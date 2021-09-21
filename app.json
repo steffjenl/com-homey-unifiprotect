@@ -38,7 +38,7 @@
     "security",
     "video"
   ],
-  "version": "1.3.5",
+  "version": "1.4.0",
   "compatibility": ">=4.2.0",
   "author": {
     "name": "Stèphan Eizinga",
@@ -304,6 +304,41 @@
       "images": {
         "large": "drivers/protectcamera/assets/images/large.png",
         "small": "drivers/protectcamera/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
+      "id": "protectlight",
+      "class": "light",
+      "capabilities": [
+        "onoff",
+        "dim",
+        "alarm_motion",
+        "last_motion_at",
+        "last_motion_date",
+        "last_motion_time"
+      ],
+      "name": {
+        "en": "Light"
+      },
+      "images": {
+        "large": "drivers/protectlight/assets/images/large.png",
+        "small": "drivers/protectlight/assets/images/small.png"
       },
       "pair": [
         {
