@@ -37,11 +37,12 @@ class ProtectWebSocket {
         try {
             ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Connecting');
 
-            const _ws = new WebSocket(this.updatesUrl() + '?' + params.toString(), {
+            const _ws = new WebSocket(this.updatesUrl() + '?' + params.toString(),null,{
                 headers: {
                     Cookie: Homey.app.api.getProxyCookieToken()
                 },
-                rejectUnauthorized: false
+                rejectUnauthorized: false,
+                perMessageDeflate: false
             });
 
             if (!_ws) {
@@ -53,23 +54,16 @@ class ProtectWebSocket {
 
             this._eventListener = _ws;
 
-            this._pingPong = setInterval(() => {
-                this.sendPingPongMessage();
-            }, SendPingPongMessageTime);
+//            this._pingPong = setInterval(() => {
+//                this.sendPingPongMessage();
+//            }, SendPingPongMessageTime);
 
             // Received pong
             this._eventListener.on('pong', (event) => {
                 // update lastPong variable
-                let lastPong = new Date().toLocaleString('nl-NL');
+                const lastPong = new Date().toLocaleString('nl-NL');
                 ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_LASTPONG, lastPong);
                 Homey.app.debug(Homey.app.api.getNvrName() + ': Received pong from websocket.');
-            });
-
-            // Received ping
-            this._eventListener.on('message', (event) => {
-                // update lastPong variable
-                let lastMessage = new Date().toLocaleString('nl-NL');
-                ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_LASTMESSAGE, lastMessage);
             });
 
             // Connection opened
@@ -89,7 +83,6 @@ class ProtectWebSocket {
 
             this._eventListener.on('error', (error) => {
                 Homey.app.debug(error);
-
                 // If we're closing before fully established it's because we're shutting down the API - ignore it.
                 if (error.message !== 'WebSocket was closed before the connection was established') {
                     Homey.app.debug(Homey.app.api.getHost(), +': ' + error);
@@ -182,6 +175,9 @@ class ProtectWebSocket {
         } else if (updatePacket.action.modelKey === 'event' && updatePacket.payload.type === 'smartDetectZone') {
             // Smart detections
             return true;
+        } else if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'light') {
+            // Updates lastMotion or the lastRing
+            return true;
         }
         return false;
     }
@@ -196,33 +192,50 @@ class ProtectWebSocket {
         // Listen for any messages coming in from our listener.
         this._eventListener.on('message', (event) => {
 
+            // update lastPong variable
+            const lastMessage = new Date().toLocaleString('nl-NL');
+            ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_LASTMESSAGE, lastMessage);
+
+            // set variable with decoded packet message
             const updatePacket = this.decodeUpdatePacket(event);
 
             if (!updatePacket) {
                 Homey.app.debug(Homey.app.api.getNvrName() + ': Unable to process message from the realtime update events API.');
-                return;
+                return true;
             }
 
             // Filter on what actions we're interested in only.
             if (!this.shouldProcessEvent(updatePacket)) {
-                return;
+                return true;
             }
 
             // get payload from updatePacket
             const payload = updatePacket.payload;
 
-            // get protectcamera driver
-            const driver = Homey.ManagerDrivers.getDriver('protectcamera');
+            if (updatePacket.action.modelKey == 'light') {
+                Homey.app.debug(JSON.stringify(payload));
+                // get protectcamera driver
+                const driver = Homey.ManagerDrivers.getDriver('protectlight');
 
-            // Get device from camera id
-            const deviceId = payload.camera || updatePacket.action.id;
-            const device = driver.getUnifiDeviceById(deviceId);
-            if (!device) {
-                return;
+                // Get device from camera id
+                const deviceId = payload.camera || updatePacket.action.id;
+                const device = driver.getUnifiDeviceById(deviceId);
+                if (device) {
+                    // Parse Websocket payload message
+                    driver.onParseWebsocketMessage(device, payload);
+                }
+            } else {
+                // get protectcamera driver
+                const driver = Homey.ManagerDrivers.getDriver('protectcamera');
+
+                // Get device from camera id
+                const deviceId = payload.camera || updatePacket.action.id;
+                const device = driver.getUnifiDeviceById(deviceId);
+                if (!device) {
+                    // Parse Websocket payload message
+                    driver.onParseWebsocketMessage(device, payload);
+                }
             }
-
-            // Parse Websocket payload message
-            driver.onParseWebsocketMessage(device, payload);
         });
         this._eventListenerConfigured = true;
         return true;

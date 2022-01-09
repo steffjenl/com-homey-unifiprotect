@@ -25,5 +25,11 @@
   },
   "1.4.2": {
     "en": "Fixing Memory leak"
+  },
+  "1.4.3": {
+    "en": "Fixing Memory Leak"
+  },
+  "1.5.0": {
+    "en": "Added Doorbell and Floodlight"
   }
 }

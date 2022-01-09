@@ -124,14 +124,14 @@ class UniFiProtect extends Homey.App {
     }
 
     debug() {
+        if (Homey.env.DEBUG === 'true') {
         const args = Array.prototype.slice.call(arguments);
         args.unshift('[debug]');
 
-        if (Homey.env.DEBUG === 'true') {
-            Homey.app.log(args.join(' '));
-        }
+        Homey.app.log(args.join(' '));
 
         ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_DEBUG, args.join(' '));
+        }
     }
 }
 

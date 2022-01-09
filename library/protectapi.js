@@ -290,7 +290,24 @@ class ProtectAPI {
         return new Promise((resolve, reject) => {
             this.webclient.get('cameras')
                 .then(response => {
-                    const result = JSON.parse(response);
+                    let result = JSON.parse(response);
+                    result = result.filter( obj => obj.type !== "UVC G4 Doorbell");
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining cameras.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    getDoorbells() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('cameras')
+                .then(response => {
+                    let result = JSON.parse(response);
+                    result = result.filter( obj => obj.type === "UVC G4 Doorbell");
                     if (result) {
                         return resolve(result);
                     } else {
@@ -432,6 +449,101 @@ class ProtectAPI {
                     resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${rtspAlias}`);
                 })
                 .catch(error => reject(new Error(`Error getting steam url: ${error}`)));
+        });
+    }
+
+    findLightById(id) {
+        return new Promise((resolve, reject) => {
+            this.webclient.get(`lights/${id}`)
+                .then(response => {
+                    const result = JSON.parse(response);
+
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining lights.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    getLights() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('lights')
+                .then(response => {
+                    const result = JSON.parse(response);
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining lights.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    setLightOn(light, isLightOn) {
+        return new Promise((resolve, reject) => {
+            const isLedForceOn = {
+                isLedForceOn: isLightOn
+            }
+            const params = {
+                isLightOn: isLightOn,
+                lightOnSettings: isLedForceOn
+            };
+            return this.webclient.patch(`lights/${light.id}`, params)
+                .then(() => resolve('isLightOn successfully set.'))
+                .catch(error => reject(new Error(`Error setting isLightOn: ${error}`)));
+        });
+    }
+
+    setLightLevel(light, ledLevel) {
+        Homey.app.debug(ledLevel);
+        return new Promise((resolve, reject) => {
+            const isLedForceOn = {
+                ledLevel: ledLevel
+            }
+            const params = {
+                lightDeviceSettings: isLedForceOn
+            };
+            return this.webclient.patch(`lights/${light.id}`, params)
+                .then(() => resolve('setLightLevel successfully set.'))
+                .catch(error => reject(new Error(`Error setting setLightLevel: ${error}`)));
+        });
+    }
+
+    setLightMode(light, mode) {
+        Homey.app.debug(mode);
+        return new Promise((resolve, reject) => {
+            let lightModeSettings = {}
+            if (mode === "motion") {
+                lightModeSettings = {
+                    mode: "motion",
+                    enableAt: "fulltime"
+
+                }
+            }
+            else if (mode === "motiondark") {
+                lightModeSettings = {
+                    mode: "motion",
+                    enableAt: "dark"
+
+                }
+            }
+            else {
+                lightModeSettings = {
+                    mode: mode,
+                    enableAt: 'dark'
+
+                }
+            }
+            const params = {
+                lightModeSettings: lightModeSettings
+            };
+            return this.webclient.patch(`lights/${light.id}`, params)
+                .then(() => resolve('setLightMode successfully set.'))
+                .catch(error => reject(new Error(`Error setting setLightMode: ${error}`)));
         });
     }
 }

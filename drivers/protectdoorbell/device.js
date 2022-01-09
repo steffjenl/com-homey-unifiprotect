@@ -5,20 +5,20 @@ const fetch = require('node-fetch');
 const https = require('https');
 const UfvConstants = require('../../library/constants');
 
-class Camera extends Homey.Device {
+class Doorbell extends Homey.Device {
   /**
    * onInit is called when the device is initialized.
    */
   async onInit() {
     await this.waitForBootstrap();
-    Homey.app.debug('UnifiCamera Device has been initialized');
+    Homey.app.debug('UnifiDoorbell Device has been initialized');
   }
 
   /**
    * onAdded is called when the user adds the device, called just after pairing.
    */
   async onAdded() {
-    Homey.app.debug('UnifiCamera Device has been added');
+    Homey.app.debug('UnifiDoorbell Device has been added');
   }
 
   /**
@@ -30,7 +30,7 @@ class Camera extends Homey.Device {
    * @returns {Promise<string|void>} return a custom message that will be displayed
    */
   async onSettings({ oldSettings, newSettings, changedKeys }) {
-    Homey.app.debug('UnifiCamera Device settings where changed');
+    Homey.app.debug('UnifiDoorbell Device settings where changed');
   }
 
   /**
@@ -39,14 +39,14 @@ class Camera extends Homey.Device {
    * @param {string} name The new name
    */
   async onRenamed(name) {
-    Homey.app.debug('UnifiCamera Device was renamed');
+    Homey.app.debug('UnifiDoorbell Device was renamed');
   }
 
   /**
    * onDeleted is called when the user deleted the device.
    */
   async onDeleted() {
-    Homey.app.debug('UnifiCamera Device has been deleted');
+    Homey.app.debug('UnifiDoorbell Device has been deleted');
   }
 
   async initCamera() {
@@ -111,9 +111,9 @@ class Camera extends Homey.Device {
   }
 
   async _createMissingCapabilities() {
-    if (this.getClass() !== 'camera') {
-      Homey.app.debug(`changed class to camera for ${this.getName()}`);
-      this.setClass('camera');
+    if (this.getClass() !== 'doorbell') {
+      Homey.app.debug(`changed class to doorbell for ${this.getName()}`);
+      this.setClass('doorbell');
     }
 
     // camera_nightvision_status
@@ -263,7 +263,7 @@ class Camera extends Homey.Device {
     // Check if the event date is newer
     if (isMotionDetected && lastMotionTime > lastMotionAt) {
       const lastMotion = new Date(lastMotionTime);
-      Homey.app.debug(`new motion detected on camera: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
+      Homey.app.debug(`new motion detected on doorbell: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
 
       this.setCapabilityValue('last_motion_at', lastMotionTime)
           .catch(this.error);
@@ -290,7 +290,7 @@ class Camera extends Homey.Device {
 
     // fire trigger (per detection type)
     for (let smartDetectionType of smartDetectTypes) {
-      Homey.app.debug(`smart detection event on camera ${this.getData().id}, with type ${smartDetectionType}`);
+      Homey.app.debug(`smart detection event on doorbell ${this.getData().id}, with type ${smartDetectionType}`);
       this._smartDetectionTrigger.trigger({
         ufp_smart_detection_camera: this.getName(),
         smart_detection_type: smartDetectionType,
@@ -405,7 +405,7 @@ class Camera extends Homey.Device {
   }
 
   async _createSnapshotImage() {
-    Homey.app.debug('Creating snapshot image for camera ' + this.getName() + '.');
+    Homey.app.debug('Creating snapshot image for doorbell ' + this.getName() + '.');
 
     this._snapshotImage = new Homey.Image();
     this._snapshotImage.setStream(async stream => {
@@ -445,9 +445,9 @@ class Camera extends Homey.Device {
         .then(() => this.setCameraImage('snapshot', 'Snapshot', this._snapshotImage))
         .catch(this.error);
 
-    Homey.app.debug('Created snapshot image for camera ' + this.getName() + '.');
+    Homey.app.debug('Created snapshot image for doorbell ' + this.getName() + '.');
   }
 
 }
 
-module.exports = Camera;
+module.exports = Doorbell;

@@ -1,13 +1,13 @@
 {
-  "name": "com.ubnt.cloudkey",
-  "version": "1.0.0",
+  "name": "com.ubnt.unifiprotect",
+  "version": "1.5.0",
   "main": "app.js",
   "devDependencies": {
-    "homey": "^2.9.7"
+    "homey": "^2.23.7"
   },
   "dependencies": {
-    "node-fetch": "^2.6.1",
-    "ws": "^7.4.6",
+    "node-fetch": "^2.6.6",
+    "ws": "^8.4.0",
     "zlib": "^1.0.5"
   }
 }

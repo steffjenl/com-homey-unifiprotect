@@ -1,0 +1,28 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Light mode",
+    "nl": "Licht modus"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "picker",
+  "values": [
+    {
+      "id": "motion",
+      "title": { "en": "On Motion Always" }
+    },
+    {
+      "id": "motiondark",
+      "title": { "en": "On Motion When Dark" }
+    },
+    {
+      "id": "always",
+      "title": { "en": "When Dark" }
+    },
+    {
+      "id": "off",
+      "title": { "en": "Manual" }
+    }
+  ]
+}
