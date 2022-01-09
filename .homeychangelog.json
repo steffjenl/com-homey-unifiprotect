@@ -19,5 +19,11 @@
   },
   "1.4.0": {
     "en": "Add support for UniFi Flood light"
+  },
+  "1.4.1": {
+    "en": "Some changes in the websocket lib and debug modus on (Test version)"
+  },
+  "1.4.2": {
+    "en": "Fixing Memory leak"
   }
 }

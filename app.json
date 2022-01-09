@@ -2,6 +2,7 @@
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.ubnt.unifiprotect",
   "sdk": 2,
+  "brandColor": "#159EDA",
   "name": {
     "en": "Ubiquiti UniFi Protect"
   },
@@ -38,7 +39,7 @@
     "security",
     "video"
   ],
-  "version": "1.4.0",
+  "version": "1.4.2",
   "compatibility": ">=4.2.0",
   "author": {
     "name": "Stèphan Eizinga",
@@ -323,6 +324,40 @@
       ]
     },
     {
+      "id": "protectdoorbell",
+      "class": "doorbell",
+      "capabilities": [
+        "alarm_motion",
+        "camera_recording_status",
+        "last_motion_at",
+        "last_smart_detection_at"
+      ],
+      "name": {
+        "en": "Doorbell",
+        "nl": "Deurbel"
+      },
+      "images": {
+        "large": "drivers/protectdoorbell/assets/images/large.png",
+        "small": "drivers/protectdoorbell/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
       "id": "protectlight",
       "class": "light",
       "capabilities": [
@@ -331,7 +366,8 @@
         "alarm_motion",
         "last_motion_at",
         "last_motion_date",
-        "last_motion_time"
+        "last_motion_time",
+        "light_mode"
       ],
       "name": {
         "en": "Light"
@@ -511,6 +547,42 @@
       "uiComponent": null,
       "getable": true,
       "setable": false
+    },
+    "light_mode": {
+      "type": "string",
+      "title": {
+        "en": "Light mode",
+        "nl": "Licht modus"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "picker",
+      "values": [
+        {
+          "id": "motion",
+          "title": {
+            "en": "On Motion Always"
+          }
+        },
+        {
+          "id": "motiondark",
+          "title": {
+            "en": "On Motion When Dark"
+          }
+        },
+        {
+          "id": "always",
+          "title": {
+            "en": "When Dark"
+          }
+        },
+        {
+          "id": "off",
+          "title": {
+            "en": "Manual"
+          }
+        }
+      ]
     },
     "nvr_cpu_load": {
       "type": "number",
