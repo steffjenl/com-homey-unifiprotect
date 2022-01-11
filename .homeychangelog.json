@@ -31,5 +31,11 @@
   },
   "1.5.0": {
     "en": "Added Doorbell and Floodlight"
+  },
+  "1.5.1": {
+    "en": "No changes"
+  },
+  "1.5.2": {
+    "en": "Little fix in websockets"
   }
 }
