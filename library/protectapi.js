@@ -546,6 +546,21 @@ class ProtectAPI {
                 .catch(error => reject(new Error(`Error setting setLightMode: ${error}`)));
         });
     }
+
+    getSensors() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('sensors')
+                .then(response => {
+                    const result = JSON.parse(response);
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining sensors.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
 }
 
 module.exports = ProtectAPI;

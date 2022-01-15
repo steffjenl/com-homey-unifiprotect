@@ -324,6 +324,40 @@
       ]
     },
     {
+      "id": "protectdoorbell",
+      "class": "doorbell",
+      "capabilities": [
+        "alarm_motion",
+        "camera_recording_status",
+        "last_motion_at",
+        "last_smart_detection_at"
+      ],
+      "name": {
+        "en": "Doorbell",
+        "nl": "Deurbel"
+      },
+      "images": {
+        "large": "drivers/protectdoorbell/assets/images/large.png",
+        "small": "drivers/protectdoorbell/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
       "id": "protectlight",
       "class": "light",
       "capabilities": [
@@ -341,6 +375,34 @@
       "images": {
         "large": "drivers/protectlight/assets/images/large.png",
         "small": "drivers/protectlight/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
+      "id": "protectsensor",
+      "class": "sensor",
+      "capabilities": [],
+      "name": {
+        "en": "Light"
+      },
+      "images": {
+        "large": "drivers/protectsensor/assets/images/large.png",
+        "small": "drivers/protectsensor/assets/images/small.png"
       },
       "pair": [
         {

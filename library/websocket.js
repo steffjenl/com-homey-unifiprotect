@@ -7,9 +7,6 @@ const UfvConstants = require('./constants');
 
 const ManagerApi = Homey.ManagerApi;
 
-// 15000 miliseconds is 0.25 minute
-const SendPingPongMessageTime = 15000;
-
 class ProtectWebSocket {
     constructor() {
         this._eventListener = null;
@@ -37,7 +34,7 @@ class ProtectWebSocket {
         try {
             ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Connecting');
 
-            const _ws = new WebSocket(this.updatesUrl() + '?' + params.toString(),null,{
+            const _ws = new WebSocket(this.updatesUrl() + '?' + params.toString(),{
                 headers: {
                     Cookie: Homey.app.api.getProxyCookieToken()
                 },
@@ -53,18 +50,6 @@ class ProtectWebSocket {
             }
 
             this._eventListener = _ws;
-
-//            this._pingPong = setInterval(() => {
-//                this.sendPingPongMessage();
-//            }, SendPingPongMessageTime);
-
-            // Received pong
-            this._eventListener.on('pong', (event) => {
-                // update lastPong variable
-                const lastPong = new Date().toLocaleString('nl-NL');
-                ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_LASTPONG, lastPong);
-                Homey.app.debug(Homey.app.api.getNvrName() + ': Received pong from websocket.');
-            });
 
             // Connection opened
             this._eventListener.on('open', (event) => {
@@ -127,13 +112,6 @@ class ProtectWebSocket {
         }
     }
 
-    sendPingPongMessage() {
-        if (this._eventListener !== null) {
-            this._eventListener.send('ping');
-            Homey.app.debug(Homey.app.api.getNvrName() + ': Send ping to websocket.');
-        }
-    }
-
     /**
      * Update actions that we care about (doorbell rings, motion detection, smart detection)
      *
@@ -191,11 +169,6 @@ class ProtectWebSocket {
 
         // Listen for any messages coming in from our listener.
         this._eventListener.on('message', (event) => {
-
-            // update lastPong variable
-            const lastMessage = new Date().toLocaleString('nl-NL');
-            ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_LASTMESSAGE, lastMessage);
-
             // set variable with decoded packet message
             const updatePacket = this.decodeUpdatePacket(event);
 
@@ -212,13 +185,23 @@ class ProtectWebSocket {
             // get payload from updatePacket
             const payload = updatePacket.payload;
 
-            if (updatePacket.action.modelKey == 'light') {
-                Homey.app.debug(JSON.stringify(payload));
-                // get protectcamera driver
+            if (updatePacket.action.modelKey === 'light') {
+                // get protectlight driver
                 const driver = Homey.ManagerDrivers.getDriver('protectlight');
 
                 // Get device from camera id
-                const deviceId = payload.camera || updatePacket.action.id;
+                const deviceId = updatePacket.action.id;
+                const device = driver.getUnifiDeviceById(deviceId);
+                if (device) {
+                    // Parse Websocket payload message
+                    driver.onParseWebsocketMessage(device, payload);
+                }
+            } else if (updatePacket.action.modelKey === 'sensor') {
+                // get protectlight driver
+                const driver = Homey.ManagerDrivers.getDriver('protectsensor');
+
+                // Get device from camera id
+                const deviceId = updatePacket.action.id;
                 const device = driver.getUnifiDeviceById(deviceId);
                 if (device) {
                     // Parse Websocket payload message
@@ -229,9 +212,9 @@ class ProtectWebSocket {
                 const driver = Homey.ManagerDrivers.getDriver('protectcamera');
 
                 // Get device from camera id
-                const deviceId = payload.camera || updatePacket.action.id;
+                const deviceId = updatePacket.action.id;
                 const device = driver.getUnifiDeviceById(deviceId);
-                if (!device) {
+                if (device) {
                     // Parse Websocket payload message
                     driver.onParseWebsocketMessage(device, payload);
                 }
