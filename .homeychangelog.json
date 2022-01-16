@@ -37,5 +37,8 @@
   },
   "1.5.2": {
     "en": "Little fix in websockets"
+  },
+  "1.5.3": {
+    "en": "Upgrade to SDKV3"
   }
 }
