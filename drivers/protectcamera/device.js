@@ -186,7 +186,6 @@ class Camera extends Homey.Device {
 
   onIsDark(isDark) {
     // Debug information about playload
-    this.homey.app.debug(JSON.stringify(isDark));
     if (this.hasCapability('camera_nightvision_status')) {
       this.setCapabilityValue('camera_nightvision_status', isDark);
     }
@@ -268,7 +267,6 @@ class Camera extends Homey.Device {
 
   onIsRecording(isRecording) {
     // Debug information about playload
-    this.homey.app.debug(JSON.stringify(isRecording));
     if (this.hasCapability('camera_recording_status')) {
       this.setCapabilityValue('camera_recording_status', isRecording);
     }
@@ -276,7 +274,6 @@ class Camera extends Homey.Device {
 
   onIsMicEnabled(isMicEnabled) {
     // Debug information about playload
-    this.homey.app.debug(JSON.stringify(isMicEnabled));
     if (this.hasCapability('camera_microphone_status')) {
       this.setCapabilityValue('camera_microphone_status', isMicEnabled);
     }
@@ -284,7 +281,6 @@ class Camera extends Homey.Device {
 
   onIsConnected(isConnected) {
     // Debug information about playload
-    this.homey.app.debug(JSON.stringify(isConnected));
     if (this.getCapabilityValue('camera_connection_status') !== isConnected) {
       this.onConnectionChanged(isConnected);
     }
@@ -293,7 +289,6 @@ class Camera extends Homey.Device {
 
   onMicVolume(micVolume) {
     // Debug information about playload
-    this.homey.app.debug('micVolume');
     if (this.hasCapability('camera_microphone_volume')) {
       this.setCapabilityValue('camera_microphone_volume', micVolume);
     }
@@ -301,7 +296,6 @@ class Camera extends Homey.Device {
 
   onRecordingMode(mode) {
     // Debug information about playload
-    this.homey.app.debug(JSON.stringify(mode));
     if (this.hasCapability('camera_recording_mode')) {
       this.setCapabilityValue('camera_recording_mode',
           this.homey.__(`events.camera.${String(mode)
