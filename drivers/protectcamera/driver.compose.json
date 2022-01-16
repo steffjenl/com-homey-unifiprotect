@@ -30,5 +30,6 @@
       "template": "add_devices"
     }
   ],
-  "platforms": ["local", "cloud"]
+  "platforms": ["local", "cloud"],
+  "connectivity": ["cloud"]
 }

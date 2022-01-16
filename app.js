@@ -17,7 +17,7 @@ class UniFiProtect extends Homey.App {
      * onInit is called when the app is initialized.
      */
     async onInit() {
-        this.loggedIn = false;
+        this.debuggedIn = false;
         this.nvrIp = null;
         this.nvrPort = null;
         this.nvrUsername = null;
@@ -66,7 +66,7 @@ class UniFiProtect extends Homey.App {
 
         // Subscribe to credentials updates
         this.homey.settings.on('set', key => {
-            if (key === 'ufp:credentials') {
+            if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {
                 this._appLogin();
             }
         });
@@ -85,21 +85,21 @@ class UniFiProtect extends Homey.App {
     async triggerConnectionStatusTrigger(tokens) {
         await this._connectionStatusTrigger
             .trigger(tokens)
-            .then(this.log)
+            .then(this.debug)
             .catch(this.error);
     }
 
     async triggerDoorbellRingingTrigger(tokens) {
         await this._doorbellRingingTrigger
             .trigger(tokens)
-            .then(this.log)
+            .then(this.debug)
             .catch(this.error);
     }
 
     async triggerSmartDetectionTrigger(tokens) {
         await this._smartDetectionTrigger
             .trigger(tokens)
-            .then(this.log)
+            .then(this.debug)
             .catch(this.error);
     }
 
@@ -137,7 +137,7 @@ class UniFiProtect extends Homey.App {
                 this.api.getBootstrapInfo()
                     .then(() => {
                         this.debug('Bootstrap loaded.');
-                        this.loggedIn = true;
+                        this.debuggedIn = true;
                         this.nvrIp = nvrip;
                         this.nvrPort = nvrport;
                         this.nvrUsername = credentials.username;
@@ -157,15 +157,15 @@ class UniFiProtect extends Homey.App {
     }
 
     _refreshCookie() {
-        if (this.loggedIn) {
+        if (this.debuggedIn) {
             this.api._lastUpdateId = null;
             this.api.login(this.nvrIp, this.nvrPort, this.nvrUsername, this.nvrPassword)
                 .then(() => {
                     this.debug('Logged in again to refresh cookie.');
                     this.api.getBootstrapInfo()
                         .then(() => {
-                            this.log('Bootstrap loaded.');
-                            this.loggedIn = true;
+                            this.debug('Bootstrap loaded.');
+                            this.debuggedIn = true;
                         })
                         .catch(error => this.error(error));
                 })
@@ -177,54 +177,6 @@ class UniFiProtect extends Homey.App {
             this._refreshCookie();
         }.bind(this);
         this.homey.setTimeout(timeOutFunction, RefreshCookieTime);
-    }
-
-    _onSnapshotBuffer(cameraName, camera, width) {
-        return new Promise((resolve, reject) => {
-            this.homey.app.api.createSnapshotUrl(camera, width)
-                .then(snapshotUrl => {
-                    this.homey.app.api.getStreamUrl(camera)
-                        .then(streamUrl => {
-                            this._SnapshotImage = this.homey.images.createImage();
-                            this._SnapshotImage.setStream(async stream => {
-                                if (!snapshotUrl) {
-                                    throw new Error('Invalid snapshot url.');
-                                }
-
-                                const headers = {};
-
-                                headers['Cookie'] = this.homey.app.api.getProxyCookieToken();
-
-                                const agent = new https.Agent({
-                                    rejectUnauthorized: false,
-                                    keepAlive: false,
-                                });
-
-                                // Fetch image
-                                const res = await fetch(snapshotUrl, {
-                                    agent,
-                                    headers
-                                });
-                                if (!res.ok) throw new Error('Could not fetch snapshot image.');
-
-                                return res.body.pipe(stream);
-                            });
-
-                            // get protectcamera driver
-                            const driver = this.homey.drivers.getDriver('protectcamera');
-
-                            driver.triggerSnapshotTrigger(this, {
-                                ufv_snapshot_token: this._SnapshotImage,
-                                ufv_snapshot_camera: cameraName,
-                                ufv_snapshot_snapshot_url: this._SnapshotImage.cloudUrl,
-                                ufv_snapshot_stream_url: streamUrl,
-                            }, {});
-
-                        })
-                        .catch(error => reject(error));
-                })
-                .catch(error => reject(error));
-        });
     }
 
     debug() {

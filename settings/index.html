@@ -25,6 +25,12 @@
     <input id="txt_nvrip" type="text" value=""/>
   </div>
 
+  <!-- Port -->
+  <div class="field row">
+    <label for="txt_nvrport" data-i18n="settings.txt_nvrport"></label>
+    <input id="txt_nvrport" type="text" value="443"/>
+  </div>
+
 </fieldset>
 
 <!-- Credentials -->
@@ -51,7 +57,7 @@
 
 <script type="text/javascript">
   var txtNvrIp = document.getElementById('txt_nvrip');
-  var txtNvrPort = '443';
+  var txtNvrPort = document.getElementById('txt_nvrport');
   var txtUsername = document.getElementById('txt_username');
   var txtPassword = document.getElementById('txt_password');
   var btnApply = document.getElementById('btn_apply');

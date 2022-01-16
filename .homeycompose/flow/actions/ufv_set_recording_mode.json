@@ -4,8 +4,12 @@
     "en": "Set recording mode",
     "nl": "Stel opnamemodus in"
   },
+  "titleFormatted": {
+    "en": "Set recording mode [[recording_mode]] for camera [[device]]"
+  },
   "args": [
     {
+      "title": "Camera",
       "name": "device",
       "type": "device",
       "filter": {
@@ -13,6 +17,7 @@
       }
     },
     {
+      "title": "Recording mode",
       "name": "recording_mode",
       "type": "dropdown",
       "values": [

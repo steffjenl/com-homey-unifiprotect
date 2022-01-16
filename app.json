@@ -228,8 +228,12 @@
           "en": "Set recording mode",
           "nl": "Stel opnamemodus in"
         },
+        "titleFormatted": {
+          "en": "Set recording mode [[recording_mode]] for camera [[device]]"
+        },
         "args": [
           {
+            "title": "Camera",
             "name": "device",
             "type": "device",
             "filter": {
@@ -237,6 +241,7 @@
             }
           },
           {
+            "title": "Recording mode",
             "name": "recording_mode",
             "type": "dropdown",
             "values": [
@@ -271,8 +276,14 @@
           "en": "Take a snapshot",
           "nl": "Maak een momentopname"
         },
+        "titleFormatted": {
+          "en": "Take a snapshot from [[device]] with an width from [[width]]"
+        },
         "args": [
           {
+            "title": {
+              "en": "Camera"
+            },
             "name": "device",
             "type": "device",
             "filter": {
@@ -280,6 +291,10 @@
             }
           },
           {
+            "title": {
+              "en": "Width in pixels",
+              "nl": "Breedte in pixels"
+            },
             "name": "width",
             "type": "number",
             "min": 0,
@@ -329,6 +344,9 @@
       "platforms": [
         "local",
         "cloud"
+      ],
+      "connectivity": [
+        "cloud"
       ]
     },
     {
@@ -366,6 +384,9 @@
       ],
       "platforms": [
         "local",
+        "cloud"
+      ],
+      "connectivity": [
         "cloud"
       ],
       "deprecated": true
@@ -408,6 +429,9 @@
       "platforms": [
         "local",
         "cloud"
+      ],
+      "connectivity": [
+        "cloud"
       ]
     },
     {
@@ -439,6 +463,9 @@
       ],
       "platforms": [
         "local",
+        "cloud"
+      ],
+      "connectivity": [
         "cloud"
       ],
       "deprecated": true

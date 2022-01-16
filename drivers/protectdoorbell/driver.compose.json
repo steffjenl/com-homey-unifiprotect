@@ -32,5 +32,6 @@
     }
   ],
   "platforms": ["local", "cloud"],
+  "connectivity": ["cloud"],
   "deprecated": true
 }

@@ -237,7 +237,7 @@ class ProtectWebSocket extends BaseClass {
 
         } catch (error) {
 
-            this.log('Realtime update API: error decoding update packet: %s', error);
+            this.homey.app.debug('Realtime update API: error decoding update packet: %s', error);
             return null;
 
         }
@@ -296,7 +296,7 @@ class ProtectWebSocket extends BaseClass {
                 break;
 
             default:
-                this.log('Unknown payload packet type received in the realtime update events API: %s.', payloadFormat);
+                this.homey.app.debug('Unknown payload packet type received in the realtime update events API: %s.', payloadFormat);
                 return null;
                 break;
         }

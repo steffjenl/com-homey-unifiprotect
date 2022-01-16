@@ -57,7 +57,7 @@ class ProtectAPI extends BaseClass {
     }
 
     getCSRFToken(host, port) {
-        this.log('Get CSRF Token...');
+        this.homey.app.debug('Get CSRF Token...');
 
         return new Promise((resolve, reject) => {
             this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Getting CSRF token');
@@ -118,7 +118,7 @@ class ProtectAPI extends BaseClass {
     }
 
     login(host, port, username, password) {
-        this.log('Logging in...');
+        this.homey.app.debug('Logging in...');
         UFV_API_ENDPOINT = '/proxy/protect/api';
 
         this.webclient.setServerHost(host);
@@ -506,7 +506,7 @@ class ProtectAPI extends BaseClass {
     }
 
     setLightLevel(light, ledLevel) {
-        this.log(ledLevel);
+        this.homey.app.debug(ledLevel);
         return new Promise((resolve, reject) => {
             const isLedForceOn = {
                 ledLevel: ledLevel
@@ -521,7 +521,7 @@ class ProtectAPI extends BaseClass {
     }
 
     setLightMode(light, mode) {
-        this.log(mode);
+        this.homey.app.debug(mode);
         return new Promise((resolve, reject) => {
             let lightModeSettings = {}
             if (mode === "motion") {
