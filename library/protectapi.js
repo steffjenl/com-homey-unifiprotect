@@ -1,6 +1,6 @@
 'use strict';
 
-const Homey = require('homey');
+const BaseClass = require('./baseclass');
 const https = require('https');
 const ProtectWebClient = require('./webclient');
 const ProtectWebSocket = require('./websocket');
@@ -8,16 +8,23 @@ const UfvConstants = require('./constants');
 
 let UFV_API_ENDPOINT = '/proxy/protect/api';
 
-class ProtectAPI {
+class ProtectAPI extends BaseClass {
 
-    constructor() {
+    constructor(...props) {
+        super(...props);
         // Single WebSocket instance for all devices
         this.ws = new ProtectWebSocket();
         this.webclient = new ProtectWebClient();
-
         this._bootstrap = null;
         this._lastUpdateId = null;
         this._rtspPort = null;
+        this.homey = null;
+    }
+
+    setHomeyObject(homey) {
+        this.homey = homey;
+        this.ws.setHomeyObject(this.homey);
+        this.webclient.setHomeyObject(this.homey);
     }
 
     getProxyCookieToken() {
@@ -50,10 +57,10 @@ class ProtectAPI {
     }
 
     getCSRFToken(host, port) {
-        Homey.app.debug('Get CSRF Token...');
+        this.log('Get CSRF Token...');
 
         return new Promise((resolve, reject) => {
-            Homey.ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Getting CSRF token');
+            this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Getting CSRF token');
 
             if (!host) reject(new Error('Invalid host.'));
 
@@ -96,14 +103,14 @@ class ProtectAPI {
                     }
 
                     // Connected
-                    Homey.ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'CSRF Token found');
+                    this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'CSRF Token found');
                     //
                     return resolve('We got it!');
                 });
             });
 
             req.on('error', error => {
-                Homey.ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
+                this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
                 return reject(error);
             });
             req.end();
@@ -111,7 +118,7 @@ class ProtectAPI {
     }
 
     login(host, port, username, password) {
-        Homey.app.debug('Logging in...');
+        this.log('Logging in...');
         UFV_API_ENDPOINT = '/proxy/protect/api';
 
         this.webclient.setServerHost(host);
@@ -121,7 +128,7 @@ class ProtectAPI {
 
         this.getCSRFToken(host, port).then(response => {
 
-                Homey.ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connecting');
+                this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connecting');
 
                 if (!host) reject(new Error('Invalid host.'));
                 if (!username) reject(new Error('Invalid username.'));
@@ -176,14 +183,14 @@ class ProtectAPI {
                         }
 
                         // Connected
-                        Homey.ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connected');
+                        this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connected');
                         //
                         return resolve('Logged in...');
                     });
                 });
 
                 req.on('error', error => {
-                    Homey.ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
+                    this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
                     return reject(error);
                 });
 
@@ -499,7 +506,7 @@ class ProtectAPI {
     }
 
     setLightLevel(light, ledLevel) {
-        Homey.app.debug(ledLevel);
+        this.log(ledLevel);
         return new Promise((resolve, reject) => {
             const isLedForceOn = {
                 ledLevel: ledLevel
@@ -514,7 +521,7 @@ class ProtectAPI {
     }
 
     setLightMode(light, mode) {
-        Homey.app.debug(mode);
+        this.log(mode);
         return new Promise((resolve, reject) => {
             let lightModeSettings = {}
             if (mode === "motion") {

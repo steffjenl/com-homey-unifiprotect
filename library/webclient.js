@@ -1,17 +1,23 @@
 'use strict';
 
+const BaseClass = require('./baseclass');
 const https = require('https');
 
 let UFV_API_ENDPOINT = '/proxy/protect/api';
 
-class ProtectWebClient {
+class ProtectWebClient extends BaseClass {
 
-    constructor() {
+    constructor(...props) {
+        super(...props);
         this._serverHost = null;
         this._serverPort = null;
         this._cookieToken = null;
         this._apiKey = null;
         this._csrfToken = null;
+    }
+
+    setHomeyObject(homey) {
+        this.homey = homey;
     }
 
     setServerHost(hostName) {

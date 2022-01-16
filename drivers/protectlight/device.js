@@ -9,14 +9,14 @@ class Light extends Homey.Device {
    */
   async onInit() {
     await this.waitForBootstrap();
-    Homey.app.debug('UnifiLight Device has been initialized');
+    this.homey.app.debug('UnifiLight Device has been initialized');
   }
 
   /**
    * onAdded is called when the user adds the device, called just after pairing.
    */
   async onAdded() {
-    Homey.app.debug('UnifiLight Device has been added');
+    this.homey.app.debug('UnifiLight Device has been added');
   }
 
   /**
@@ -28,7 +28,7 @@ class Light extends Homey.Device {
    * @returns {Promise<string|void>} return a custom message that will be displayed
    */
   async onSettings({ oldSettings, newSettings, changedKeys }) {
-    Homey.app.debug('UnifiLight Device settings where changed');
+    this.homey.app.debug('UnifiLight Device settings where changed');
   }
 
   /**
@@ -37,27 +37,27 @@ class Light extends Homey.Device {
    * @param {string} name The new name
    */
   async onRenamed(name) {
-    Homey.app.debug('UnifiLight Device was renamed');
+    this.homey.app.debug('UnifiLight Device was renamed');
   }
 
   /**
    * onDeleted is called when the user deleted the device.
    */
   async onDeleted() {
-    Homey.app.debug('UnifiLight Device has been deleted');
+    this.homey.app.debug('UnifiLight Device has been deleted');
   }
 
   async initCamera() {
     this.registerCapabilityListener("onoff", (value) => {
-      Homey.app.api.setLightOn(this.getData(), value);
+      this.homey.app.api.setLightOn(this.getData(), value);
     });
 
     this.registerCapabilityListener("dim", (value) => {
-      Homey.app.api.setLightLevel(this.getData(), this.translateLedLevel(value, true));
+      this.homey.app.api.setLightLevel(this.getData(), this.translateLedLevel(value, true));
     });
 
     this.registerCapabilityListener("light_mode", (value) => {
-      Homey.app.api.setLightMode(this.getData(), value);
+      this.homey.app.api.setLightMode(this.getData(), value);
     });
 
     await this._createMissingCapabilities();
@@ -65,27 +65,27 @@ class Light extends Homey.Device {
   }
 
   async waitForBootstrap() {
-    if (typeof Homey.app.api.getLastUpdateId() !== 'undefined' && Homey.app.api.getLastUpdateId() !== null) {
+    if (typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null) {
       await this.initCamera();
     } else {
-      setTimeout(this.waitForBootstrap.bind(this), 250);
+      this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
     }
   }
 
   async _createMissingCapabilities() {
     if (this.getClass() !== 'light') {
-      Homey.app.debug(`changed class to light for ${this.getName()}`);
+      this.homey.app.debug(`changed class to light for ${this.getName()}`);
       this.setClass('light');
     }
     // light_mode
     if (!this.hasCapability('light_mode')) {
       this.addCapability('light_mode');
-      Homey.app.debug(`created capability light_mode for ${this.getName()}`);
+      this.homey.app.debug(`created capability light_mode for ${this.getName()}`);
     }
   }
 
   async _initLightData() {
-    const bootstrapData = Homey.app.api.getBootstrap();
+    const bootstrapData = this.homey.app.api.getBootstrap();
     if (bootstrapData) {
       bootstrapData.lights.forEach((light) => {
         if (light.id === this.getData().id) {
@@ -104,12 +104,12 @@ class Light extends Homey.Device {
   }
 
   onMotionStart() {
-    Homey.app.debug('onMotionStart');
+    this.homey.app.debug('onMotionStart');
     this.setCapabilityValue('alarm_motion', true);
   }
 
   onMotionEnd() {
-    Homey.app.debug('onMotionEnd');
+    this.homey.app.debug('onMotionEnd');
     this.setCapabilityValue('alarm_motion', false);
   }
 
@@ -120,14 +120,14 @@ class Light extends Homey.Device {
   }
 
   onLedLevelChange(ledLevel) {
-    Homey.app.debug('onLedLevelChange');
+    this.homey.app.debug('onLedLevelChange');
     if (this.hasCapability('dim')) {
       this.setCapabilityValue('dim', this.translateLedLevel(ledLevel, false));
     }
   }
 
   onLightModeChange(settings) {
-    Homey.app.debug('onLightModeChange');
+    this.homey.app.debug('onLightModeChange');
     if (this.hasCapability('light_mode')) {
       this.setCapabilityValue('light_mode', this.translateLightMode(settings));
     }
@@ -192,7 +192,7 @@ class Light extends Homey.Device {
     const lastMotionAt = this.getCapabilityValue('last_motion_at');
 
     if (!lastMotionAt) {
-      Homey.app.debug(`set last_motion_at to last datetime: ${this.getData().id}`);
+      this.homey.app.debug(`set last_motion_at to last datetime: ${this.getData().id}`);
       this.setCapabilityValue('last_motion_at', lastMotionTime)
           .catch(this.error);
       return;
@@ -201,7 +201,7 @@ class Light extends Homey.Device {
     // Check if the event date is newer
     if (isMotionDetected && lastMotionTime > lastMotionAt) {
       const lastMotion = new Date(lastMotionTime);
-      Homey.app.debug(`new motion detected on light: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
+      this.homey.app.debug(`new motion detected on light: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
 
       this.setCapabilityValue('last_motion_at', lastMotionTime)
           .catch(this.error);
@@ -212,7 +212,7 @@ class Light extends Homey.Device {
       this.onMotionStart();
     } else if (!isMotionDetected && lastMotionTime > lastMotionAt) {
       const lastMotion = new Date(lastMotionTime);
-      Homey.app.debug(`motion detected ended on light: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
+      this.homey.app.debug(`motion detected ended on light: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
       this.onMotionEnd();
       this.setCapabilityValue('last_motion_at', lastMotionTime)
           .catch(this.error);

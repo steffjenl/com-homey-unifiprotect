@@ -25,12 +25,6 @@
     <input id="txt_nvrip" type="text" value=""/>
   </div>
 
-  <!-- Port -->
-  <div class="field row">
-    <label for="txt_nvrport" data-i18n="settings.nvrport"></label>
-    <input id="txt_nvrport" type="text" value="443"/>
-  </div>
-
 </fieldset>
 
 <!-- Credentials -->
@@ -57,7 +51,7 @@
 
 <script type="text/javascript">
   var txtNvrIp = document.getElementById('txt_nvrip');
-  var txtNvrPort = document.getElementById('txt_nvrport');
+  var txtNvrPort = '443';
   var txtUsername = document.getElementById('txt_username');
   var txtPassword = document.getElementById('txt_password');
   var btnApply = document.getElementById('btn_apply');
@@ -80,7 +74,7 @@
         if (nvrPort) {
           txtNvrPort.value = nvrPort;
         } else {
-          console.warn('[SETTINGS] Could not read UniFi Cloud Key IP address.');
+          console.warn('[SETTINGS] Could not read UniFi Cloud Key Port.');
         }
       });
 
@@ -97,13 +91,6 @@
     };
 
     const saveSettings = () => {
-      Homey.api('POST', '/settings/validate', {
-        'hostname': txtNvrIp.value,
-        'port': txtNvrPort.value,
-        'username': txtUsername.value,
-        'password': txtPassword.value
-      }, function (err, result) {
-        if (err) return Homey.alert(err);
         Homey.set('ufp:nvrip', txtNvrIp.value, (error, result) => {
           if (error) return Homey.alert(error);
           console.log('[SETTINGS] UniFi Cloud Key IP address saved.');
@@ -124,7 +111,6 @@
           console.log('[SETTINGS] credentials saved.');
         });
         Homey.alert(Homey.__('settings.saved'), 'info');
-      });
     };
 
     btnApply.addEventListener('click', e => {

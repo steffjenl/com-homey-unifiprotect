@@ -1,22 +1,19 @@
 'use strict';
 
-const Homey = require('homey');
+const BaseClass = require('./baseclass');
 const WebSocket = require('ws');
 const zlib = require('zlib');
 const UfvConstants = require('./constants');
 
-const ManagerApi = Homey.ManagerApi;
-
-class ProtectWebSocket {
-    constructor() {
-        this._eventListener = null;
-        this._pingPong = null;
+class ProtectWebSocket extends BaseClass {
+    constructor(...props) {
+        super(...props);
     }
 
     // Return the realtime update events API URL.
     updatesUrl() {
 
-        return 'wss://' + Homey.app.api.getHost() + '/proxy/protect/ws/updates';
+        return 'wss://' + this.homey.app.api.getHost() + '/proxy/protect/ws/updates';
     }
 
     // Connect to the realtime update events API.
@@ -27,23 +24,23 @@ class ProtectWebSocket {
             return true;
         }
 
-        const params = new URLSearchParams({ lastUpdateId: Homey.app.api._lastUpdateId });
+        const params = new URLSearchParams({ lastUpdateId: this.homey.app.api._lastUpdateId });
 
-        Homey.app.debug('Update listener: ' + this.updatesUrl() + '?' + params.toString());
+        this.homey.app.debug('Update listener: ' + this.updatesUrl() + '?' + params.toString());
 
         try {
-            ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Connecting');
+            this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Connecting');
 
             const _ws = new WebSocket(this.updatesUrl() + '?' + params.toString(),{
                 headers: {
-                    Cookie: Homey.app.api.getProxyCookieToken()
+                    Cookie: this.homey.app.api.getProxyCookieToken()
                 },
                 rejectUnauthorized: false,
                 perMessageDeflate: false
             });
 
             if (!_ws) {
-                Homey.app.debug('Unable to connect to the realtime update events API. Will retry again later.');
+                this.homey.app.debug('Unable to connect to the realtime update events API. Will retry again later.');
                 delete this._eventListener;
                 this._eventListenerConfigured = false;
                 return false;
@@ -53,8 +50,8 @@ class ProtectWebSocket {
 
             // Connection opened
             this._eventListener.on('open', (event) => {
-                Homey.app.debug(Homey.app.api.getNvrName() + ': Connected to the UniFi realtime update events API.');
-                ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Connected');
+                this.homey.app.debug(this.homey.app.api.getNvrName() + ': Connected to the UniFi realtime update events API.');
+                this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Connected');
             });
 
             this._eventListener.on('close', () => {
@@ -62,22 +59,22 @@ class ProtectWebSocket {
                 delete this._eventListener;
                 this._eventListenerConfigured = false;
                 clearInterval(this._pingPong);
-                ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Disconnected');
+                this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Disconnected');
                 this.reconnectUpdatesListener();
             });
 
             this._eventListener.on('error', (error) => {
-                Homey.app.debug(error);
+                this.homey.app.debug(error);
                 // If we're closing before fully established it's because we're shutting down the API - ignore it.
                 if (error.message !== 'WebSocket was closed before the connection was established') {
-                    Homey.app.debug(Homey.app.api.getHost(), +': ' + error);
+                    this.homey.app.debug(this.homey.app.api.getHost(), +': ' + error);
                 }
 
-                ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, error.message);
+                this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, error.message);
             });
         } catch (error) {
-            Homey.app.debug(Homey.app.api.getNvrName() + ': Error connecting to the realtime update events API: ' + error);
-            ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, error);
+            this.homey.app.debug(this.homey.app.api.getNvrName() + ': Error connecting to the realtime update events API: ' + error);
+            this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, error);
         }
 
         return true;
@@ -86,7 +83,7 @@ class ProtectWebSocket {
     disconnectEventListener() {
         return new Promise((resolve, reject) => {
             if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
-                Homey.app.debug('Called terminate websocket');
+                this.homey.app.debug('Called terminate websocket');
                 this._eventListener.close();
             }
             this._eventListenerConfigured = false;
@@ -95,20 +92,20 @@ class ProtectWebSocket {
     }
 
     reconnectUpdatesListener() {
-        Homey.app.debug('Called reconnectUpdatesListener');
+        this.homey.app.debug('Called reconnectUpdatesListener');
         this.disconnectEventListener().then((res) => {
             this.waitForBootstrap();
         }).catch();
     }
 
     waitForBootstrap() {
-        if (typeof Homey.app.api._lastUpdateId !== 'undefined' && Homey.app.api._lastUpdateId !== null) {
-            Homey.app.debug('Called waitForBootstrap');
+        if (typeof this.homey.app.api._lastUpdateId !== 'undefined' && this.homey.app.api._lastUpdateId !== null) {
+            this.homey.app.debug('Called waitForBootstrap');
             this.launchUpdatesListener();
             this.configureUpdatesListener(this);
         } else {
-            Homey.app.debug('Calling waitForBootstrap');
-            setTimeout(this.waitForBootstrap.bind(this), 250);
+            this.homey.app.debug('Calling waitForBootstrap');
+            this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
         }
     }
 
@@ -173,7 +170,6 @@ class ProtectWebSocket {
             const updatePacket = this.decodeUpdatePacket(event);
 
             if (!updatePacket) {
-                Homey.app.debug(Homey.app.api.getNvrName() + ': Unable to process message from the realtime update events API.');
                 return true;
             }
 
@@ -187,8 +183,7 @@ class ProtectWebSocket {
 
             if (updatePacket.action.modelKey === 'light') {
                 // get protectlight driver
-                const driver = Homey.ManagerDrivers.getDriver('protectlight');
-
+                const driver = this.homey.drivers.getDriver('protectlight');
                 // Get device from camera id
                 const deviceId = updatePacket.action.id;
                 const device = driver.getUnifiDeviceById(deviceId);
@@ -197,9 +192,8 @@ class ProtectWebSocket {
                     driver.onParseWebsocketMessage(device, payload);
                 }
             } else if (updatePacket.action.modelKey === 'sensor') {
-                // get protectlight driver
-                const driver = Homey.ManagerDrivers.getDriver('protectsensor');
-
+                // get protectsensor driver
+                const driver = this.homey.drivers.getDriver('protectsensor');
                 // Get device from camera id
                 const deviceId = updatePacket.action.id;
                 const device = driver.getUnifiDeviceById(deviceId);
@@ -209,8 +203,7 @@ class ProtectWebSocket {
                 }
             } else {
                 // get protectcamera driver
-                const driver = Homey.ManagerDrivers.getDriver('protectcamera');
-
+                const driver = this.homey.drivers.getDriver('protectcamera');
                 // Get device from camera id
                 const deviceId = updatePacket.action.id;
                 const device = driver.getUnifiDeviceById(deviceId);
@@ -244,7 +237,7 @@ class ProtectWebSocket {
 
         } catch (error) {
 
-            Homey.app.debug('Realtime update API: error decoding update packet: %s', error);
+            this.log('Realtime update API: error decoding update packet: %s', error);
             return null;
 
         }
@@ -252,6 +245,8 @@ class ProtectWebSocket {
         // Decode the action and payload frames now that we know where everything is.
         const actionFrame = this.decodeUpdateFrame(packet.slice(0, dataOffset), 1);
         const payloadFrame = this.decodeUpdateFrame(packet.slice(dataOffset), 2);
+
+        dataOffset = null;
 
         if (!actionFrame || !payloadFrame) {
             return null;
@@ -301,7 +296,7 @@ class ProtectWebSocket {
                 break;
 
             default:
-                Homey.app.debug('Unknown payload packet type received in the realtime update events API: %s.', payloadFormat);
+                this.log('Unknown payload packet type received in the realtime update events API: %s.', payloadFormat);
                 return null;
                 break;
         }

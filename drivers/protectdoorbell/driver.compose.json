@@ -30,5 +30,7 @@
       "id": "add_devices",
       "template": "add_devices"
     }
-  ]
+  ],
+  "platforms": ["local", "cloud"],
+  "deprecated": true
 }
