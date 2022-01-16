@@ -340,12 +340,14 @@ class Camera extends Homey.Device {
     });
 
     if (triggerFlow) {
-      this.homey.app.triggerSnapshotTrigger({
-        ufv_snapshot_token: this._snapshotImage,
-        ufv_snapshot_camera: this.getName(),
-        ufv_snapshot_snapshot_url: this._snapshotImage.cloudUrl,
-        ufv_snapshot_stream_url: '',
-      });
+      this.homey.app.api.getStreamUrl(this.getData()).then((rtspUrl => {
+        this.homey.app.triggerSnapshotTrigger({
+          ufv_snapshot_token: this._snapshotImage,
+          ufv_snapshot_camera: this.getName(),
+          ufv_snapshot_snapshot_url: this._snapshotImage.cloudUrl,
+          ufv_snapshot_stream_url: rtspUrl
+        });
+      })).catch(this.homey.app.debug);
     }
 
      this.setCameraImage('snapshot', 'Snapshot', this._snapshotImage);
