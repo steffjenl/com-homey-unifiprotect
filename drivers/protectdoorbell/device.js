@@ -11,14 +11,14 @@ class Doorbell extends Homey.Device {
    */
   async onInit() {
     await this.waitForBootstrap();
-    Homey.app.debug('UnifiDoorbell Device has been initialized');
+    this.homey.app.debug('UnifiDoorbell Device has been initialized');
   }
 
   /**
    * onAdded is called when the user adds the device, called just after pairing.
    */
   async onAdded() {
-    Homey.app.debug('UnifiDoorbell Device has been added');
+    this.homey.app.debug('UnifiDoorbell Device has been added');
   }
 
   /**
@@ -30,7 +30,7 @@ class Doorbell extends Homey.Device {
    * @returns {Promise<string|void>} return a custom message that will be displayed
    */
   async onSettings({ oldSettings, newSettings, changedKeys }) {
-    Homey.app.debug('UnifiDoorbell Device settings where changed');
+    this.homey.app.debug('UnifiDoorbell Device settings where changed');
   }
 
   /**
@@ -39,35 +39,35 @@ class Doorbell extends Homey.Device {
    * @param {string} name The new name
    */
   async onRenamed(name) {
-    Homey.app.debug('UnifiDoorbell Device was renamed');
+    this.homey.app.debug('UnifiDoorbell Device was renamed');
   }
 
   /**
    * onDeleted is called when the user deleted the device.
    */
   async onDeleted() {
-    Homey.app.debug('UnifiDoorbell Device has been deleted');
+    this.homey.app.debug('UnifiDoorbell Device has been deleted');
   }
 
   async initCamera() {
     // Snapshot trigger
-    this._snapshotTrigger = new Homey.FlowCardTrigger(UfvConstants.EVENT_SNAPSHOT_CREATED);
+    this._snapshotTrigger = new this.homey.FlowCardTrigger(UfvConstants.EVENT_SNAPSHOT_CREATED);
     this._snapshotTrigger.register();
 
     // Connection Status trigger
-    this._connectionStatusTrigger = new Homey.FlowCardTrigger(UfvConstants.EVENT_CONNECTION_CHANGED);
+    this._connectionStatusTrigger = new this.homey.FlowCardTrigger(UfvConstants.EVENT_CONNECTION_CHANGED);
     this._connectionStatusTrigger.register();
 
     // Doorbell ringing trigger
-    this._doorbellRingingTrigger = new Homey.FlowCardTrigger(UfvConstants.EVENT_DOORBELL_RINGING);
+    this._doorbellRingingTrigger = new this.homey.FlowCardTrigger(UfvConstants.EVENT_DOORBELL_RINGING);
     this._doorbellRingingTrigger.register();
 
     // Smart detection trigger
-    this._smartDetectionTrigger = new Homey.FlowCardTrigger(UfvConstants.EVENT_SMART_DETECTION);
+    this._smartDetectionTrigger = new this.homey.FlowCardTrigger(UfvConstants.EVENT_SMART_DETECTION);
     this._smartDetectionTrigger.register();
 
     // Action 'take snapshot'
-    new Homey.FlowCardAction(UfvConstants.ACTION_TAKE_SNAPSHOT)
+    new this.homey.FlowCardAction(UfvConstants.ACTION_TAKE_SNAPSHOT)
         .register()
         .registerRunListener((args, state) => {
           if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
@@ -79,12 +79,12 @@ class Doorbell extends Homey.Device {
         });
 
     // Action 'set recording mode'
-    new Homey.FlowCardAction(UfvConstants.ACTION_SET_RECORDING_MODE)
+    new this.homey.FlowCardAction(UfvConstants.ACTION_SET_RECORDING_MODE)
         .register()
         .registerRunListener((args, state) => {
           if (typeof args.device.getData().id !== 'undefined') {
-            Homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode)
-                .then(Homey.app.debug.bind(this, '[recordingmode.set]'))
+            this.homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode)
+                .then(this.homey.app.debug.bind(this, '[recordingmode.set]'))
                 .catch(this.error.bind(this, '[recordingmode.set]'));
           }
 
@@ -92,8 +92,8 @@ class Doorbell extends Homey.Device {
         });
 
     this.registerCapabilityListener('camera_microphone_volume', async (value) => {
-      Homey.app.debug('camera_microphone_volume');
-      Homey.app.api.setMicVolume(this.getData(), value)
+      this.homey.app.debug('camera_microphone_volume');
+      this.homey.app.api.setMicVolume(this.getData(), value)
           .catch(this.error);
     });
 
@@ -103,83 +103,83 @@ class Doorbell extends Homey.Device {
   }
 
   async waitForBootstrap() {
-    if (typeof Homey.app.api.getLastUpdateId() !== 'undefined' && Homey.app.api.getLastUpdateId() !== null) {
+    if (typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null) {
       await this.initCamera();
     } else {
-      setTimeout(this.waitForBootstrap.bind(this), 250);
+      this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
     }
   }
 
   async _createMissingCapabilities() {
     if (this.getClass() !== 'doorbell') {
-      Homey.app.debug(`changed class to doorbell for ${this.getName()}`);
+      this.homey.app.debug(`changed class to doorbell for ${this.getName()}`);
       this.setClass('doorbell');
     }
 
     // camera_nightvision_status
     if (!this.hasCapability('camera_nightvision_status')) {
       this.addCapability('camera_nightvision_status');
-      Homey.app.debug(`created capability camera_nightvision_status for ${this.getName()}`);
+      this.homey.app.debug(`created capability camera_nightvision_status for ${this.getName()}`);
     }
 
     if (!this.hasCapability('last_motion_score')) {
       this.addCapability('last_motion_score');
-      Homey.app.debug(`created capability last_motion_score for ${this.getName()}`);
+      this.homey.app.debug(`created capability last_motion_score for ${this.getName()}`);
     }
 
     if (!this.hasCapability('last_motion_thumbnail')) {
       this.addCapability('last_motion_thumbnail');
-      Homey.app.debug(`created capability last_motion_thumbnail for ${this.getName()}`);
+      this.homey.app.debug(`created capability last_motion_thumbnail for ${this.getName()}`);
     }
     if (!this.hasCapability('last_motion_heatmap')) {
       this.addCapability('last_motion_heatmap');
-      Homey.app.debug(`created capability last_motion_heatmap for ${this.getName()}`);
+      this.homey.app.debug(`created capability last_motion_heatmap for ${this.getName()}`);
     }
     if (this.hasCapability('last_motion_datetime')) {
       this.removeCapability('last_motion_datetime');
-      Homey.app.debug(`removed capability last_motion_datetime for ${this.getName()}`);
+      this.homey.app.debug(`removed capability last_motion_datetime for ${this.getName()}`);
     }
     if (!this.hasCapability('last_motion_date')) {
       this.addCapability('last_motion_date');
-      Homey.app.debug(`created capability last_motion_date for ${this.getName()}`);
+      this.homey.app.debug(`created capability last_motion_date for ${this.getName()}`);
     }
     if (!this.hasCapability('last_motion_time')) {
       this.addCapability('last_motion_time');
-      Homey.app.debug(`created capability last_motion_time for ${this.getName()}`);
+      this.homey.app.debug(`created capability last_motion_time for ${this.getName()}`);
     }
     if (!this.hasCapability('camera_recording_mode')) {
       this.addCapability('camera_recording_mode');
-      Homey.app.debug(`created capability camera_recording_mode for ${this.getName()}`);
+      this.homey.app.debug(`created capability camera_recording_mode for ${this.getName()}`);
     }
     if (!this.hasCapability('camera_microphone_status')) {
       this.addCapability('camera_microphone_status');
-      Homey.app.debug(`created capability camera_microphone_status for ${this.getName()}`);
+      this.homey.app.debug(`created capability camera_microphone_status for ${this.getName()}`);
     }
     if (!this.hasCapability('camera_microphone_volume')) {
       this.addCapability('camera_microphone_volume');
-      Homey.app.debug(`created capability camera_microphone_volume for ${this.getName()}`);
+      this.homey.app.debug(`created capability camera_microphone_volume for ${this.getName()}`);
     }
     if (!this.hasCapability('camera_connection_status')) {
       this.addCapability('camera_connection_status');
-      Homey.app.debug(`created capability camera_connection_status for ${this.getName()}`);
+      this.homey.app.debug(`created capability camera_connection_status for ${this.getName()}`);
     }
     if (!this.hasCapability('last_ring_at')) {
       this.addCapability('last_ring_at');
-      Homey.app.debug(`created capability last_ring_at for ${this.getName()}`);
+      this.homey.app.debug(`created capability last_ring_at for ${this.getName()}`);
     }
     if (!this.hasCapability('last_smart_detection_at')) {
       this.addCapability('last_smart_detection_at');
-      Homey.app.debug(`created capability last_smart_detection_at for ${this.getName()}`);
+      this.homey.app.debug(`created capability last_smart_detection_at for ${this.getName()}`);
     }
     if (!this.hasCapability('last_smart_detection_score')) {
       this.addCapability('last_smart_detection_score');
-      Homey.app.debug(`created capability last_smart_detection_score for ${this.getName()}`);
+      this.homey.app.debug(`created capability last_smart_detection_score for ${this.getName()}`);
     }
 
   }
 
   async _initCameraData() {
-    const cameraData = Homey.app.api.getBootstrap();
+    const cameraData = this.homey.app.api.getBootstrap();
 
     if (cameraData) {
       cameraData.cameras.forEach((camera) => {
@@ -190,7 +190,7 @@ class Doorbell extends Homey.Device {
           }
           if (this.hasCapability('camera_recording_mode')) {
             this.setCapabilityValue('camera_recording_mode',
-                Homey.__(`events.camera.${String(camera.recordingSettings.mode)
+                this.homey.__(`events.camera.${String(camera.recordingSettings.mode)
                     .toLowerCase()}`));
           }
           if (this.hasCapability('camera_microphone_status')) {
@@ -215,18 +215,18 @@ class Doorbell extends Homey.Device {
   }
 
   onMotionStart() {
-    Homey.app.debug('onMotionStart');
+    this.homey.app.debug('onMotionStart');
     this.setCapabilityValue('alarm_motion', true);
   }
 
   onMotionEnd() {
-    Homey.app.debug('onMotionEnd');
+    this.homey.app.debug('onMotionEnd');
     this.setCapabilityValue('alarm_motion', false);
   }
 
   onIsDark(isDark) {
     // Debug information about playload
-    Homey.app.debug(JSON.stringify(isDark));
+    this.homey.app.debug(JSON.stringify(isDark));
     if (this.hasCapability('camera_nightvision_status')) {
       this.setCapabilityValue('camera_nightvision_status', isDark);
     }
@@ -243,7 +243,7 @@ class Doorbell extends Homey.Device {
     }
 
     if (!lastRingAt) {
-      if (Homey.env.DEBUG) Homey.app.debug(`set last_ring_at to last datetime: ${this.getData().id}`);
+      if (this.homey.env.DEBUG) this.homey.app.debug(`set last_ring_at to last datetime: ${this.getData().id}`);
       this.setCapabilityValue('last_ring_at', lastRing)
           .catch(this.error);
       return;
@@ -254,7 +254,7 @@ class Doorbell extends Homey.Device {
     const lastMotionAt = this.getCapabilityValue('last_motion_at');
 
     if (!lastMotionAt) {
-      Homey.app.debug(`set last_motion_at to last datetime: ${this.getData().id}`);
+      this.homey.app.debug(`set last_motion_at to last datetime: ${this.getData().id}`);
       this.setCapabilityValue('last_motion_at', lastMotionTime)
           .catch(this.error);
       return;
@@ -263,7 +263,7 @@ class Doorbell extends Homey.Device {
     // Check if the event date is newer
     if (isMotionDetected && lastMotionTime > lastMotionAt) {
       const lastMotion = new Date(lastMotionTime);
-      Homey.app.debug(`new motion detected on doorbell: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
+      this.homey.app.debug(`new motion detected on doorbell: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
 
       this.setCapabilityValue('last_motion_at', lastMotionTime)
           .catch(this.error);
@@ -274,7 +274,7 @@ class Doorbell extends Homey.Device {
       this.onMotionStart();
     } else if (!isMotionDetected && lastMotionTime > lastMotionAt) {
       const lastMotion = new Date(lastMotionTime);
-      Homey.app.debug(`motion detected ended on camera: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
+      this.homey.app.debug(`motion detected ended on camera: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
       this.onMotionEnd();
       this.setCapabilityValue('last_motion_at', lastMotionTime)
           .catch(this.error);
@@ -290,7 +290,7 @@ class Doorbell extends Homey.Device {
 
     // fire trigger (per detection type)
     for (let smartDetectionType of smartDetectTypes) {
-      Homey.app.debug(`smart detection event on doorbell ${this.getData().id}, with type ${smartDetectionType}`);
+      this.homey.app.debug(`smart detection event on doorbell ${this.getData().id}, with type ${smartDetectionType}`);
       this._smartDetectionTrigger.trigger({
         ufp_smart_detection_camera: this.getName(),
         smart_detection_type: smartDetectionType,
@@ -308,7 +308,7 @@ class Doorbell extends Homey.Device {
 
   onIsRecording(isRecording) {
     // Debug information about playload
-    Homey.app.debug(JSON.stringify(isRecording));
+    this.homey.app.debug(JSON.stringify(isRecording));
     if (this.hasCapability('camera_recording_status')) {
       this.setCapabilityValue('camera_recording_status', isRecording);
     }
@@ -316,7 +316,7 @@ class Doorbell extends Homey.Device {
 
   onIsMicEnabled(isMicEnabled) {
     // Debug information about playload
-    Homey.app.debug(JSON.stringify(isMicEnabled));
+    this.homey.app.debug(JSON.stringify(isMicEnabled));
     if (this.hasCapability('camera_microphone_status')) {
       this.setCapabilityValue('camera_microphone_status', isMicEnabled);
     }
@@ -324,7 +324,7 @@ class Doorbell extends Homey.Device {
 
   onIsConnected(isConnected) {
     // Debug information about playload
-    Homey.app.debug(JSON.stringify(isConnected));
+    this.homey.app.debug(JSON.stringify(isConnected));
     if (this.getCapabilityValue('camera_connection_status') !== isConnected) {
       this.onConnectionChanged(isConnected);
     }
@@ -333,7 +333,7 @@ class Doorbell extends Homey.Device {
 
   onMicVolume(micVolume) {
     // Debug information about playload
-    Homey.app.debug('micVolume');
+    this.homey.app.debug('micVolume');
     if (this.hasCapability('camera_microphone_volume')) {
       this.setCapabilityValue('camera_microphone_volume', micVolume);
     }
@@ -341,21 +341,21 @@ class Doorbell extends Homey.Device {
 
   onRecordingMode(mode) {
     // Debug information about playload
-    Homey.app.debug(JSON.stringify(mode));
+    this.homey.app.debug(JSON.stringify(mode));
     if (this.hasCapability('camera_recording_mode')) {
       this.setCapabilityValue('camera_recording_mode',
-          Homey.__(`events.camera.${String(mode)
+          this.homey.__(`events.camera.${String(mode)
               .toLowerCase()}`));
     }
   }
 
   _onSnapshotBuffer(cameraName, camera, width) {
     return new Promise((resolve, reject) => {
-      Homey.app.api.createSnapshotUrl(camera, width)
+      this.homey.app.api.createSnapshotUrl(camera, width)
           .then(snapshotUrl => {
-            Homey.app.api.getStreamUrl(camera)
+            this.homey.app.api.getStreamUrl(camera)
                 .then(streamUrl => {
-                  const SnapshotImage = new Homey.Image();
+                  const SnapshotImage = new this.homey.Image();
                   SnapshotImage.setStream(async stream => {
                     if (!snapshotUrl) {
                       throw new Error('Invalid snapshot url.');
@@ -363,7 +363,7 @@ class Doorbell extends Homey.Device {
 
                     const headers = {};
 
-                    headers['Cookie'] = Homey.app.api.getProxyCookieToken();
+                    headers['Cookie'] = this.homey.app.api.getProxyCookieToken();
 
                     const agent = new https.Agent({
                       rejectUnauthorized: false,
@@ -381,13 +381,13 @@ class Doorbell extends Homey.Device {
                   });
                   SnapshotImage.register()
                       .then(() => {
-                        Homey.app.snapshotToken.setValue(SnapshotImage);
+                        this.homey.app.snapshotToken.setValue(SnapshotImage);
 
-                        Homey.app.debug('------ _onSnapshotBuffer ------');
-                        Homey.app.debug(`- Camera name: ${cameraName}`);
-                        Homey.app.debug(`- Snapshot url: ${SnapshotImage.cloudUrl}`);
-                        Homey.app.debug(`- Stream url: ${streamUrl}`);
-                        Homey.app.debug('-------------------------------');
+                        this.homey.app.debug('------ _onSnapshotBuffer ------');
+                        this.homey.app.debug(`- Camera name: ${cameraName}`);
+                        this.homey.app.debug(`- Snapshot url: ${SnapshotImage.cloudUrl}`);
+                        this.homey.app.debug(`- Stream url: ${streamUrl}`);
+                        this.homey.app.debug('-------------------------------');
 
                         this._snapshotTrigger.trigger({
                           ufv_snapshot_token: SnapshotImage,
@@ -405,14 +405,14 @@ class Doorbell extends Homey.Device {
   }
 
   async _createSnapshotImage() {
-    Homey.app.debug('Creating snapshot image for doorbell ' + this.getName() + '.');
+    this.homey.app.debug('Creating snapshot image for doorbell ' + this.getName() + '.');
 
-    this._snapshotImage = new Homey.Image();
+    this._snapshotImage = new this.homey.Image();
     this._snapshotImage.setStream(async stream => {
       // Obtain snapshot URL
       let snapshotUrl = null;
 
-      await Homey.app.api.createSnapshotUrl(this.getData())
+      await this.homey.app.api.createSnapshotUrl(this.getData())
           .then(url => {
             snapshotUrl = url;
           })
@@ -423,7 +423,7 @@ class Doorbell extends Homey.Device {
       }
 
       const headers = {};
-      headers['Cookie'] = Homey.app.api.getProxyCookieToken();
+      headers['Cookie'] = this.homey.app.api.getProxyCookieToken();
 
       const agent = new https.Agent({
         rejectUnauthorized: false,
@@ -445,7 +445,7 @@ class Doorbell extends Homey.Device {
         .then(() => this.setCameraImage('snapshot', 'Snapshot', this._snapshotImage))
         .catch(this.error);
 
-    Homey.app.debug('Created snapshot image for doorbell ' + this.getName() + '.');
+    this.homey.app.debug('Created snapshot image for doorbell ' + this.getName() + '.');
   }
 
 }

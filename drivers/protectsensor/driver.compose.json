@@ -4,7 +4,7 @@
   "capabilities": [
   ],
   "name": {
-    "en": "Light"
+    "en": "Sensor"
   },
   "images": {
     "large": "drivers/protectsensor/assets/images/large.png",
@@ -25,5 +25,8 @@
       "id": "add_devices",
       "template": "add_devices"
     }
-  ]
+  ],
+  "platforms": ["local", "cloud"],
+  "connectivity": ["cloud"],
+  "deprecated": true
 }

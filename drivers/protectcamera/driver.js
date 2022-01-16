@@ -1,25 +1,31 @@
 'use strict';
 
 const Homey = require('homey');
+const UfvConstants = require("../../library/constants");
 
 class UniFiCameraDriver extends Homey.Driver {
   /**
    * onInit is called when the driver is initialized.
    */
   async onInit() {
-    Homey.app.debug('UnifiCamera Driver has been initialized');
+    // Register flow cards
+    this._connectionStatusTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_CONNECTION_CHANGED);
+    this._doorbellRingingTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOORBELL_RINGING);
+    this._smartDetectionTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION);
+    //
+    this.homey.app.debug('UnifiCamera Driver has been initialized');
   }
 
   onPair(socket) {
     // Validate NVR IP address
     socket.on('validate', (data, callback) => {
-      const nvrip = Homey.ManagerSettings.get('ufp:nvrip');
+      const nvrip = this.homey.ManagerSettings.get('ufp:nvrip');
       callback(null, nvrip ? 'ok' : 'nok');
     });
 
     // Perform when device list is shown
     socket.on('list_devices', async (data, callback) => {
-      callback(null, Object.values(await Homey.app.api.getCameras()).map(camera => {
+      callback(null, Object.values(await this.homey.app.api.getCameras()).map(camera => {
         return {
           data: { id: String(camera.id) },
           name: camera.name,
@@ -30,7 +36,6 @@ class UniFiCameraDriver extends Homey.Driver {
 
   onParseWebsocketMessage(camera, payload) {
     if (Object.prototype.hasOwnProperty.call(camera, '_events')) {
-      Homey.app.debug(JSON.stringify(payload));
       if (payload.hasOwnProperty('isRecording')) {
         camera.onIsRecording(payload.isRecording);
       }

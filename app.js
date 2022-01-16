@@ -4,8 +4,10 @@
 const Homey = require('homey');
 const ProtectAPI = require('./library/protectapi');
 const UfvConstants = require('./library/constants');
+const https = require("https");
+const fetch = require("node-fetch");
 
-const ManagerApi = Homey.ManagerApi;
+const ManagerApi = Homey.api;
 
 // 2700000 miliseconds is 45 minutes
 const RefreshCookieTime = 2700000;
@@ -15,7 +17,7 @@ class UniFiProtect extends Homey.App {
      * onInit is called when the app is initialized.
      */
     async onInit() {
-        this.loggedIn = false;
+        this.debuggedIn = false;
         this.nvrIp = null;
         this.nvrPort = null;
         this.nvrUsername = null;
@@ -25,53 +27,107 @@ class UniFiProtect extends Homey.App {
         if (Homey.env.DEBUG === 'true') {
             // eslint-disable-next-line global-require
             require('inspector')
-                .open(9229, '0.0.0.0');
+                .open(9230, '0.0.0.0');
         }
 
         // Single API instance for all devices
         this.api = new ProtectAPI();
+        this.api.setHomeyObject(this.homey)
 
         // Register snapshot image token
         this._registerSnapshotToken();
 
+        this._snapshotTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SNAPSHOT_CREATED);
+        this._connectionStatusTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_CONNECTION_CHANGED);
+        this._doorbellRingingTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOORBELL_RINGING);
+        this._smartDetectionTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION);
+
+        const _actionTakeSnapshot = this.homey.flow.getActionCard(UfvConstants.ACTION_TAKE_SNAPSHOT);
+        _actionTakeSnapshot.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+                // Get device from camera id
+                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+                if (device) {
+                    device._createSnapshotImage(true);
+                }
+            }
+            return Promise.resolve(true);
+        });
+
+        const _setRecordingMode = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_RECORDING_MODE);
+        _setRecordingMode.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData().id !== 'undefined') {
+                this.homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode)
+                    .then(this.homey.app.debug.bind(this, '[recordingmode.set]'))
+                    .catch(this.error.bind(this, '[recordingmode.set]'));
+            }
+            return Promise.resolve(true);
+        });
+
         // Subscribe to credentials updates
-        Homey.ManagerSettings.on('set', key => {
-            if (key === 'ufp:credentials') {
+        this.homey.settings.on('set', key => {
+            if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {
                 this._appLogin();
             }
         });
         this._appLogin();
 
 
-        Homey.app.debug('UniFiProtect has been initialized');
+        this.debug('UniFiProtect has been initialized');
+    }
+
+    async triggerSnapshotTrigger(tokens) {
+        await this._snapshotTrigger
+            .trigger(tokens)
+            .catch(this.error);
+    }
+
+    async triggerConnectionStatusTrigger(tokens) {
+        await this._connectionStatusTrigger
+            .trigger(tokens)
+            .then(this.debug)
+            .catch(this.error);
+    }
+
+    async triggerDoorbellRingingTrigger(tokens) {
+        await this._doorbellRingingTrigger
+            .trigger(tokens)
+            .then(this.debug)
+            .catch(this.error);
+    }
+
+    async triggerSmartDetectionTrigger(tokens) {
+        await this._smartDetectionTrigger
+            .trigger(tokens)
+            .then(this.debug)
+            .catch(this.error);
     }
 
     _registerSnapshotToken() {
         // Register snapshot image token
-        this.snapshotToken = new Homey.FlowToken('ufv_snapshot', {
+        this.homey.flow.createToken('ufv_snapshot', {
             type: 'image',
             title: 'Snapshot',
         });
-        Homey.ManagerFlow.registerToken(this.snapshotToken);
     }
 
     _appLogin() {
-        Homey.app.debug('Logging in...');
+        this.debug('Logging in...');
 
         // Validate NVR IP address
-        const nvrip = Homey.ManagerSettings.get('ufp:nvrip');
+        const nvrip = this.homey.settings.get('ufp:nvrip');
         if (!nvrip) {
-            Homey.app.debug('NVR IP address not set.');
+            this.debug('NVR IP address not set.');
             return;
         }
 
         // Setting NVR Port when set
-        const nvrport = Homey.ManagerSettings.get('ufp:nvrport');
+        const nvrport = this.homey.settings.get('ufp:nvrport');
 
         // Validate NVR credentials
-        const credentials = Homey.ManagerSettings.get('ufp:credentials');
+        const credentials = this.homey.settings.get('ufp:credentials');
         if (!credentials) {
-            Homey.app.debug('Credentials not set.');
+            this.debug('Credentials not set.');
             return;
         }
 
@@ -80,8 +136,8 @@ class UniFiProtect extends Homey.App {
             .then(() => {
                 this.api.getBootstrapInfo()
                     .then(() => {
-                        Homey.app.debug('Bootstrap loaded.');
-                        this.loggedIn = true;
+                        this.debug('Bootstrap loaded.');
+                        this.debuggedIn = true;
                         this.nvrIp = nvrip;
                         this.nvrPort = nvrport;
                         this.nvrUsername = credentials.username;
@@ -91,9 +147,9 @@ class UniFiProtect extends Homey.App {
                         const timeOutFunction = function () {
                             this._refreshCookie();
                         }.bind(this);
-                        setTimeout(timeOutFunction, RefreshCookieTime);
+                        this.homey.setTimeout(timeOutFunction, RefreshCookieTime);
 
-                        Homey.app.debug('Logged in.');
+                        this.debug('Logged in.');
                     })
                     .catch(error => this.error(error));
             })
@@ -101,15 +157,15 @@ class UniFiProtect extends Homey.App {
     }
 
     _refreshCookie() {
-        if (this.loggedIn) {
+        if (this.debuggedIn) {
             this.api._lastUpdateId = null;
             this.api.login(this.nvrIp, this.nvrPort, this.nvrUsername, this.nvrPassword)
                 .then(() => {
-                    Homey.app.debug('Logged in again to refresh cookie.');
+                    this.debug('Logged in again to refresh cookie.');
                     this.api.getBootstrapInfo()
                         .then(() => {
-                            this.log('Bootstrap loaded.');
-                            this.loggedIn = true;
+                            this.debug('Bootstrap loaded.');
+                            this.debuggedIn = true;
                         })
                         .catch(error => this.error(error));
                 })
@@ -120,17 +176,14 @@ class UniFiProtect extends Homey.App {
         const timeOutFunction = function () {
             this._refreshCookie();
         }.bind(this);
-        setTimeout(timeOutFunction, RefreshCookieTime);
+        this.homey.setTimeout(timeOutFunction, RefreshCookieTime);
     }
 
     debug() {
         if (Homey.env.DEBUG === 'true') {
         const args = Array.prototype.slice.call(arguments);
         args.unshift('[debug]');
-//
-        Homey.app.log(args.join(' '));
-//
-//        ManagerApi.realtime(UfvConstants.EVENT_SETTINGS_DEBUG, args.join(' '));
+        this.homey.log(args.join(' '));
         }
     }
 }

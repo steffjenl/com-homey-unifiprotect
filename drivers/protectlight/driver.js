@@ -7,19 +7,19 @@ class UniFiLightDriver extends Homey.Driver {
    * onInit is called when the driver is initialized.
    */
   async onInit() {
-    Homey.app.debug('UniFiLight Driver has been initialized');
+    this.homey.app.debug('UniFiLight Driver has been initialized');
   }
 
   onPair(socket) {
     // Validate NVR IP address
     socket.on('validate', (data, callback) => {
-      const nvrip = Homey.ManagerSettings.get('ufp:nvrip');
+      const nvrip = this.homey.ManagerSettings.get('ufp:nvrip');
       callback(null, nvrip ? 'ok' : 'nok');
     });
 
     // Perform when device list is shown
     socket.on('list_devices', async (data, callback) => {
-      callback(null, Object.values(await Homey.app.api.getLights()).map(light => {
+      callback(null, Object.values(await this.homey.app.api.getLights()).map(light => {
         return {
           data: { id: String(light.id) },
           name: light.name,
@@ -30,7 +30,6 @@ class UniFiLightDriver extends Homey.Driver {
 
   onParseWebsocketMessage(light, payload) {
     if (Object.prototype.hasOwnProperty.call(light, '_events')) {
-      Homey.app.debug(JSON.stringify(payload));
       if (payload.hasOwnProperty('isLightOn')) {
         light.onIsLightOn(payload.isLightOn);
       }

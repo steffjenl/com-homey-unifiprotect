@@ -4,8 +4,14 @@
     "en": "Take a snapshot",
     "nl": "Maak een momentopname"
   },
+  "titleFormatted": {
+    "en": "Take a snapshot from [[device]] with an width from [[width]]"
+  },
   "args": [
     {
+      "title": {
+        "en": "Camera"
+      },
       "name": "device",
       "type": "device",
       "filter": {
@@ -13,6 +19,10 @@
       }
     },
     {
+      "title": {
+        "en": "Width in pixels",
+        "nl": "Breedte in pixels"
+      },
       "name": "width",
       "type": "number",
       "min": 0,

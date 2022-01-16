@@ -2,3 +2,6 @@ env.json
 node_modules/
 .idea/
 yarn.lock
+
+# Added by Homey CLI
+/.homeybuild/
