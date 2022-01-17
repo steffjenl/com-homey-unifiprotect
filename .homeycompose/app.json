@@ -38,7 +38,7 @@
     "security",
     "video"
   ],
-  "version": "1.5.3",
+  "version": "1.5.4",
   "compatibility": ">=5.0.0",
   "author": {
     "name": "Stèphan Eizinga",
@@ -66,7 +66,6 @@
   "support": "mailto:stephan@monkeysoft.nl",
   "homeyCommunityTopicId": 42966,
   "platforms": [
-    "local",
-    "cloud"
+    "local"
   ]
 }

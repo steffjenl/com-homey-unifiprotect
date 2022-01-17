@@ -40,5 +40,8 @@
   },
   "1.5.3": {
     "en": "Upgrade to SDKV3"
+  },
+  "1.5.4": {
+    "en": "Bugfix for crash when some camera's are not added to homey"
   }
 }
