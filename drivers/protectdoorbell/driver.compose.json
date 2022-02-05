@@ -31,7 +31,7 @@
       "template": "add_devices"
     }
   ],
-  "platforms": ["local", "cloud"],
+  "platforms": ["local"],
   "connectivity": ["cloud"],
   "deprecated": true
 }

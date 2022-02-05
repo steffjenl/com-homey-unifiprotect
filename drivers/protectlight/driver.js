@@ -10,21 +10,20 @@ class UniFiLightDriver extends Homey.Driver {
     this.homey.app.debug('UniFiLight Driver has been initialized');
   }
 
-  onPair(socket) {
-    // Validate NVR IP address
-    socket.on('validate', (data, callback) => {
-      const nvrip = this.homey.ManagerSettings.get('ufp:nvrip');
-      callback(null, nvrip ? 'ok' : 'nok');
+  onPair(session) {
+    const homey = this.homey;
+    session.setHandler("validate", async function (data) {
+      const nvrip = homey.settings.get('ufp:nvrip');
+      return (nvrip ? 'ok' : 'nok');
     });
 
-    // Perform when device list is shown
-    socket.on('list_devices', async (data, callback) => {
-      callback(null, Object.values(await this.homey.app.api.getLights()).map(light => {
+    session.setHandler("list_devices", async function (data) {
+      return Object.values(await homey.app.api.getLights()).map(light => {
         return {
-          data: { id: String(light.id) },
+          data: {id: String(light.id)},
           name: light.name,
         };
-      }));
+      });
     });
   }
 
@@ -49,11 +48,16 @@ class UniFiLightDriver extends Homey.Driver {
   }
 
   getUnifiDeviceById(camera) {
-    const device = this.getDevice({
-      id: camera,
-    });
+    try {
+      const device = this.getDevice({
+        id: camera,
+      });
 
-    return device;
+      return device;
+    }
+    catch(Error) {
+      return false;
+    }
   }
 }
 

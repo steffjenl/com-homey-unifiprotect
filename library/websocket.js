@@ -85,6 +85,7 @@ class ProtectWebSocket extends BaseClass {
             if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
                 this.homey.app.debug('Called terminate websocket');
                 this._eventListener.close();
+                delete this._eventListener;
             }
             this._eventListenerConfigured = false;
             resolve(true);

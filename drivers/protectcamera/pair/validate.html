@@ -4,18 +4,19 @@
   </div>
 
   <script type="text/javascript">
-    this.homey.setTitle(__('pair.validate.title'))
-    this.homey.showLoadingOverlay();
+    Homey.setTitle(__('pair.validate.title'))
+    Homey.showLoadingOverlay();
 
-    this.homey.emit('validate', null, (error, result) => {
-      if (error) return this.homey.alert(error);
 
+    Homey.emit("validate", null).then(function (result) {
       if (result === 'ok') {
-        this.homey.showView('list_devices');
+        Homey.showView('list_devices');
       } else {
-        this.homey.hideLoadingOverlay();
-        this.homey.setNavigationClose();
+        Homey.hideLoadingOverlay();
+        Homey.setNavigationClose();
       }
+    }).catch(function (error) {
+      return Homey.alert(error);
     });
   </script>
 </body>
