@@ -4,10 +4,6 @@
 const Homey = require('homey');
 const ProtectAPI = require('./library/protectapi');
 const UfvConstants = require('./library/constants');
-const https = require("https");
-const fetch = require("node-fetch");
-
-const ManagerApi = Homey.api;
 
 // 2700000 miliseconds is 45 minutes
 const RefreshCookieTime = 2700000;
