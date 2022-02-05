@@ -43,5 +43,8 @@
   },
   "1.5.4": {
     "en": "Bugfix for crash when some camera's are not added to homey"
+  },
+  "1.5.5": {
+    "en": "Fixed socket.on error message with pairing"
   }
 }
