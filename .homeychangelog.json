@@ -46,5 +46,11 @@
   },
   "1.5.5": {
     "en": "Fixed socket.on error message with pairing"
+  },
+  "1.5.6": {
+    "en": "Forgot to remove debug code"
+  },
+  "1.5.7": {
+    "en": "Removed reconnected after connection loss because of memory leak."
   }
 }
