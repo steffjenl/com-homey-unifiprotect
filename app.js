@@ -155,7 +155,25 @@ class UniFiProtect extends Homey.App {
     _refreshCookie() {
         if (this.debuggedIn) {
             this.api._lastUpdateId = null;
-            this.api.login(this.nvrIp, this.nvrPort, this.nvrUsername, this.nvrPassword)
+
+            // Validate NVR IP address
+            const nvrip = this.homey.settings.get('ufp:nvrip');
+            if (!nvrip) {
+                this.debug('NVR IP address not set.');
+                return;
+            }
+
+            // Setting NVR Port when set
+            const nvrport = this.homey.settings.get('ufp:nvrport');
+
+            // Validate NVR credentials
+            const credentials = this.homey.settings.get('ufp:credentials');
+            if (!credentials) {
+                this.debug('Credentials not set.');
+                return;
+            }
+
+            this.api.login(nvrip, nvrport, credentials.username, credentials.password)
                 .then(() => {
                     this.debug('Logged in again to refresh cookie.');
                     this.api.getBootstrapInfo()

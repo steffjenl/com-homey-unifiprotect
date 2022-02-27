@@ -10,6 +10,15 @@ class ProtectWebSocket extends BaseClass {
         super(...props);
     }
 
+    isWebsocketConnected() {
+        if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
+            if (this._eventListener.readyState === WebSocket.OPEN) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Return the realtime update events API URL.
     updatesUrl() {
 
@@ -60,7 +69,6 @@ class ProtectWebSocket extends BaseClass {
                 this._eventListenerConfigured = false;
                 clearInterval(this._pingPong);
                 this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Disconnected');
-                this.reconnectUpdatesListener();
             });
 
             this._eventListener.on('error', (error) => {

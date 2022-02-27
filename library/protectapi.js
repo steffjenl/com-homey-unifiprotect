@@ -214,10 +214,12 @@ class ProtectAPI extends BaseClass {
                             this.webclient.setApiKey(result.accessKey);
                             this._rtspPort = result.nvr.ports.rtsp;
                             this._lastUpdateId = result.lastUpdateId;
-                        }
 
-                        // lastUpdateId is changed, please reconnect to websocket
-                        this.ws.reconnectUpdatesListener();
+                            if (this.ws.isWebsocketConnected() === false) {
+                                // lastUpdateId is changed, please reconnect to websocket when websocket is disconnected.
+                                this.ws.reconnectUpdatesListener();
+                            }
+                        }
 
                         return resolve(result);
                     } else {
