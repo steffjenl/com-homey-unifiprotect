@@ -32,7 +32,8 @@
             "done": "Done",
             "always": "Always",
             "motion": "Motion",
-            "never": "Never"
+            "never": "Never",
+            "detections": "Detections"
         },
         "health": {
             "unknown": "Unknown",

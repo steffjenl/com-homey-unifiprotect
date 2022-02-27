@@ -32,7 +32,8 @@
       "done": "Klaar",
       "always": "Altijd",
       "motion": "Bij beweging",
-      "never": "Nooit"
+      "never": "Nooit",
+      "detections": "Bij beweging"
     },
     "health": {
       "unknown": "Onbekend",
