@@ -35,6 +35,7 @@ class UniFiCameraDriver extends Homey.Driver {
 
   onParseWebsocketMessage(camera, payload) {
     if (Object.prototype.hasOwnProperty.call(camera, '_events')) {
+      this.homey.app.debug(JSON.stringify(payload));
       if (payload.hasOwnProperty('isRecording')) {
         camera.onIsRecording(payload.isRecording);
       }
@@ -57,6 +58,10 @@ class UniFiCameraDriver extends Homey.Driver {
 
       if (payload.hasOwnProperty('lastMotion')) {
         camera.onMotionDetected(payload.lastMotion, payload.isMotionDetected);
+      }
+
+      if (payload.hasOwnProperty('isSmartDetected')) {
+        camera.onSmartDetectionNew(payload.lastMotion, payload.isSmartDetected);
       }
 
       if (payload.hasOwnProperty('smartDetectTypes')) {
