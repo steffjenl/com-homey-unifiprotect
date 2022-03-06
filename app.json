@@ -259,7 +259,7 @@
                 }
               },
               {
-                "id": "motion",
+                "id": "detections",
                 "label": {
                   "en": "Record only motion",
                   "nl": "Alleen beweging opnemen"

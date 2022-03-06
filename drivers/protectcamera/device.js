@@ -248,7 +248,7 @@ class Camera extends Homey.Device {
       this.homey.app.debug(`smart detection event on camera ${this.getData().id}`);
       this.homey.app._smartDetectionTrigger.trigger({
         ufp_smart_detection_camera: this.getName(),
-        smart_detection_type: '',
+        smart_detection_type: 'n/a',
         score: -1
       });
     }
