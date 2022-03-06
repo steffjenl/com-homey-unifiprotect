@@ -52,5 +52,8 @@
   },
   "1.5.7": {
     "en": "Removed reconnected after connection loss because of memory leak."
+  },
+  "1.5.8": {
+    "en": "Smartdetection fixed, Score and type are broken for now!"
   }
 }
