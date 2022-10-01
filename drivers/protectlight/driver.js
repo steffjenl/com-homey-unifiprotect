@@ -28,7 +28,7 @@ class UniFiLightDriver extends Homey.Driver {
   }
 
   onParseWebsocketMessage(light, payload) {
-    if (Object.prototype.hasOwnProperty.call(light, '_events')) {
+    if (Object.prototype.hasOwnProperty.call(light, '_events')) {s
       if (payload.hasOwnProperty('isLightOn')) {
         light.onIsLightOn(payload.isLightOn);
       }

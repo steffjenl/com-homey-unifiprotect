@@ -2,6 +2,14 @@
   "id": "protectsensor",
   "class": "sensor",
   "capabilities": [
+    "alarm_motion",
+    "last_motion_at",
+    "last_motion_date",
+    "last_motion_time",
+    "measure_humidity",
+    "measure_temperature",
+    "measure_luminance",
+    "alarm_contact"
   ],
   "name": {
     "en": "Sensor"
@@ -27,6 +35,5 @@
     }
   ],
   "platforms": ["local"],
-  "connectivity": ["cloud"],
-  "deprecated": true
+  "connectivity": ["cloud"]
 }

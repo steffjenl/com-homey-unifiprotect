@@ -27,22 +27,26 @@ class UniFiLightDriver extends Homey.Driver {
         });
     }
 
-    onParseWebsocketMessage(light, payload) {
-        if (Object.prototype.hasOwnProperty.call(light, '_events')) {
-            if (payload.hasOwnProperty('isLightOn')) {
-                light.onIsLightOn(payload.isLightOn);
+    onParseWebsocketMessage(sensor, payload) {
+        if (Object.prototype.hasOwnProperty.call(sensor, '_events')) {
+            if (payload.hasOwnProperty('stats') && payload.stats.hasOwnProperty('temperature')) {
+                sensor.onTemperatureChange(payload.stats.temperature.value);
             }
 
-            if (payload.hasOwnProperty('isPirMotionDetected')) {
-                light.onMotionDetected(payload.lastMotion, payload.isPirMotionDetected);
+            if (payload.hasOwnProperty('stats') && payload.stats.hasOwnProperty('humidity')) {
+                sensor.onHumidityChange(payload.stats.humidity.value);
             }
 
-            if (payload.hasOwnProperty('lightDeviceSettings') && payload.lightDeviceSettings.hasOwnProperty('ledLevel')) {
-                light.onLedLevelChange(payload.ledLevel);
+            if (payload.hasOwnProperty('stats') && payload.stats.hasOwnProperty('light')) {
+                sensor.onLightChange(payload.stats.light.value);
             }
 
-            if (payload.hasOwnProperty('lightModeSettings') && payload.lightModeSettings.hasOwnProperty('mode')) {
-                light.onLightModeChange(payload.lightModeSettings);
+            if (payload.hasOwnProperty('isOpened')) {
+                sensor.onDoorChange( payload.isOpened );
+            }
+
+            if (payload.hasOwnProperty('motionDetectedAt')) {
+                sensor.onMotionDetected(payload.motionDetectedAt, payload.isMotionDetected);
             }
         }
     }

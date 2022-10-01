@@ -35,7 +35,6 @@ class UniFiCameraDriver extends Homey.Driver {
 
   onParseWebsocketMessage(camera, payload) {
     if (Object.prototype.hasOwnProperty.call(camera, '_events')) {
-      this.homey.app.debug(JSON.stringify(payload));
       if (payload.hasOwnProperty('isRecording')) {
         camera.onIsRecording(payload.isRecording);
       }

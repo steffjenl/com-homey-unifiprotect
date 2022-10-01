@@ -228,7 +228,7 @@
           "nl": "Stel opnamemodus in"
         },
         "titleFormatted": {
-          "en": "Set recording mode [[recording_mode]] for camera [[device]]"
+          "en": "Set recording mode [[recording_mode]] for camera"
         },
         "args": [
           {
@@ -276,7 +276,7 @@
           "nl": "Maak een momentopname"
         },
         "titleFormatted": {
-          "en": "Take a snapshot from [[device]] with an width from [[width]]"
+          "en": "Take a snapshot from camera with an width from [[width]]"
         },
         "args": [
           {
@@ -433,7 +433,16 @@
     {
       "id": "protectsensor",
       "class": "sensor",
-      "capabilities": [],
+      "capabilities": [
+        "alarm_motion",
+        "last_motion_at",
+        "last_motion_date",
+        "last_motion_time",
+        "measure_humidity",
+        "measure_temperature",
+        "measure_luminance",
+        "alarm_contact"
+      ],
       "name": {
         "en": "Sensor"
       },
@@ -462,8 +471,7 @@
       ],
       "connectivity": [
         "cloud"
-      ],
-      "deprecated": true
+      ]
     }
   ],
   "capabilities": {

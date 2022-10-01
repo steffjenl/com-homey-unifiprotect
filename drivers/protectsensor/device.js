@@ -47,7 +47,7 @@ class Sensor extends Homey.Device {
     this.homey.app.debug('UnifiSensor Device has been deleted');
   }
 
-  async initCamera() {
+  async initSensor() {
     this.registerCapabilityListener("onoff", (value) => {
       this.homey.app.api.setLightOn(this.getData(), value);
     });
@@ -61,42 +61,74 @@ class Sensor extends Homey.Device {
     });
 
     await this._createMissingCapabilities();
-    await this._initLightData();
+    await this._initSensorData();
   }
 
   async waitForBootstrap() {
     if (typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null) {
-      await this.initCamera();
+      await this.initSensor();
     } else {
       this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
     }
   }
 
   async _createMissingCapabilities() {
-    if (this.getClass() !== 'light') {
-      this.homey.app.debug(`changed class to light for ${this.getName()}`);
-      this.setClass('light');
+    if (this.getClass() !== 'sensor') {
+      this.homey.app.debug(`changed class to sensor for ${this.getName()}`);
+      this.setClass('sensor');
     }
-    // light_mode
-    if (!this.hasCapability('light_mode')) {
-      this.addCapability('light_mode');
-      this.homey.app.debug(`created capability light_mode for ${this.getName()}`);
+    // alarm_motion
+    if (!this.hasCapability('alarm_motion')) {
+      this.addCapability('alarm_motion');
+      this.homey.app.debug(`created capability alarm_motion for ${this.getName()}`);
+    }
+    if (!this.hasCapability('last_motion_at')) {
+      this.addCapability('last_motion_at');
+      this.homey.app.debug(`created capability last_motion_at for ${this.getName()}`);
+    }
+    if (!this.hasCapability('measure_humidity')) {
+      this.addCapability('measure_humidity');
+      this.homey.app.debug(`created capability measure_humidity for ${this.getName()}`);
+    }
+    if (!this.hasCapability('measure_temperature')) {
+      this.addCapability('measure_temperature');
+      this.homey.app.debug(`created capability measure_temperature for ${this.getName()}`);
+    }
+    if (!this.hasCapability('measure_luminance')) {
+      this.addCapability('measure_luminance');
+      this.homey.app.debug(`created capability measure_luminance for ${this.getName()}`);
+    }
+    if (!this.hasCapability('alarm_contact')) {
+      this.addCapability('alarm_contact');
+      this.homey.app.debug(`created capability alarm_contact for ${this.getName()}`);
+    }
+    if (!this.hasCapability('last_motion_date')) {
+      this.addCapability('last_motion_date');
+      this.homey.app.debug(`created capability last_motion_date for ${this.getName()}`);
+    }
+    if (!this.hasCapability('last_motion_time')) {
+      this.addCapability('last_motion_time');
+      this.homey.app.debug(`created capability last_motion_time for ${this.getName()}`);
     }
   }
 
-  async _initLightData() {
+  async _initSensorData() {
+    this.homey.app.debug('_initSensorData');
     const bootstrapData = this.homey.app.api.getBootstrap();
     if (bootstrapData) {
-      bootstrapData.lights.forEach((light) => {
-        if (light.id === this.getData().id) {
-          if (this.hasCapability('onoff')) {
-            this.setCapabilityValue('onoff', light.isLightOn);
+      bootstrapData.sensors.forEach((sensor) => {
+        if (sensor.id === this.getData().id) {
+          if (this.hasCapability('measure_humidity')) {
+            this.setCapabilityValue('measure_humidity', sensor.stats.humidity.value);
           }
-          if (this.hasCapability('dim')) {
-            this.setCapabilityValue('dim', this.translateLedLevel(light.lightDeviceSettings.ledLevel, false));
+          if (this.hasCapability('measure_temperature')) {
+            this.setCapabilityValue('measure_temperature', sensor.stats.temperature.value);
           }
-          if (this.hasCapability('light_mode')) {
-            this.setCapabilityValue('light_mode', this.translateLightMode(light.lightModeSettings));
+          if (this.hasCapability('measure_luminance')) {
+            this.setCapabilityValue('measure_luminance', sensor.stats.light.value);
+          }
+          if (this.hasCapability('alarm_contact')) {
+            this.setCapabilityValue('alarm_contact', sensor.isOpened );
           }
         }
       });
@@ -116,6 +148,34 @@ class Sensor extends Homey.Device {
   onIsLightOn(isLightOn) {
     if (this.hasCapability('onoff')) {
       this.setCapabilityValue('onoff', isLightOn);
+    }
+  }
+
+  onHumidityChange(humidity) {
+    this.homey.app.debug('onHumidityChange');
+    if (this.hasCapability('measure_humidity')) {
+      this.setCapabilityValue('measure_humidity', humidity);
+    }
+  }
+
+  onTemperatureChange(temperature) {
+    this.homey.app.debug('onTemperatureChange');
+    if (this.hasCapability('measure_temperature')) {
+      this.setCapabilityValue('measure_temperature', temperature);
+    }
+  }
+
+  onLightChange(light) {
+    this.homey.app.debug('onLightChange');
+    if (this.hasCapability('measure_luminance')) {
+      this.setCapabilityValue('measure_luminance', light);
+    }
+  }
+
+  onDoorChange(isOpened) {
+    this.homey.app.debug('onDoorChange');
+    if (this.hasCapability('alarm_contact')) {
+      this.setCapabilityValue('alarm_contact', isOpened );
     }
   }
 
@@ -201,7 +261,7 @@ class Sensor extends Homey.Device {
     // Check if the event date is newer
     if (isMotionDetected && lastMotionTime > lastMotionAt) {
       const lastMotion = new Date(lastMotionTime);
-      this.homey.app.debug(`new motion detected on light: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
+      this.homey.app.debug(`new motion detected on sensor: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
 
       this.setCapabilityValue('last_motion_at', lastMotionTime)
           .catch(this.error);
@@ -212,7 +272,7 @@ class Sensor extends Homey.Device {
       this.onMotionStart();
     } else if (!isMotionDetected && lastMotionTime > lastMotionAt) {
       const lastMotion = new Date(lastMotionTime);
-      this.homey.app.debug(`motion detected ended on light: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
+      this.homey.app.debug(`motion detected ended on sensor: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
       this.onMotionEnd();
       this.setCapabilityValue('last_motion_at', lastMotionTime)
           .catch(this.error);

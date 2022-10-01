@@ -162,7 +162,12 @@ class ProtectWebSocket extends BaseClass {
         } else if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'light') {
             // Updates lastMotion or the lastRing
             return true;
+        } else if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'sensor') {
+            // Updates lastMotion or the lastRing
+            return true;
         }
+
+
         return false;
     }
 
