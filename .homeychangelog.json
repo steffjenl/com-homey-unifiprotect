@@ -55,5 +55,8 @@
   },
   "1.5.8": {
     "en": "Smartdetection fixed, Score and type are broken for now!"
+  },
+  "1.5.9": {
+    "en": "Add Sensor driver and Light driver"
   }
 }
