@@ -58,5 +58,8 @@
   },
   "1.5.9": {
     "en": "Add Sensor driver and Light driver"
+  },
+  "1.5.10": {
+    "en": "New icon files for sensors and light"
   }
 }
