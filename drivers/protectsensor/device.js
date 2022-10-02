@@ -113,7 +113,6 @@ class Sensor extends Homey.Device {
   }
 
   async _initSensorData() {
-    this.homey.app.debug('_initSensorData');
     const bootstrapData = this.homey.app.api.getBootstrap();
     if (bootstrapData) {
       bootstrapData.sensors.forEach((sensor) => {
@@ -133,6 +132,12 @@ class Sensor extends Homey.Device {
         }
       });
     }
+  }
+
+  refreshSensorData() {
+    this.homey.app.api.getBootstrapInfo().then(() => {
+      this._initSensorData();
+    }).catch(error => this.homey.app.debug(error));
   }
 
   onMotionStart() {

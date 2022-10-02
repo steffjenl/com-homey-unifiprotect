@@ -48,6 +48,8 @@ class UniFiLightDriver extends Homey.Driver {
             if (payload.hasOwnProperty('motionDetectedAt')) {
                 sensor.onMotionDetected(payload.motionDetectedAt, payload.isMotionDetected);
             }
+
+            sensor.refreshSensorData();
         }
     }
 

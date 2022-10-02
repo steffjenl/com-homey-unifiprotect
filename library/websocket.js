@@ -194,6 +194,7 @@ class ProtectWebSocket extends BaseClass {
 
             // get payload from updatePacket
             const payload = updatePacket.payload;
+            //this.homey.app.debug(JSON.stringify(updatePacket));
 
             if (updatePacket.action.modelKey === 'light') {
                 // get protectlight driver
