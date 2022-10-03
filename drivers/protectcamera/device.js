@@ -1,7 +1,7 @@
 'use strict';
 
 const Homey = require('homey');
-const fetch = import('node-fetch');
+const fetch = require('node-fetch');
 const https = require('https');
 const UfvConstants = require('../../library/constants');
 
