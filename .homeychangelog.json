@@ -67,5 +67,8 @@
   },
   "1.5.12": {
     "en": "Bugfix: fetch is not an function"
+  },
+  "1.5.13": {
+    "en": "Bugfix: SmartDetection score and type"
   }
 }
