@@ -156,7 +156,7 @@ class ProtectWebSocket extends BaseClass {
         } else if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'camera') {
             // Updates lastMotion or the lastRing
             return true;
-        } else if (updatePacket.action.modelKey === 'event' && updatePacket.payload.type === 'smartDetectZone') {
+        } else if (updatePacket.action.action === 'add' && updatePacket.payload.type === 'smartDetectZone') {
             // Smart detections
             return true;
         } else if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'light') {
@@ -194,7 +194,6 @@ class ProtectWebSocket extends BaseClass {
 
             // get payload from updatePacket
             const payload = updatePacket.payload;
-            //this.homey.app.debug(JSON.stringify(updatePacket));
 
             if (updatePacket.action.modelKey === 'light') {
                 // get protectlight driver
@@ -211,6 +210,16 @@ class ProtectWebSocket extends BaseClass {
                 const driver = this.homey.drivers.getDriver('protectsensor');
                 // Get device from camera id
                 const deviceId = updatePacket.action.id;
+                const device = driver.getUnifiDeviceById(deviceId);
+                if (device) {
+                    // Parse Websocket payload message
+                    driver.onParseWebsocketMessage(device, payload);
+                }
+            } else if (updatePacket.payload.type === 'smartDetectZone') {
+                // get protectcamera driver
+                const driver = this.homey.drivers.getDriver('protectcamera');
+                // Get device from camera id
+                const deviceId = updatePacket.payload.camera;
                 const device = driver.getUnifiDeviceById(deviceId);
                 if (device) {
                     // Parse Websocket payload message

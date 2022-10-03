@@ -3,7 +3,7 @@
     "pair": {
         "validate": {
             "title": "Validating UniFi Cloud Key",
-            "instruction": "Please add the NVR to Homey first and try again."
+            "instruction": "Please set the Cloud Key in Settings first."
         },
         "login": {
             "title": "Log in"

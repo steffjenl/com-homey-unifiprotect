@@ -3,7 +3,7 @@
   "pair": {
     "validate": {
       "title": "UniFi Cloud Key valideren",
-      "instruction": "Voeg eerst de UniFi Cloud Key aan Homey toe en probeer het daarna opnieuw."
+      "instruction": "Graag eerst bij Instellingen de Cloud Key instellen."
     },
     "login": {
       "title": "Inloggen"
