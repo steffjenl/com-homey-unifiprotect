@@ -64,5 +64,8 @@
   },
   "1.5.11": {
     "en": "New GitLab URL's"
+  },
+  "1.5.12": {
+    "en": "Bugfix: fetch is not an function"
   }
 }
