@@ -70,10 +70,6 @@ class UniFiCameraDriver extends Homey.Driver {
       if (payload.hasOwnProperty('isDark')) {
         camera.onIsDark(payload.isDark);
       }
-
-      if (payload.hasOwnProperty('type') && payload.type === "smartDetectZone") {
-        camera.onSmartDetection(payload.start, payload.smartDetectTypes, payload.score);
-      }
     }
   }
 
