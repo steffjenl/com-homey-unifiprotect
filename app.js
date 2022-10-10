@@ -4,6 +4,7 @@
 const Homey = require('homey');
 const ProtectAPI = require('./library/protectapi');
 const UfvConstants = require('./library/constants');
+const { Log } = require('homey-log');
 
 // 2700000 miliseconds is 45 minutes
 const RefreshCookieTime = 2700000;
@@ -13,6 +14,7 @@ class UniFiProtect extends Homey.App {
      * onInit is called when the app is initialized.
      */
     async onInit() {
+        this.homeyLog = new Log({ homey: this.homey });
         this.debuggedIn = false;
         this.nvrIp = null;
         this.nvrPort = null;
