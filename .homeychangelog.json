@@ -79,5 +79,8 @@
   },
   "1.5.16": {
     "en": "External error logging enabled"
+  },
+  "1.5.17": {
+    "en": "Add doorbell support and doorbel pressed flow."
   }
 }
