@@ -5,16 +5,14 @@
     "nl": "Stel opnamemodus in"
   },
   "titleFormatted": {
-    "en": "Set recording mode [[recording_mode]] for camera"
+    "en": "Set recording mode [[recording_mode]] for [[device]]"
   },
   "args": [
     {
       "title": "Camera",
       "name": "device",
       "type": "device",
-      "filter": {
-        "driver_id": "protectcamera"
-      }
+      "$filter": "class=camera|doorbell"
     },
     {
       "title": "Recording mode",

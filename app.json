@@ -218,6 +218,34 @@
             }
           }
         ]
+      },
+      {
+        "id": "ufp_device_doorbell_ringing",
+        "title": {
+          "en": "Doorbell pressed",
+          "nl": "Deurbel ingedrukt"
+        },
+        "tokens": [
+          {
+            "name": "ufp_pressed_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          }
+        ]
       }
     ],
     "actions": [
@@ -228,16 +256,13 @@
           "nl": "Stel opnamemodus in"
         },
         "titleFormatted": {
-          "en": "Set recording mode [[recording_mode]] for camera"
+          "en": "Set recording mode [[recording_mode]] for [[device]]"
         },
         "args": [
           {
             "title": "Camera",
             "name": "device",
-            "type": "device",
-            "filter": {
-              "driver_id": "protectcamera"
-            }
+            "type": "device"
           },
           {
             "title": "Recording mode",
@@ -276,7 +301,7 @@
           "nl": "Maak een momentopname"
         },
         "titleFormatted": {
-          "en": "Take a snapshot from camera with an width from [[width]]"
+          "en": "Take a snapshot from [[device]] with an width from [[width]]"
         },
         "args": [
           {
@@ -284,10 +309,7 @@
               "en": "Camera"
             },
             "name": "device",
-            "type": "device",
-            "filter": {
-              "driver_id": "protectcamera"
-            }
+            "type": "device"
           },
           {
             "title": {
@@ -385,8 +407,7 @@
       ],
       "connectivity": [
         "cloud"
-      ],
-      "deprecated": true
+      ]
     },
     {
       "id": "protectlight",

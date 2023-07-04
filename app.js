@@ -21,13 +21,6 @@ class UniFiProtect extends Homey.App {
         this.nvrUsername = null;
         this.nvrPassword = null;
 
-        // Enable remote debugging, if applicable
-        if (Homey.env.DEBUG === 'true') {
-            // eslint-disable-next-line global-require
-            require('inspector')
-                .open(9230, '0.0.0.0');
-        }
-
         // Single API instance for all devices
         this.api = new ProtectAPI();
         this.api.setHomeyObject(this.homey)

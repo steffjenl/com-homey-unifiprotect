@@ -34,6 +34,7 @@ module.exports.EVENT_SNAPSHOT_CREATED = 'ufv_snapshot_created';
 module.exports.EVENT_CONNECTION_CHANGED = 'ufp_connection_changed';
 module.exports.EVENT_DOORBELL_RINGING = 'ufp_doorbell_ringing';
 module.exports.EVENT_SMART_DETECTION = 'ufp_smart_detection';
+module.exports.EVENT_DEVICE_DOORBELL_PRESET = 'ufp_device_doorbell_ringing';
 
 module.exports.EVENT_SETTINGS_DEBUG = 'com.ubnt.unifiprotect.debug';
 module.exports.EVENT_SETTINGS_STATUS = 'com.ubnt.unifiprotect.status';

@@ -1,0 +1,25 @@
+{
+  "triggers": [
+    {
+      "id": "ufp_device_doorbell_ringing",
+      "title": {
+        "en": "Doorbell pressed",
+        "nl": "Deurbel ingedrukt"
+      },
+      "tokens": [
+        {
+          "name": "ufp_pressed_camera",
+          "type": "string",
+          "title": {
+            "en": "Camera",
+            "nl": "Camera"
+          },
+          "example": {
+            "en": "Doorbell",
+            "nl": "Deurbel"
+          }
+        }
+      ]
+    }
+  ]
+}

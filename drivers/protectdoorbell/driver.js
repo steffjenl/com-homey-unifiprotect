@@ -1,13 +1,20 @@
 'use strict';
 
 const Homey = require('homey');
+const UfvConstants = require("../../library/constants");
 
 class UniFiDoorbellDriver extends Homey.Driver {
   /**
    * onInit is called when the driver is initialized.
    */
   async onInit() {
-    this.homey.app.debug('UnifiDoorbell Driver has been initialized');
+    // Register flow cards
+    this._connectionStatusTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_CONNECTION_CHANGED);
+    this._doorbellRingingTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOORBELL_RINGING);
+    this._smartDetectionTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION);
+    this._doorbellPressetTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_PRESET);
+    //
+    this.homey.app.debug('UniFiDoorbell Driver has been initialized');
   }
 
   onPair(session) {
@@ -18,10 +25,10 @@ class UniFiDoorbellDriver extends Homey.Driver {
     });
 
     session.setHandler("list_devices", async function (data) {
-      return Object.values(await homey.app.api.getDoorbells()).map(doorbell => {
+      return Object.values(await homey.app.api.getDoorbells()).map(camera => {
         return {
-          data: {id: String(doorbell.id)},
-          name: doorbell.name,
+          data: {id: String(camera.id)},
+          name: camera.name,
         };
       });
     });

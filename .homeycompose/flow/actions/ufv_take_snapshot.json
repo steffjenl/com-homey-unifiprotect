@@ -5,7 +5,7 @@
     "nl": "Maak een momentopname"
   },
   "titleFormatted": {
-    "en": "Take a snapshot from camera with an width from [[width]]"
+    "en": "Take a snapshot from [[device]] with an width from [[width]]"
   },
   "args": [
     {
@@ -14,9 +14,7 @@
       },
       "name": "device",
       "type": "device",
-      "filter": {
-        "driver_id": "protectcamera"
-      }
+      "$filter": "class=camera|doorbell"
     },
     {
       "title": {
