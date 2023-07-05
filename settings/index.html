@@ -169,10 +169,20 @@
       }
     }
 
-    Homey.get('com.ubnt.unifiprotect.status', updateStatusField);
     Homey.on('com.ubnt.unifiprotect.status', ( data ) => { updateStatusField(null, data); });
-    Homey.get('com.ubnt.unifiprotect.websocket.status', updateWebsocketStatusField);
     Homey.on('com.ubnt.unifiprotect.websocket.status', ( data ) => { updateWebsocketStatusField(null, data); });
+    Homey.get('com.ubnt.unifiprotect.status', updateStatusField);
+    Homey.get('com.ubnt.unifiprotect.websocket.status', updateWebsocketStatusField);
+
+    Homey.api("GET", "/status", null , function (err, result) {
+      updateStatusField(null, result);
+      if (err) return Homey.alert(err);
+    });
+
+    Homey.api("GET", "/websocketstatus", null , function (err, result) {
+      updateWebsocketStatusField(null, result);
+      if (err) return Homey.alert(err);
+    });
 
   }
 </script>

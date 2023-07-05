@@ -55,6 +55,29 @@ class UniFiProtect extends Homey.App {
             return Promise.resolve(true);
         });
 
+        // V2 Actions
+        const _actionTakeSnapshotV2 = this.homey.flow.getActionCard(UfvConstants.ACTION_TAKE_SNAPSHOT_V2);
+        _actionTakeSnapshotV2.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+                // Get device from camera id
+                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+                if (device) {
+                    device._createSnapshotImage(true);
+                }
+            }
+            return Promise.resolve(true);
+        });
+
+        const _setRecordingModeV2 = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_RECORDING_MODE_V2);
+        _setRecordingModeV2.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData().id !== 'undefined') {
+                this.homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode)
+                    .then(this.homey.app.debug.bind(this, '[recordingmode.set]'))
+                    .catch(this.error.bind(this, '[recordingmode.set]'));
+            }
+            return Promise.resolve(true);
+        });
+
         // Subscribe to credentials updates
         this.homey.settings.on('set', key => {
             if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {

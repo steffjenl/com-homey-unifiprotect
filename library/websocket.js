@@ -8,6 +8,7 @@ const UfvConstants = require('./constants');
 class ProtectWebSocket extends BaseClass {
     constructor(...props) {
         super(...props);
+        this.loggedInStatus = 'Unknown';
     }
 
     isWebsocketConnected() {
@@ -39,6 +40,7 @@ class ProtectWebSocket extends BaseClass {
 
         try {
             this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Connecting');
+            this.loggedInStatus = 'Connecting';
 
             const _ws = new WebSocket(this.updatesUrl() + '?' + params.toString(),{
                 headers: {
@@ -61,6 +63,7 @@ class ProtectWebSocket extends BaseClass {
             this._eventListener.on('open', (event) => {
                 this.homey.app.debug(this.homey.app.api.getNvrName() + ': Connected to the UniFi realtime update events API.');
                 this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Connected');
+                this.loggedInStatus = 'Connected';
             });
 
             this._eventListener.on('close', () => {
@@ -69,6 +72,7 @@ class ProtectWebSocket extends BaseClass {
                 this._eventListenerConfigured = false;
                 clearInterval(this._pingPong);
                 this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Disconnected');
+                this.loggedInStatus = 'Disconnected';
             });
 
             this._eventListener.on('error', (error) => {
@@ -79,10 +83,12 @@ class ProtectWebSocket extends BaseClass {
                 }
 
                 this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, error.message);
+                this.loggedInStatus = error.message;
             });
         } catch (error) {
             this.homey.app.debug(this.homey.app.api.getNvrName() + ': Error connecting to the realtime update events API: ' + error);
             this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, error);
+            this.loggedInStatus = error;
         }
 
         return true;

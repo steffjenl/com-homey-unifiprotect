@@ -19,6 +19,7 @@ class ProtectAPI extends BaseClass {
         this._lastUpdateId = null;
         this._rtspPort = null;
         this.homey = null;
+        this.loggedInStatus = 0;
     }
 
     setHomeyObject(homey) {
@@ -61,6 +62,7 @@ class ProtectAPI extends BaseClass {
 
         return new Promise((resolve, reject) => {
             this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Getting CSRF token');
+            this.loggedInStatus = 'Getting CSRF token';
 
             if (!host) reject(new Error('Invalid host.'));
 
@@ -104,6 +106,7 @@ class ProtectAPI extends BaseClass {
 
                     // Connected
                     this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'CSRF Token found');
+                    this.loggedInStatus = 'CSRF Token found';
                     //
                     return resolve('We got it!');
                 });
@@ -111,6 +114,7 @@ class ProtectAPI extends BaseClass {
 
             req.on('error', error => {
                 this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
+                this.loggedInStatus = 'Disconnected';
                 return reject(error);
             });
             req.end();
@@ -129,6 +133,7 @@ class ProtectAPI extends BaseClass {
         this.getCSRFToken(host, port).then(response => {
 
                 this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connecting');
+            this.loggedInStatus = 'Connecting';
 
                 if (!host) reject(new Error('Invalid host.'));
                 if (!username) reject(new Error('Invalid username.'));
@@ -184,6 +189,7 @@ class ProtectAPI extends BaseClass {
 
                         // Connected
                         this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connected');
+                        this.loggedInStatus = 'Connected';
                         //
                         return resolve('Logged in...');
                     });
@@ -191,6 +197,7 @@ class ProtectAPI extends BaseClass {
 
                 req.on('error', error => {
                     this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
+                    this.loggedInStatus = 'Disconnected';
                     return reject(error);
                 });
 

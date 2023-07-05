@@ -69,6 +69,16 @@
   "platforms": [
     "local"
   ],
+  "api": {
+    "getStatus": {
+      "method": "GET",
+      "path": "/status"
+    },
+    "getWebsocketStatus": {
+      "method": "GET",
+      "path": "/websocketstatus"
+    }
+  },
   "flow": {
     "triggers": [
       {
@@ -250,6 +260,7 @@
     ],
     "actions": [
       {
+        "deprecated": true,
         "id": "ufv_set_recording_mode",
         "title": {
           "en": "Set recording mode",
@@ -295,7 +306,86 @@
         ]
       },
       {
+        "id": "ufv_set_recording_mode_v2",
+        "title": {
+          "en": "Set recording mode",
+          "nl": "Stel opnamemodus in"
+        },
+        "titleFormatted": {
+          "en": "Set recording mode [[recording_mode]] for [[device]]"
+        },
+        "args": [
+          {
+            "title": "Camera",
+            "name": "device",
+            "type": "device"
+          },
+          {
+            "title": "Recording mode",
+            "name": "recording_mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "never",
+                "label": {
+                  "en": "Don't record",
+                  "nl": "Niet opnemen"
+                }
+              },
+              {
+                "id": "always",
+                "label": {
+                  "en": "Always record",
+                  "nl": "Altijd opnemen"
+                }
+              },
+              {
+                "id": "detections",
+                "label": {
+                  "en": "Record only motion",
+                  "nl": "Alleen beweging opnemen"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "deprecated": true,
         "id": "ufv_take_snapshot",
+        "title": {
+          "en": "Take a snapshot",
+          "nl": "Maak een momentopname"
+        },
+        "titleFormatted": {
+          "en": "Take a snapshot from [[device]] with an width from [[width]]"
+        },
+        "args": [
+          {
+            "title": {
+              "en": "Camera"
+            },
+            "name": "device",
+            "type": "device"
+          },
+          {
+            "title": {
+              "en": "Width in pixels",
+              "nl": "Breedte in pixels"
+            },
+            "name": "width",
+            "type": "number",
+            "min": 0,
+            "max": 1920,
+            "placeholder": {
+              "en": "Width in pixels",
+              "nl": "Breedte in pixels"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_take_snapshot_v2",
         "title": {
           "en": "Take a snapshot",
           "nl": "Maak een momentopname"

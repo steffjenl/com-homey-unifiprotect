@@ -67,5 +67,15 @@
   "homeyCommunityTopicId": 42966,
   "platforms": [
     "local"
-  ]
+  ],
+  "api": {
+    "getStatus": {
+      "method": "GET",
+      "path": "/status"
+    },
+    "getWebsocketStatus": {
+      "method": "GET",
+      "path": "/websocketstatus"
+    }
+  }
 }

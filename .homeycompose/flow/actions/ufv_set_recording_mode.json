@@ -1,4 +1,5 @@
 {
+  "deprecated": true,
   "id": "ufv_set_recording_mode",
   "title": {
     "en": "Set recording mode",
@@ -12,7 +13,7 @@
       "title": "Camera",
       "name": "device",
       "type": "device",
-      "$filter": "class=camera|doorbell"
+      "$filter": "class=camera"
     },
     {
       "title": "Recording mode",
