@@ -82,5 +82,8 @@
   },
   "1.5.17": {
     "en": "Add doorbell support and doorbel pressed flow."
+  },
+  "1.5.18": {
+    "en": "Fixing connection status and old action flow cards"
   }
 }
