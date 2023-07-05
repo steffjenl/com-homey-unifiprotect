@@ -1,0 +1,46 @@
+{
+  "id": "ufv_set_recording_mode_v2",
+  "title": {
+    "en": "Set recording mode",
+    "nl": "Stel opnamemodus in"
+  },
+  "titleFormatted": {
+    "en": "Set recording mode [[recording_mode]] for [[device]]"
+  },
+  "args": [
+    {
+      "title": "Camera",
+      "name": "device",
+      "type": "device",
+      "$filter": "class=camera|doorbell"
+    },
+    {
+      "title": "Recording mode",
+      "name": "recording_mode",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "never",
+          "label": {
+            "en": "Don't record",
+            "nl": "Niet opnemen"
+          }
+        },
+        {
+          "id": "always",
+          "label": {
+            "en": "Always record",
+            "nl": "Altijd opnemen"
+          }
+        },
+        {
+          "id": "detections",
+          "label": {
+            "en": "Record only motion",
+            "nl": "Alleen beweging opnemen"
+          }
+        }
+      ]
+    }
+  ]
+}
