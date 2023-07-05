@@ -85,5 +85,8 @@
   },
   "1.5.18": {
     "en": "Fixing connection status and old action flow cards"
+  },
+  "1.5.19": {
+    "en": "Fixing some bugs"
   }
 }
