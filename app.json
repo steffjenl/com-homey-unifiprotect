@@ -267,13 +267,16 @@
           "nl": "Stel opnamemodus in"
         },
         "titleFormatted": {
-          "en": "Set recording mode [[recording_mode]] for [[device]]"
+          "en": "Set recording mode [[recording_mode]] for camera"
         },
         "args": [
           {
             "title": "Camera",
             "name": "device",
-            "type": "device"
+            "type": "device",
+            "filter": {
+              "driver_id": "protectcamera"
+            }
           },
           {
             "title": "Recording mode",
@@ -358,7 +361,7 @@
           "nl": "Maak een momentopname"
         },
         "titleFormatted": {
-          "en": "Take a snapshot from [[device]] with an width from [[width]]"
+          "en": "Take a snapshot from camera with an width from [[width]]"
         },
         "args": [
           {
@@ -366,7 +369,10 @@
               "en": "Camera"
             },
             "name": "device",
-            "type": "device"
+            "type": "device",
+            "filter": {
+              "driver_id": "protectcamera"
+            }
           },
           {
             "title": {
