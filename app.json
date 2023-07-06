@@ -511,7 +511,7 @@
         "volume_set"
       ],
       "name": {
-        "en": "Light"
+        "en": "Chime"
       },
       "images": {
         "large": "drivers/protectchime/assets/images/large.png",

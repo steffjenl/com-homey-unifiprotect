@@ -78,8 +78,8 @@ class UniFiProtect extends Homey.App {
             return Promise.resolve(true);
         });
 
-        const _setChimeOnOff = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_CHIME_ONOFF);
-        _setChimeOnOff.registerRunListener(async (args, state) => {
+        const _setChimeVolume = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_CHIME_ONOFF);
+        _setChimeVolume.registerRunListener(async (args, state) => {
             if (typeof args.device.getData().id !== 'undefined') {
                 let volume = 0;
                 if (args.enabled)

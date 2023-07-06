@@ -484,6 +484,32 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    getChimes() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('chimes')
+                .then(response => {
+                    const result = JSON.parse(response);
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining chimes.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    setChimeVolume(chime, volumeLevel) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                volume: volumeLevel
+            };
+            return this.webclient.patch(`chimes/${chime.id}`, params)
+                .then(() => resolve('volume successfully set.'))
+                .catch(error => reject(new Error(`Error setting volume: ${error}`)));
+        });
+    }
+
     getLights() {
         return new Promise((resolve, reject) => {
             this.webclient.get('lights')
