@@ -78,6 +78,21 @@ class UniFiProtect extends Homey.App {
             return Promise.resolve(true);
         });
 
+        const _setChimeOnOff = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_CHIME_ONOFF);
+        _setChimeOnOff.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData().id !== 'undefined') {
+                let volume = 0;
+                if (args.enabled)
+                {
+                    volume = args.volume;
+                }
+                this.homey.app.api.setChimeVolume(args.device.getData(), volume)
+                    .then(this.homey.app.debug.bind(this, '[chime.volume.set]'))
+                    .catch(this.error.bind(this, '[chime.volume.set]'));
+            }
+            return Promise.resolve(true);
+        });
+
         // Subscribe to credentials updates
         this.homey.settings.on('set', key => {
             if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {

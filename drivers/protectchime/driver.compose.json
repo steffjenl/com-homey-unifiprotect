@@ -1,0 +1,33 @@
+{
+  "id": "protectchime",
+  "class": "sensor",
+  "capabilities": [
+    "onoff",
+    "volume_set"
+  ],
+  "name": {
+    "en": "Light"
+  },
+  "images": {
+    "large": "drivers/protectchime/assets/images/large.png",
+    "small": "drivers/protectchime/assets/images/small.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "platforms": ["local"],
+  "connectivity": ["cloud"]
+}

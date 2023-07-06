@@ -1,0 +1,35 @@
+{
+  "id": "ufv_chime_turnonoff",
+  "title": {
+    "en": "Set chime on/off",
+    "nl": "Zet deurbell aan of uit"
+  },
+  "titleFormatted": {
+    "en": "Set chime [[device]] [[enabled]] with volume [[volume]]"
+  },
+  "args": [
+    {
+      "title": {
+        "en": "Chime"
+      },
+      "name": "device",
+      "type": "device",
+      "$filter": "class=sensor&capabilities=onoff|volume_set"
+    },
+    {x
+      "type": "checkbox",
+      "name": "enabled",
+      "title": { "en": "Enabled" }
+    },
+    {
+      "type": "range",
+      "name": "volume",
+      "title": { "en": "Volume" },
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "label": "%",
+      "labelDecimals": 0
+    }
+  ]
+}

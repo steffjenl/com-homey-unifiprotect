@@ -1,0 +1,22 @@
+<body>
+<div class="field row">
+  <span data-i18n="pair.validate.instruction"></span>
+</div>
+
+<script type="text/javascript">
+  Homey.setTitle(__('pair.validate.title'))
+  Homey.showLoadingOverlay();
+
+
+  Homey.emit("validate", null).then(function (result) {
+    if (result === 'ok') {
+      Homey.showView('list_devices');
+    } else {
+      Homey.hideLoadingOverlay();
+      Homey.setNavigationClose();
+    }
+  }).catch(function (error) {
+    return Homey.alert(error);
+  });
+</script>
+</body>

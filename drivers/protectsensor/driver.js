@@ -2,12 +2,12 @@
 
 const Homey = require('homey');
 
-class UniFiLightDriver extends Homey.Driver {
+class UniFiSensorDriver extends Homey.Driver {
     /**
      * onInit is called when the driver is initialized.
      */
     async onInit() {
-        this.homey.app.debug('UniFiLight Driver has been initialized');
+        this.homey.app.debug('UniFiSensor Driver has been initialized');
     }
 
     onPair(session) {
@@ -66,4 +66,4 @@ class UniFiLightDriver extends Homey.Driver {
     }
 }
 
-module.exports = UniFiLightDriver;
+module.exports = UniFiSensorDriver;
