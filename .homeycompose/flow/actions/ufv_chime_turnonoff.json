@@ -16,7 +16,7 @@
       "type": "device",
       "$filter": "class=sensor&capabilities=onoff|volume_set"
     },
-    {x
+    {
       "type": "checkbox",
       "name": "enabled",
       "title": { "en": "Enabled" }

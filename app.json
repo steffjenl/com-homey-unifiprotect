@@ -260,6 +260,44 @@
     ],
     "actions": [
       {
+        "id": "ufv_chime_turnonoff",
+        "title": {
+          "en": "Set chime on/off",
+          "nl": "Zet deurbell aan of uit"
+        },
+        "titleFormatted": {
+          "en": "Set chime [[device]] [[enabled]] with volume [[volume]]"
+        },
+        "args": [
+          {
+            "title": {
+              "en": "Chime"
+            },
+            "name": "device",
+            "type": "device"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled"
+            }
+          },
+          {
+            "type": "range",
+            "name": "volume",
+            "title": {
+              "en": "Volume"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "%",
+            "labelDecimals": 0
+          }
+        ]
+      },
+      {
         "deprecated": true,
         "id": "ufv_set_recording_mode",
         "title": {
@@ -441,6 +479,43 @@
       "images": {
         "large": "drivers/protectcamera/assets/images/large.png",
         "small": "drivers/protectcamera/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ]
+    },
+    {
+      "id": "protectchime",
+      "class": "sensor",
+      "capabilities": [
+        "onoff",
+        "volume_set"
+      ],
+      "name": {
+        "en": "Light"
+      },
+      "images": {
+        "large": "drivers/protectchime/assets/images/large.png",
+        "small": "drivers/protectchime/assets/images/small.png"
       },
       "pair": [
         {

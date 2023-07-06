@@ -221,6 +221,16 @@ class ProtectWebSocket extends BaseClass {
                     // Parse Websocket payload message
                     driver.onParseWebsocketMessage(device, payload);
                 }
+            } else if (updatePacket.action.modelKey === 'chime') {
+                // get protectsensor driver
+                const driver = this.homey.drivers.getDriver('protectchime');
+                // Get device from camera id
+                const deviceId = updatePacket.action.id;
+                const device = driver.getUnifiDeviceById(deviceId);
+                if (device) {
+                    // Parse Websocket payload message
+                    driver.onParseWebsocketMessage(device, payload);
+                }
             } else if (updatePacket.payload.type === 'smartDetectZone') {
                 // get protectcamera driver
                 const driverCamera = this.homey.drivers.getDriver('protectcamera');

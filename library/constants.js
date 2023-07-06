@@ -18,7 +18,7 @@ module.exports.ACTION_TAKE_SNAPSHOT = 'ufv_take_snapshot';
 module.exports.ACTION_SET_RECORDING_MODE = 'ufv_set_recording_mode';
 module.exports.ACTION_TAKE_SNAPSHOT_V2 = 'ufv_take_snapshot_v2';
 module.exports.ACTION_SET_RECORDING_MODE_V2 = 'ufv_set_recording_mode_v2';
-module.ACTION_SET_CHIME_ONOFF = 'ufv_chime_turnonoff';
+module.exports.ACTION_SET_CHIME_ONOFF = 'ufv_chime_turnonoff';
 
 module.exports.EVENT_CONNECTION_KEEPALIVE = 'ufv_event_connection_keepalive';
 module.exports.EVENT_CONNECTION_ERROR = 'ufv_event_connection_error';
