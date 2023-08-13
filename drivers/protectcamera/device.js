@@ -309,6 +309,7 @@ class Camera extends Homey.Device {
         this.homey.app.debug('Creating snapshot image for camera ' + this.getName() + '.');
 
         this._snapshotImage = await this.homey.images.createImage();
+        this._snapshotImage.filename = this.getName() + '.jpg';
         this._snapshotImage.setStream(async stream => {
             // Obtain snapshot URL
             let snapshotUrl = null;

@@ -342,8 +342,8 @@ class ProtectAPI extends BaseClass {
 
             const params = {
                 accessKey: this.webclient.getApiKey(),
-                w: widthInPixels,
-                h: height,
+                //w: widthInPixels,
+                //h: height,
                 force: true,
             };
 
@@ -362,8 +362,8 @@ class ProtectAPI extends BaseClass {
 
             const params = {
                 accessKey: this.webclient.getApiKey(),
-                w: widthInPixels,
-                h: height,
+                //w: widthInPixels,
+                //h: height,
                 force: true,
                 ts: Date.now()
             };
