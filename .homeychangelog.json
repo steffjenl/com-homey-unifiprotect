@@ -88,5 +88,8 @@
   },
   "1.5.19": {
     "en": "Fixing some bugs"
+  },
+  "1.5.20": {
+    "en": "Removed height and width and added image name to snapshot"
   }
 }
