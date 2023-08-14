@@ -97,5 +97,8 @@
   },
   "1.5.22": {
     "en": "Add option to get snapshot directly from the camera"
+  },
+  "1.5.23": {
+    "en": "Upgrade node packages to latest version"
   }
 }
