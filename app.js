@@ -107,8 +107,8 @@ class UniFiProtect extends Homey.App {
 
         // set settings
         const settings = this.homey.settings.get('ufp:settings');
-        if (!settings && typeof settings.useCameraSnapshot !== 'undefined') {
-            this.useCameraSnapshot = settings.useCameraSnapshot;
+        if (settings) {
+             this.useCameraSnapshot = settings.useCameraSnapshot;
         }
 
         this._appLogin();

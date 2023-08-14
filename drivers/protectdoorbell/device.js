@@ -206,7 +206,7 @@ class Doorbell extends Homey.Device {
                 ufp_ringing_camera: this.getName(),
             });
 
-            this.driver._doorbellPressetTrigger.trigger({
+            this.driver._doorbellPressetTrigger.trigger(this, {
                 ufp_pressed_camera: this.getName(),
             });
         }
