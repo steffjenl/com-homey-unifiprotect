@@ -100,5 +100,8 @@
   },
   "1.5.23": {
     "en": "Upgrade node packages to latest version"
+  },
+  "1.5.24": {
+    "en": "Upgrade node packages to latest version"
   }
 }
