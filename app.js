@@ -104,9 +104,12 @@ class UniFiProtect extends Homey.App {
                 this.useCameraSnapshot = settings.useCameraSnapshot;
             }
         });
+
         // set settings
         const settings = this.homey.settings.get('ufp:settings');
-        this.useCameraSnapshot = settings.useCameraSnapshot;
+        if (!settings && typeof settings.useCameraSnapshot !== 'undefined') {
+            this.useCameraSnapshot = settings.useCameraSnapshot;
+        }
 
         this._appLogin();
 
