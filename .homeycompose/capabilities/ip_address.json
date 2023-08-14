@@ -1,0 +1,10 @@
+{
+  "type": "string",
+  "title": {
+    "en": "IP Address",
+    "nl": "IP Adres"
+  },
+  "uiComponent": null,
+  "getable": true,
+  "setable": false
+}
