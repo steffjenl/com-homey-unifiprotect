@@ -57,9 +57,9 @@ class Camera extends Homey.Device {
                 .catch(this.error);
         });
 
-        await this._createSnapshotImage();
         await this._createMissingCapabilities();
         await this._initCameraData();
+        await this._createSnapshotImage();
     }
 
     async waitForBootstrap() {
@@ -135,6 +135,10 @@ class Camera extends Homey.Device {
             this.addCapability('last_smart_detection_score');
             this.homey.app.debug(`created capability last_smart_detection_score for ${this.getName()}`);
         }
+        if (!this.hasCapability('ip_address')) {
+            this.addCapability('ip_address');
+            this.homey.app.debug(`created capability ip_address for ${this.getName()}`);
+        }
 
     }
 
@@ -143,8 +147,12 @@ class Camera extends Homey.Device {
 
         if (cameraData) {
             cameraData.cameras.forEach((camera) => {
+
                 if (camera.id === this.getData().id) {
 
+                    if (this.hasCapability('ip_address')) {
+                        this.setCapabilityValue('ip_address', camera.host);
+                    }
                     if (this.hasCapability('camera_recording_status')) {
                         this.setCapabilityValue('camera_recording_status', camera.isRecording);
                     }
@@ -310,15 +318,23 @@ class Camera extends Homey.Device {
 
         this._snapshotImage = await this.homey.images.createImage();
         this._snapshotImage.filename = this.getName() + '.jpg';
+
+        const ipAddress = this.getCapabilityValue('ip_address');
+
         this._snapshotImage.setStream(async stream => {
             // Obtain snapshot URL
             let snapshotUrl = null;
 
-            await this.homey.app.api.createSnapshotUrl(this.getData())
-                .then(url => {
-                    snapshotUrl = url;
-                })
-                .catch(this.error.bind(this, 'Could not create snapshot URL.'));
+            if (this.homey.app.useCameraSnapshot) {
+                snapshotUrl = `https://${ipAddress}/snap.jpeg`;
+            }
+            else {
+                await this.homey.app.api.createSnapshotUrl(this.getData())
+                    .then(url => {
+                        snapshotUrl = url;
+                    })
+                    .catch(this.error.bind(this, 'Could not create snapshot URL.'));
+            }
 
             if (!snapshotUrl) {
                 throw new Error('Invalid snapshot url.');

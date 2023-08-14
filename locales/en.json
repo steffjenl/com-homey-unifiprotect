@@ -19,7 +19,9 @@
         "username": "Username",
         "password": "Password",
         "apply": "Apply",
-        "saved": "Settings saved."
+        "saved": "Settings saved.",
+        "settings": "Settings",
+        "useCameraSnapshot": "Use camera snapshot"
     },
     "events": {
         "camera": {

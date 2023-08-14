@@ -20,6 +20,7 @@ class UniFiProtect extends Homey.App {
         this.nvrPort = null;
         this.nvrUsername = null;
         this.nvrPassword = null;
+        this.useCameraSnapshot = false;
 
         // Single API instance for all devices
         this.api = new ProtectAPI();
@@ -98,7 +99,15 @@ class UniFiProtect extends Homey.App {
             if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {
                 this._appLogin();
             }
+            if (key === 'ufp:settings') {
+                const settings = this.homey.settings.get('ufp:settings');
+                this.useCameraSnapshot = settings.useCameraSnapshot;
+            }
         });
+        // set settings
+        const settings = this.homey.settings.get('ufp:settings');
+        this.useCameraSnapshot = settings.useCameraSnapshot;
+
         this._appLogin();
 
 

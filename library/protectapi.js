@@ -342,8 +342,7 @@ class ProtectAPI extends BaseClass {
 
             const params = {
                 accessKey: this.webclient.getApiKey(),
-                //w: widthInPixels,
-                //h: height,
+                w: widthInPixels,
                 force: true,
             };
 
@@ -354,19 +353,18 @@ class ProtectAPI extends BaseClass {
         });
     }
 
-    createSnapshotUrl(camera, widthInPixels = 1920) {
+    createSnapshotUrl(camera, widthInPixels = 1920, useCameraSnapshotUrl = false) {
         return new Promise((resolve, reject) => {
             if (!this.webclient.getServerHost()) reject(new Error('Invalid host.'));
             if (!camera) reject(new Error('Invalid camera'));
-            const height = this.getAspectRatioHeight(camera.id, widthInPixels);
 
             const params = {
                 accessKey: this.webclient.getApiKey(),
-                //w: widthInPixels,
-                //h: height,
+                w: widthInPixels,
                 force: true,
                 ts: Date.now()
             };
+
             return resolve(`https://${this.webclient.getServerHost()}:${this.webclient.getServerPort()}${UFV_API_ENDPOINT}/cameras/${camera.id}/snapshot${this.webclient.toQueryString(params)}`);
         });
     }

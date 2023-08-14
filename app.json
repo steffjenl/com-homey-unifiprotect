@@ -471,7 +471,8 @@
         "alarm_motion",
         "camera_recording_status",
         "last_motion_at",
-        "last_smart_detection_at"
+        "last_smart_detection_at",
+        "ip_address"
       ],
       "name": {
         "en": "Camera"
@@ -547,7 +548,8 @@
         "alarm_motion",
         "camera_recording_status",
         "last_motion_at",
-        "last_smart_detection_at"
+        "last_smart_detection_at",
+        "ip_address"
       ],
       "name": {
         "en": "Doorbell",
@@ -734,6 +736,16 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/assets/recording.svg"
+    },
+    "ip_address": {
+      "type": "string",
+      "title": {
+        "en": "IP Address",
+        "nl": "IP Adres"
+      },
+      "uiComponent": null,
+      "getable": true,
+      "setable": false
     },
     "last_motion_at": {
       "type": "number",

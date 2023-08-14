@@ -2,8 +2,8 @@
 <html>
 
 <head>
-  <script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
-  <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+    <script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
+    <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
 </head>
 
 <body>
@@ -13,178 +13,217 @@
 <!-- Instruction -->
 <p data-i18n="settings.instruction"></p>
 
-<p><span data-i18n="settings.status">Status</span>: <span id="unifi_status" style="font-weight: bold;">Unknown</span></p>
-<p><span data-i18n="settings.websocket.status">Realtime updates Status</span>: <span id="unifi_websocket_status" style="font-weight: bold;">Unknown</span></p>
+<p><span data-i18n="settings.status">Status</span>: <span id="unifi_status" style="font-weight: bold;">Unknown</span>
+</p>
+<p><span data-i18n="settings.websocket.status">Realtime updates Status</span>: <span id="unifi_websocket_status"
+                                                                                     style="font-weight: bold;">Unknown</span>
+</p>
 <!-- NVR -->
 <fieldset>
-  <legend data-i18n="settings.nvr"></legend>
+    <legend data-i18n="settings.nvr"></legend>
 
-  <!-- IP address -->
-  <div class="field row">
-    <label for="txt_nvrip" data-i18n="settings.nvrip"></label>
-    <input id="txt_nvrip" type="text" value=""/>
-  </div>
+    <!-- IP address -->
+    <div class="field row">
+        <label for="txt_nvrip" data-i18n="settings.nvrip"></label>
+        <input id="txt_nvrip" type="text" value=""/>
+    </div>
 
-  <!-- Port -->
-  <div class="field row">
-    <label for="txt_nvrport" data-i18n="settings.txt_nvrport"></label>
-    <input id="txt_nvrport" type="text" value="443"/>
-  </div>
+    <!-- Port -->
+    <div class="field row">
+        <label for="txt_nvrport" data-i18n="settings.txt_nvrport"></label>
+        <input id="txt_nvrport" type="text" value="443"/>
+    </div>
 
 </fieldset>
 
 <!-- Credentials -->
 <fieldset>
-  <legend data-i18n="settings.credentials"></legend>
+    <legend data-i18n="settings.credentials"></legend>
 
-  <!-- Username -->
-  <div class="field row">
-    <label for="txt_username" data-i18n="settings.username"></label>
-    <input id="txt_username" type="text" value=""/>
-  </div>
+    <!-- Username -->
+    <div class="field row">
+        <label for="txt_username" data-i18n="settings.username"></label>
+        <input id="txt_username" type="text" value=""/>
+    </div>
 
-  <!-- Password -->
-  <div class="field row">
-    <label for="txt_password" data-i18n="settings.password"></label>
-    <input id="txt_password" type="password" value=""/>
-  </div>
+    <!-- Password -->
+    <div class="field row">
+        <label for="txt_password" data-i18n="settings.password"></label>
+        <input id="txt_password" type="password" value=""/>
+    </div>
+</fieldset>
+
+<!-- Settings -->
+<fieldset>
+    <legend data-i18n="settings.settings"></legend>
+
+    <!-- useCameraSnapshot -->
+    <div class="field row">
+        <label for="txt_useCameraSnapshot" data-i18n="settings.useCameraSnapshot"></label>
+        <input id="txt_useCameraSnapshot" type="checkbox" value="true"/>
+    </div>
+
 </fieldset>
 
 <!-- Apply button -->
 <div class="field row">
-  <button id="btn_apply" class="right" data-i18n="settings.apply"></button>
+    <button id="btn_apply" class="right" data-i18n="settings.apply"></button>
 </div>
 
 <script type="text/javascript">
-  var txtNvrIp = document.getElementById('txt_nvrip');
-  var txtNvrPort = document.getElementById('txt_nvrport');
-  var txtUsername = document.getElementById('txt_username');
-  var txtPassword = document.getElementById('txt_password');
-  var btnApply = document.getElementById('btn_apply');
+    var txtNvrIp = document.getElementById('txt_nvrip');
+    var txtNvrPort = document.getElementById('txt_nvrport');
+    var txtUsername = document.getElementById('txt_username');
+    var txtPassword = document.getElementById('txt_password');
+    var txtuseCameraSnapshot = document.getElementById('txt_useCameraSnapshot');
+    var btnApply = document.getElementById('btn_apply');
 
-  function onHomeyReady(Homey) {
-    const readSettings = () => {
-      Homey.get('ufp:nvrip', (error, nvrip) => {
-        if (error) return Homey.alert(error);
+    function onHomeyReady(Homey) {
+        const readSettings = () => {
+            Homey.get('ufp:nvrip', (error, nvrip) => {
+                if (error) return Homey.alert(error);
 
-        if (nvrip) {
-          txtNvrIp.value = nvrip;
-        } else {
-          console.warn('[SETTINGS] Could not read UniFi Cloud Key IP address.');
-        }
-      });
+                if (nvrip) {
+                    txtNvrIp.value = nvrip;
+                } else {
+                    console.warn('[SETTINGS] Could not read UniFi Cloud Key IP address.');
+                }
+            });
 
-      Homey.get('ufp:nvrport', (error, nvrPort) => {
-        if (error) return Homey.alert(error);
+            Homey.get('ufp:nvrport', (error, nvrPort) => {
+                if (error) return Homey.alert(error);
 
-        if (nvrPort) {
-          txtNvrPort.value = nvrPort;
-        } else {
-          console.warn('[SETTINGS] Could not read UniFi Cloud Key Port.');
-        }
-      });
+                if (nvrPort) {
+                    txtNvrPort.value = nvrPort;
+                } else {
+                    console.warn('[SETTINGS] Could not read UniFi Cloud Key Port.');
+                }
+            });
 
-      Homey.get('ufp:credentials', (error, credentials) => {
-        if (error) return Homey.alert(error);
+            Homey.get('ufp:credentials', (error, credentials) => {
+                if (error) return Homey.alert(error);
 
-        if (credentials) {
-          txtUsername.value = credentials.username;
-          txtPassword.value = credentials.password;
-        } else {
-          console.warn('[SETTINGS] Could not read credentials.');
-        }
-      });
-    };
+                if (credentials) {
+                    txtUsername.value = credentials.username;
+                    txtPassword.value = credentials.password;
+                } else {
+                    console.warn('[SETTINGS] Could not read credentials.');
+                }
+            });
 
-    const saveSettings = () => {
-        Homey.set('ufp:nvrip', txtNvrIp.value, (error, result) => {
-          if (error) return Homey.alert(error);
-          console.log('[SETTINGS] UniFi Cloud Key IP address saved.');
-        });
+            Homey.get('ufp:settings', (error, settings) => {
+                if (error) return Homey.alert(error);
 
-        Homey.set('ufp:nvrport', txtNvrPort.value, (error, result) => {
-          if (error) return Homey.alert(error);
-          console.log('[SETTINGS] UniFi Cloud Key Port saved.');
-        });
-
-        const credentials = {
-          'username': txtUsername.value,
-          'password': txtPassword.value
+                if (settings) {
+                    txtuseCameraSnapshot.checked = settings.useCameraSnapshot;
+                } else {
+                    console.warn('[SETTINGS] Could not read settings.');
+                }
+            });
         };
 
-        Homey.set('ufp:credentials', credentials, (error, result) => {
-          if (error) return Homey.alert(error);
-          console.log('[SETTINGS] credentials saved.');
+        const saveSettings = () => {
+            Homey.set('ufp:nvrip', txtNvrIp.value, (error, result) => {
+                if (error) return Homey.alert(error);
+                console.log('[SETTINGS] UniFi Cloud Key IP address saved.');
+            });
+
+            Homey.set('ufp:nvrport', txtNvrPort.value, (error, result) => {
+                if (error) return Homey.alert(error);
+                console.log('[SETTINGS] UniFi Cloud Key Port saved.');
+            });
+
+            const credentials = {
+                'username': txtUsername.value,
+                'password': txtPassword.value
+            };
+
+            Homey.set('ufp:credentials', credentials, (error, result) => {
+                if (error) return Homey.alert(error);
+                console.log('[SETTINGS] credentials saved.');
+            });
+
+            const settings = {
+                'useCameraSnapshot': txtuseCameraSnapshot.checked
+            };
+
+            Homey.set('ufp:settings', settings, (error, result) => {
+                if (error) return Homey.alert(error);
+                console.log('[SETTINGS] settings saved.');
+            });
+            Homey.alert(Homey.__('settings.saved'), 'info');
+        };
+
+        btnApply.addEventListener('click', e => {
+            saveSettings();
         });
-        Homey.alert(Homey.__('settings.saved'), 'info');
-    };
 
-    btnApply.addEventListener('click', e => {
-      saveSettings();
-    });
+        readSettings();
 
-    readSettings();
+        Homey.ready();
 
-    Homey.ready();
+        const updateStatusField = (err, data) => {
+            if (err) {
+                return err;
+            }
+            var color = 'darkred';
+            if (data === 'Connected') color = 'darkgreen';
+            if (data === 'Connecting...') color = 'orange';
 
-    const updateStatusField =  (err, data) => {
-      if (err) {
-        return err;
-      }
-      var color = 'darkred';
-      if (data === 'Connected') color = 'darkgreen';
-      if (data === 'Connecting...') color = 'orange';
+            var statusField = document.getElementById('unifi_status');
+            statusField.style.color = color;
 
-      var statusField = document.getElementById('unifi_status');
-      statusField.style.color = color;
+            var translationKey = 'status.connection.' + data;
+            var translation = Homey.__(translationKey);
 
-      var translationKey = 'status.connection.' + data;
-      var translation = Homey.__(translationKey);
+            if (translation === translationKey || translation === '' || typeof translation === 'undefined') {
+                statusField.innerHTML = data;
+            } else {
+                statusField.innerHTML = translation;
+            }
+        }
 
-      if (translation === translationKey || translation === '' || typeof translation === 'undefined') {
-        statusField.innerHTML = data;
-      } else {
-        statusField.innerHTML = translation;
-      }
+        const updateWebsocketStatusField = (err, data) => {
+            if (err) {
+                return err;
+            }
+            var color = 'darkred';
+            if (data === 'Connected') color = 'darkgreen';
+            if (data === 'Connecting...') color = 'orange';
+
+            var statusField = document.getElementById('unifi_websocket_status');
+            statusField.style.color = color;
+
+            var translationKey = 'status.connection.' + data;
+            var translation = Homey.__(translationKey);
+
+            if (translation === translationKey || translation === '' || typeof translation === 'undefined') {
+                statusField.innerHTML = data;
+            } else {
+                statusField.innerHTML = translation;
+            }
+        }
+
+        Homey.on('com.ubnt.unifiprotect.status', (data) => {
+            updateStatusField(null, data);
+        });
+        Homey.on('com.ubnt.unifiprotect.websocket.status', (data) => {
+            updateWebsocketStatusField(null, data);
+        });
+        Homey.get('com.ubnt.unifiprotect.status', updateStatusField);
+        Homey.get('com.ubnt.unifiprotect.websocket.status', updateWebsocketStatusField);
+
+        Homey.api("GET", "/status", null, function (err, result) {
+            updateStatusField(null, result);
+            if (err) return Homey.alert(err);
+        });
+
+        Homey.api("GET", "/websocketstatus", null, function (err, result) {
+            updateWebsocketStatusField(null, result);
+            if (err) return Homey.alert(err);
+        });
+
     }
-
-    const updateWebsocketStatusField =  (err, data) => {
-      if (err) {
-        return err;
-      }
-      var color = 'darkred';
-      if (data === 'Connected') color = 'darkgreen';
-      if (data === 'Connecting...') color = 'orange';
-
-      var statusField = document.getElementById('unifi_websocket_status');
-      statusField.style.color = color;
-
-      var translationKey = 'status.connection.' + data;
-      var translation = Homey.__(translationKey);
-
-      if (translation === translationKey || translation === '' || typeof translation === 'undefined') {
-        statusField.innerHTML = data;
-      } else {
-        statusField.innerHTML = translation;
-      }
-    }
-
-    Homey.on('com.ubnt.unifiprotect.status', ( data ) => { updateStatusField(null, data); });
-    Homey.on('com.ubnt.unifiprotect.websocket.status', ( data ) => { updateWebsocketStatusField(null, data); });
-    Homey.get('com.ubnt.unifiprotect.status', updateStatusField);
-    Homey.get('com.ubnt.unifiprotect.websocket.status', updateWebsocketStatusField);
-
-    Homey.api("GET", "/status", null , function (err, result) {
-      updateStatusField(null, result);
-      if (err) return Homey.alert(err);
-    });
-
-    Homey.api("GET", "/websocketstatus", null , function (err, result) {
-      updateWebsocketStatusField(null, result);
-      if (err) return Homey.alert(err);
-    });
-
-  }
 </script>
 </body>
 

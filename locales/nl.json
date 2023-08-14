@@ -19,7 +19,9 @@
     "username": "Gebruikersnaam",
     "password": "Wachtwoord",
     "apply": "Toepassen",
-    "saved": "Instellingen opgeslagen."
+    "saved": "Instellingen opgeslagen.",
+    "settings": "Instellingen",
+    "useCameraSnapshot": "Gebruik camera afbeelding"
   },
   "events": {
     "camera": {
