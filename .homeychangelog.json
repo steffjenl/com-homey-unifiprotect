@@ -91,5 +91,8 @@
   },
   "1.5.20": {
     "en": "Removed height and width and added image name to snapshot"
+  },
+  "1.5.21": {
+    "en": "Add option to get snapshot directly from the camera"
   }
 }
