@@ -319,11 +319,13 @@ class Doorbell extends Homey.Device {
         this.homey.app.debug('Creating snapshot image for doorbell ' + this.getName() + '.');
 
         this._snapshotImage = await this.homey.images.createImage();
-        this._snapshotImage.filename = this.getName() + '.jpg';
 
         const ipAddress = this.getCapabilityValue('ip_address');
 
         this._snapshotImage.setStream(async stream => {
+            // set stream filename
+            stream.filename = `snapshot-${this.getName()}.jpg`;
+
             // Obtain snapshot URL
             let snapshotUrl = null;
 
