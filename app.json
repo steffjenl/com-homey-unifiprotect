@@ -768,6 +768,9 @@
       "setable": true,
       "uiComponent": "picker",
       "uiQuickAction": true,
+      "uiOptions": {
+        "icon": "/assets/nightvision.svg"
+      },
       "icon": "/assets/nightvision.svg",
       "values": [
         {

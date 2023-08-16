@@ -188,7 +188,7 @@ class Camera extends Homey.Device {
                         this.setCapabilityValue('camera_connection_status', camera.isConnected);
                     }
                     if (this.hasCapability('camera_nightvision_set')) {
-                        this.setCapabilityValue('camera_nightvision_status', camera.ispSettings.irLedMode);
+                        this.setCapabilityValue('camera_nightvision_set', camera.ispSettings.irLedMode);
                     }
 
                 }
@@ -377,6 +377,8 @@ class Camera extends Homey.Device {
                 headers
             });
             if (!res.ok) throw new Error('Could not fetch snapshot image.');
+
+            res.headers.set('Content-disposition', 'attachment; filename=' + stream.filename);
 
             return res.body.pipe(stream);
         });
