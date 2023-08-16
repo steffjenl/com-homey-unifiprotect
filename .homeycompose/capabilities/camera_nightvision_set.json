@@ -1,0 +1,45 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Night Vision",
+    "nl": "Nachtzicht"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "picker",
+  "uiQuickAction": true,
+  "uiOptions": {
+    "icon": "/assets/nightvision.svg"
+  },
+  "icon": "/assets/nightvision.svg",
+  "values": [
+    {
+      "id": "auto",
+      "title": {
+        "en": "Auto",
+        "nl": "Automatisch"
+      }
+    },
+    {
+      "id": "autoFilterOnly",
+        "title": {
+            "en": "Auto (Filter only, no LEDs)",
+            "nl": "Auto (Filter only, no LEDs)"
+        }
+    },
+    {
+      "id": "on",
+        "title": {
+            "en": "Always Enable",
+            "nl": "Altijd Aan"
+        }
+    },
+    {
+      "id": "off",
+        "title": {
+            "en": "Always Disable",
+            "nl": "Altijd Uit"
+        }
+    }
+  ]
+}
