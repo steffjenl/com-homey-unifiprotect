@@ -103,5 +103,8 @@
   },
   "1.5.24": {
     "en": "Upgrade node packages to latest version"
+  },
+  "1.5.25": {
+    "en": "Add support for setting Night Vision in UI and Flow"
   }
 }
