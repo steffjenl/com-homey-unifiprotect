@@ -307,7 +307,7 @@ class ProtectAPI extends BaseClass {
             this.webclient.get('cameras')
                 .then(response => {
                     let result = JSON.parse(response);
-//                    result = result.filter( obj => obj.type !== "UVC G4 Doorbell");
+                    result = result.filter( obj => obj.featureFlags.isDoorbell !== true);
                     if (result) {
                         return resolve(result);
                     } else {
@@ -323,7 +323,7 @@ class ProtectAPI extends BaseClass {
             this.webclient.get('cameras')
                 .then(response => {
                     let result = JSON.parse(response);
-                    result = result.filter( obj => obj.type === "UVC G4 Doorbell");
+                    result = result.filter( obj => obj.featureFlags.isDoorbell === true);
                     if (result) {
                         return resolve(result);
                     } else {
