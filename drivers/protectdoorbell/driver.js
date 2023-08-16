@@ -71,6 +71,11 @@ class UniFiDoorbellDriver extends Homey.Driver {
       if (payload.hasOwnProperty('isDark')) {
         camera.onIsDark(payload.isDark);
       }
+
+      if (payload.hasOwnProperty('ispSettings') && payload.ispSettings.hasOwnProperty('irLedMode')) {
+        camera.onNightVisionMode(payload.ispSettings.irLedMode);
+      }
+
     }
   }
 

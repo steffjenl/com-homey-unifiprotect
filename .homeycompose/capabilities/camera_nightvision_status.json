@@ -7,5 +7,5 @@
   "getable": true,
   "setable": false,
   "uiComponent": "sensor",
-  "icon": "/assets/microphone.svg"
+  "icon": "/assets/nightvision.svg"
 }

@@ -94,6 +94,16 @@ class UniFiProtect extends Homey.App {
             return Promise.resolve(true);
         });
 
+        const _setNightVisionMode = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_NIGHT_VISION_MODE);
+        _setNightVisionMode.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData().id !== 'undefined') {
+                this.homey.app.api.setNightVisionMode(args.device.getData(), args.nightvision_mode)
+                    .then(this.homey.app.debug.bind(this, '[nightvision_mode.set]'))
+                    .catch(this.error.bind(this, '[nightvision_mode.set]'));
+            }
+            return Promise.resolve(true);
+        });
+
         // Subscribe to credentials updates
         this.homey.settings.on('set', key => {
             if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {
