@@ -298,6 +298,58 @@
         ]
       },
       {
+        "id": "ufv_set_nightvision_mode",
+        "title": {
+          "en": "Set Night Vision mode",
+          "nl": "Stel Night Vision in"
+        },
+        "titleFormatted": {
+          "en": "Set Night Vision mode [[nightvision_mode]] for [[device]]"
+        },
+        "args": [
+          {
+            "title": "Camera",
+            "name": "device",
+            "type": "device"
+          },
+          {
+            "title": "Night Vision",
+            "name": "nightvision_mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "auto",
+                "title": {
+                  "en": "Auto",
+                  "nl": "Automatisch"
+                }
+              },
+              {
+                "id": "autoFilterOnly",
+                "title": {
+                  "en": "Auto (Filter only, no LEDs)",
+                  "nl": "Auto (Filter only, no LEDs)"
+                }
+              },
+              {
+                "id": "on",
+                "title": {
+                  "en": "Always Enable",
+                  "nl": "Altijd Aan"
+                }
+              },
+              {
+                "id": "off",
+                "title": {
+                  "en": "Always Disable",
+                  "nl": "Altijd Uit"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
         "deprecated": true,
         "id": "ufv_set_recording_mode",
         "title": {
@@ -472,7 +524,8 @@
         "camera_recording_status",
         "last_motion_at",
         "last_smart_detection_at",
-        "ip_address"
+        "ip_address",
+        "camera_nightvision_set"
       ],
       "name": {
         "en": "Camera"
@@ -549,7 +602,8 @@
         "camera_recording_status",
         "last_motion_at",
         "last_smart_detection_at",
-        "ip_address"
+        "ip_address",
+        "camera_nightvision_set"
       ],
       "name": {
         "en": "Doorbell",
@@ -704,6 +758,48 @@
       "max": 100,
       "icon": "/assets/microphone.svg"
     },
+    "camera_nightvision_set": {
+      "type": "enum",
+      "title": {
+        "en": "Night Vision",
+        "nl": "Nachtzicht"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "picker",
+      "uiQuickAction": true,
+      "icon": "/assets/nightvision.svg",
+      "values": [
+        {
+          "id": "auto",
+          "title": {
+            "en": "Auto",
+            "nl": "Automatisch"
+          }
+        },
+        {
+          "id": "autoFilterOnly",
+          "title": {
+            "en": "Auto (Filter only, no LEDs)",
+            "nl": "Auto (Filter only, no LEDs)"
+          }
+        },
+        {
+          "id": "on",
+          "title": {
+            "en": "Always Enable",
+            "nl": "Altijd Aan"
+          }
+        },
+        {
+          "id": "off",
+          "title": {
+            "en": "Always Disable",
+            "nl": "Altijd Uit"
+          }
+        }
+      ]
+    },
     "camera_nightvision_status": {
       "type": "boolean",
       "title": {
@@ -713,7 +809,7 @@
       "getable": true,
       "setable": false,
       "uiComponent": "sensor",
-      "icon": "/assets/microphone.svg"
+      "icon": "/assets/nightvision.svg"
     },
     "camera_recording_mode": {
       "type": "string",

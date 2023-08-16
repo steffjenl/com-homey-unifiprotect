@@ -344,6 +344,7 @@ class ProtectAPI extends BaseClass {
                 accessKey: this.webclient.getApiKey(),
                 w: widthInPixels,
                 force: true,
+                ext: '.jpg'
             };
 
             let snapshot;
@@ -362,7 +363,8 @@ class ProtectAPI extends BaseClass {
                 accessKey: this.webclient.getApiKey(),
                 w: widthInPixels,
                 force: true,
-                ts: Date.now()
+                ts: Date.now(),
+                ext: '.jpg'
             };
 
             return resolve(`https://${this.webclient.getServerHost()}:${this.webclient.getServerPort()}${UFV_API_ENDPOINT}/cameras/${camera.id}/snapshot${this.webclient.toQueryString(params)}`);
@@ -393,6 +395,35 @@ class ProtectAPI extends BaseClass {
                         .catch(error => reject(new Error(`Error setting recording mode: ${error}`)));
                 })
                 .catch(error => reject(new Error(`Error setting recording mode: ${error}`)));
+        });
+    }
+
+    setNightVisionMode(camera, mode = 'auto') {
+        return new Promise((resolve, reject) => {
+            this.findCameraById(camera.id)
+                .then(cameraInfo => {
+                    const homekitSettings = cameraInfo.homekitSettings;
+                    const ispSettings = cameraInfo.ispSettings;
+                    const ledSettings = cameraInfo.ledSettings;
+                    const micVolume = cameraInfo.micVolume;
+                    const name = cameraInfo.name;
+                    const speakerSettings = cameraInfo.speakerSettings;
+                    ispSettings.irLedMode = mode;
+
+                    const params = {
+                        homekitSettings,
+                        ispSettings,
+                        ledSettings,
+                        micVolume,
+                        name,
+                        speakerSettings
+                    };
+
+                    return this.webclient.patch(`cameras/${camera.id}`, params)
+                        .then(() => resolve('Night Vision mode successfully set.'))
+                        .catch(error => reject(new Error(`Error setting Night Vision mode: ${error}`)));
+                })
+                .catch(error => reject(new Error(`Error setting Night Vision mode: ${error}`)));
         });
     }
 

@@ -1,0 +1,53 @@
+{
+  "id": "ufv_set_nightvision_mode",
+  "title": {
+    "en": "Set Night Vision mode",
+    "nl": "Stel Night Vision in"
+  },
+  "titleFormatted": {
+    "en": "Set Night Vision mode [[nightvision_mode]] for [[device]]"
+  },
+  "args": [
+    {
+      "title": "Camera",
+      "name": "device",
+      "type": "device",
+      "$filter": "class=camera|doorbell"
+    },
+    {
+      "title": "Night Vision",
+      "name": "nightvision_mode",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "auto",
+          "title": {
+            "en": "Auto",
+            "nl": "Automatisch"
+          }
+        },
+        {
+          "id": "autoFilterOnly",
+          "title": {
+            "en": "Auto (Filter only, no LEDs)",
+            "nl": "Auto (Filter only, no LEDs)"
+          }
+        },
+        {
+          "id": "on",
+          "title": {
+            "en": "Always Enable",
+            "nl": "Altijd Aan"
+          }
+        },
+        {
+          "id": "off",
+          "title": {
+            "en": "Always Disable",
+            "nl": "Altijd Uit"
+          }
+        }
+      ]
+    }
+  ]
+}

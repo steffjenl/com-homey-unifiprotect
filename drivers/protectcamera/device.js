@@ -57,6 +57,12 @@ class Camera extends Homey.Device {
                 .catch(this.error);
         });
 
+        this.registerCapabilityListener('camera_nightvision_set', async (value) => {
+            this.homey.app.debug('camera_nightvision_set');
+            this.homey.app.api.setNightVisionMode(this.getData(), value)
+               .catch(this.error);
+        });
+
         await this._createMissingCapabilities();
         await this._initCameraData();
         await this._createSnapshotImage();
@@ -80,6 +86,11 @@ class Camera extends Homey.Device {
         if (!this.hasCapability('camera_nightvision_status')) {
             this.addCapability('camera_nightvision_status');
             this.homey.app.debug(`created capability camera_nightvision_status for ${this.getName()}`);
+        }
+
+        if (!this.hasCapability('camera_nightvision_set')) {
+            this.addCapability('camera_nightvision_set');
+            this.homey.app.debug(`created capability camera_nightvision_set for ${this.getName()}`);
         }
 
         if (!this.hasCapability('last_motion_score')) {
@@ -176,6 +187,9 @@ class Camera extends Homey.Device {
                         }
                         this.setCapabilityValue('camera_connection_status', camera.isConnected);
                     }
+                    if (this.hasCapability('camera_nightvision_set')) {
+                        this.setCapabilityValue('camera_nightvision_status', camera.ispSettings.irLedMode);
+                    }
 
                 }
             });
@@ -196,6 +210,13 @@ class Camera extends Homey.Device {
         // Debug information about playload
         if (this.hasCapability('camera_nightvision_status')) {
             this.setCapabilityValue('camera_nightvision_status', isDark);
+        }
+    }
+
+    onNightVisionMode(mode) {
+        // Debug information about playload
+        if (this.hasCapability('camera_nightvision_set')) {
+            this.setCapabilityValue('camera_nightvision_set', mode);
         }
     }
 
