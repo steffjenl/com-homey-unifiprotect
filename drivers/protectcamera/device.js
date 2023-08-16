@@ -276,17 +276,17 @@ class Camera extends Homey.Device {
         this.setCapabilityValue('last_smart_detection_score', score)
             .catch(this.error);
 
-        const smartDetectionType = smartDetectTypes.join(',');
+        // const smartDetectionType = smartDetectTypes.join(',');
 
         // fire trigger (per detection type)
-        //for (let smartDetectionType of smartDetectTypes) {
-        this.homey.app.debug(`smart detection event on camera ${this.getData().id}, with type ${smartDetectionType}`);
-        this.homey.app._smartDetectionTrigger.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            smart_detection_type: smartDetectionType,
-            score: score
-        });
-        //}
+        for (let smartDetectionType of smartDetectTypes) {
+            this.homey.app.debug(`smart detection event on camera ${this.getData().id}, with type ${smartDetectionType}`);
+            this.homey.app._smartDetectionTrigger.trigger({
+                ufp_smart_detection_camera: this.getName(),
+                smart_detection_type: smartDetectionType,
+                score: score
+            });
+        }
     }
 
     onConnectionChanged(connectionStatus) {
