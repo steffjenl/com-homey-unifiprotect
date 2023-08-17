@@ -235,17 +235,16 @@ class ProtectWebSocket extends BaseClass {
                 // get protectcamera driver
                 const driverCamera = this.homey.drivers.getDriver('protectcamera');
                 // Get device from camera id
-                const deviceId = updatePacket.action.id;
+                const deviceId = updatePacket.payload.camera;
                 const deviceCamera = driverCamera.getUnifiDeviceById(deviceId);
                 if (deviceCamera) {
                     // Parse Websocket payload message
                     driverCamera.onParseWebsocketMessage(deviceCamera, payload);
                 }
-
                 // get doorbell driver
                 const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
                 // Get device from camera id
-                const deviceDoorbellId = updatePacket.action.id;
+                const deviceDoorbellId = updatePacket.payload.camera;
                 const deviceDoorbell = driverDoorbell.getUnifiDeviceById(deviceDoorbellId);
                 if (deviceDoorbell) {
                     // Parse Websocket payload message

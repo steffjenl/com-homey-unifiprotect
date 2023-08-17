@@ -79,15 +79,14 @@ class UniFiDoorbellDriver extends Homey.Driver {
     }
   }
 
-  getUnifiDeviceById(camera) {
+  getUnifiDeviceById(doorbellId) {
     try {
       const device = this.getDevice({
-        id: camera,
+        id: doorbellId,
       });
 
       return device;
-    }
-    catch(Error) {
+    } catch(Error) {
       return false;
     }
   }
