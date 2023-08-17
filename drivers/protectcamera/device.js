@@ -342,9 +342,6 @@ class Camera extends Homey.Device {
         const ipAddress = this.getCapabilityValue('ip_address');
 
         this._snapshotImage.setStream(async stream => {
-            // set stream filename
-            stream.filename = `snapshot-${this.getName()}.jpg`;
-
             // Obtain snapshot URL
             let snapshotUrl = null;
 
@@ -377,8 +374,6 @@ class Camera extends Homey.Device {
                 headers
             });
             if (!res.ok) throw new Error('Could not fetch snapshot image.');
-
-            res.headers.set('Content-disposition', 'attachment; filename=' + stream.filename);
 
             return res.body.pipe(stream);
         });
