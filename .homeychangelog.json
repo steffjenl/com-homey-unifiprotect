@@ -106,5 +106,8 @@
   },
   "1.5.25": {
     "en": "Add support for setting Night Vision in UI and Flow"
+  },
+  "1.5.26": {
+    "en": "Bugfix: smartDetect events"
   }
 }
