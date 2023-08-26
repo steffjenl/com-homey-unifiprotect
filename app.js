@@ -104,6 +104,16 @@ class UniFiProtect extends Homey.App {
             return Promise.resolve(true);
         });
 
+        const _setLCDMessage = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_LCD_MESSAGE);
+        _setLCDMessage.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData().id !== 'undefined') {
+                this.homey.app.api.setLCDMessage(args.device.getData(), args.message)
+                    .then(this.homey.app.debug.bind(this, '[lcd_message.set]'))
+                    .catch(this.error.bind(this, '[lcd_message.set]'));
+            }
+            return Promise.resolve(true);
+        });
+
         // Subscribe to credentials updates
         this.homey.settings.on('set', key => {
             if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {

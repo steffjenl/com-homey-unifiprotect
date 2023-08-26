@@ -438,6 +438,21 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    setLCDMessage(camera, message = '', resetAt = null) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                lcdMessage: {
+                    type: "CUSTOM_MESSAGE",
+                    text: message,
+                    resetAt: resetAt
+                },
+            };
+            return this.webclient.patch(`cameras/${camera.id}`, params)
+                .then(() => resolve('LCD message successfully set.'))
+                .catch(error => reject(new Error(`Error setting lcd message: ${error}`)));
+        });
+    }
+
     getMotionEvents() {
         return new Promise((resolve, reject) => {
             let start = new Date();

@@ -1,0 +1,23 @@
+{
+  "id": "ufv_set_lcd_message",
+  "title": {
+    "en": "Set LCD message",
+    "nl": "Stel LCD bericht in"
+  },
+  "titleFormatted": {
+    "en": "Set LCD message [[message]] for [[device]]"
+  },
+  "args": [
+    {
+      "title": "Doorbell",
+      "name": "device",
+      "type": "device",
+      "$filter": "class=doorbell"
+    },
+    {
+      "title": "Message",
+      "name": "message",
+      "type": "text"
+    }
+  ]
+}
