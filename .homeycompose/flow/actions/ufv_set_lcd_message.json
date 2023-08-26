@@ -17,7 +17,8 @@
     {
       "title": "Message",
       "name": "message",
-      "type": "text"
+      "type": "text",
+      "placeholder": "Message max 30 characters"
     }
   ]
 }
