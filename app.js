@@ -107,7 +107,7 @@ class UniFiProtect extends Homey.App {
         const _setLCDMessage = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_LCD_MESSAGE);
         _setLCDMessage.registerRunListener(async (args, state) => {
             if (typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.api.setLCDMessage(args.device.getData(), args.message)
+                this.homey.app.api.setLCDMessage(args.device.getData(), args.message.substring(0, 29))
                     .then(this.homey.app.debug.bind(this, '[lcd_message.set]'))
                     .catch(this.error.bind(this, '[lcd_message.set]'));
             }
