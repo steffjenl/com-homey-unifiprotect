@@ -39,7 +39,7 @@
     "security",
     "video"
   ],
-  "version": "1.5.28",
+  "version": "1.6.0",
   "compatibility": ">=5.0.0",
   "author": {
     "name": "Stèphan Eizinga",
