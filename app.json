@@ -77,6 +77,10 @@
     "getWebsocketStatus": {
       "method": "GET",
       "path": "/websocketstatus"
+    },
+    "testCredentials": {
+      "method": "POST",
+      "path": "/test"
     }
   },
   "flow": {

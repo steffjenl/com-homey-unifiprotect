@@ -336,6 +336,19 @@ class Doorbell extends Homey.Device {
         }
     }
 
+    async getSnapshot() {
+        this._snapshotImage = await this.homey.images.createImage();
+        this._snapshotImage.setStream(async stream => {
+            let snapshotUrl = `https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg`;
+            // Fetch image
+            const res = await fetch(snapshotUrl);
+            if (!res.ok) throw new Error('Could not fetch snapshot image.');
+
+            return res.body.pipe(stream);
+        });
+        this.setCameraImage('snapshot', this.getName(), this._snapshotImage);
+    }
+
     async _createSnapshotImage(triggerFlow = false) {
         this.homey.app.debug('Creating snapshot image for doorbell ' + this.getName() + '.');
 

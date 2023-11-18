@@ -61,8 +61,8 @@ class ProtectAPI extends BaseClass {
         this.homey.app.debug('Get CSRF Token...');
 
         return new Promise((resolve, reject) => {
-            this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Getting CSRF token');
-            this.loggedInStatus = 'Getting CSRF token';
+            //this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Getting CSRF token');
+            //this.loggedInStatus = 'Getting CSRF token';
 
             if (!host) reject(new Error('Invalid host.'));
 
@@ -97,18 +97,15 @@ class ProtectAPI extends BaseClass {
                         if (item.toLowerCase() === 'x-csrf-token') {
                             this.webclient.setCSRFToken(res.rawHeaders[index + 1]);
                         }
+
+                        // this.homey.app.debug('Header: ' + item.toLowerCase() + ' => ' + res.rawHeaders[index + 1]);
                     });
 
-                    if (this.webclient.getCSRFToken() === null) {
-                        reject(new Error('Invalid x-csrf-token header.'));
-                        return;
-                    }
-
                     // Connected
-                    this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'CSRF Token found');
-                    this.loggedInStatus = 'CSRF Token found';
+                    //this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'CSRF Token found');
+                    //this.loggedInStatus = 'CSRF Token found';
                     //
-                    return resolve('We got it!');
+                    return resolve(this.webclient.getCSRFToken());
                 });
             });
 
@@ -130,10 +127,10 @@ class ProtectAPI extends BaseClass {
 
         return new Promise((resolve, reject) => {
 
-        this.getCSRFToken(host, port).then(response => {
+            this.getCSRFToken(host, port).then(response => {
 
                 this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connecting');
-            this.loggedInStatus = 'Connecting';
+                this.loggedInStatus = 'Connecting';
 
                 if (!host) reject(new Error('Invalid host.'));
                 if (!username) reject(new Error('Invalid username.'));
@@ -204,7 +201,7 @@ class ProtectAPI extends BaseClass {
                 req.write(credentials);
                 req.end();
 
-        }).catch(error => reject(error));
+            }).catch(error => reject(error));
         });
     }
 
@@ -307,7 +304,7 @@ class ProtectAPI extends BaseClass {
             this.webclient.get('cameras')
                 .then(response => {
                     let result = JSON.parse(response);
-                    result = result.filter( obj => obj.featureFlags.isDoorbell !== true);
+                    result = result.filter(obj => obj.featureFlags.isDoorbell !== true);
                     if (result) {
                         return resolve(result);
                     } else {
@@ -323,7 +320,7 @@ class ProtectAPI extends BaseClass {
             this.webclient.get('cameras')
                 .then(response => {
                     let result = JSON.parse(response);
-                    result = result.filter( obj => obj.featureFlags.isDoorbell === true);
+                    result = result.filter(obj => obj.featureFlags.isDoorbell === true);
                     if (result) {
                         return resolve(result);
                     } else {
@@ -609,15 +606,13 @@ class ProtectAPI extends BaseClass {
                     enableAt: "fulltime"
 
                 }
-            }
-            else if (mode === "motiondark") {
+            } else if (mode === "motiondark") {
                 lightModeSettings = {
                     mode: "motion",
                     enableAt: "dark"
 
                 }
-            }
-            else {
+            } else {
                 lightModeSettings = {
                     mode: mode,
                     enableAt: 'dark'
