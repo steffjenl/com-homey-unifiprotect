@@ -112,5 +112,8 @@
   },
   "1.5.27": {
     "en": "Add support to set LCD message for Doorbell"
+  },
+  "1.5.28": {
+    "en": "Give settings new Homey layout"
   }
 }
