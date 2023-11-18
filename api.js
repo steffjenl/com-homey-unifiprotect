@@ -17,7 +17,7 @@ module.exports = {
                 this.webclient.setServerHost(body.host);
                 this.webclient.setServerPort(body.port);
 
-                homey.app.api.getCSRFToken(body.host, body.port).then(response => {
+                // homey.app.api.getCSRFToken(body.host, body.port).then(response => {
                     const credentials = JSON.stringify({
                         username: body.user,
                         password: body.pass,
@@ -31,7 +31,6 @@ module.exports = {
                         headers: {
                             'Content-Type': 'application/json; charset=utf-8',
                             Accept: 'application/json',
-                            'x-csrf-token': response,
                         },
                         maxRedirects: 20,
                         rejectUnauthorized: false,
@@ -56,7 +55,7 @@ module.exports = {
 
                     req.write(credentials);
                     req.end();
-                });
+                //});
             }).then((result) => {
                 return {
                     status: 'success',

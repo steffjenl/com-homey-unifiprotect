@@ -127,7 +127,7 @@ class ProtectAPI extends BaseClass {
 
         return new Promise((resolve, reject) => {
 
-            this.getCSRFToken(host, port).then(response => {
+            //this.getCSRFToken(host, port).then(response => {
 
                 this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connecting');
                 this.loggedInStatus = 'Connecting';
@@ -149,7 +149,6 @@ class ProtectAPI extends BaseClass {
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8',
                         Accept: 'application/json',
-                        'x-csrf-token': this.webclient.getCSRFToken(),
                     },
                     maxRedirects: 20,
                     rejectUnauthorized: false,
@@ -202,7 +201,6 @@ class ProtectAPI extends BaseClass {
                 req.end();
 
             }).catch(error => reject(error));
-        });
     }
 
     getBootstrapInfo() {
