@@ -121,5 +121,8 @@
   },
   "1.6.1": {
     "en": "Add smart detections capabilities"
+  },
+  "1.6.2": {
+    "en": "Bugfix"
   }
 }
