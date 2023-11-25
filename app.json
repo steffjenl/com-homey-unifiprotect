@@ -948,13 +948,30 @@
       "getable": true,
       "setable": false
     },
+    "last_smart_detection_date": {
+      "type": "string",
+      "title": {
+        "en": "Last smart detection at",
+        "nl": "Laatste slimme detectie op"
+      },
+      "getable": true,
+      "setable": false
+    },
     "last_smart_detection_score": {
       "type": "number",
       "title": {
         "en": "Last smart detection score",
         "nl": "Laatste slimme detectie score"
       },
-      "uiComponent": null,
+      "getable": true,
+      "setable": false
+    },
+    "last_smart_detection_time": {
+      "type": "string",
+      "title": {
+        "en": "Last smart detection on",
+        "nl": "Laatste slimme detectie om"
+      },
       "getable": true,
       "setable": false
     },

@@ -146,6 +146,14 @@ class Camera extends Homey.Device {
             this.addCapability('last_smart_detection_score');
             this.homey.app.debug(`created capability last_smart_detection_score for ${this.getName()}`);
         }
+        if (!this.hasCapability('last_smart_detection_date')) {
+            this.addCapability('last_smart_detection_date');
+            this.homey.app.debug(`created capability last_smart_detection_date for ${this.getName()}`);
+        }
+        if (!this.hasCapability('last_smart_detection_time')) {
+            this.addCapability('last_smart_detection_time');
+            this.homey.app.debug(`created capability last_smart_detection_time for ${this.getName()}`);
+        }
         if (!this.hasCapability('ip_address')) {
             this.addCapability('ip_address');
             this.homey.app.debug(`created capability ip_address for ${this.getName()}`);
@@ -272,6 +280,10 @@ class Camera extends Homey.Device {
     onSmartDetection(lastDetectionAt, smartDetectTypes, score) {
         // Set last smart detection to current datetime
         this.setCapabilityValue('last_smart_detection_at', lastDetectionAt)
+            .catch(this.error);
+        this.setCapabilityValue('last_smart_detection_date', lastDetectionAt.toLocaleDateString())
+            .catch(this.error);
+        this.setCapabilityValue('last_smart_detection_time', lastDetectionAt.toLocaleTimeString())
             .catch(this.error);
         this.setCapabilityValue('last_smart_detection_score', score)
             .catch(this.error);
