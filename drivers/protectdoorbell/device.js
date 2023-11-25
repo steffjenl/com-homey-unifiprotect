@@ -280,12 +280,13 @@ class Doorbell extends Homey.Device {
     }
 
     onSmartDetection(lastDetectionAt, smartDetectTypes, score) {
+        const lastDetection = new Date(lastDetectionAt);
         // Set last smart detection to current datetime
         this.setCapabilityValue('last_smart_detection_at', lastDetectionAt)
             .catch(this.error);
-        this.setCapabilityValue('last_smart_detection_date', lastDetectionAt.toLocaleDateString())
+        this.setCapabilityValue('last_smart_detection_date', lastDetection.toLocaleDateString())
             .catch(this.error);
-        this.setCapabilityValue('last_smart_detection_time', lastDetectionAt.toLocaleTimeString())
+        this.setCapabilityValue('last_smart_detection_time', lastDetection.toLocaleTimeString())
             .catch(this.error);
         this.setCapabilityValue('last_smart_detection_score', score)
             .catch(this.error);
