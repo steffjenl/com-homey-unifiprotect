@@ -21,6 +21,7 @@ class UniFiProtect extends Homey.App {
         this.nvrUsername = null;
         this.nvrPassword = null;
         this.useCameraSnapshot = false;
+        this._refreshAuthTokensnterval = 24 * 60 * 60 * 1000; // 24 hours
 
         // Single API instance for all devices
         this.api = new ProtectAPI();
@@ -132,9 +133,21 @@ class UniFiProtect extends Homey.App {
         }
 
         this._appLogin();
-
+        // refresh auth tokens every day
+        await this.refreshAuthTokens();
 
         this.debug('UniFiProtect has been initialized');
+    }
+
+    async refreshAuthTokens()    {
+        const refreshAuthTokens = setInterval(() => {
+            try {
+                this.debug('Refreshing auth tokens');
+                this._appLogin();
+            } catch (error) {
+                this.homey.error(`${JSON.stringify(error)}`);
+            }
+        }, this._refreshAuthTokensnterval);
     }
 
     async triggerSnapshotTrigger(tokens) {

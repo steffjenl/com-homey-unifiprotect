@@ -75,11 +75,11 @@ class Light extends Homey.Device {
   async _createMissingCapabilities() {
     if (this.getClass() !== 'light') {
       this.homey.app.debug(`changed class to light for ${this.getName()}`);
-      this.setClass('light');
+      await this.setClass('light');
     }
     // light_mode
     if (!this.hasCapability('light_mode')) {
-      this.addCapability('light_mode');
+      await this.addCapability('light_mode');
       this.homey.app.debug(`created capability light_mode for ${this.getName()}`);
     }
   }

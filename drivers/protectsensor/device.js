@@ -75,39 +75,39 @@ class Sensor extends Homey.Device {
   async _createMissingCapabilities() {
     if (this.getClass() !== 'sensor') {
       this.homey.app.debug(`changed class to sensor for ${this.getName()}`);
-      this.setClass('sensor');
+      await this.setClass('sensor');
     }
     // alarm_motion
     if (!this.hasCapability('alarm_motion')) {
-      this.addCapability('alarm_motion');
+      await this.addCapability('alarm_motion');
       this.homey.app.debug(`created capability alarm_motion for ${this.getName()}`);
     }
     if (!this.hasCapability('last_motion_at')) {
-      this.addCapability('last_motion_at');
+      await this.addCapability('last_motion_at');
       this.homey.app.debug(`created capability last_motion_at for ${this.getName()}`);
     }
     if (!this.hasCapability('measure_humidity')) {
-      this.addCapability('measure_humidity');
+      await this.addCapability('measure_humidity');
       this.homey.app.debug(`created capability measure_humidity for ${this.getName()}`);
     }
     if (!this.hasCapability('measure_temperature')) {
-      this.addCapability('measure_temperature');
+      await this.addCapability('measure_temperature');
       this.homey.app.debug(`created capability measure_temperature for ${this.getName()}`);
     }
     if (!this.hasCapability('measure_luminance')) {
-      this.addCapability('measure_luminance');
+      await this.addCapability('measure_luminance');
       this.homey.app.debug(`created capability measure_luminance for ${this.getName()}`);
     }
     if (!this.hasCapability('alarm_contact')) {
-      this.addCapability('alarm_contact');
+      await this.addCapability('alarm_contact');
       this.homey.app.debug(`created capability alarm_contact for ${this.getName()}`);
     }
     if (!this.hasCapability('last_motion_date')) {
-      this.addCapability('last_motion_date');
+      await this.addCapability('last_motion_date');
       this.homey.app.debug(`created capability last_motion_date for ${this.getName()}`);
     }
     if (!this.hasCapability('last_motion_time')) {
-      this.addCapability('last_motion_time');
+      await this.addCapability('last_motion_time');
       this.homey.app.debug(`created capability last_motion_time for ${this.getName()}`);
     }
   }

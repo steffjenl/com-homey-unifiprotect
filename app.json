@@ -628,6 +628,8 @@
         "alarm_motion",
         "camera_recording_status",
         "last_motion_at",
+        "last_motion_date",
+        "last_motion_time",
         "last_smart_detection_at",
         "ip_address",
         "camera_nightvision_set"
