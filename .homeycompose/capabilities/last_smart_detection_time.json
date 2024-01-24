@@ -1,0 +1,9 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Last smart detection on",
+    "nl": "Laatste slimme detectie om"
+  },
+  "getable": true,
+  "setable": false
+}

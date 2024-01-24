@@ -112,5 +112,17 @@
   },
   "1.5.27": {
     "en": "Add support to set LCD message for Doorbell"
+  },
+  "1.5.28": {
+    "en": "Give settings new Homey layout"
+  },
+  "1.6.0": {
+    "en": "Support for new firmware UnifiOS devices"
+  },
+  "1.6.1": {
+    "en": "Add smart detections capabilities"
+  },
+  "1.6.2": {
+    "en": "Bugfix"
   }
 }

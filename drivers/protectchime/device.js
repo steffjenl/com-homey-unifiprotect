@@ -71,7 +71,7 @@ class Chime extends Homey.Device {
   async _createMissingCapabilities() {
     if (this.getClass() !== 'sensor') {
       this.homey.app.debug(`changed class to sensor for ${this.getName()}`);
-      this.setClass('sensor');
+      await this.setClass('sensor');
     }
   }
 

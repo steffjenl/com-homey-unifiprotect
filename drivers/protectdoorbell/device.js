@@ -79,75 +79,84 @@ class Doorbell extends Homey.Device {
     async _createMissingCapabilities() {
         if (this.getClass() !== 'doorbell') {
             this.homey.app.debug(`changed class to doorbell for ${this.getName()}`);
-            this.setClass('doorbell');
+            await this.setClass('doorbell');
         }
 
         // Doorbell_nightvision_status
         if (!this.hasCapability('camera_nightvision_status')) {
-            this.addCapability('camera_nightvision_status');
+            await this.addCapability('camera_nightvision_status');
             this.homey.app.debug(`created capability camera_nightvision_status for ${this.getName()}`);
         }
 
         if (!this.hasCapability('camera_nightvision_set')) {
-            this.addCapability('camera_nightvision_set');
+            await this.addCapability('camera_nightvision_set');
             this.homey.app.debug(`created capability camera_nightvision_set for ${this.getName()}`);
         }
 
         if (!this.hasCapability('last_motion_score')) {
-            this.addCapability('last_motion_score');
+            await this.addCapability('last_motion_score');
             this.homey.app.debug(`created capability last_motion_score for ${this.getName()}`);
         }
 
         if (!this.hasCapability('last_motion_thumbnail')) {
-            this.addCapability('last_motion_thumbnail');
+            await this.addCapability('last_motion_thumbnail');
             this.homey.app.debug(`created capability last_motion_thumbnail for ${this.getName()}`);
         }
         if (!this.hasCapability('last_motion_heatmap')) {
-            this.addCapability('last_motion_heatmap');
+            await this.addCapability('last_motion_heatmap');
             this.homey.app.debug(`created capability last_motion_heatmap for ${this.getName()}`);
         }
         if (this.hasCapability('last_motion_datetime')) {
-            this.removeCapability('last_motion_datetime');
+            await this.removeCapability('last_motion_datetime');
             this.homey.app.debug(`removed capability last_motion_datetime for ${this.getName()}`);
         }
         if (!this.hasCapability('last_motion_date')) {
-            this.addCapability('last_motion_date');
+            await this.addCapability('last_motion_date');
             this.homey.app.debug(`created capability last_motion_date for ${this.getName()}`);
         }
         if (!this.hasCapability('last_motion_time')) {
-            this.addCapability('last_motion_time');
+            await this.addCapability('last_motion_time');
             this.homey.app.debug(`created capability last_motion_time for ${this.getName()}`);
         }
+
         if (!this.hasCapability('camera_recording_mode')) {
-            this.addCapability('camera_recording_mode');
+            await this.addCapability('camera_recording_mode');
             this.homey.app.debug(`created capability camera_recording_mode for ${this.getName()}`);
         }
         if (!this.hasCapability('camera_microphone_status')) {
-            this.addCapability('camera_microphone_status');
+            await this.addCapability('camera_microphone_status');
             this.homey.app.debug(`created capability camera_microphone_status for ${this.getName()}`);
         }
         if (!this.hasCapability('camera_microphone_volume')) {
-            this.addCapability('camera_microphone_volume');
+            await this.addCapability('camera_microphone_volume');
             this.homey.app.debug(`created capability camera_microphone_volume for ${this.getName()}`);
         }
         if (!this.hasCapability('camera_connection_status')) {
-            this.addCapability('camera_connection_status');
+            await this.addCapability('camera_connection_status');
             this.homey.app.debug(`created capability camera_connection_status for ${this.getName()}`);
         }
         if (!this.hasCapability('last_ring_at')) {
-            this.addCapability('last_ring_at');
+            await this.addCapability('last_ring_at');
             this.homey.app.debug(`created capability last_ring_at for ${this.getName()}`);
         }
         if (!this.hasCapability('last_smart_detection_at')) {
-            this.addCapability('last_smart_detection_at');
+            await this.addCapability('last_smart_detection_at');
             this.homey.app.debug(`created capability last_smart_detection_at for ${this.getName()}`);
         }
         if (!this.hasCapability('last_smart_detection_score')) {
-            this.addCapability('last_smart_detection_score');
+            await this.addCapability('last_smart_detection_score');
             this.homey.app.debug(`created capability last_smart_detection_score for ${this.getName()}`);
         }
+        if (!this.hasCapability('last_smart_detection_date')) {
+            await this.addCapability('last_smart_detection_date');
+            this.homey.app.debug(`created capability last_smart_detection_date for ${this.getName()}`);
+        }
+        if (!this.hasCapability('last_smart_detection_time')) {
+            await this.addCapability('last_smart_detection_time');
+            this.homey.app.debug(`created capability last_smart_detection_time for ${this.getName()}`);
+        }
         if (!this.hasCapability('ip_address')) {
-            this.addCapability('ip_address');
+            await this.addCapability('ip_address');
             this.homey.app.debug(`created capability ip_address for ${this.getName()}`);
         }
 
@@ -272,8 +281,13 @@ class Doorbell extends Homey.Device {
     }
 
     onSmartDetection(lastDetectionAt, smartDetectTypes, score) {
+        const lastDetection = new Date(lastDetectionAt);
         // Set last smart detection to current datetime
         this.setCapabilityValue('last_smart_detection_at', lastDetectionAt)
+            .catch(this.error);
+        this.setCapabilityValue('last_smart_detection_date', lastDetection.toLocaleDateString())
+            .catch(this.error);
+        this.setCapabilityValue('last_smart_detection_time', lastDetection.toLocaleTimeString())
             .catch(this.error);
         this.setCapabilityValue('last_smart_detection_score', score)
             .catch(this.error);
@@ -334,6 +348,19 @@ class Doorbell extends Homey.Device {
                 this.homey.__(`events.Doorbell.${String(mode)
                     .toLowerCase()}`));
         }
+    }
+
+    async getSnapshot() {
+        this._snapshotImage = await this.homey.images.createImage();
+        this._snapshotImage.setStream(async stream => {
+            let snapshotUrl = `https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg`;
+            // Fetch image
+            const res = await fetch(snapshotUrl);
+            if (!res.ok) throw new Error('Could not fetch snapshot image.');
+
+            return res.body.pipe(stream);
+        });
+        this.setCameraImage('snapshot', this.getName(), this._snapshotImage);
     }
 
     async _createSnapshotImage(triggerFlow = false) {

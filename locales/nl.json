@@ -12,10 +12,10 @@
   "settings": {
     "title": "UniFi Protect instellingen",
     "instruction": "Log in met de gegevens van de UniFi Protect-gebruiker.",
-    "nvr": "Gegevens van UniFi Cloud Key",
+    "nvr": "Server gegevens",
     "nvrip": "IP-adres",
     "nvrport": "Port",
-    "credentials": "UniFi Protect gebruikersgegevens",
+    "credentials": "Gebruikersgegevens",
     "username": "Gebruikersnaam",
     "password": "Wachtwoord",
     "apply": "Toepassen",

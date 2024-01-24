@@ -98,7 +98,7 @@ class ProtectWebClient extends BaseClass {
                         }
 
                         if (item.toLowerCase() === 'x-csrf-token') {
-                            //this._csrfToken = res.rawHeaders[index + 1];
+                            this._csrfToken = res.rawHeaders[index + 1];
                         }
                     });
 

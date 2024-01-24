@@ -12,16 +12,21 @@
     "settings": {
         "title": "UniFi Protect Settings",
         "instruction": "Log in with the credentials of the UniFi Protect user.",
-        "nvr": "UniFi Protect Server details",
+        "nvr": "Server details",
         "nvrip": "IP address",
         "nvrport": "Port",
-        "credentials": "UniFi Protect user credentials",
+        "credentials": "User credentials",
         "username": "Username",
         "password": "Password",
         "apply": "Apply",
         "saved": "Settings saved.",
         "settings": "Settings",
-        "useCameraSnapshot": "Use camera snapshot"
+        "useCameraSnapshot": "Use camera snapshot",
+        "testConnection": "Test connection",
+        "test_status": {
+            "success": "Credentials are valid.",
+            "failure": "Credentials are invalid."
+        }
     },
     "events": {
         "camera": {

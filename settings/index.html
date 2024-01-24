@@ -19,55 +19,60 @@
                                                                                      style="font-weight: bold;">Unknown</span>
 </p>
 <!-- NVR -->
-<fieldset>
-    <legend data-i18n="settings.nvr"></legend>
+<fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend" data-i18n="settings.nvr"></legend>
 
     <!-- IP address -->
     <div class="field row">
-        <label for="txt_nvrip" data-i18n="settings.nvrip"></label>
-        <input id="txt_nvrip" type="text" value=""/>
+        <label class="homey-form-label" for="txt_nvrip" data-i18n="settings.nvrip"></label>
+        <input class="homey-form-input" id="txt_nvrip" type="text" value=""/>
     </div>
 
     <!-- Port -->
     <div class="field row">
-        <label for="txt_nvrport" data-i18n="settings.txt_nvrport"></label>
-        <input id="txt_nvrport" type="text" value="443"/>
+        <label class="homey-form-label" for="txt_nvrport" data-i18n="settings.nvrport"></label>
+        <input class="homey-form-input" id="txt_nvrport" type="text" value="443"/>
     </div>
 
 </fieldset>
 
 <!-- Credentials -->
-<fieldset>
-    <legend data-i18n="settings.credentials"></legend>
+<fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend" data-i18n="settings.credentials"></legend>
 
     <!-- Username -->
     <div class="field row">
-        <label for="txt_username" data-i18n="settings.username"></label>
-        <input id="txt_username" type="text" value=""/>
+        <label class="homey-form-label" for="txt_username" data-i18n="settings.username"></label>
+        <input class="homey-form-input" id="txt_username" type="text" value=""/>
     </div>
 
     <!-- Password -->
     <div class="field row">
-        <label for="txt_password" data-i18n="settings.password"></label>
-        <input id="txt_password" type="password" value=""/>
+        <label class="homey-form-label" for="txt_password" data-i18n="settings.password"></label>
+        <input class="homey-form-input" id="txt_password" type="password" value=""/>
     </div>
 </fieldset>
 
 <!-- Settings -->
-<fieldset>
-    <legend data-i18n="settings.settings"></legend>
+<fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend" data-i18n="settings.settings"></legend>
 
     <!-- useCameraSnapshot -->
     <div class="field row">
-        <label for="txt_useCameraSnapshot" data-i18n="settings.useCameraSnapshot"></label>
-        <input id="txt_useCameraSnapshot" type="checkbox" value="true"/>
+        <label class="homey-form-checkbox">
+            <input class="homey-form-checkbox-input" id="txt_useCameraSnapshot" type="checkbox" value="true">
+            <span class="homey-form-checkbox-checkmark"></span>
+            <span class="homey-form-checkbox-text"><span data-i18n="settings.useCameraSnapshot"></span></span>
+        </label>
     </div>
 
 </fieldset>
 
 <!-- Apply button -->
 <div class="field row">
-    <button id="btn_apply" class="right" data-i18n="settings.apply"></button>
+    <button id="btn_test" class="homey-button-primary-full" data-i18n="settings.testConnection"></button>
+    <br />
+    <button id="btn_apply" class="homey-button-primary-full" data-i18n="settings.apply"></button>
 </div>
 
 <script type="text/javascript">
@@ -77,6 +82,7 @@
     var txtPassword = document.getElementById('txt_password');
     var txtuseCameraSnapshot = document.getElementById('txt_useCameraSnapshot');
     var btnApply = document.getElementById('btn_apply');
+    var btnTest = document.getElementById('btn_test');
 
     function onHomeyReady(Homey) {
         const readSettings = () => {
@@ -153,6 +159,30 @@
             });
             Homey.alert(Homey.__('settings.saved'), 'info');
         };
+
+        const testSettings = () => {
+            const settings = {
+                'host': txtNvrIp.value,
+                'port': txtNvrPort.value,
+                'user': txtUsername.value,
+                'pass': txtPassword.value,
+            };
+
+            Homey.api("POST", "/test", settings, function (err, response) {
+                if (err) return Homey.alert(err);
+                if (response) {
+                    if (response.status === 'success') {
+                        Homey.alert(Homey.__('settings.test_status.success'), 'info');
+                    } else {
+                        Homey.alert(Homey.__('settings.test_status.failure'), 'error');
+                    }
+                }
+            });
+        };
+
+        btnTest.addEventListener('click', e => {
+            testSettings();
+        });
 
         btnApply.addEventListener('click', e => {
             saveSettings();
