@@ -20,6 +20,7 @@ class ProtectAPI extends BaseClass {
         this._rtspPort = null;
         this.homey = null;
         this.loggedInStatus = 0;
+        this.lastWebsocketMessage = null;
     }
 
     setHomeyObject(homey) {

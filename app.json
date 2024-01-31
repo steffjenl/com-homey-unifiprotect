@@ -81,6 +81,10 @@
     "testCredentials": {
       "method": "POST",
       "path": "/test"
+    },
+    "getLastWebsocketMessageTime": {
+      "method": "GET",
+      "path": "/getLastWebsocketMessageTime"
     }
   },
   "flow": {
