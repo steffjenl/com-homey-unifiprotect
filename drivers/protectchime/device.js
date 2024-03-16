@@ -49,11 +49,11 @@ class Chime extends Homey.Device {
 
   async initChime() {
     this.registerCapabilityListener("onoff", (value) => {
-      this.homey.app.api.setChimeVolume(this.getData(), (value === true ? 1 : 0));
+      this.homey.app.api.setChimeVolume(this.getData(), (value === true ? this.getCapabilityValue('volume_set') : 0));
     });
 
     this.registerCapabilityListener("volume_set", (value) => {
-      this.homey.app.api.setChimeVolume(this.getData(), value * 100);
+      this.homey.app.api.setChimeVolume(this.getData(), value);
     });
 
     await this._createMissingCapabilities();
