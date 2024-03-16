@@ -7,8 +7,10 @@ module.exports = {
         return result;
     },
     async getWebsocketStatus({ homey, query }) {
-        const result = await homey.app.api.ws.loggedInStatus;
-        return result;
+        return homey.app.api.ws.isWebsocketConnected() ? 'Connected' : 'Unknown';
+    },
+    async getLastWebsocketMessageTime({ homey, query }) {
+        return homey.app.api.ws.getLastWebsocketMessageTime();
     },
     async testCredentials({homey, body}) {
         try {

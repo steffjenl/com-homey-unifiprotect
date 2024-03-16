@@ -39,7 +39,7 @@
     "security",
     "video"
   ],
-  "version": "1.6.2",
+  "version": "1.6.3",
   "compatibility": ">=5.0.0",
   "author": {
     "name": "Stèphan Eizinga",
@@ -81,6 +81,10 @@
     "testCredentials": {
       "method": "POST",
       "path": "/test"
+    },
+    "getLastWebsocketMessageTime": {
+      "method": "GET",
+      "path": "/getLastWebsocketMessageTime"
     }
   },
   "flow": {

@@ -124,5 +124,8 @@
   },
   "1.6.2": {
     "en": "Bugfix"
+  },
+  "1.6.3": {
+    "en": "Added Last Websocket Message At in settings page"
   }
 }

@@ -18,6 +18,9 @@
 <p><span data-i18n="settings.websocket.status">Realtime updates Status</span>: <span id="unifi_websocket_status"
                                                                                      style="font-weight: bold;">Unknown</span>
 </p>
+<p><span data-i18n="settings.websocket.at">Last update at</span>: <span id="unifi_websocket_at"
+                                                                                     style="font-weight: bold;">Unknown</span>
+</p>
 <!-- NVR -->
 <fieldset class="homey-form-fieldset">
     <legend class="homey-form-legend" data-i18n="settings.nvr"></legend>
@@ -234,6 +237,14 @@
             }
         }
 
+        const updateWebsocketAtField = (err, data) => {
+            if (err) {
+                return err;
+            }
+
+            document.getElementById('unifi_websocket_at').innerHTML = data;
+        }
+
         Homey.on('com.ubnt.unifiprotect.status', (data) => {
             updateStatusField(null, data);
         });
@@ -253,6 +264,10 @@
             if (err) return Homey.alert(err);
         });
 
+        Homey.api("GET", "/getLastWebsocketMessageTime", null, function (err, result) {
+            updateWebsocketAtField(null, result);
+            if (err) return Homey.alert(err);
+        });
     }
 </script>
 </body>

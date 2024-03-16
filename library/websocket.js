@@ -9,6 +9,7 @@ class ProtectWebSocket extends BaseClass {
     constructor(...props) {
         super(...props);
         this.loggedInStatus = 'Unknown';
+        this.lastWebsocketMessage = null;
     }
 
     isWebsocketConnected() {
@@ -18,6 +19,10 @@ class ProtectWebSocket extends BaseClass {
             }
         }
         return false;
+    }
+
+    getLastWebsocketMessageTime() {
+        return this.lastWebsocketMessage;
     }
 
     // Return the realtime update events API URL.
@@ -197,6 +202,9 @@ class ProtectWebSocket extends BaseClass {
             if (!this.shouldProcessEvent(updatePacket)) {
                 return true;
             }
+
+            //
+            this.lastWebsocketMessage = (new Date()).toISOString().slice(0,16);
 
             // get payload from updatePacket
             const payload = updatePacket.payload;
