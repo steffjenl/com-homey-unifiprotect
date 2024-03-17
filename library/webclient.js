@@ -84,9 +84,6 @@ class ProtectWebClient extends BaseClass {
             };
 
             const req = https.request(options, res => {
-                if (res.statusCode !== 200) {
-                    return reject(new Error(`Failed to GET url: ${options.path} (status code: ${res.statusCode})`));
-                }
                 const data = [];
 
                 res.on('data', chunk => data.push(chunk));
@@ -101,6 +98,10 @@ class ProtectWebClient extends BaseClass {
                             this._csrfToken = res.rawHeaders[index + 1];
                         }
                     });
+
+                    if (res.statusCode !== 200) {
+                        return reject(new Error(`Failed to GET url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+                    }
 
                     if (isBinary) {
                         return resolve(Buffer.concat(data));
@@ -144,9 +145,6 @@ class ProtectWebClient extends BaseClass {
             };
 
             const req = https.request(options, res => {
-                if (res.statusCode !== 200) {
-                    return reject(new Error(`Failed to PUT to url: ${options.host}${options.path} (status code: ${res.statusCode})`));
-                }
                 res.setEncoding('utf8');
                 const data = [];
 
@@ -162,6 +160,10 @@ class ProtectWebClient extends BaseClass {
                             //this._csrfToken = res.rawHeaders[index + 1];
                         }
                     });
+
+                    if (res.statusCode !== 200) {
+                        return reject(new Error(`Failed to PUT to url: ${options.host}${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+                    }
 
                     return resolve(data.join(''));
                 });
@@ -198,9 +200,6 @@ class ProtectWebClient extends BaseClass {
             };
 
             const req = https.request(options, res => {
-                if (res.statusCode !== 200) {
-                    return reject(new Error(`Failed to PATCH url: ${options.path} (status code: ${res.statusCode})`));
-                }
                 res.setEncoding('utf8');
                 const data = [];
 
@@ -216,6 +215,10 @@ class ProtectWebClient extends BaseClass {
                             //this._csrfToken = res.rawHeaders[index + 1];
                         }
                     });
+
+                    if (res.statusCode !== 200) {
+                        return reject(new Error(`Failed to PATCH url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+                    }
 
                     return resolve(data.join(''));
                 });
@@ -252,9 +255,6 @@ class ProtectWebClient extends BaseClass {
             };
 
             const req = https.request(options, res => {
-                if (res.statusCode !== 200) {
-                    return reject(new Error(`Failed to POST to url: ${options.host}${options.path} (status code: ${res.statusCode})`));
-                }
                 res.setEncoding('utf8');
                 const data = [];
 
@@ -270,6 +270,10 @@ class ProtectWebClient extends BaseClass {
                             //this._csrfToken = res.rawHeaders[index + 1];
                         }
                     });
+
+                    if (res.statusCode !== 200) {
+                        return reject(new Error(`Failed to POST to url: ${options.host}${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+                    }
 
                     return resolve(data.join(''));
                 });
