@@ -127,5 +127,8 @@
   },
   "1.6.3": {
     "en": "Added Last Websocket Message At in settings page"
+  },
+  "1.6.4": {
+    "en": "Fix Volume Door Chime (Thanks Jeroen Aartse)"
   }
 }
