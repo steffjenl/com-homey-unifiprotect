@@ -49,11 +49,11 @@ class Chime extends Homey.Device {
 
   async initChime() {
     this.registerCapabilityListener("onoff", (value) => {
-      this.homey.app.api.setVolume(this.getData(), (value === true ? 100 : 0));
+      this.homey.app.api.setChimeVolume(this.getData(), (value === true ? this.getCapabilityValue('volume_set') : 0));
     });
 
     this.registerCapabilityListener("volume_set", (value) => {
-      this.homey.app.api.setVolume(this.getData(), value);
+      this.homey.app.api.setChimeVolume(this.getData(), value);
     });
 
     await this._createMissingCapabilities();
@@ -84,7 +84,7 @@ class Chime extends Homey.Device {
             this.setCapabilityValue('onoff', (chime.volume > 0));
           }
           if (this.hasCapability('volume_set')) {
-            this.setCapabilityValue('volume_set', chime.volume);
+            this.setCapabilityValue('volume_set', chime.volume / 100);
           }
         }
       });
@@ -96,7 +96,7 @@ class Chime extends Homey.Device {
       this.setCapabilityValue('onoff', (volume > 0));
     }
     if (this.hasCapability('volume_set')) {
-      this.setCapabilityValue('volume_set', volume);
+      this.setCapabilityValue('volume_set', volume / 100);
     }
   }
 }

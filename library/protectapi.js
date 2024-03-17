@@ -542,7 +542,7 @@ class ProtectAPI extends BaseClass {
     setChimeVolume(chime, volumeLevel) {
         return new Promise((resolve, reject) => {
             const params = {
-                volume: volumeLevel
+                volume: volumeLevel * 100
             };
             return this.webclient.patch(`chimes/${chime.id}`, params)
                 .then(() => resolve('volume successfully set.'))
