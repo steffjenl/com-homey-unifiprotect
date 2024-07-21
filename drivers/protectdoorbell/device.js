@@ -261,7 +261,7 @@ class Doorbell extends Homey.Device {
 
         // Check if the event date is newer
         if (isMotionDetected && lastMotionTime > lastMotionAt) {
-            const lastMotion = new Date(lastMotionTime);
+            const lastMotion = this.homey.app.toLocalTime(new Date(lastMotionTime));
             this.homey.app.debug(`new motion detected on Doorbell: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
 
             this.setCapabilityValue('last_motion_at', lastMotionTime)
@@ -272,7 +272,7 @@ class Doorbell extends Homey.Device {
                 .catch(this.error);
             this.onMotionStart();
         } else if (!isMotionDetected && lastMotionTime > lastMotionAt) {
-            const lastMotion = new Date(lastMotionTime);
+            const lastMotion = this.homey.app.toLocalTime(new Date(lastMotionTime));
             this.homey.app.debug(`motion detected ended on Doorbell: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
             this.onMotionEnd();
             this.setCapabilityValue('last_motion_at', lastMotionTime)
@@ -281,7 +281,7 @@ class Doorbell extends Homey.Device {
     }
 
     onSmartDetection(lastDetectionAt, smartDetectTypes, score) {
-        const lastDetection = new Date(lastDetectionAt);
+        const lastDetection = this.homey.app.toLocalTime(new Date(lastDetectionAt));
         // Set last smart detection to current datetime
         this.setCapabilityValue('last_smart_detection_at', lastDetectionAt)
             .catch(this.error);

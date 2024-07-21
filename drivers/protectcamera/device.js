@@ -246,39 +246,38 @@ class Camera extends Homey.Device {
         }
     }
 
-    onMotionDetected(lastMotionTime, isMotionDetected) {
+    onMotionDetected(motionTime, isMotionDetected) {
         const lastMotionAt = this.getCapabilityValue('last_motion_at');
+        const motionAt = this.homey.app.toLocalTime(new Date(motionTime));
 
         if (!lastMotionAt) {
             this.homey.app.debug(`set last_motion_at to last datetime: ${this.getData().id}`);
-            this.setCapabilityValue('last_motion_at', lastMotionTime)
+            this.setCapabilityValue('last_motion_at', motionTime)
                 .catch(this.error);
             return;
         }
 
         // Check if the event date is newer
-        if (isMotionDetected && lastMotionTime > lastMotionAt) {
-            const lastMotion = new Date(lastMotionTime);
-            this.homey.app.debug(`new motion detected on camera: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
+        if (isMotionDetected && motionTime > lastMotionAt) {
+            this.homey.app.debug(`new motion detected on camera: ${this.getData().id} on ${motionAt.toLocaleString()}`);
 
-            this.setCapabilityValue('last_motion_at', lastMotionTime)
+            this.setCapabilityValue('last_motion_at', motionTime)
                 .catch(this.error);
-            this.setCapabilityValue('last_motion_date', lastMotion.toLocaleDateString())
+            this.setCapabilityValue('last_motion_date', motionAt.toLocaleDateString())
                 .catch(this.error);
-            this.setCapabilityValue('last_motion_time', lastMotion.toLocaleTimeString())
+            this.setCapabilityValue('last_motion_time', motionAt.toLocaleTimeString())
                 .catch(this.error);
             this.onMotionStart();
-        } else if (!isMotionDetected && lastMotionTime > lastMotionAt) {
-            const lastMotion = new Date(lastMotionTime);
-            this.homey.app.debug(`motion detected ended on camera: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
+        } else if (!isMotionDetected && motionTime > lastMotionAt) {
+            this.homey.app.debug(`motion detected ended on camera: ${this.getData().id} on ${motionAt.toLocaleString()}`);
             this.onMotionEnd();
-            this.setCapabilityValue('last_motion_at', lastMotionTime)
+            this.setCapabilityValue('last_motion_at', motionTime)
                 .catch(this.error);
         }
     }
 
     onSmartDetection(lastDetectionAt, smartDetectTypes, score) {
-        const lastDetection = new Date(lastDetectionAt);
+        const lastDetection = this.homey.app.toLocalTime(new Date(lastDetectionAt));
         // Set last smart detection to current datetime
         this.setCapabilityValue('last_smart_detection_at', lastDetectionAt)
             .catch(this.error);

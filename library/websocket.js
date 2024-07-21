@@ -204,7 +204,7 @@ class ProtectWebSocket extends BaseClass {
             }
 
             //
-            this.lastWebsocketMessage = (new Date()).toISOString().slice(0,16);
+            this.lastWebsocketMessage = this.homey.app.toLocalTime(new Date()).toISOString().slice(0,16);
 
             // get payload from updatePacket
             const payload = updatePacket.payload;

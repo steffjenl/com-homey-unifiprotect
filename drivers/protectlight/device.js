@@ -200,7 +200,7 @@ class Light extends Homey.Device {
 
     // Check if the event date is newer
     if (isMotionDetected && lastMotionTime > lastMotionAt) {
-      const lastMotion = new Date(lastMotionTime);
+      const lastMotion = this.homey.app.toLocalTime(new Date(lastMotionTime));
       this.homey.app.debug(`new motion detected on light: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
 
       this.setCapabilityValue('last_motion_at', lastMotionTime)
@@ -211,7 +211,7 @@ class Light extends Homey.Device {
           .catch(this.error);
       this.onMotionStart();
     } else if (!isMotionDetected && lastMotionTime > lastMotionAt) {
-      const lastMotion = new Date(lastMotionTime);
+      const lastMotion = this.homey.app.toLocalTime(new Date(lastMotionTime));
       this.homey.app.debug(`motion detected ended on light: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
       this.onMotionEnd();
       this.setCapabilityValue('last_motion_at', lastMotionTime)
