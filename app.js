@@ -21,7 +21,8 @@ class UniFiProtect extends Homey.App {
         this.nvrUsername = null;
         this.nvrPassword = null;
         this.useCameraSnapshot = false;
-        this._refreshAuthTokensnterval = 24 * 60 * 60 * 1000; // 24 hours
+        // this._refreshAuthTokensnterval = 24 * 60 * 60 * 1000; // 24 hours
+        this._refreshAuthTokensnterval = 60 * 60 * 1000; // 1 hour
 
         // Single API instance for all devices
         this.api = new ProtectAPI();
@@ -231,7 +232,7 @@ class UniFiProtect extends Homey.App {
     }
 
     _refreshCookie() {
-        if (this.debuggedIn) {
+        //if (this.debuggedIn) {
             this.api._lastUpdateId = null;
 
             // Validate NVR IP address
@@ -262,13 +263,24 @@ class UniFiProtect extends Homey.App {
                         .catch(error => this.error(error));
                 })
                 .catch(error => this.error(error));
-        }
+        //}
 
-        // _refreshCookie after 45 minutes
+        // _refreshCookie after 1 hour
         const timeOutFunction = function () {
             this._refreshCookie();
         }.bind(this);
         this.homey.setTimeout(timeOutFunction, RefreshCookieTime);
+    }
+
+    /**
+     * Convert a Homey time to a local time
+     * @param {Date} homeyTime
+     * @returns {Date}
+     */
+    toLocalTime(homeyTime) {
+        const tz = this.homey.clock.getTimezone();
+        const localTime = new Date(homeyTime.toLocaleString('en-US', { timeZone: tz }));
+        return localTime;
     }
 
     debug() {
