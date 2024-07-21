@@ -17,6 +17,10 @@
       "title": { "en": "On Motion When Dark" }
     },
     {
+      "id": "dark",
+      "title": { "en": "Dark" }
+    },
+    {
       "id": "always",
       "title": { "en": "When Dark" }
     },

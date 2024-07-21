@@ -21,11 +21,25 @@
       }
     },
     {
+      "id": "custom",
+      "title": {
+        "en": "Custom",
+        "nl": "Aangepast"
+      }
+    },
+    {
       "id": "autoFilterOnly",
         "title": {
             "en": "Auto (Filter only, no LEDs)",
             "nl": "Auto (Filter only, no LEDs)"
         }
+    },
+    {
+      "id": "customFilterOnly",
+      "title": {
+        "en": "Custom (Filter only, no LEDs)",
+        "nl": "Aangepast (Alleen filter, geen LEDs)"
+      }
     },
     {
       "id": "on",

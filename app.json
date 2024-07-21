@@ -356,6 +356,20 @@
                 }
               },
               {
+                "id": "custom",
+                "title": {
+                  "en": "Custom",
+                  "nl": "Aangepast"
+                }
+              },
+              {
+                "id": "customFilterOnly",
+                "title": {
+                  "en": "Custom (Filter only, no LEDs)",
+                  "nl": "Aangepast (Alleen filter, geen LEDs)"
+                }
+              },
+              {
                 "id": "autoFilterOnly",
                 "title": {
                   "en": "Auto (Filter only, no LEDs)",
@@ -814,10 +828,24 @@
           }
         },
         {
+          "id": "custom",
+          "title": {
+            "en": "Custom",
+            "nl": "Aangepast"
+          }
+        },
+        {
           "id": "autoFilterOnly",
           "title": {
             "en": "Auto (Filter only, no LEDs)",
             "nl": "Auto (Filter only, no LEDs)"
+          }
+        },
+        {
+          "id": "customFilterOnly",
+          "title": {
+            "en": "Custom (Filter only, no LEDs)",
+            "nl": "Aangepast (Alleen filter, geen LEDs)"
           }
         },
         {
@@ -1001,6 +1029,12 @@
           "id": "motiondark",
           "title": {
             "en": "On Motion When Dark"
+          }
+        },
+        {
+          "id": "dark",
+          "title": {
+            "en": "Dark"
           }
         },
         {
