@@ -130,5 +130,8 @@
   },
   "1.6.4": {
     "en": "Fix Volume Door Chime (Thanks Jeroen Aartse)"
+  },
+  "1.6.5": {
+    "en": "Fixed: Cookie is now refreshed every hour, missing options added for light_mode and nightvision and latest packages"
   }
 }
