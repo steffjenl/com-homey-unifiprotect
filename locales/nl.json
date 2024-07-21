@@ -21,7 +21,8 @@
     "apply": "Toepassen",
     "saved": "Instellingen opgeslagen.",
     "settings": "Instellingen",
-    "useCameraSnapshot": "Gebruik camera afbeelding"
+    "useCameraSnapshot": "Gebruik camera afbeelding",
+    "useCameraSnapshotInstruction": "Gebruik 'Gebruik camera afbeelding' alleen wanneer 'Anonieme snapshot inschakelen' is ingeschakeld in de lokale camerainstellingen. Weet u zeker dat u dit wilt inschakelen?"
   },
   "events": {
     "camera": {

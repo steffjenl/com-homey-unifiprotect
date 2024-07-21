@@ -22,6 +22,7 @@
         "saved": "Settings saved.",
         "settings": "Settings",
         "useCameraSnapshot": "Use camera snapshot",
+        "useCameraSnapshotInstruction": "Use 'Use camera snapshot' only when 'Enable Anonymous Snapshot' is enabled in the local camera settings. Are you sure you want to enable this?",
         "testConnection": "Test connection",
         "test_status": {
             "success": "Credentials are valid.",

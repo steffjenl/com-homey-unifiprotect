@@ -19,7 +19,7 @@
                                                                                      style="font-weight: bold;">Unknown</span>
 </p>
 <p><span data-i18n="settings.websocket.at">Last update at</span>: <span id="unifi_websocket_at"
-                                                                                     style="font-weight: bold;">Unknown</span>
+                                                                        style="font-weight: bold;">Unknown</span>
 </p>
 <!-- NVR -->
 <fieldset class="homey-form-fieldset">
@@ -74,7 +74,7 @@
 <!-- Apply button -->
 <div class="field row">
     <button id="btn_test" class="homey-button-primary-full" data-i18n="settings.testConnection"></button>
-    <br />
+    <br/>
     <button id="btn_apply" class="homey-button-primary-full" data-i18n="settings.apply"></button>
 </div>
 
@@ -122,7 +122,6 @@
 
             Homey.get('ufp:settings', (error, settings) => {
                 if (error) return Homey.alert(error);
-
                 if (settings) {
                     txtuseCameraSnapshot.checked = settings.useCameraSnapshot;
                 } else {
@@ -153,13 +152,14 @@
             });
 
             const settings = {
-                'useCameraSnapshot': txtuseCameraSnapshot.checked
+                'useCameraSnapshot': (!!txtuseCameraSnapshot.checked)
             };
 
             Homey.set('ufp:settings', settings, (error, result) => {
                 if (error) return Homey.alert(error);
                 console.log('[SETTINGS] settings saved.');
             });
+
             Homey.alert(Homey.__('settings.saved'), 'info');
         };
 
@@ -188,7 +188,16 @@
         });
 
         btnApply.addEventListener('click', e => {
-            saveSettings();
+            if (txtuseCameraSnapshot.checked) {
+                Homey.confirm(Homey.__('settings.useCameraSnapshotInstruction'), 'info', (err, confirmed) => {
+                    if (err) return Homey.alert(err);
+                    if (confirmed) {
+                        saveSettings();
+                    }
+                });
+            } else {
+                saveSettings();
+            }
         });
 
         readSettings();
