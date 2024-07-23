@@ -1,5 +1,5 @@
 {
-  "type": "string",
+  "type": "enum",
   "title": {
     "en": "Light mode",
     "nl": "Licht modus"
@@ -13,12 +13,8 @@
       "title": { "en": "On Motion Always" }
     },
     {
-      "id": "motiondark",
-      "title": { "en": "On Motion When Dark" }
-    },
-    {
       "id": "dark",
-      "title": { "en": "Dark" }
+      "title": { "en": "On Motion Dark" }
     },
     {
       "id": "always",

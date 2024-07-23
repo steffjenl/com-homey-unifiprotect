@@ -38,7 +38,7 @@ class UniFiLightDriver extends Homey.Driver {
       }
 
       if (payload.hasOwnProperty('lightDeviceSettings') && payload.lightDeviceSettings.hasOwnProperty('ledLevel')) {
-        light.onLedLevelChange(payload.ledLevel);
+        light.onLedLevelChange(payload.lightDeviceSettings.ledLevel);
       }
 
       if (payload.hasOwnProperty('lightModeSettings') && payload.lightModeSettings.hasOwnProperty('mode')) {

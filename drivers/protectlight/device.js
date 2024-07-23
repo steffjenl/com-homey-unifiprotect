@@ -47,7 +47,7 @@ class Light extends Homey.Device {
     this.homey.app.debug('UnifiLight Device has been deleted');
   }
 
-  async initCamera() {
+  async initLight() {
     this.registerCapabilityListener("onoff", (value) => {
       this.homey.app.api.setLightOn(this.getData(), value);
     });
@@ -56,7 +56,7 @@ class Light extends Homey.Device {
       this.homey.app.api.setLightLevel(this.getData(), this.translateLedLevel(value, true));
     });
 
-    this.registerCapabilityListener("light_mode", (value) => {
+    this.registerCapabilityListener("light_mode_unifi", (value) => {
       this.homey.app.api.setLightMode(this.getData(), value);
     });
 
@@ -66,7 +66,7 @@ class Light extends Homey.Device {
 
   async waitForBootstrap() {
     if (typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null) {
-      await this.initCamera();
+      await this.initLight();
     } else {
       this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
     }
@@ -77,10 +77,10 @@ class Light extends Homey.Device {
       this.homey.app.debug(`changed class to light for ${this.getName()}`);
       await this.setClass('light');
     }
-    // light_mode
-    if (!this.hasCapability('light_mode')) {
-      await this.addCapability('light_mode');
-      this.homey.app.debug(`created capability light_mode for ${this.getName()}`);
+    // light_mode_unifi
+    if (!this.hasCapability('light_mode_unifi')) {
+      await this.addCapability('light_mode_unifi');
+      this.homey.app.debug(`created capability light_mode_unifi for ${this.getName()}`);
     }
   }
 
@@ -95,8 +95,8 @@ class Light extends Homey.Device {
           if (this.hasCapability('dim')) {
             this.setCapabilityValue('dim', this.translateLedLevel(light.lightDeviceSettings.ledLevel, false));
           }
-          if (this.hasCapability('light_mode')) {
-            this.setCapabilityValue('light_mode', this.translateLightMode(light.lightModeSettings));
+          if (this.hasCapability('light_mode_unifi')) {
+            this.setCapabilityValue('light_mode_unifi', this.translateLightMode(light.lightModeSettings));
           }
         }
       });
@@ -128,8 +128,8 @@ class Light extends Homey.Device {
 
   onLightModeChange(settings) {
     this.homey.app.debug('onLightModeChange');
-    if (this.hasCapability('light_mode')) {
-      this.setCapabilityValue('light_mode', this.translateLightMode(settings));
+    if (this.hasCapability('light_mode_unifi')) {
+      this.setCapabilityValue('light_mode_unifi', this.translateLightMode(settings));
     }
   }
 
@@ -173,13 +173,13 @@ class Light extends Homey.Device {
       else if(ledLevel === 2) {
         return 0.32;
       }
-      else if(ledLevel === 2) {
+      else if(ledLevel === 3) {
         return 0.48;
       }
-      else if(ledLevel === 2) {
+      else if(ledLevel === 4) {
         return 0.64;
       }
-      else if(ledLevel === 2) {
+      else if(ledLevel === 5) {
         return 0.80;
       }
       else {

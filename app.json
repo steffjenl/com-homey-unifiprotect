@@ -693,7 +693,7 @@
         "last_motion_at",
         "last_motion_date",
         "last_motion_time",
-        "light_mode"
+        "light_mode_unifi"
       ],
       "name": {
         "en": "Light"
@@ -1009,8 +1009,8 @@
       "getable": true,
       "setable": false
     },
-    "light_mode": {
-      "type": "string",
+    "light_mode_unifi": {
+      "type": "enum",
       "title": {
         "en": "Light mode",
         "nl": "Licht modus"
@@ -1026,15 +1026,9 @@
           }
         },
         {
-          "id": "motiondark",
-          "title": {
-            "en": "On Motion When Dark"
-          }
-        },
-        {
           "id": "dark",
           "title": {
-            "en": "Dark"
+            "en": "On Motion Dark"
           }
         },
         {

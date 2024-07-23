@@ -605,7 +605,7 @@ class ProtectAPI extends BaseClass {
                     enableAt: "fulltime"
 
                 }
-            } else if (mode === "motiondark") {
+            } else if (mode === "dark") {
                 lightModeSettings = {
                     mode: "motion",
                     enableAt: "dark"
