@@ -136,5 +136,8 @@
   },
   "1.6.6": {
     "en": "Fix: useCameraSnapshot can now be disabled and extra notice when saving."
+  },
+  "1.6.7": {
+    "en": "Fix: Unifi Light Motion options and Brightness"
   }
 }
