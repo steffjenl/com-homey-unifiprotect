@@ -1,3 +1,4 @@
+name: Validate Homey App
 on:
   push:
   pull_request:

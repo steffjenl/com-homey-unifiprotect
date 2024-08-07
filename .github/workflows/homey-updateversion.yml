@@ -1,3 +1,4 @@
+name: Update Homey App Version
 on:
   workflow_dispatch:
     inputs:

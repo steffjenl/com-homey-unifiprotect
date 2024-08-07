@@ -1,3 +1,4 @@
+name: Homey Publish
 on:
   workflow_dispatch:
 
