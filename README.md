@@ -38,9 +38,13 @@ Adds support for Ubiquiti UniFi Protect devices in Homey.
 * A flow action card can be used to create a snapshot, which is is saved to an Image tag.
 * A flow action card is available to set a camera's recording mode, being one of 'Don't record', 'Always record' or 'Record only motion'.
 
-## Notice
-In a beta version of Unifi Protect, all information about the NVR itself has been removed. We have made the NVR itself deprecated as a device and will be removed in the next version.
-Remove the NVR from your devices. The NVR is also no longer obliged to install it first.
+## How to create an local account?
+
+* Login in your local UniFi web interface, and click on Admins & Users. **Note:** This must be done from your local device and not from _unifi.ui.com_ or within the app.
+* Click on the '+' icon to add a new user.
+* Fill in the user details, and make sure to select 'Restrict to local access only' as the user type.
+* Give the user Full Management rights and click on 'Add'.
+
 
 ## Troubleshooting / FAQ
 * Question: I am using not the latest firmware on the cloudkey and can't connect.
@@ -56,7 +60,7 @@ Remove the NVR from your devices. The NVR is also no longer obliged to install i
 
 ## Feedback
 
-If you find a bug or if you are missing a feature, please [create an issue here](https://github.com/steffjenl/com.ubnt.unifiprotect/issues).
+If you find a bug or if you are missing a feature, please [create an issue here](https://github.com/steffjenl/com-ubnt-unifiprotect/discussions).
 Thank you for using this app!
 
 ## Attributions
