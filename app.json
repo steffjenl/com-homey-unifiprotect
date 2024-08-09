@@ -238,6 +238,58 @@
         ]
       },
       {
+        "id": "ufp_device_camera_smart_detection",
+        "title": {
+          "en": "A smart detection event",
+          "nl": "Een slim detectie event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_smart_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "smart_detection_type",
+            "type": "string",
+            "title": {
+              "en": "Smart detection type",
+              "nl": "Slim detectie type"
+            },
+            "example": {
+              "en": "vehicle",
+              "nl": "vehicle"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectcamera"
+          }
+        ]
+      },
+      {
         "id": "ufp_device_doorbell_ringing",
         "title": {
           "en": "Doorbell pressed",
@@ -254,6 +306,58 @@
             "example": {
               "en": "Doorbell",
               "nl": "Deurbel"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_doorbell_smart_detection",
+        "title": {
+          "en": "A smart detection event",
+          "nl": "Een slim detectie event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_smart_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "smart_detection_type",
+            "type": "string",
+            "title": {
+              "en": "Smart detection type",
+              "nl": "Slim detectie type"
+            },
+            "example": {
+              "en": "vehicle",
+              "nl": "vehicle"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
             }
           }
         ],

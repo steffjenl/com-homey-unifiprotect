@@ -297,7 +297,14 @@ class Doorbell extends Homey.Device {
         // fire trigger (per detection type)
         for (let smartDetectionType of smartDetectTypes) {
             this.homey.app.debug(`smart detection event on Doorbell ${this.getData().id}, with type ${smartDetectionType}`);
+            // app
             this.homey.app._smartDetectionTrigger.trigger({
+                ufp_smart_detection_camera: this.getName(),
+                smart_detection_type: smartDetectionType,
+                score: score
+            });
+            // device
+            this.homey.app._deviceSmartDetectionTrigger.trigger(this,{
                 ufp_smart_detection_camera: this.getName(),
                 smart_detection_type: smartDetectionType,
                 score: score
