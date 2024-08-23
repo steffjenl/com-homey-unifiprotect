@@ -439,7 +439,7 @@ class Doorbell extends Homey.Device {
             score: score
         });
         // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
+        this.driver._smartDetectionTrigger.trigger(this,{
             smart_detection_type: 'person',
             score: score
         });
@@ -450,7 +450,7 @@ class Doorbell extends Homey.Device {
             score: score
         });
         // Device trigger
-        this.driver._smartDetectionTriggerPerson.trigger({
+        this.driver._deviceSmartDetectionTriggerPerson.trigger({
             score: score
         });
     }
@@ -463,7 +463,7 @@ class Doorbell extends Homey.Device {
             score: score
         });
         // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
+        this.driver._smartDetectionTrigger.trigger(this,{
             smart_detection_type: 'vehicle',
             score: score
         });
@@ -474,7 +474,7 @@ class Doorbell extends Homey.Device {
             score: score
         });
         // Device trigger
-        this.driver._smartDetectionTriggerVehicle.trigger({
+        this.driver._deviceSmartDetectionTriggerVehicle.trigger({
             score: score
         });
     }
@@ -487,7 +487,7 @@ class Doorbell extends Homey.Device {
             score: score
         });
         // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
+        this.driver._smartDetectionTrigger.trigger(this,{
             smart_detection_type: 'animal',
             score: score
         });
@@ -498,7 +498,7 @@ class Doorbell extends Homey.Device {
             score: score
         });
         // Device trigger
-        this.driver._smartDetectionTriggerAnimal.trigger({
+        this.driver._deviceSmartDetectionTriggerAnimal.trigger({
             score: score
         });
     }
@@ -522,7 +522,7 @@ class Doorbell extends Homey.Device {
             score: score
         });
         // Device trigger
-        this.driver._smartDetectionTriggerPackage.trigger({
+        this.driver._deviceSmartDetectionTriggerPackage.trigger({
             score: score
         });
     }

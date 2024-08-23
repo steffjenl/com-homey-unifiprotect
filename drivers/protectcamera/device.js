@@ -421,7 +421,7 @@ class Camera extends Homey.Device {
             score: score
         });
         // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
+        this.driver._smartDetectionTrigger.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'person',
             score: score
@@ -433,7 +433,7 @@ class Camera extends Homey.Device {
             score: score
         });
         // Device trigger
-        this.driver._smartDetectionTriggerPerson.trigger({
+        this.driver._deviceSmartDetectionTriggerPerson.trigger({
             ufp_smart_detection_camera: this.getName(),
             score: score
         });
@@ -447,7 +447,7 @@ class Camera extends Homey.Device {
             score: score
         });
         // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
+        this.driver._smartDetectionTrigger.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'vehicle',
             score: score
@@ -459,7 +459,7 @@ class Camera extends Homey.Device {
             score: score
         });
         // Device trigger
-        this.driver._smartDetectionTriggerVehicle.trigger({
+        this.driver._deviceSmartDetectionTriggerAnimal.trigger({
             ufp_smart_detection_camera: this.getName(),
             score: score
         });
@@ -485,7 +485,7 @@ class Camera extends Homey.Device {
             score: score
         });
         // Device trigger
-        this.driver._smartDetectionTriggerAnimal.trigger({
+        this.driver._deviceSmartDetectionTriggerAnimal.trigger({
             ufp_smart_detection_camera: this.getName(),
             score: score
         });
@@ -511,7 +511,7 @@ class Camera extends Homey.Device {
             score: score
         });
         // Device trigger
-        this.driver._smartDetectionTriggerPackage.trigger({
+        this.driver._deviceSmartDetectionTriggerPackage.trigger({
             ufp_smart_detection_camera: this.getName(),
             score: score
         });
