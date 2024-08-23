@@ -60,9 +60,9 @@
     }
   },
   "bugs": {
-    "url": "https://gitlab.com/monkeysoft/com-ubnt-unifiprotect/-/issues"
+    "url": "https://github.com/steffjenl/com-homey-unifiprotect/issues"
   },
-  "source": "https://gitlab.com/monkeysoft/com-ubnt-unifiprotect/",
+  "source": "https://github.com/steffjenl/com-homey-unifiprotect/",
   "support": "mailto:stephan@monkeysoft.nl",
   "homeyCommunityTopicId": 42966,
   "platforms": [
