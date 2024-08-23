@@ -29,18 +29,6 @@
       },
       "tokens": [
         {
-          "name": "ufp_smart_detection_camera",
-          "type": "string",
-          "title": {
-            "en": "Camera",
-            "nl": "Camera"
-          },
-          "example": {
-            "en": "Doorbell",
-            "nl": "Deurbel"
-          }
-        },
-        {
           "name": "smart_detection_type",
           "type": "string",
           "title": {
@@ -52,6 +40,90 @@
             "nl": "vehicle"
           }
         },
+        {
+          "name": "score",
+          "type": "number",
+          "title": {
+            "en": "Score",
+            "nl": "Score"
+          },
+          "example": {
+            "en": "62",
+            "nl": "62"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufp_device_doorbell_smart_detection_vehicle",
+      "title": {
+        "en": "A smart vehicle detection event",
+        "nl": "Een slimme voertuig detectie event"
+      },
+      "tokens": [
+        {
+          "name": "score",
+          "type": "number",
+          "title": {
+            "en": "Score",
+            "nl": "Score"
+          },
+          "example": {
+            "en": "62",
+            "nl": "62"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufp_device_doorbell_smart_detection_person",
+      "title": {
+        "en": "A smart person detection event",
+        "nl": "Een slimme persoon detectie event"
+      },
+      "tokens": [
+        {
+          "name": "score",
+          "type": "number",
+          "title": {
+            "en": "Score",
+            "nl": "Score"
+          },
+          "example": {
+            "en": "62",
+            "nl": "62"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufp_device_doorbell_smart_detection_package",
+      "title": {
+        "en": "A smart package detection event",
+        "nl": "Een slimme pakket detectie event"
+      },
+      "tokens": [
+        {
+          "name": "score",
+          "type": "number",
+          "title": {
+            "en": "Score",
+            "nl": "Score"
+          },
+          "example": {
+            "en": "62",
+            "nl": "62"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufp_device_doorbell_smart_detection_animal",
+      "title": {
+        "en": "A smart animal detection event",
+        "nl": "Een slimme dier detectie event"
+      },
+      "tokens": [
         {
           "name": "score",
           "type": "number",

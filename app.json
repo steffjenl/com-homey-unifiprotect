@@ -61,9 +61,9 @@
     }
   },
   "bugs": {
-    "url": "https://gitlab.com/monkeysoft/com-ubnt-unifiprotect/-/issues"
+    "url": "https://github.com/steffjenl/com-homey-unifiprotect/issues"
   },
-  "source": "https://gitlab.com/monkeysoft/com-ubnt-unifiprotect/",
+  "source": "https://github.com/steffjenl/com-homey-unifiprotect/",
   "support": "mailto:stephan@monkeysoft.nl",
   "homeyCommunityTopicId": 42966,
   "platforms": [
@@ -168,6 +168,138 @@
             "example": {
               "en": "vehicle",
               "nl": "vehicle"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_smart_detection_animal",
+        "title": {
+          "en": "A smart animal detection event",
+          "nl": "Een slimme dier detectie event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_smart_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_smart_detection_package",
+        "title": {
+          "en": "A smart package detection event",
+          "nl": "Een slimme pakket detectie event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_smart_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_smart_detection_person",
+        "title": {
+          "en": "A smart person detection event",
+          "nl": "Een slimme persoon detectie event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_smart_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_smart_detection_vehicle",
+        "title": {
+          "en": "A smart vehicle detection event",
+          "nl": "Een slimme auto detectie event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_smart_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
             }
           },
           {
@@ -290,6 +422,166 @@
         ]
       },
       {
+        "id": "ufp_device_camera_smart_detection_vehicle",
+        "title": {
+          "en": "A smart vehicle detection event",
+          "nl": "Een slimme voertuig detectie event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_smart_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectcamera"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_camera_smart_detection_package",
+        "title": {
+          "en": "A smart package detection event",
+          "nl": "Een slimme pakket detectie event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_smart_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectcamera"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_camera_smart_detection_animal",
+        "title": {
+          "en": "A smart animal detection event",
+          "nl": "Een slimme dier detectie event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_smart_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectcamera"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_camera_smart_detection_person",
+        "title": {
+          "en": "A smart person detection event",
+          "nl": "Een slimme persoon detectie event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_smart_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectcamera"
+          }
+        ]
+      },
+      {
         "id": "ufp_device_doorbell_ringing",
         "title": {
           "en": "Doorbell pressed",
@@ -325,18 +617,6 @@
         },
         "tokens": [
           {
-            "name": "ufp_smart_detection_camera",
-            "type": "string",
-            "title": {
-              "en": "Camera",
-              "nl": "Camera"
-            },
-            "example": {
-              "en": "Doorbell",
-              "nl": "Deurbel"
-            }
-          },
-          {
             "name": "smart_detection_type",
             "type": "string",
             "title": {
@@ -348,6 +628,118 @@
               "nl": "vehicle"
             }
           },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_doorbell_smart_detection_vehicle",
+        "title": {
+          "en": "A smart vehicle detection event",
+          "nl": "Een slimme voertuig detectie event"
+        },
+        "tokens": [
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_doorbell_smart_detection_person",
+        "title": {
+          "en": "A smart person detection event",
+          "nl": "Een slimme persoon detectie event"
+        },
+        "tokens": [
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_doorbell_smart_detection_package",
+        "title": {
+          "en": "A smart package detection event",
+          "nl": "Een slimme pakket detectie event"
+        },
+        "tokens": [
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_doorbell_smart_detection_animal",
+        "title": {
+          "en": "A smart animal detection event",
+          "nl": "Een slimme dier detectie event"
+        },
+        "tokens": [
           {
             "name": "score",
             "type": "number",
