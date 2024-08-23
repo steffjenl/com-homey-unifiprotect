@@ -139,5 +139,8 @@
   },
   "1.6.7": {
     "en": "Fix: Unifi Light Motion options and Brightness"
+  },
+  "1.6.8": {
+    "en": "Add support for device smart detections"
   }
 }
