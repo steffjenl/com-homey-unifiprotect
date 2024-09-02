@@ -67,7 +67,7 @@ class UniFiDoorbellDriver extends Homey.Driver {
       }
 
       if (payload.hasOwnProperty('smartDetectTypes')) {
-        camera.onSmartDetection(payload.start, payload.smartDetectTypes, ( typeof payload.score !== 'undefined' ? payload.score : 0 ));
+        camera.onSmartDetection((typeof payload.start !== 'undefined' ? payload.start : new Date()), payload.smartDetectTypes, ( typeof payload.score !== 'undefined' ? payload.score : 99 ));
       }
 
       if (payload.hasOwnProperty('lastRing')) {
