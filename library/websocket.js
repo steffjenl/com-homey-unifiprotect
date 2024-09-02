@@ -221,11 +221,11 @@ class ProtectWebSocket extends BaseClass {
             // get payload from updatePacket
             const payload = updatePacket.payload;
 
-            if (updatePacket.action.modelKey === 'event' && typeof updatePacket.payload.smartDetectTypes !== 'undefined' && updatePacket.payload.smartDetectTypes.length > 0) {
+            if (updatePacket.action.modelKey === 'event' && typeof updatePacket.action.recordId !== 'undefined' && typeof updatePacket.payload.smartDetectTypes !== 'undefined' && updatePacket.payload.smartDetectTypes.length > 0) {
                 // get protectcamera driver
                 const driverCamera = this.homey.drivers.getDriver('protectcamera');
                 // Get device from camera id
-                const deviceId = updatePacket.payload.camera;
+                const deviceId = updatePacket.action.recordId;
                 const deviceCamera = driverCamera.getUnifiDeviceById(deviceId);
                 if (deviceCamera) {
                     // Parse Websocket payload message
@@ -234,7 +234,7 @@ class ProtectWebSocket extends BaseClass {
                 // get doorbell driver
                 const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
                 // Get device from camera id
-                const deviceDoorbellId = updatePacket.payload.camera;
+                const deviceDoorbellId = updatePacket.action.recordId;
                 const deviceDoorbell = driverDoorbell.getUnifiDeviceById(deviceDoorbellId);
                 if (deviceDoorbell) {
                     // Parse Websocket payload message

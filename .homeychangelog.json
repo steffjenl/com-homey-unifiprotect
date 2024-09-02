@@ -142,5 +142,8 @@
   },
   "1.6.8": {
     "en": "Add support for device smart detections"
+  },
+  "1.6.9": {
+    "en": "Fixing breaking change for smart detections"
   }
 }
