@@ -290,21 +290,20 @@ class Camera extends Homey.Device {
 
         // const smartDetectionType = smartDetectTypes.join(',');
 
-        // fire trigger (per detection type)
-        for (let smartDetectionType of smartDetectTypes) {
-            this.homey.app.debug(`smart detection event on camera ${this.getData().id}, with type ${smartDetectionType}`);
-            // fire trigger
-            if (smartDetectionType === 'person') {
-                this.triggerSmartDetectionTriggerPerson(score);
-            }
-            else if (smartDetectionType === 'vehicle') {
-                this.triggerSmartDetectionTriggerVehicle(score);
-            }
-            else if (smartDetectionType === 'animal') {
-                this.triggerSmartDetectionTriggerAnimal(score);
-            }
-            else if (smartDetectionType === 'package') {
-                this.triggerSmartDetectionTriggerPackage(score);
+        if (smartDetectTypes.length > 0) {
+            // fire trigger (per detection type)
+            for (let smartDetectionType of smartDetectTypes) {
+                this.homey.app.debug(`smart detection event on camera ${this.getData().id}, with type ${smartDetectionType}`);
+                // fire trigger
+                if (smartDetectionType === 'person') {
+                    this.triggerSmartDetectionTriggerPerson(score);
+                } else if (smartDetectionType === 'vehicle') {
+                    this.triggerSmartDetectionTriggerVehicle(score);
+                } else if (smartDetectionType === 'animal') {
+                    this.triggerSmartDetectionTriggerAnimal(score);
+                } else if (smartDetectionType === 'package') {
+                    this.triggerSmartDetectionTriggerPackage(score);
+                }
             }
         }
     }

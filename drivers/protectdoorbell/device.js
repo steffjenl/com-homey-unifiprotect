@@ -295,20 +295,19 @@ class Doorbell extends Homey.Device {
         // const smartDetectionType = smartDetectTypes.join(',');
 
         // fire trigger (per detection type)
-        for (let smartDetectionType of smartDetectTypes) {
-            this.homey.app.debug(`smart detection event on Doorbell ${this.getData().id}, with type ${smartDetectionType}`);
-            // fire trigger
-            if (smartDetectionType === 'person') {
-                this.triggerSmartDetectionTriggerPerson(score);
-            }
-            else if (smartDetectionType === 'vehicle') {
-                this.triggerSmartDetectionTriggerVehicle(score);
-            }
-            else if (smartDetectionType === 'animal') {
-                this.triggerSmartDetectionTriggerAnimal(score);
-            }
-            else if (smartDetectionType === 'package') {
-                this.triggerSmartDetectionTriggerPackage(score);
+        if (smartDetectTypes.length > 0) {
+            for (let smartDetectionType of smartDetectTypes) {
+                this.homey.app.debug(`smart detection event on Doorbell ${this.getData().id}, with type ${smartDetectionType}`);
+                // fire trigger
+                if (smartDetectionType === 'person') {
+                    this.triggerSmartDetectionTriggerPerson(score);
+                } else if (smartDetectionType === 'vehicle') {
+                    this.triggerSmartDetectionTriggerVehicle(score);
+                } else if (smartDetectionType === 'animal') {
+                    this.triggerSmartDetectionTriggerAnimal(score);
+                } else if (smartDetectionType === 'package') {
+                    this.triggerSmartDetectionTriggerPackage(score);
+                }
             }
         }
     }
@@ -429,6 +428,20 @@ class Doorbell extends Homey.Device {
         this.setCameraImage('snapshot', this.getName(), this._snapshotImage);
 
         this.homey.app.debug('Created snapshot image for doorbell ' + this.getName() + '.');
+    }
+
+    triggerSmartDetectionTriggerUnknown(score) {
+        // Generic trigger
+        this.homey.app._smartDetectionTrigger.trigger({
+            ufp_smart_detection_camera: this.getName(),
+            smart_detection_type: 'unknown',
+            score: score
+        });
+        // device
+        this.driver._smartDetectionTrigger.trigger(this,{
+            smart_detection_type: 'unknown',
+            score: score
+        });
     }
 
     triggerSmartDetectionTriggerPerson(score) {

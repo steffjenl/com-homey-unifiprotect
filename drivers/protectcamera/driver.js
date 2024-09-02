@@ -66,7 +66,7 @@ class UniFiCameraDriver extends Homey.Driver {
       }
 
       if (payload.hasOwnProperty('smartDetectTypes')) {
-        camera.onSmartDetection(payload.start, payload.smartDetectTypes, payload.score);
+        camera.onSmartDetection(payload.start, payload.smartDetectTypes, ( typeof payload.score !== 'undefined' ? payload.score : 0 ));
       }
 
       if (payload.hasOwnProperty('lastRing')) {
