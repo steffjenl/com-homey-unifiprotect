@@ -276,7 +276,40 @@ class Camera extends Homey.Device {
         }
     }
 
-    onSmartDetection(lastDetectionAt, smartDetectTypes, score) {
+    onSmartDetection(payload) {
+        let lastDetectionAt = null;
+        let score = null;
+        let smartDetectTypes = null;
+
+        if (
+            payload
+            && typeof payload.smartDetectTypes !== 'undefined'
+            && typeof payload.score !== 'undefined'
+            && typeof payload.start !== 'undefined'
+        ) {
+            // old implementation
+            // Get the last detection, score and type
+            lastDetectionAt = payload.start;
+            score = payload.score;
+            smartDetectTypes = payload.smartDetectTypes;
+        } else if (
+            payload
+            && typeof payload.smartDetectTypes !== 'undefined'
+            && typeof payload.metadata !== 'undefined'
+            && typeof payload.metadata.detectedThumbnails !== 'undefined'
+            && payload.smartDetectTypes.length !== 0
+            && payload.metadata.detectedThumbnails.length !== 0
+        ) {
+            // new implementation
+            // Get the last detection, score and type
+            lastDetectionAt = payload.metadata.detectedThumbnails[0].clockBestWall
+            score = payload.metadata.detectedThumbnails[0].confidence;
+            smartDetectTypes = payload.smartDetectTypes;
+        } else {
+            // missing data
+            return;
+        }
+
         const lastDetection = this.homey.app.toLocalTime(new Date(lastDetectionAt));
         // Set last smart detection to current datetime
         this.setCapabilityValue('last_smart_detection_at', lastDetectionAt)
@@ -290,10 +323,10 @@ class Camera extends Homey.Device {
 
         // const smartDetectionType = smartDetectTypes.join(',');
 
+        // fire trigger (per detection type)
         if (smartDetectTypes.length > 0) {
-            // fire trigger (per detection type)
             for (let smartDetectionType of smartDetectTypes) {
-                this.homey.app.debug(`smart detection event on camera ${this.getData().id}, with type ${smartDetectionType}`);
+                this.homey.app.debug(`smart detection event on Doorbell ${this.getData().id}, with type ${smartDetectionType}`);
                 // fire trigger
                 if (smartDetectionType === 'person') {
                     this.triggerSmartDetectionTriggerPerson(score);
@@ -418,24 +451,24 @@ class Camera extends Homey.Device {
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'person',
             score: score
-        });
+        }).catch(this.error);
         // device
-        this.driver._smartDetectionTrigger.trigger(this,{
+        this.driver._deviceSmartDetectionTrigger.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'person',
             score: score
-        });
+        }).catch(this.error);
         // Detection Type trigger
         // App trigger
         this.homey.app._smartDetectionTriggerPerson.trigger({
             ufp_smart_detection_camera: this.getName(),
             score: score
-        });
+        }).catch(this.error);
         // Device trigger
-        this.driver._deviceSmartDetectionTriggerPerson.trigger({
+        this.driver._deviceSmartDetectionTriggerPerson.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
             score: score
-        });
+        }).catch(this.error);
     }
 
     triggerSmartDetectionTriggerVehicle(score) {
@@ -444,24 +477,24 @@ class Camera extends Homey.Device {
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'vehicle',
             score: score
-        });
+        }).catch(this.error);
         // device
-        this.driver._smartDetectionTrigger.trigger(this,{
+        this.driver._deviceSmartDetectionTrigger.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'vehicle',
             score: score
-        });
+        }).catch(this.error);
         // Detection Type trigger
         // App trigger
         this.homey.app._smartDetectionTriggerVehicle.trigger({
             ufp_smart_detection_camera: this.getName(),
             score: score
-        });
+        }).catch(this.error);
         // Device trigger
-        this.driver._deviceSmartDetectionTriggerAnimal.trigger({
+        this.driver._deviceSmartDetectionTriggerAnimal.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
             score: score
-        });
+        }).catch(this.error);
     }
 
     triggerSmartDetectionTriggerAnimal(score) {
@@ -476,18 +509,18 @@ class Camera extends Homey.Device {
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'animal',
             score: score
-        });
+        }).catch(this.error);
         // Detection Type trigger
         // App trigger
         this.homey.app._smartDetectionTriggerAnimal.trigger({
             ufp_smart_detection_camera: this.getName(),
             score: score
-        });
+        }).catch(this.error);
         // Device trigger
-        this.driver._deviceSmartDetectionTriggerAnimal.trigger({
+        this.driver._deviceSmartDetectionTriggerAnimal.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
             score: score
-        });
+        }).catch(this.error);
     }
 
     triggerSmartDetectionTriggerPackage(score) {
@@ -496,24 +529,24 @@ class Camera extends Homey.Device {
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'package',
             score: score
-        });
+        }).catch(this.error);
         // device
         this.driver._deviceSmartDetectionTrigger.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'package',
             score: score
-        });
+        }).catch(this.error);
         // Detection Type trigger
         // App trigger
         this.homey.app._smartDetectionTriggerPackage.trigger({
             ufp_smart_detection_camera: this.getName(),
             score: score
-        });
+        }).catch(this.error);
         // Device trigger
-        this.driver._deviceSmartDetectionTriggerPackage.trigger({
+        this.driver._deviceSmartDetectionTriggerPackage.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
             score: score
-        });
+        }).catch(this.error);
     }
 
 }

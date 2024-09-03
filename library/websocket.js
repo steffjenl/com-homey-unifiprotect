@@ -221,7 +221,13 @@ class ProtectWebSocket extends BaseClass {
             // get payload from updatePacket
             const payload = updatePacket.payload;
 
-            if (updatePacket.action.modelKey === 'event' && typeof updatePacket.action.recordId !== 'undefined' && typeof updatePacket.payload.smartDetectTypes !== 'undefined' && updatePacket.payload.smartDetectTypes.length > 0) {
+            if (
+                updatePacket.action.modelKey === 'event'
+                && typeof updatePacket.action.recordId !== 'undefined'
+                && typeof updatePacket.payload.smartDetectTypes !== 'undefined'
+                && updatePacket.payload.smartDetectTypes.length > 0
+            ) {
+                this.homey.app.debug('if statement for event: ' + JSON.stringify(updatePacket));
                 // get protectcamera driver
                 const driverCamera = this.homey.drivers.getDriver('protectcamera');
                 // Get device from camera id

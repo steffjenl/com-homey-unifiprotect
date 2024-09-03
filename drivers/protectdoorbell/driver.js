@@ -9,9 +9,9 @@ class UniFiDoorbellDriver extends Homey.Driver {
    */
   async onInit() {
     // Register flow cards
-    this._connectionStatusTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_CONNECTION_CHANGED);
-    this._doorbellRingingTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOORBELL_RINGING);
-    this._smartDetectionTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION);
+    //this._connectionStatusTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_CONNECTION_CHANGED);
+    //this._doorbellRingingTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOORBELL_RINGING);
+    //this._smartDetectionTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION);
     this._doorbellPressetTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_PRESET);
     this._deviceSmartDetectionTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION);
     this._deviceSmartDetectionTriggerPerson = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_PERSON);
@@ -67,7 +67,8 @@ class UniFiDoorbellDriver extends Homey.Driver {
       }
 
       if (payload.hasOwnProperty('smartDetectTypes')) {
-        camera.onSmartDetection((typeof payload.start !== 'undefined' ? payload.start : new Date()), payload.smartDetectTypes, ( typeof payload.score !== 'undefined' ? payload.score : 99 ));
+        this.homey.app.debug('onParseWebsocketMessage ' + JSON.stringify(payload));
+        camera.onSmartDetection(payload);
       }
 
       if (payload.hasOwnProperty('lastRing')) {
