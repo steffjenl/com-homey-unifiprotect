@@ -145,5 +145,8 @@
   },
   "1.6.9": {
     "en": "Fixing breaking change for smart detections"
+  },
+  "1.6.10": {
+    "en": "Realfix for Smart Detection"
   }
 }
