@@ -148,5 +148,8 @@
   },
   "1.6.10": {
     "en": "Realfix for Smart Detection"
+  },
+  "1.6.11": {
+    "en": "Fix reject not found"
   }
 }
