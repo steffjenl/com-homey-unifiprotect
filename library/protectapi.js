@@ -201,7 +201,7 @@ class ProtectAPI extends BaseClass {
                 req.write(credentials);
                 req.end();
 
-            }).catch(error => reject(error));
+            }).catch(error => this.homey.error(error));
     }
 
     getBootstrapInfo() {
