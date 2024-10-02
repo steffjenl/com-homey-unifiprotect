@@ -129,9 +129,6 @@ class Sensor extends Homey.Device {
           if (this.hasCapability('alarm_contact')) {
             this.setCapabilityValue('alarm_contact', sensor.isOpened);
           }
-          if (this.hasCapability('alarm_motion')) {
-            this.setCapabilityValue('alarm_motion', false);
-          }
         }
       });
     }
