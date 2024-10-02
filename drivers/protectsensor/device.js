@@ -127,7 +127,10 @@ class Sensor extends Homey.Device {
             this.setCapabilityValue('measure_luminance', sensor.stats.light.value);
           }
           if (this.hasCapability('alarm_contact')) {
-            this.setCapabilityValue('alarm_contact', sensor.isOpened );
+            this.setCapabilityValue('alarm_contact', sensor.isOpened);
+          }
+          if (this.hasCapability('alarm_motion')) {
+            this.setCapabilityValue('alarm_motion', false);
           }
         }
       });
@@ -140,9 +143,24 @@ class Sensor extends Homey.Device {
     }).catch(error => this.homey.app.debug(error));
   }
 
+  motion_timer_id = -1;
+  motion_timer_wait_in_sec = 10;
+
   onMotionStart() {
-    this.homey.app.debug('onMotionStart');
-    this.setCapabilityValue('alarm_motion', true);
+    if (this.getCapabilityValue('alarm_motion') !== true) {
+      this.homey.app.debug('onMotionStart');
+      this.setCapabilityValue('alarm_motion', true);
+
+      this.motion_timer_id=setTimeout(() => {
+        this.onMotionEnd();
+      }, this.motion_timer_wait_in_sec*1000);
+    } else {
+      this.homey.app.debug('onMotionStart reset timer');
+      clearTimeout(this.motion_timer_id)
+      this.motion_timer_id=setTimeout(() => {
+        this.onMotionEnd();
+      }, this.motion_timer_wait_in_sec*1000);
+    }
   }
 
   onMotionEnd() {
@@ -180,7 +198,7 @@ class Sensor extends Homey.Device {
   onDoorChange(isOpened) {
     this.homey.app.debug('onDoorChange');
     if (this.hasCapability('alarm_contact')) {
-      this.setCapabilityValue('alarm_contact', isOpened );
+      this.setCapabilityValue('alarm_contact', isOpened);
     }
   }
 
@@ -199,15 +217,15 @@ class Sensor extends Homey.Device {
   }
 
   translateLightMode(settings) {
-      if (settings.mode === "motion" && settings.enableAt === "fulltime") {
-        return "motion";
-      }
-      else if (settings.mode === "motion" && settings.enableAt === "dark") {
-        return "dark";
-      }
-      else {
-        return settings.mode;
-      }
+    if (settings.mode === "motion" && settings.enableAt === "fulltime") {
+      return "motion";
+    }
+    else if (settings.mode === "motion" && settings.enableAt === "dark") {
+      return "dark";
+    }
+    else {
+      return settings.mode;
+    }
   }
 
   translateLedLevel(ledLevel, homey) {
@@ -215,16 +233,16 @@ class Sensor extends Homey.Device {
       if (ledLevel <= 0.16) {
         return 1;
       }
-      else if(ledLevel <= 0.32) {
+      else if (ledLevel <= 0.32) {
         return 2;
       }
-      else if(ledLevel <= 0.48) {
+      else if (ledLevel <= 0.48) {
         return 3;
       }
-      else if(ledLevel <= 0.64) {
+      else if (ledLevel <= 0.64) {
         return 4;
       }
-      else if(ledLevel <= 0.80) {
+      else if (ledLevel <= 0.80) {
         return 5;
       }
       else {
@@ -235,16 +253,16 @@ class Sensor extends Homey.Device {
       if (ledLevel === 1) {
         return 0.16;
       }
-      else if(ledLevel === 2) {
+      else if (ledLevel === 2) {
         return 0.32;
       }
-      else if(ledLevel === 2) {
+      else if (ledLevel === 2) {
         return 0.48;
       }
-      else if(ledLevel === 2) {
+      else if (ledLevel === 2) {
         return 0.64;
       }
-      else if(ledLevel === 2) {
+      else if (ledLevel === 2) {
         return 0.80;
       }
       else {
@@ -259,7 +277,7 @@ class Sensor extends Homey.Device {
     if (!lastMotionAt) {
       this.homey.app.debug(`set last_motion_at to last datetime: ${this.getData().id}`);
       this.setCapabilityValue('last_motion_at', lastMotionTime)
-          .catch(this.error);
+        .catch(this.error);
       return;
     }
 
@@ -269,18 +287,12 @@ class Sensor extends Homey.Device {
       this.homey.app.debug(`new motion detected on sensor: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
 
       this.setCapabilityValue('last_motion_at', lastMotionTime)
-          .catch(this.error);
+        .catch(this.error);
       this.setCapabilityValue('last_motion_date', lastMotion.toLocaleDateString())
-          .catch(this.error);
+        .catch(this.error);
       this.setCapabilityValue('last_motion_time', lastMotion.toLocaleTimeString())
-          .catch(this.error);
+        .catch(this.error);
       this.onMotionStart();
-    } else if (!isMotionDetected && lastMotionTime > lastMotionAt) {
-      const lastMotion = this.homey.app.toLocalTime(new Date(lastMotionTime));
-      this.homey.app.debug(`motion detected ended on sensor: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
-      this.onMotionEnd();
-      this.setCapabilityValue('last_motion_at', lastMotionTime)
-          .catch(this.error);
     }
   }
 }
