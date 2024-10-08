@@ -4,6 +4,9 @@ const Homey = require('homey');
 const UfvConstants = require('../../library/constants');
 
 class Sensor extends Homey.Device {
+
+  motion_timer_id = -1;
+
   /**
    * onInit is called when the device is initialized.
    */
@@ -140,23 +143,20 @@ class Sensor extends Homey.Device {
     }).catch(error => this.homey.app.debug(error));
   }
 
-  motion_timer_id = -1;
-  motion_timer_wait_in_sec = 10;
-
   onMotionStart() {
     if (this.getCapabilityValue('alarm_motion') !== true) {
       this.homey.app.debug('onMotionStart');
       this.setCapabilityValue('alarm_motion', true);
 
-      this.motion_timer_id=setTimeout(() => {
+      this.motion_timer_id=this.homey.setTimeout(() => {
         this.onMotionEnd();
-      }, this.motion_timer_wait_in_sec*1000);
+      }, UfvConstants.PROTECT_SENSOR_MOTION_TIMER_WAIT_IN_SEC);
     } else {
       this.homey.app.debug('onMotionStart reset timer');
-      clearTimeout(this.motion_timer_id)
-      this.motion_timer_id=setTimeout(() => {
+      this.homey.clearTimeout(this.motion_timer_id)
+      this.motion_timer_id=this.homey.setTimeout(() => {
         this.onMotionEnd();
-      }, this.motion_timer_wait_in_sec*1000);
+      }, UfvConstants.PROTECT_SENSOR_MOTION_TIMER_WAIT_IN_SEC);
     }
   }
 
