@@ -78,3 +78,6 @@ module.exports.PROTECT_MQTT_TOPIC = "unifi/protect";
 // How often, in seconds, should we check Protect controllers for new or removed devices.
 // This will NOT impact motion or doorbell event detection on UniFi OS devices.
 module.exports.PROTECT_NVR_UNIFIOS_REFRESH_INTERVAL = 10;
+
+
+module.exports.PROTECT_SENSOR_MOTION_TIMER_WAIT_IN_SEC = 10 * 1000;
