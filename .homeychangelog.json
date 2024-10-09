@@ -151,5 +151,8 @@
   },
   "1.6.11": {
     "en": "Fix reject not found"
+  },
+  "1.6.12": {
+    "en": "Add timer on motion sensor (Unifi Sensor)"
   }
 }
