@@ -282,6 +282,8 @@ class Doorbell extends Homey.Device {
 
     onSmartDetection(payload) {
 
+        this.homey.app.debug('[A] onSmartDetection ' + JSON.stringify(payload));
+
         let lastDetectionAt = null;
         let score = null;
         let smartDetectTypes = null;
@@ -312,6 +314,7 @@ class Doorbell extends Homey.Device {
             smartDetectTypes = payload.smartDetectTypes;
         } else {
             // missing data
+            this.homey.app.debug('[B] missing data onSmartDetection ' + JSON.stringify(payload));
             return;
         }
 
@@ -331,7 +334,7 @@ class Doorbell extends Homey.Device {
         // fire trigger (per detection type)
         if (smartDetectTypes.length > 0) {
             for (let smartDetectionType of smartDetectTypes) {
-                this.homey.app.debug(`smart detection event on Doorbell ${this.getData().id}, with type ${smartDetectionType}`);
+                this.homey.app.debug(`[C] smart detection event on Doorbell ${this.getData().id}, with type ${smartDetectionType}`);
                 // fire trigger
                 if (smartDetectionType === 'person') {
                     this.triggerSmartDetectionTriggerPerson(score);
