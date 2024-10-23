@@ -151,5 +151,11 @@
   },
   "1.6.11": {
     "en": "Fix reject not found"
+  },
+  "1.6.12": {
+    "en": "Add Unknown SmartMotion trigger and more debug information"
+  },
+  "1.6.13": {
+    "en": "Add more debug information and Unknown Smartmotion trigger"
   }
 }
