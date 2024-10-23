@@ -202,8 +202,21 @@ class ProtectWebSocket extends BaseClass {
                 return true;
             }
 
-            if (updatePacket.action.modelKey === 'event' && ( updatePacket.payload.type === 'smartDetectZone' || updatePacket.payload.type === 'smartDetectLine') ) {
+            if (
+                updatePacket.action.modelKey !== 'nvr'
+                && updatePacket.action.modelKey !== 'sensor'
+                && updatePacket.action.modelKey !== 'bridge'
+                && updatePacket.action.modelKey !== 'user'
+                && typeof updatePacket.payload.wifiConnectionState === 'undefined'
+                && typeof updatePacket.payload.stats === 'undefined'
+                && typeof updatePacket.payload.permissions === 'undefined'
+                && typeof updatePacket.payload.upSince === 'undefined'
+            ) {
                 this.homey.app.debug('event: ' + JSON.stringify(updatePacket));
+            }
+
+            if (updatePacket.action.modelKey === 'event' && ( updatePacket.payload.type === 'smartDetectZone' || updatePacket.payload.type === 'smartDetectLine') ) {
+                this.homey.app.debug('smartDetectZone event: ' + JSON.stringify(updatePacket));
             }
 
             if (typeof updatePacket.payload !== 'undefined' && typeof updatePacket.payload.smartDetectTypes !== 'undefined' && updatePacket.payload.smartDetectTypes.length > 0) {
@@ -280,7 +293,7 @@ class ProtectWebSocket extends BaseClass {
                 // get protectcamera driver
                 const driverCamera = this.homey.drivers.getDriver('protectcamera');
                 // Get device from camera id
-                const deviceId = updatePacket.payload.camera;
+                const deviceId = updatePacket.recordId;
                 const deviceCamera = driverCamera.getUnifiDeviceById(deviceId);
                 if (deviceCamera) {
                     // Parse Websocket payload message
@@ -289,7 +302,7 @@ class ProtectWebSocket extends BaseClass {
                 // get doorbell driver
                 const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
                 // Get device from camera id
-                const deviceDoorbellId = updatePacket.payload.camera;
+                const deviceDoorbellId = updatePacket.recordId;
                 const deviceDoorbell = driverDoorbell.getUnifiDeviceById(deviceDoorbellId);
                 if (deviceDoorbell) {
                     // Parse Websocket payload message

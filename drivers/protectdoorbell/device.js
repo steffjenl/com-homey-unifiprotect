@@ -312,6 +312,18 @@ class Doorbell extends Homey.Device {
             lastDetectionAt = payload.metadata.detectedThumbnails[0].clockBestWall
             score = payload.metadata.detectedThumbnails[0].confidence;
             smartDetectTypes = payload.smartDetectTypes;
+        } else if (
+            payload
+            && typeof payload.smartDetectTypes !== 'undefined'
+            && typeof payload.score === 'undefined'
+            && typeof payload.start === 'undefined'
+            && payload.smartDetectTypes.length !== 0
+        ) {
+            // new implementation
+            // Get the last detection, score and type
+            lastDetectionAt = this.homey.app.getUnixTimestamp();
+            score = 0;
+            smartDetectTypes = payload.smartDetectTypes;
         } else {
             // missing data
             this.homey.app.debug('[B] missing data onSmartDetection ' + JSON.stringify(payload));
@@ -346,6 +358,8 @@ class Doorbell extends Homey.Device {
                     this.triggerSmartDetectionTriggerPackage(score);
                 }
             }
+        } else {
+            this.triggerSmartDetectionTriggerUnknown(score);
         }
     }
 
