@@ -286,6 +286,10 @@ class UniFiProtect extends Homey.App {
         return localTime;
     }
 
+    getUnixTimestamp () {
+        return Math.floor(Date.now() / 1000)
+    }
+
     debug() {
         if (Homey.env.DEBUG === 'true') {
         const args = Array.prototype.slice.call(arguments);
