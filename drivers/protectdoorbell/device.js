@@ -13,6 +13,7 @@ class Doorbell extends Homey.Device {
     async onInit() {
         this.device = this;
         await this.waitForBootstrap();
+        this.cleanSmartDetectionEvents();
         this.homey.app.debug('UnifiDoorbell Device has been initialized');
     }
 
@@ -311,50 +312,6 @@ class Doorbell extends Homey.Device {
             return;
         }
 
-
-
-        // if (
-        //     payload
-        //     && typeof payload.smartDetectTypes !== 'undefined'
-        //     && typeof payload.score !== 'undefined'
-        //     && typeof payload.start !== 'undefined'
-        // ) {
-        //     // old implementation
-        //     // Get the last detection, score and type
-        //     lastDetectionAt = payload.start;
-        //     score = payload.score;
-        //     smartDetectTypes = payload.smartDetectTypes;
-        // } else if (
-        //     payload
-        //     && typeof payload.smartDetectTypes !== 'undefined'
-        //     && typeof payload.metadata !== 'undefined'
-        //     && typeof payload.metadata.detectedThumbnails !== 'undefined'
-        //     && payload.smartDetectTypes.length !== 0
-        //     && payload.metadata.detectedThumbnails.length !== 0
-        // ) {
-        //     // new implementation
-        //     // Get the last detection, score and type
-        //     lastDetectionAt = payload.metadata.detectedThumbnails[0].clockBestWall
-        //     score = payload.metadata.detectedThumbnails[0].confidence;
-        //     smartDetectTypes = payload.smartDetectTypes;
-        // } else if (
-        //     payload
-        //     && typeof payload.smartDetectTypes !== 'undefined'
-        //     && typeof payload.score === 'undefined'
-        //     && typeof payload.start === 'undefined'
-        //     && payload.smartDetectTypes.length !== 0
-        // ) {
-        //     // new implementation
-        //     // Get the last detection, score and type
-        //     lastDetectionAt = this.homey.app.getUnixTimestamp();
-        //     score = 0;
-        //     smartDetectTypes = payload.smartDetectTypes;
-        // } else {
-        //     // missing data
-        //     this.homey.app.debug('[B] missing data onSmartDetection ' + JSON.stringify(payload));
-        //     return;
-        // }
-
         const lastDetection = this.homey.app.toLocalTime(new Date(lastDetectionAt));
         // Set last smart detection to current datetime
         this.setCapabilityValue('last_smart_detection_at', lastDetectionAt)
@@ -514,7 +471,7 @@ class Doorbell extends Homey.Device {
             score: score
         }).catch(this.error);
         // device
-        this.driver._smartDetectionTrigger.trigger(this,{
+        this.driver._deviceSmartDetectionTrigger.trigger(this,{
             smart_detection_type: 'unknown',
             score: score
         }).catch(this.error);
@@ -635,11 +592,14 @@ class Doorbell extends Homey.Device {
 
     cleanSmartDetectionEvents() {
         const events = this.getStoreKeys();
-        for (let eventId in events) {
-            const event = this.getStoreValue(eventId);
-            this.unsetStoreValue(eventId);
-        }
 
+        events.forEach((eventId) => {
+            let event = this.getStoreValue(eventId);
+            let currentTime = this.homey.app.getUnixTimestamp();
+            if ((currentTime - event.detectionTime) > 86400) {
+                this.unsetStoreValue(eventId).catch(this.error);
+            }
+        });
     }
 
 }

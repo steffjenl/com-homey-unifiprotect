@@ -234,6 +234,20 @@ class UniFiProtect extends Homey.App {
             .catch(error => this.error(error));
     }
 
+    cleanDeviceStorage() {
+        const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
+        const driverCamera = this.homey.drivers.getDriver('protectcamera');
+
+        driverDoorbell.getDevices().forEach(device => {
+            device.cleanSmartDetectionEvents();
+        });
+
+        driverCamera.getDevices().forEach(device => {
+            device.cleanSmartDetectionEvents();
+        });
+
+    }
+
     _refreshCookie() {
         //if (this.debuggedIn) {
             this.api._lastUpdateId = null;
@@ -268,6 +282,9 @@ class UniFiProtect extends Homey.App {
                 .catch(error => this.error(error));
         //}
 
+        // clean Device Storage
+        this.cleanDeviceStorage();
+
         // _refreshCookie after 1 hour
         const timeOutFunction = function () {
             this._refreshCookie();
@@ -287,7 +304,7 @@ class UniFiProtect extends Homey.App {
     }
 
     getUnixTimestamp () {
-        return Math.floor(Date.now() / 1000)
+        return Math.floor(Date.now());
     }
 
     debug() {

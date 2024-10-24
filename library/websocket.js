@@ -271,7 +271,7 @@ class ProtectWebSocket extends BaseClass {
                 const deviceCamera = driverCamera.getUnifiDeviceById(updatePacket.action.recordId);
                 if (deviceCamera) {
                     // Parse Websocket payload message
-                    driverCamera.onParseWebsocketMessage(deviceCamera, updatePacket, updatePacket.action.action, updatePacket.action.id);
+                    driverCamera.onParseWebsocketMessage(deviceCamera, payload, updatePacket.action.action, updatePacket.action.id);
                 }
                 // get doorbell driver
                 const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
@@ -279,7 +279,7 @@ class ProtectWebSocket extends BaseClass {
                 const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
                 if (deviceDoorbell) {
                     // Parse Websocket payload message
-                    driverDoorbell.onParseWebsocketMessage(deviceDoorbell, updatePacket, updatePacket.action.action, updatePacket.action.id);
+                    driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
                 }
             } else if (updatePacket.action.modelKey === 'light') {
                 // get protectlight driver
