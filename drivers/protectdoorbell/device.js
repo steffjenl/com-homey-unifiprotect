@@ -4,6 +4,7 @@ const Homey = require('homey');
 const fetch = require('node-fetch');
 const https = require('https');
 const UfvConstants = require('../../library/constants');
+const SmartDetectionEvent = require('../../library/Models/SmartDetectionEvent');
 
 class Doorbell extends Homey.Device {
     /**
@@ -280,55 +281,79 @@ class Doorbell extends Homey.Device {
         }
     }
 
-    onSmartDetection(payload) {
+    onSmartDetection(payload, actionType = null, eventId = null) {
 
         this.homey.app.debug('[A] onSmartDetection ' + JSON.stringify(payload));
 
         let lastDetectionAt = null;
         let score = null;
         let smartDetectTypes = null;
+        let event = null;
 
-        if (
-            payload
-            && typeof payload.smartDetectTypes !== 'undefined'
-            && typeof payload.score !== 'undefined'
-            && typeof payload.start !== 'undefined'
-        ) {
-            // old implementation
-            // Get the last detection, score and type
-            lastDetectionAt = payload.start;
-            score = payload.score;
-            smartDetectTypes = payload.smartDetectTypes;
-        } else if (
-            payload
-            && typeof payload.smartDetectTypes !== 'undefined'
-            && typeof payload.metadata !== 'undefined'
-            && typeof payload.metadata.detectedThumbnails !== 'undefined'
-            && payload.smartDetectTypes.length !== 0
-            && payload.metadata.detectedThumbnails.length !== 0
-        ) {
-            // new implementation
-            // Get the last detection, score and type
-            lastDetectionAt = payload.metadata.detectedThumbnails[0].clockBestWall
-            score = payload.metadata.detectedThumbnails[0].confidence;
-            smartDetectTypes = payload.smartDetectTypes;
-        } else if (
-            payload
-            && typeof payload.smartDetectTypes !== 'undefined'
-            && typeof payload.score === 'undefined'
-            && typeof payload.start === 'undefined'
-            && payload.smartDetectTypes.length !== 0
-        ) {
-            // new implementation
-            // Get the last detection, score and type
-            lastDetectionAt = this.homey.app.getUnixTimestamp();
-            score = 0;
-            smartDetectTypes = payload.smartDetectTypes;
+
+        if (actionType === 'add') {
+            event = this.setSmartDetectionEvent(eventId, payload.start, payload.smartDetectTypes, payload.score);
+        } else if (actionType === 'update') {
+            event = this.getSmartDetectionEvent(eventId);
+            if (event !== null) {
+                event.detectionTypes = payload.smartDetectTypes;
+            }
+        }
+
+        this.homey.app.debug('[Object] onSmartDetection ' + JSON.stringify(event));
+
+        if (event !== null) {
+            lastDetectionAt = event.detectionTime;
+            score = event.detectionScore;
+            smartDetectTypes = event.detectionTypes;
         } else {
-            // missing data
-            this.homey.app.debug('[B] missing data onSmartDetection ' + JSON.stringify(payload));
+            this.homey.app.debug('[404] Event not found [' + eventId + '] ' + JSON.stringify(payload));
             return;
         }
+
+
+
+        // if (
+        //     payload
+        //     && typeof payload.smartDetectTypes !== 'undefined'
+        //     && typeof payload.score !== 'undefined'
+        //     && typeof payload.start !== 'undefined'
+        // ) {
+        //     // old implementation
+        //     // Get the last detection, score and type
+        //     lastDetectionAt = payload.start;
+        //     score = payload.score;
+        //     smartDetectTypes = payload.smartDetectTypes;
+        // } else if (
+        //     payload
+        //     && typeof payload.smartDetectTypes !== 'undefined'
+        //     && typeof payload.metadata !== 'undefined'
+        //     && typeof payload.metadata.detectedThumbnails !== 'undefined'
+        //     && payload.smartDetectTypes.length !== 0
+        //     && payload.metadata.detectedThumbnails.length !== 0
+        // ) {
+        //     // new implementation
+        //     // Get the last detection, score and type
+        //     lastDetectionAt = payload.metadata.detectedThumbnails[0].clockBestWall
+        //     score = payload.metadata.detectedThumbnails[0].confidence;
+        //     smartDetectTypes = payload.smartDetectTypes;
+        // } else if (
+        //     payload
+        //     && typeof payload.smartDetectTypes !== 'undefined'
+        //     && typeof payload.score === 'undefined'
+        //     && typeof payload.start === 'undefined'
+        //     && payload.smartDetectTypes.length !== 0
+        // ) {
+        //     // new implementation
+        //     // Get the last detection, score and type
+        //     lastDetectionAt = this.homey.app.getUnixTimestamp();
+        //     score = 0;
+        //     smartDetectTypes = payload.smartDetectTypes;
+        // } else {
+        //     // missing data
+        //     this.homey.app.debug('[B] missing data onSmartDetection ' + JSON.stringify(payload));
+        //     return;
+        // }
 
         const lastDetection = this.homey.app.toLocalTime(new Date(lastDetectionAt));
         // Set last smart detection to current datetime
@@ -596,6 +621,25 @@ class Doorbell extends Homey.Device {
         this.driver._deviceSmartDetectionTriggerPackage.trigger(this,{
             score: score
         }).catch(this.error);
+    }
+
+    getSmartDetectionEvent(event_id) {
+        return this.getStoreValue(event_id);
+    }
+
+    setSmartDetectionEvent(event_id, smartDetectionTime, smartDetectionType, smartDetectionScore) {
+        const event = new SmartDetectionEvent(smartDetectionTime, smartDetectionType, smartDetectionScore, event_id);
+        this.setStoreValue(event_id, event).catch(this.error);
+        return event;
+    }
+
+    cleanSmartDetectionEvents() {
+        const events = this.getStoreKeys();
+        for (let eventId in events) {
+            const event = this.getStoreValue(eventId);
+            this.unsetStoreValue(eventId);
+        }
+
     }
 
 }

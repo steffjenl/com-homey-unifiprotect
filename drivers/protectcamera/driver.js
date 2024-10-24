@@ -39,7 +39,7 @@ class UniFiCameraDriver extends Homey.Driver {
     });
   }
 
-  onParseWebsocketMessage(camera, payload) {
+  onParseWebsocketMessage(camera, payload, actionType = null, eventId = null) {
     if (Object.prototype.hasOwnProperty.call(camera, '_events')) {
       if (payload.hasOwnProperty('isRecording')) {
         camera.onIsRecording(payload.isRecording);
@@ -65,10 +65,6 @@ class UniFiCameraDriver extends Homey.Driver {
         camera.onMotionDetected(payload.lastMotion, payload.isMotionDetected);
       }
 
-      if (payload.hasOwnProperty('smartDetectTypes')) {
-        camera.onSmartDetection(payload);
-      }
-
       if (payload.hasOwnProperty('lastRing')) {
         camera.onDoorbellRinging(payload.lastRing);
       }
@@ -79,6 +75,10 @@ class UniFiCameraDriver extends Homey.Driver {
 
       if (payload.hasOwnProperty('ispSettings') && payload.ispSettings.hasOwnProperty('irLedMode')) {
         camera.onNightVisionMode(payload.ispSettings.irLedMode);
+      }
+
+      if (payload.hasOwnProperty('type') && payload.type === 'smartDetectZone') {
+        camera.onSmartDetection(payload, actionType, eventId);
       }
     }
   }
