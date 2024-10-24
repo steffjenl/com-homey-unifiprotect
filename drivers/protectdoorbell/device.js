@@ -283,9 +283,6 @@ class Doorbell extends Homey.Device {
     }
 
     onSmartDetection(payload, actionType = null, eventId = null) {
-
-        this.homey.app.debug('[A] onSmartDetection ' + JSON.stringify(payload));
-
         let lastDetectionAt = null;
         let score = null;
         let smartDetectTypes = null;

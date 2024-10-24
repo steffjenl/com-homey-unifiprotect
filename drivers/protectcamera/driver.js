@@ -77,7 +77,8 @@ class UniFiCameraDriver extends Homey.Driver {
         camera.onNightVisionMode(payload.ispSettings.irLedMode);
       }
 
-      if (payload.hasOwnProperty('type') && payload.type === 'smartDetectZone') {
+      if (payload.hasOwnProperty('smartDetectTypes')) {
+        this.homey.app.debug('onParseWebsocketMessage ' + JSON.stringify(payload));
         camera.onSmartDetection(payload, actionType, eventId);
       }
     }
