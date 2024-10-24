@@ -157,5 +157,8 @@
   },
   "1.6.13": {
     "en": "Add more debug information and Unknown Smartmotion trigger"
+  },
+  "1.6.14": {
+    "en": "Second fix for smartdetections"
   }
 }
