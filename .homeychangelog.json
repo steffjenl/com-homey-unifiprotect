@@ -163,5 +163,8 @@
   },
   "1.6.15": {
     "en": "Second fix for smartdetections"
+  },
+  "1.6.16": {
+    "en": "Fixing crash on smart detection for camera's"
   }
 }
