@@ -440,6 +440,20 @@ class Camera extends Homey.Device {
         this.homey.app.debug('Created snapshot image for camera ' + this.getName() + '.');
     }
 
+    triggerSmartDetectionTriggerUnknown(score) {
+        // Generic trigger
+        this.homey.app._smartDetectionTrigger.trigger({
+            ufp_smart_detection_camera: this.getName(),
+            smart_detection_type: 'unknown',
+            score: score
+        }).catch(this.error);
+        // device
+        this.driver._deviceSmartDetectionTrigger.trigger(this,{
+            smart_detection_type: 'unknown',
+            score: score
+        }).catch(this.error);
+    }
+
     triggerSmartDetectionTriggerPerson(score) {
         // Generic trigger
         this.homey.app._smartDetectionTrigger.trigger({
