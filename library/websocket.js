@@ -222,6 +222,10 @@ class ProtectWebSocket extends BaseClass {
                 this.homey.app.debug('smartDetectZone event: ' + JSON.stringify(updatePacket));
             }
 
+            if (updatePacket.action.modelKey === 'event' && ( updatePacket.payload.type === 'fingerprintIdentified') ) {
+                this.homey.app.debug('fingerprintIdentified event: ' + JSON.stringify(updatePacket));
+            }
+
             // Filter on what actions we're interested in only.
             if (!this.shouldProcessEvent(updatePacket)) {
                 return true;
@@ -273,6 +277,21 @@ class ProtectWebSocket extends BaseClass {
                     // Parse Websocket payload message
                     driverCamera.onParseWebsocketMessage(deviceCamera, payload, updatePacket.action.action, updatePacket.action.id);
                 }
+                // get doorbell driver
+                const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
+                // Get device from camera id
+                const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
+                if (deviceDoorbell) {
+                    // Parse Websocket payload message
+                    driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
+                }
+            } else if (
+                updatePacket.action.modelKey === 'event'
+                && typeof updatePacket.action.recordId !== 'undefined'
+                && typeof updatePacket.payload.type !== 'undefined'
+                && updatePacket.payload.type === 'fingerprintIdentified'
+            ) {
+                this.homey.app.debug('fingerprintIdentified event');
                 // get doorbell driver
                 const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
                 // Get device from camera id

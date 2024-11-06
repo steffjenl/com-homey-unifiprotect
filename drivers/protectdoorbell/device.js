@@ -282,6 +282,30 @@ class Doorbell extends Homey.Device {
         }
     }
 
+    onFingerprintIdentified(payload, actionType = null, eventId = null) {
+        this.homey.app.debug('[Object] onFingerprintIdentified ' + JSON.stringify(payload));
+
+        let username = 'unknown';
+
+        if (typeof payload === 'undefined' || typeof payload.metadata === 'undefined' || typeof payload.metadata.fingerprint === 'undefined' || typeof payload.metadata.fingerprint.userId === 'undefined') {
+            this.homey.app.debug('Fingerprint is not valid!');
+            return;
+        }
+
+        this.homey.app.api.getUsernameById(payload.metadata.fingerprint.userId).then((localUsername) => {
+            // Generic trigger
+            this.homey.app._fingerPrintIdentifiedTrigger.trigger({
+                ufp_fingerprint_identified_camera: this.getName(),
+                ufp_fingerprint_identified_person: localUsername
+            }).catch(this.error);
+
+            // Device trigger
+            this.driver._deviceFingerprintIdentifiedTrigger.trigger(this,{
+                ufp_device_fingerprint_identified_camera: localUsername,
+            }).catch(this.error);
+        }).catch(this.error);
+    }
+
     onSmartDetection(payload, actionType = null, eventId = null) {
         let lastDetectionAt = null;
         let score = null;
