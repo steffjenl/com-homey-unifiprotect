@@ -24,8 +24,8 @@
     {
       "id": "ufp_device_fingerprint_identified",
       "title": {
-        "en": "A smart detection event",
-        "nl": "Een slim detectie event"
+        "en": "A fingerprint identified event",
+        "nl": "Een vingerafdruk geïdentificeerd event"
       },
       "tokens": [
         {
