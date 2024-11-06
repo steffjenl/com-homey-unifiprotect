@@ -301,7 +301,7 @@ class Doorbell extends Homey.Device {
 
             // Device trigger
             this.driver._deviceFingerprintIdentifiedTrigger.trigger(this,{
-                ufp_device_fingerprint_identified_camera: localUsername,
+                ufp_device_fingerprint_identified_person: localUsername,
             }).catch(this.error);
         }).catch(this.error);
     }

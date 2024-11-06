@@ -81,8 +81,8 @@ class UniFiDoorbellDriver extends Homey.Driver {
         camera.onSmartDetection(payload, actionType, eventId);
       }
 
-      if (payload.hasOwnProperty('fingerprintIdentified')) {
-        this.homey.app.debug('onParseWebsocketMessage ' + JSON.stringify(payload));
+      if (payload.hasOwnProperty('type') && payload.type === 'fingerprintIdentified') {
+        this.homey.app.debug('fingerprintIdentified ' + JSON.stringify(payload));
         camera.onFingerprintIdentified(payload, actionType, eventId);
       }
 
