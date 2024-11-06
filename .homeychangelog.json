@@ -169,5 +169,8 @@
   },
   "1.6.17": {
     "en": "Add fingerprint identified event"
+  },
+  "1.6.18": {
+    "en": "Add support for NFC Card Reader and UniFi Access integration with the Doorbell G4 Pro"
   }
 }
