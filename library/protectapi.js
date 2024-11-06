@@ -641,6 +641,27 @@ class ProtectAPI extends BaseClass {
                 .catch(error => reject(error));
         });
     }
+
+    getUsers() {
+        return new Promise((resolve, reject) => {
+        this.getBootstrapInfo()
+            .then((result) => {
+                return resolve(result.users);
+            })
+            .catch(error => this.error(error));
+        });
+    }
+
+    getUsernameById(id) {
+        return new Promise((resolve, reject) => {
+            this.getUsers()
+                .then(users => {
+                    const user = users.find(user => user.id === id);
+                    return resolve(user.localUsername);
+                })
+                .catch(error => reject(error));
+        });
+    }
 }
 
 module.exports = ProtectAPI;

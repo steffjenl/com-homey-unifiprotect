@@ -39,7 +39,7 @@
     "security",
     "video"
   ],
-  "version": "1.6.16",
+  "version": "1.6.17",
   "compatibility": ">=5.0.0",
   "author": {
     "name": "Stèphan Eizinga",
@@ -135,6 +135,39 @@
             "example": {
               "en": "Doorbell",
               "nl": "Deurbel"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_fingerprint_identified",
+        "title": {
+          "en": "A fingerprint identified event",
+          "nl": "Een vingerafdruk geïdentificeerd event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fingerprint_identified_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "ufp_fingerprint_identified_person",
+            "type": "string",
+            "title": {
+              "en": "Person",
+              "nl": "Persoon"
+            },
+            "example": {
+              "en": "John Doe",
+              "nl": "Jan Jansen"
             }
           }
         ]
@@ -598,6 +631,34 @@
             "example": {
               "en": "Doorbell",
               "nl": "Deurbel"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fingerprint_identified",
+        "title": {
+          "en": "A fingerprint identified event",
+          "nl": "Een vingerafdruk geïdentificeerd event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_device_fingerprint_identified_person",
+            "type": "string",
+            "title": {
+              "en": "Person",
+              "nl": "Persoon"
+            },
+            "example": {
+              "en": "John Doe",
+              "nl": "Jan Jansen"
             }
           }
         ],

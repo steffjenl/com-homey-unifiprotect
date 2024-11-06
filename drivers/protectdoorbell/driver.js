@@ -15,6 +15,7 @@ class UniFiDoorbellDriver extends Homey.Driver {
     this._deviceSmartDetectionTriggerVehicle = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_VEHICLE);
     this._deviceSmartDetectionTriggerAnimal = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_ANIMAL);
     this._deviceSmartDetectionTriggerPackage = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_PACKAGE);
+    this._deviceFingerprintIdentifiedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_FINGERPRINT_IDENTIFIED);
     //
     this.homey.app.debug('UniFiDoorbell Driver has been initialized');
   }
@@ -79,6 +80,12 @@ class UniFiDoorbellDriver extends Homey.Driver {
         this.homey.app.debug('onParseWebsocketMessage ' + JSON.stringify(payload));
         camera.onSmartDetection(payload, actionType, eventId);
       }
+
+      if (payload.hasOwnProperty('type') && payload.type === 'fingerprintIdentified') {
+        this.homey.app.debug('fingerprintIdentified ' + JSON.stringify(payload));
+        camera.onFingerprintIdentified(payload, actionType, eventId);
+      }
+
     }
   }
 

@@ -1,0 +1,33 @@
+{
+  "id": "ufp_fingerprint_identified",
+  "title": {
+    "en": "A fingerprint identified event",
+    "nl": "Een vingerafdruk geïdentificeerd event"
+  },
+  "tokens": [
+    {
+      "name": "ufp_fingerprint_identified_camera",
+      "type": "string",
+      "title": {
+        "en": "Camera",
+        "nl": "Camera"
+      },
+      "example": {
+        "en": "Doorbell",
+        "nl": "Deurbel"
+      }
+    },
+    {
+      "name": "ufp_fingerprint_identified_person",
+      "type": "string",
+      "title": {
+        "en": "Person",
+        "nl": "Persoon"
+      },
+      "example": {
+        "en": "John Doe",
+        "nl": "Jan Jansen"
+      }
+    }
+  ]
+}

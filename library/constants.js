@@ -54,6 +54,8 @@ module.exports.EVENT_DEVICE_DOORBELL_SMART_DETECTION_PERSON = 'ufp_device_doorbe
 module.exports.EVENT_DEVICE_DOORBELL_SMART_DETECTION_VEHICLE = 'ufp_device_doorbell_smart_detection_vehicle';
 module.exports.EVENT_DEVICE_DOORBELL_SMART_DETECTION_ANIMAL = 'ufp_device_doorbell_smart_detection_animal';
 module.exports.EVENT_DEVICE_DOORBELL_SMART_DETECTION_PACKAGE = 'ufp_device_doorbell_smart_detection_package';
+module.exports.EVENT_FINGERPRINT_IDENTIFIED = 'ufp_fingerprint_identified';
+module.exports.EVENT_DEVICE_FINGERPRINT_IDENTIFIED = 'ufp_device_fingerprint_identified';
 
 module.exports.EVENT_SETTINGS_DEBUG = 'com.ubnt.unifiprotect.debug';
 module.exports.EVENT_SETTINGS_STATUS = 'com.ubnt.unifiprotect.status';

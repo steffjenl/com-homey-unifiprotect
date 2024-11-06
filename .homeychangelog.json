@@ -166,5 +166,8 @@
   },
   "1.6.16": {
     "en": "Fixing crash on smart detection for camera's"
+  },
+  "1.6.17": {
+    "en": "Add fingerprint identified event"
   }
 }

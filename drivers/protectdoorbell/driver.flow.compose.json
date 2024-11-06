@@ -22,6 +22,27 @@
       ]
     },
     {
+      "id": "ufp_device_fingerprint_identified",
+      "title": {
+        "en": "A fingerprint identified event",
+        "nl": "Een vingerafdruk geïdentificeerd event"
+      },
+      "tokens": [
+        {
+          "name": "ufp_device_fingerprint_identified_person",
+          "type": "string",
+          "title": {
+            "en": "Person",
+            "nl": "Persoon"
+          },
+          "example": {
+            "en": "John Doe",
+            "nl": "Jan Jansen"
+          }
+        }
+      ]
+    },
+    {
       "id": "ufp_device_doorbell_smart_detection",
       "title": {
         "en": "A smart detection event",
