@@ -39,7 +39,7 @@
     "security",
     "video"
   ],
-  "version": "1.6.16",
+  "version": "1.6.17",
   "compatibility": ">=5.0.0",
   "author": {
     "name": "Stèphan Eizinga",
@@ -645,8 +645,8 @@
       {
         "id": "ufp_device_fingerprint_identified",
         "title": {
-          "en": "A smart detection event",
-          "nl": "Een slim detectie event"
+          "en": "A fingerprint identified event",
+          "nl": "Een vingerafdruk geïdentificeerd event"
         },
         "tokens": [
           {
