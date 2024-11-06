@@ -16,6 +16,8 @@ class UniFiDoorbellDriver extends Homey.Driver {
     this._deviceSmartDetectionTriggerAnimal = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_ANIMAL);
     this._deviceSmartDetectionTriggerPackage = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_PACKAGE);
     this._deviceFingerprintIdentifiedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_FINGERPRINT_IDENTIFIED);
+    this._deviceDoorAccessTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOOR_ACCESS);
+    this._deviceNFCCardScannedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_NFC_CARD_SCANNED);
     //
     this.homey.app.debug('UniFiDoorbell Driver has been initialized');
   }
@@ -84,6 +86,16 @@ class UniFiDoorbellDriver extends Homey.Driver {
       if (payload.hasOwnProperty('type') && payload.type === 'fingerprintIdentified') {
         this.homey.app.debug('fingerprintIdentified ' + JSON.stringify(payload));
         camera.onFingerprintIdentified(payload, actionType, eventId);
+      }
+
+      if (payload.hasOwnProperty('type') && payload.type === 'nfcCardScanned') {
+        this.homey.app.debug('nfcCardScanned ' + JSON.stringify(payload));
+        camera.onNFCCardScanned(payload, actionType, eventId);
+      }
+
+      if (payload.hasOwnProperty('type') && payload.type === 'doorAccess') {
+        this.homey.app.debug('doorAccess ' + JSON.stringify(payload));
+        camera.onDoorAccess(payload, actionType, eventId);
       }
 
     }

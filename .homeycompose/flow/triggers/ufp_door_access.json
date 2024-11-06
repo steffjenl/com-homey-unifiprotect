@@ -1,0 +1,33 @@
+{
+  "id": "ufp_door_access",
+  "title": {
+    "en": "A door access event",
+    "nl": "Een deurtoegang event"
+  },
+  "tokens": [
+    {
+      "name": "ufp_door_access_camera",
+      "type": "string",
+      "title": {
+        "en": "Camera",
+        "nl": "Camera"
+      },
+      "example": {
+        "en": "Doorbell",
+        "nl": "Deurbel"
+      }
+    },
+    {
+      "name": "ufp_door_access_person",
+      "type": "string",
+      "title": {
+        "en": "Person",
+        "nl": "Persoon"
+      },
+      "example": {
+        "en": "John Doe",
+        "nl": "Jan Jansen"
+      }
+    }
+  ]
+}

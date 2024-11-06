@@ -205,26 +205,34 @@ class ProtectWebSocket extends BaseClass {
                 return true;
             }
 
-            if (
-                updatePacket.action.modelKey !== 'nvr'
-                && updatePacket.action.modelKey !== 'sensor'
-                && updatePacket.action.modelKey !== 'bridge'
-                && updatePacket.action.modelKey !== 'user'
-                && typeof updatePacket.payload.wifiConnectionState === 'undefined'
-                && typeof updatePacket.payload.stats === 'undefined'
-                && typeof updatePacket.payload.permissions === 'undefined'
-                && typeof updatePacket.payload.upSince === 'undefined'
-            ) {
-                this.homey.app.debug('event: ' + JSON.stringify(updatePacket));
-            }
-
-            if (updatePacket.action.modelKey === 'event' && ( updatePacket.payload.type === 'smartDetectZone' || updatePacket.payload.type === 'smartDetectLine') ) {
-                this.homey.app.debug('smartDetectZone event: ' + JSON.stringify(updatePacket));
-            }
-
-            if (updatePacket.action.modelKey === 'event' && ( updatePacket.payload.type === 'fingerprintIdentified') ) {
-                this.homey.app.debug('fingerprintIdentified event: ' + JSON.stringify(updatePacket));
-            }
+            // if (
+            //     updatePacket.action.modelKey !== 'nvr'
+            //     && updatePacket.action.modelKey !== 'sensor'
+            //     && updatePacket.action.modelKey !== 'bridge'
+            //     && updatePacket.action.modelKey !== 'user'
+            //     && typeof updatePacket.payload.wifiConnectionState === 'undefined'
+            //     && typeof updatePacket.payload.stats === 'undefined'
+            //     && typeof updatePacket.payload.permissions === 'undefined'
+            //     && typeof updatePacket.payload.upSince === 'undefined'
+            // ) {
+            //     this.homey.app.debug('event: ' + JSON.stringify(updatePacket));
+            // }
+            //
+            // if (updatePacket.action.modelKey === 'event' && ( updatePacket.payload.type === 'smartDetectZone' || updatePacket.payload.type === 'smartDetectLine') ) {
+            //     this.homey.app.debug('smartDetectZone event: ' + JSON.stringify(updatePacket));
+            // }
+            //
+            // if (updatePacket.action.modelKey === 'event' && ( updatePacket.payload.type === 'fingerprintIdentified') ) {
+            //     this.homey.app.debug('fingerprintIdentified event: ' + JSON.stringify(updatePacket));
+            // }
+            //
+            // if (updatePacket.action.modelKey === 'event' && ( updatePacket.payload.type === 'nfcCardScanned') ) {
+            //     this.homey.app.debug('nfcCardScanned event: ' + JSON.stringify(updatePacket));
+            // }
+            //
+            // if (updatePacket.action.modelKey === 'event' && ( updatePacket.payload.type === 'doorAccess') ) {
+            //     this.homey.app.debug('doorAccess event: ' + JSON.stringify(updatePacket));
+            // }
 
             // Filter on what actions we're interested in only.
             if (!this.shouldProcessEvent(updatePacket)) {
@@ -292,6 +300,36 @@ class ProtectWebSocket extends BaseClass {
                 && updatePacket.payload.type === 'fingerprintIdentified'
             ) {
                 this.homey.app.debug('fingerprintIdentified event');
+                // get doorbell driver
+                const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
+                // Get device from camera id
+                const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
+                if (deviceDoorbell) {
+                    // Parse Websocket payload message
+                    driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
+                }
+            }  else if (
+                updatePacket.action.modelKey === 'event'
+                && typeof updatePacket.action.recordId !== 'undefined'
+                && typeof updatePacket.payload.type !== 'undefined'
+                && updatePacket.payload.type === 'nfcCardScanned'
+            ) {
+                this.homey.app.debug('nfcCardScanned event');
+                // get doorbell driver
+                const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
+                // Get device from camera id
+                const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
+                if (deviceDoorbell) {
+                    // Parse Websocket payload message
+                    driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
+                }
+            }  else if (
+                updatePacket.action.modelKey === 'event'
+                && typeof updatePacket.action.recordId !== 'undefined'
+                && typeof updatePacket.payload.type !== 'undefined'
+                && updatePacket.payload.type === 'doorAccess'
+            ) {
+                this.homey.app.debug('doorAccess event');
                 // get doorbell driver
                 const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
                 // Get device from camera id

@@ -119,6 +119,39 @@
         ]
       },
       {
+        "id": "ufp_door_access",
+        "title": {
+          "en": "A door access event",
+          "nl": "Een deurtoegang event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_door_access_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "ufp_door_access_person",
+            "type": "string",
+            "title": {
+              "en": "Person",
+              "nl": "Persoon"
+            },
+            "example": {
+              "en": "John Doe",
+              "nl": "Jan Jansen"
+            }
+          }
+        ]
+      },
+      {
         "id": "ufp_doorbell_ringing",
         "title": {
           "en": "A doorbell is ringing",
@@ -160,6 +193,39 @@
           },
           {
             "name": "ufp_fingerprint_identified_person",
+            "type": "string",
+            "title": {
+              "en": "Person",
+              "nl": "Persoon"
+            },
+            "example": {
+              "en": "John Doe",
+              "nl": "Jan Jansen"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_nfc_card_scanned",
+        "title": {
+          "en": "A NFC card scanned event",
+          "nl": "Een NFC kaart gescand event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_nfc_card_scanned_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "ufp_nfc_card_scanned_person",
             "type": "string",
             "title": {
               "en": "Person",
@@ -651,6 +717,62 @@
         "tokens": [
           {
             "name": "ufp_device_fingerprint_identified_person",
+            "type": "string",
+            "title": {
+              "en": "Person",
+              "nl": "Persoon"
+            },
+            "example": {
+              "en": "John Doe",
+              "nl": "Jan Jansen"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_door_access",
+        "title": {
+          "en": "A door access event",
+          "nl": "Een deurtoegang event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_device_door_access_person",
+            "type": "string",
+            "title": {
+              "en": "Person",
+              "nl": "Persoon"
+            },
+            "example": {
+              "en": "John Doe",
+              "nl": "Jan Jansen"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_nfc_card_scanned",
+        "title": {
+          "en": "A NFC card scanned event",
+          "nl": "Een NFC kaart gescand event"
+        },
+        "tokens": [
+          {
+            "name": "ufp_device_nfc_card_scanned_person",
             "type": "string",
             "title": {
               "en": "Person",

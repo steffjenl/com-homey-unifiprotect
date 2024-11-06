@@ -43,6 +43,48 @@
       ]
     },
     {
+      "id": "ufp_device_door_access",
+      "title": {
+        "en": "A door access event",
+        "nl": "Een deurtoegang event"
+      },
+      "tokens": [
+        {
+          "name": "ufp_device_door_access_person",
+          "type": "string",
+          "title": {
+            "en": "Person",
+            "nl": "Persoon"
+          },
+          "example": {
+            "en": "John Doe",
+            "nl": "Jan Jansen"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufp_device_nfc_card_scanned",
+      "title": {
+        "en": "A NFC card scanned event",
+        "nl": "Een NFC kaart gescand event"
+      },
+      "tokens": [
+        {
+          "name": "ufp_device_nfc_card_scanned_person",
+          "type": "string",
+          "title": {
+            "en": "Person",
+            "nl": "Persoon"
+          },
+          "example": {
+            "en": "John Doe",
+            "nl": "Jan Jansen"
+          }
+        }
+      ]
+    },
+    {
       "id": "ufp_device_doorbell_smart_detection",
       "title": {
         "en": "A smart detection event",
