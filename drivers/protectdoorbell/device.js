@@ -287,7 +287,11 @@ class Doorbell extends Homey.Device {
 
         let username = 'unknown';
 
-        if (typeof payload === 'undefined' || typeof payload.metadata === 'undefined' || typeof payload.metadata.fingerprint === 'undefined' || typeof payload.metadata.fingerprint.userId === 'undefined') {
+        if (typeof payload === 'undefined'
+            || typeof payload.metadata === 'undefined'
+            || typeof payload.metadata.fingerprint === 'undefined'
+            || typeof payload.metadata.fingerprint.userId === 'undefined'
+            || payload.metadata.fingerprint.userId === null) {
             this.homey.app.debug('Fingerprint is not valid!');
             return;
         }
