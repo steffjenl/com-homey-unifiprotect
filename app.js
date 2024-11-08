@@ -57,9 +57,7 @@ class UniFiProtect extends Homey.App {
         const _setRecordingMode = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_RECORDING_MODE);
         _setRecordingMode.registerRunListener(async (args, state) => {
             if (typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode)
-                    .then(this.homey.app.debug.bind(this, '[recordingmode.set]'))
-                    .catch(this.error.bind(this, '[recordingmode.set]'));
+                return this.homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode);
             }
             return Promise.resolve(true);
         });
@@ -80,9 +78,7 @@ class UniFiProtect extends Homey.App {
         const _setRecordingModeV2 = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_RECORDING_MODE_V2);
         _setRecordingModeV2.registerRunListener(async (args, state) => {
             if (typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode)
-                    .then(this.homey.app.debug.bind(this, '[recordingmode.set]'))
-                    .catch(this.error.bind(this, '[recordingmode.set]'));
+                return this.homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode);
             }
             return Promise.resolve(true);
         });
@@ -95,9 +91,7 @@ class UniFiProtect extends Homey.App {
                 {
                     volume = args.volume;
                 }
-                this.homey.app.api.setChimeVolume(args.device.getData(), volume)
-                    .then(this.homey.app.debug.bind(this, '[chime.volume.set]'))
-                    .catch(this.error.bind(this, '[chime.volume.set]'));
+                return this.homey.app.api.setChimeVolume(args.device.getData(), volume);
             }
             return Promise.resolve(true);
         });
@@ -105,9 +99,7 @@ class UniFiProtect extends Homey.App {
         const _setNightVisionMode = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_NIGHT_VISION_MODE);
         _setNightVisionMode.registerRunListener(async (args, state) => {
             if (typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.api.setNightVisionMode(args.device.getData(), args.nightvision_mode)
-                    .then(this.homey.app.debug.bind(this, '[nightvision_mode.set]'))
-                    .catch(this.error.bind(this, '[nightvision_mode.set]'));
+                return this.homey.app.api.setNightVisionMode(args.device.getData(), args.nightvision_mode);
             }
             return Promise.resolve(true);
         });
