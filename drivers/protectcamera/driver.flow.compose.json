@@ -177,5 +177,28 @@
         }
       ]
     }
+  ],
+  "actions": [
+    {
+      "id": "ufv_set_device_camera_status_led",
+      "title": {
+        "en": "Set camera status LED",
+        "nl": "Zet camera status LED"
+      },
+      "titleFormatted": {
+        "en": "Set camera status LED [[enabled]]",
+        "nl": "Zet camera status LED [[enabled]]"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "enabled",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld"
+          }
+        }
+      ]
+    }
   ]
 }

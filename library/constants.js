@@ -18,9 +18,16 @@ module.exports.ACTION_TAKE_SNAPSHOT = 'ufv_take_snapshot';
 module.exports.ACTION_SET_RECORDING_MODE = 'ufv_set_recording_mode';
 module.exports.ACTION_TAKE_SNAPSHOT_V2 = 'ufv_take_snapshot_v2';
 module.exports.ACTION_SET_RECORDING_MODE_V2 = 'ufv_set_recording_mode_v2';
-module.exports.ACTION_SET_CHIME_ONOFF = 'ufv_chime_turnonoff';
+module.exports.ACTION_SET_CHIME_ONOFF = 'ufv_set_chime_turnonoff';
 module.exports.ACTION_SET_NIGHT_VISION_MODE = 'ufv_set_nightvision_mode';
 module.exports.ACTION_SET_LCD_MESSAGE = 'ufv_set_lcd_message';
+module.exports.ACTION_SET_CAMERA_STATUS_LED = 'ufv_set_camera_status_led';
+module.exports.ACTION_SET_DOORBELL_STATUS_LED = 'ufv_set_doorbell_status_led';
+module.exports.ACTION_SET_DOORBELL_STATUS_SOUND = 'ufv_set_doorbell_status_sound';
+module.exports.ACTION_SET_DEVICE_CAMERA_STATUS_LED = 'ufv_set_device_camera_status_led';
+module.exports.ACTION_SET_DEVICE_DOORBELL_STATUS_LED = 'ufv_set_device_doorbell_status_led';
+module.exports.ACTION_SET_DEVICE_DOORBELL_STATUS_SOUND = 'ufv_set_device_doorbell_status_sound';
+
 
 module.exports.EVENT_CONNECTION_KEEPALIVE = 'ufv_event_connection_keepalive';
 module.exports.EVENT_CONNECTION_ERROR = 'ufv_event_connection_error';

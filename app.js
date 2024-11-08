@@ -122,6 +122,54 @@ class UniFiProtect extends Homey.App {
             return Promise.resolve(true);
         });
 
+        const _setCameraStatusLed = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_CAMERA_STATUS_LED);
+        _setCameraStatusLed.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData().id !== 'undefined') {
+                return this.homey.app.api.setStatusLed(args.device.getData(), args.enabled);
+            }
+            return Promise.resolve(true);
+        });
+
+        const _setDoorbellStatusLed = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DOORBELL_STATUS_LED);
+        _setDoorbellStatusLed.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData().id !== 'undefined') {
+                return this.homey.app.api.setStatusLed(args.device.getData(), args.enabled);
+            }
+            return Promise.resolve(true);
+        });
+
+        const _setDoorbellStatusSound = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DOORBELL_STATUS_SOUND);
+        _setDoorbellStatusSound.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData().id !== 'undefined') {
+                return this.homey.app.api.setStatusSound(args.device.getData(), args.enabled);
+            }
+            return Promise.resolve(true);
+        });
+
+        const _setDeviceCameraStatusLed = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_CAMERA_STATUS_LED);
+        _setDeviceCameraStatusLed.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData().id !== 'undefined') {
+                return this.homey.app.api.setStatusLed(args.device.getData(), args.enabled);
+            }
+            return Promise.resolve(true);
+        });
+
+        const _setDeviceDoorbellStatusLed = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_STATUS_LED);
+        _setDeviceDoorbellStatusLed.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData().id !== 'undefined') {
+                return this.homey.app.api.setStatusLed(args.device.getData(), args.enabled);
+            }
+            return Promise.resolve(true);
+        });
+
+        const _setDeviceDoorbellStatusSound = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_STATUS_SOUND);
+        _setDeviceDoorbellStatusSound.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData().id !== 'undefined') {
+                return this.homey.app.api.setStatusSound(args.device.getData(), args.enabled);
+            }
+            return Promise.resolve(true);
+        });
+
         // Subscribe to credentials updates
         this.homey.settings.on('set', key => {
             if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {

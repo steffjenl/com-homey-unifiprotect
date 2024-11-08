@@ -665,6 +665,32 @@ class ProtectAPI extends BaseClass {
                 .catch(error => reject(error));
         });
     }
+
+    setStatusLed(camera, enabled) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                ledSettings: {
+                    isEnabled: enabled
+                }
+            };
+            return this.webclient.patch(`cameras/${camera.id}`, params)
+                .then(() => resolve('Status Led successfully set.'))
+                .catch(error => reject(new Error(`Error setting status led: ${error}`)));
+        });
+    }
+
+    setStatusSound(camera, enabled) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                speakerSettings: {
+                    areSystemSoundsEnabled: enabled
+                }
+            };
+            return this.webclient.patch(`cameras/${camera.id}`, params)
+                .then(() => resolve('Status Sound successfully set.'))
+                .catch(error => reject(new Error(`Error setting status sound: ${error}`)));
+        });
+    }
 }
 
 module.exports = ProtectAPI;
