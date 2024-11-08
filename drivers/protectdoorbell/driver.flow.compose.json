@@ -201,5 +201,49 @@
         }
       ]
     }
+  ],
+  "actions": [
+    {
+      "id": "ufv_set_device_doorbell_status_led",
+      "title": {
+        "en": "Set doorbell status LED",
+        "nl": "Zet deurbel status LED"
+      },
+      "titleFormatted": {
+        "en": "Set doorbell status LED [[enabled]]",
+        "nl": "Zet deurbel status LED [[enabled]]"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "enabled",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufv_set_device_doorbell_status_sound",
+      "title": {
+        "en": "Set doorbell status sound",
+        "nl": "Zet deurbel status geluid"
+      },
+      "titleFormatted": {
+        "en": "Set doorbell status sound [[enabled]]",
+        "nl": "Zet deurbel status geluid [[enabled]]"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "enabled",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld"
+          }
+        }
+      ]
+    }
   ]
 }

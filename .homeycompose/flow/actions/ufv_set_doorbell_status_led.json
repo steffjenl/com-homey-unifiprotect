@@ -1,0 +1,30 @@
+{
+  "id": "ufv_set_doorbell_status_led",
+  "title": {
+    "en": "Set doorbell status LED",
+    "nl": "Zet deurbel status LED"
+  },
+  "titleFormatted": {
+    "en": "Set doorbell status LED [[device]] [[enabled]]",
+    "nl": "Zet deurbel status LED [[device]] [[enabled]]"
+  },
+  "args": [
+    {
+      "title": {
+        "en": "Doorbell",
+        "nl": "Deurbel"
+      },
+      "name": "device",
+      "type": "device",
+      "$filter": "driver_id=protectdoorbell"
+    },
+    {
+      "type": "checkbox",
+      "name": "enabled",
+      "title": {
+        "en": "Enabled",
+        "nl": "Ingeschakeld"
+      }
+    }
+  ]
+}

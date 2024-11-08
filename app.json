@@ -947,7 +947,36 @@
     ],
     "actions": [
       {
-        "id": "ufv_chime_turnonoff",
+        "id": "ufv_set_camera_status_led",
+        "title": {
+          "en": "Set camera status LED",
+          "nl": "Zet camera status LED"
+        },
+        "titleFormatted": {
+          "en": "Set camera status LED [[device]] [[enabled]]",
+          "nl": "Zet camera status LED [[device]] [[enabled]]"
+        },
+        "args": [
+          {
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "name": "device",
+            "type": "device"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_chime_turnonoff",
         "title": {
           "en": "Set chime on/off",
           "nl": "Zet deurbell aan of uit"
@@ -981,6 +1010,64 @@
             "step": 1,
             "label": "%",
             "labelDecimals": 0
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_doorbell_status_led",
+        "title": {
+          "en": "Set doorbell status LED",
+          "nl": "Zet deurbel status LED"
+        },
+        "titleFormatted": {
+          "en": "Set doorbell status LED [[device]] [[enabled]]",
+          "nl": "Zet deurbel status LED [[device]] [[enabled]]"
+        },
+        "args": [
+          {
+            "title": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            },
+            "name": "device",
+            "type": "device"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_doorbell_status_sound",
+        "title": {
+          "en": "Set doorbell status sound",
+          "nl": "Zet deurbel status geluid"
+        },
+        "titleFormatted": {
+          "en": "Set doorbell status sound [[device]] [[enabled]]",
+          "nl": "Zet deurbel status geluid [[device]] [[enabled]]"
+        },
+        "args": [
+          {
+            "title": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            },
+            "name": "device",
+            "type": "device"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            }
           }
         ]
       },
@@ -1229,10 +1316,88 @@
             "name": "width",
             "type": "number",
             "min": 0,
-            "max": 1920,
+            "max": 3840,
             "placeholder": {
               "en": "Width in pixels",
               "nl": "Breedte in pixels"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_device_camera_status_led",
+        "title": {
+          "en": "Set camera status LED",
+          "nl": "Zet camera status LED"
+        },
+        "titleFormatted": {
+          "en": "Set camera status LED [[enabled]]",
+          "nl": "Zet camera status LED [[enabled]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectcamera"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_device_doorbell_status_led",
+        "title": {
+          "en": "Set doorbell status LED",
+          "nl": "Zet deurbel status LED"
+        },
+        "titleFormatted": {
+          "en": "Set doorbell status LED [[enabled]]",
+          "nl": "Zet deurbel status LED [[enabled]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_device_doorbell_status_sound",
+        "title": {
+          "en": "Set doorbell status sound",
+          "nl": "Zet deurbel status geluid"
+        },
+        "titleFormatted": {
+          "en": "Set doorbell status sound [[enabled]]",
+          "nl": "Zet deurbel status geluid [[enabled]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
             }
           }
         ]
