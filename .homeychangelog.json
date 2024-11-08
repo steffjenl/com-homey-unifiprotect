@@ -172,5 +172,8 @@
   },
   "1.6.18": {
     "en": "Add support for NFC Card Reader and UniFi Access integration with the Doorbell G4 Pro"
+  },
+  "1.6.19": {
+    "en": "Feature: Add support for enable status led and sound for camera and doorbell"
   }
 }
