@@ -424,13 +424,16 @@ class ProtectAPI extends BaseClass {
     }
 
     setMicVolume(camera, volume = 100) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const params = {
                 micVolume: volume,
             };
-            return this.webclient.patch(`cameras/${camera.id}`, params)
-                .then(() => resolve('Mic volume successfully set.'))
-                .catch(error => reject(new Error(`Error setting mic volume: ${error}`)));
+            try {
+                await this.webclient.patch(`cameras/${camera.id}`, params);
+                return resolve('Mic volume successfully set.');
+            } catch (error) {
+                return reject(new Error(`Error setting mic volume: ${error}`));
+            }
         });
     }
 

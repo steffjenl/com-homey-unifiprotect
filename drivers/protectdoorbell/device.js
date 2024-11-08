@@ -55,14 +55,12 @@ class Doorbell extends Homey.Device {
     async initDoorbell() {
         this.registerCapabilityListener('camera_microphone_volume', async (value) => {
             this.homey.app.debug('camera_microphone_volume');
-            this.homey.app.api.setMicVolume(this.getData(), value)
-                .catch(this.error);
+            return this.homey.app.api.setMicVolume(this.getData(), value);
         });
 
         this.registerCapabilityListener('camera_nightvision_set', async (value) => {
             this.homey.app.debug('camera_nightvision_set');
-            this.homey.app.api.setNightVisionMode(this.getData(), value)
-                .catch(this.error);
+            return this.homey.app.api.setNightVisionMode(this.getData(), value);
         });
 
         await this._createMissingCapabilities();

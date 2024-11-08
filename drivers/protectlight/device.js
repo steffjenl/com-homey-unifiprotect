@@ -49,15 +49,15 @@ class Light extends Homey.Device {
 
   async initLight() {
     this.registerCapabilityListener("onoff", (value) => {
-      this.homey.app.api.setLightOn(this.getData(), value);
+      return this.homey.app.api.setLightOn(this.getData(), value);
     });
 
     this.registerCapabilityListener("dim", (value) => {
-      this.homey.app.api.setLightLevel(this.getData(), this.translateLedLevel(value, true));
+      return this.homey.app.api.setLightLevel(this.getData(), this.translateLedLevel(value, true));
     });
 
     this.registerCapabilityListener("light_mode_unifi", (value) => {
-      this.homey.app.api.setLightMode(this.getData(), value);
+      return this.homey.app.api.setLightMode(this.getData(), value);
     });
 
     await this._createMissingCapabilities();

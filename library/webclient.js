@@ -99,6 +99,10 @@ class ProtectWebClient extends BaseClass {
                         }
                     });
 
+                    if (res.statusCode === 403) {
+                        return reject(new Error(`Homey user has no permission to perform this action. Please check the user's role.`));
+                    }
+
                     if (res.statusCode !== 200) {
                         return reject(new Error(`Failed to GET url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
                     }
@@ -161,6 +165,10 @@ class ProtectWebClient extends BaseClass {
                         }
                     });
 
+                    if (res.statusCode === 403) {
+                        return reject(new Error(`Homey user has no permission to perform this action. Please check the user's role.`));
+                    }
+
                     if (res.statusCode !== 200) {
                         return reject(new Error(`Failed to PUT to url: ${options.host}${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
                     }
@@ -216,6 +224,10 @@ class ProtectWebClient extends BaseClass {
                         }
                     });
 
+                    if (res.statusCode === 403) {
+                        return reject(new Error(`Homey user has no permission to perform this action. Please check the user's role.`));
+                    }
+
                     if (res.statusCode !== 200) {
                         return reject(new Error(`Failed to PATCH url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
                     }
@@ -270,6 +282,10 @@ class ProtectWebClient extends BaseClass {
                             //this._csrfToken = res.rawHeaders[index + 1];
                         }
                     });
+
+                    if (res.statusCode === 403) {
+                        return reject(new Error(`Homey user has no permission to perform this action. Please check the user's role.`));
+                    }
 
                     if (res.statusCode !== 200) {
                         return reject(new Error(`Failed to POST to url: ${options.host}${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
