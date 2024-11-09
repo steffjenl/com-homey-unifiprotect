@@ -241,8 +241,8 @@
       {
         "id": "ufp_smart_detection",
         "title": {
-          "en": "A smart detection event",
-          "nl": "Een slim detectie event"
+          "en": "A object was detected",
+          "nl": "Er is een object gedetecteerd"
         },
         "tokens": [
           {
@@ -471,8 +471,8 @@
       {
         "id": "ufp_device_camera_smart_detection",
         "title": {
-          "en": "A smart detection event",
-          "nl": "Een slim detectie event"
+          "en": "A object was detected",
+          "nl": "Er is een object gedetecteerd"
         },
         "tokens": [
           {
@@ -795,8 +795,8 @@
       {
         "id": "ufp_device_doorbell_smart_detection",
         "title": {
-          "en": "A smart detection event",
-          "nl": "Een slim detectie event"
+          "en": "A object was detected",
+          "nl": "Er is een object gedetecteerd"
         },
         "tokens": [
           {
