@@ -307,7 +307,7 @@ class Doorbell extends Homey.Device {
     }
 
     onNFCCardScanned(payload, actionType = null, eventId = null) {
-        this.homey.app.debug('[Object] onFingerprintIdentified ' + JSON.stringify(payload));
+        this.homey.app.debug('A [Object] onNFCCardScanned ' + JSON.stringify(payload));
 
         if (typeof payload === 'undefined'
             || typeof payload.metadata === 'undefined'
@@ -318,7 +318,11 @@ class Doorbell extends Homey.Device {
             return;
         }
 
+        this.homey.app.debug('B [Object] onNFCCardScanned ' + JSON.stringify(payload));
+
         this.homey.app.api.getUsernameById(payload.metadata.nfc.userId).then((localUsername) => {
+
+            this.homey.app.debug('C [Object] onNFCCardScanned ' + JSON.stringify(localUsername));
             // Generic trigger
             this.homey.app._nfcCardScannedTrigger.trigger({
                 ufp_nfc_card_scanned_camera: this.getName(),
