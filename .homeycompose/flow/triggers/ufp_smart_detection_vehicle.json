@@ -1,8 +1,8 @@
 {
   "id": "ufp_smart_detection_vehicle",
   "title": {
-    "en": "A smart vehicle detection event",
-    "nl": "Een slimme auto detectie event"
+    "en": "A vehicle was detected",
+    "nl": "Een voertuig werd gedetecteerd"
   },
   "tokens": [
     {

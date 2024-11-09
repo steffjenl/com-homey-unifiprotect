@@ -1,8 +1,8 @@
 {
   "id": "ufp_smart_detection_person",
   "title": {
-    "en": "A smart person detection event",
-    "nl": "Een slimme persoon detectie event"
+    "en": "A person was detected",
+    "nl": "Een persoon werd gedetecteerd"
   },
   "tokens": [
     {

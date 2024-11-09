@@ -48,8 +48,8 @@
     {
       "id": "ufp_device_camera_smart_detection_vehicle",
       "title": {
-        "en": "A smart vehicle detection event",
-        "nl": "Een slimme voertuig detectie event"
+        "en": "A vehicle was detected",
+        "nl": "Een voertuig werd gedetecteerd"
       },
       "tokens": [
         {
@@ -81,8 +81,8 @@
     {
       "id": "ufp_device_camera_smart_detection_package",
       "title": {
-        "en": "A smart package detection event",
-        "nl": "Een slimme pakket detectie event"
+        "en": "A package was detected",
+        "nl": "Een pakket werd gedetecteerd"
       },
       "tokens": [
         {
@@ -114,8 +114,8 @@
     {
       "id": "ufp_device_camera_smart_detection_animal",
       "title": {
-        "en": "A smart animal detection event",
-        "nl": "Een slimme dier detectie event"
+        "en": "A animal was detected",
+        "nl": "Een dier werd gedetecteerd"
       },
       "tokens": [
         {
@@ -147,8 +147,8 @@
     {
       "id": "ufp_device_camera_smart_detection_person",
       "title": {
-        "en": "A smart person detection event",
-        "nl": "Een slimme persoon detectie event"
+        "en": "A person was detected",
+        "nl": "Een persoon werd gedetecteerd"
       },
       "tokens": [
         {

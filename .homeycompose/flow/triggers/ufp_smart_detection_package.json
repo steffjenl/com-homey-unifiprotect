@@ -1,8 +1,8 @@
 {
   "id": "ufp_smart_detection_package",
   "title": {
-    "en": "A smart package detection event",
-    "nl": "Een slimme pakket detectie event"
+    "en": "A package was detected",
+    "nl": "Een pakket werd gedetecteerd"
   },
   "tokens": [
     {

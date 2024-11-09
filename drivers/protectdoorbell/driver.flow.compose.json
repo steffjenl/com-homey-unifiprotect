@@ -120,8 +120,8 @@
     {
       "id": "ufp_device_doorbell_smart_detection_vehicle",
       "title": {
-        "en": "A smart vehicle detection event",
-        "nl": "Een slimme voertuig detectie event"
+        "en": "A vehicle detection event",
+        "nl": "Een voertuig detectie event"
       },
       "tokens": [
         {
@@ -141,8 +141,8 @@
     {
       "id": "ufp_device_doorbell_smart_detection_person",
       "title": {
-        "en": "A smart person detection event",
-        "nl": "Een slimme persoon detectie event"
+        "en": "A person detection event",
+        "nl": "Een persoon detectie event"
       },
       "tokens": [
         {
@@ -162,8 +162,8 @@
     {
       "id": "ufp_device_doorbell_smart_detection_package",
       "title": {
-        "en": "A smart package detection event",
-        "nl": "Een slimme pakket detectie event"
+        "en": "A package detection event",
+        "nl": "Een pakket detectie event"
       },
       "tokens": [
         {
@@ -183,8 +183,8 @@
     {
       "id": "ufp_device_doorbell_smart_detection_animal",
       "title": {
-        "en": "A smart animal detection event",
-        "nl": "Een slimme dier detectie event"
+        "en": "A animal detection event",
+        "nl": "Een dier detectie event"
       },
       "tokens": [
         {
