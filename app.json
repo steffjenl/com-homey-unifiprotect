@@ -39,7 +39,7 @@
     "security",
     "video"
   ],
-  "version": "1.6.19",
+  "version": "1.7.0",
   "compatibility": ">=5.0.0",
   "author": {
     "name": "Stèphan Eizinga",
@@ -835,8 +835,8 @@
       {
         "id": "ufp_device_doorbell_smart_detection_vehicle",
         "title": {
-          "en": "A vehicle detection event",
-          "nl": "Een voertuig detectie event"
+          "en": "A vehicle was detected",
+          "nl": "Een voertuig werd gedetecteerd"
         },
         "tokens": [
           {
@@ -863,8 +863,8 @@
       {
         "id": "ufp_device_doorbell_smart_detection_person",
         "title": {
-          "en": "A person detection event",
-          "nl": "Een persoon detectie event"
+          "en": "A person was detected",
+          "nl": "Een persoon werd gedetecteerd"
         },
         "tokens": [
           {
@@ -891,8 +891,8 @@
       {
         "id": "ufp_device_doorbell_smart_detection_package",
         "title": {
-          "en": "A package detection event",
-          "nl": "Een pakket detectie event"
+          "en": "A package was detected",
+          "nl": "Een pakket werd gedetecteerd"
         },
         "tokens": [
           {
@@ -919,8 +919,8 @@
       {
         "id": "ufp_device_doorbell_smart_detection_animal",
         "title": {
-          "en": "A animal detection event",
-          "nl": "Een dier detectie event"
+          "en": "A animal was detected",
+          "nl": "Een dier werd gedetecteerd"
         },
         "tokens": [
           {
