@@ -10,14 +10,13 @@ class ProtectWebSocket extends BaseClass {
         super(...props);
         this.loggedInStatus = 'Unknown';
         this.lastWebsocketMessage = null;
-        this.isAlive = false;
     }
 
     heartbeat() {
-        this.homey.app.debug('Send heartbeat ping to websocket');
-        this.homey.clearTimeout(this.pingTimeout);
+        this.homey.log('Send heartbeat ping to websocket');
+        this.homey.clearInterval(this.pingTimeout);
 
-        this.pingTimeout = this.homey.setTimeout(() => {
+        this.pingTimeout = this.homey.setInterval(() => {
             this._eventListener.ping();
         }, 30000);
     }
@@ -76,15 +75,14 @@ class ProtectWebSocket extends BaseClass {
 
             // Connection opened
             this._eventListener.on('open', (event) => {
-                this.heartbeat();
                 this.homey.app.debug(this.homey.app.api.getNvrName() + ': Connected to the UniFi realtime update events API.');
                 this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Connected');
                 this.loggedInStatus = 'Connected';
-                this._eventListener.ping();
+                this.heartbeat();
             });
 
             this._eventListener.on('pong', (event) => {
-                this.heartbeat();
+                this.homey.log('Received pong from websocket');
             });
 
             this._eventListener.on('close', () => {
