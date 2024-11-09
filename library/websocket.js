@@ -10,6 +10,16 @@ class ProtectWebSocket extends BaseClass {
         super(...props);
         this.loggedInStatus = 'Unknown';
         this.lastWebsocketMessage = null;
+        this.isAlive = false;
+    }
+
+    heartbeat() {
+        this.homey.app.debug('Send heartbeat ping to websocket');
+        this.homey.clearTimeout(this.pingTimeout);
+
+        this.pingTimeout = this.homey.setTimeout(() => {
+            this._eventListener.ping();
+        }, 30000);
     }
 
     isWebsocketConnected() {
@@ -66,16 +76,22 @@ class ProtectWebSocket extends BaseClass {
 
             // Connection opened
             this._eventListener.on('open', (event) => {
+                this.heartbeat();
                 this.homey.app.debug(this.homey.app.api.getNvrName() + ': Connected to the UniFi realtime update events API.');
                 this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Connected');
                 this.loggedInStatus = 'Connected';
+                this._eventListener.ping();
+            });
+
+            this._eventListener.on('pong', (event) => {
+                this.heartbeat();
             });
 
             this._eventListener.on('close', () => {
                 // terminate and cleanup websocket connection and timers
                 delete this._eventListener;
                 this._eventListenerConfigured = false;
-                clearInterval(this._pingPong);
+                this.homey.clearTimeout(this.pingTimeout);
                 this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Disconnected');
                 this.loggedInStatus = 'Disconnected';
             });
@@ -330,6 +346,21 @@ class ProtectWebSocket extends BaseClass {
                 && updatePacket.payload.type === 'doorAccess'
             ) {
                 this.homey.app.debug('doorAccess event');
+                // get doorbell driver
+                const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
+                // Get device from camera id
+                const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
+                if (deviceDoorbell) {
+                    // Parse Websocket payload message
+                    driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
+                }
+            }  else if (
+                updatePacket.action.modelKey === 'event'
+                && typeof updatePacket.action.recordId !== 'undefined'
+                && typeof updatePacket.payload.type !== 'undefined'
+                && updatePacket.payload.type === 'ring'
+            ) {
+                this.homey.app.debug('ring event');
                 // get doorbell driver
                 const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
                 // Get device from camera id
