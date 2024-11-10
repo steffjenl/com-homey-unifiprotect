@@ -178,5 +178,8 @@
   },
   "1.7.0": {
     "en": "Add support for new functionality and fixed some bugs. In the next release we will remove the 'Snapshot url' token from the snapshot trigger."
+  },
+  "1.7.1": {
+    "en": "Change order for Package Camera"
   }
 }
