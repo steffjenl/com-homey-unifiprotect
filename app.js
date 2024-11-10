@@ -31,6 +31,7 @@ class UniFiProtect extends Homey.App {
         this._registerSnapshotToken();
 
         this._snapshotTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SNAPSHOT_CREATED);
+        this._packageSnapshotTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_PACKAGE_SNAPSHOT_CREATED);
         this._connectionStatusTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_CONNECTION_CHANGED);
         this._doorbellRingingTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOORBELL_RINGING);
         this._smartDetectionTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION);
@@ -160,6 +161,19 @@ class UniFiProtect extends Homey.App {
                 return this.homey.app.api.setStatusSound(args.device.getData(), args.enabled);
             }
             return Promise.resolve(true);
+        });
+
+
+        const _actionTakePackageSnapshot = this.homey.flow.getActionCard(UfvConstants.ACTION_TAKE_PACKAGE_SNAPSHOT);
+        _actionTakePackageSnapshot.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+                // Get device from camera id
+                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+                if (device) {
+                    return device._createSnapshotPackageImage(true);
+                }
+            }
+            return Promise.reject('No device found');
         });
 
         // Subscribe to credentials updates

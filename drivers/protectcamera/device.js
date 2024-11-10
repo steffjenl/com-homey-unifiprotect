@@ -428,10 +428,10 @@ class Camera extends Homey.Device {
                 this.homey.app.triggerSnapshotTrigger({
                     ufv_snapshot_token: this._snapshotImage,
                     ufv_snapshot_camera: this.getName(),
-                    ufv_snapshot_snapshot_url: this._snapshotImage.cloudUrl,
+                    ufv_snapshot_snapshot_url: '',
                     ufv_snapshot_stream_url: rtspUrl
                 });
-            })).catch(this.homey.app.debug);
+            })).catch(this.log);
         }
 
         this.setCameraImage('snapshot', this.getName(), this._snapshotImage);

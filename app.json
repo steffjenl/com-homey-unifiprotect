@@ -416,6 +416,47 @@
         ]
       },
       {
+        "id": "ufv_package_snapshot_created",
+        "title": {
+          "en": "A snapshot was created from the package camera",
+          "nl": "Er is een momentopname gemaakt van de 'pakket' camera"
+        },
+        "tokens": [
+          {
+            "name": "ufv_snapshot_token",
+            "type": "image",
+            "title": {
+              "en": "Snapshot",
+              "nl": "Momentopname"
+            }
+          },
+          {
+            "name": "ufv_snapshot_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Front door",
+              "nl": "Voordeur"
+            }
+          },
+          {
+            "name": "ufv_snapshot_stream_url",
+            "type": "string",
+            "title": {
+              "en": "Snapshot video url",
+              "nl": "Snapshot video adres"
+            },
+            "example": {
+              "en": "rtsp://........:7447/........",
+              "nl": "rtsp://........:7447/........"
+            }
+          }
+        ]
+      },
+      {
         "id": "ufv_snapshot_created",
         "title": {
           "en": "A snapshot was created",
@@ -443,6 +484,7 @@
             }
           },
           {
+            "deprecated": true,
             "name": "ufv_snapshot_snapshot_url",
             "type": "string",
             "title": {
@@ -1398,6 +1440,38 @@
             "title": {
               "en": "Enabled",
               "nl": "Ingeschakeld"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_take_package_snapshot",
+        "title": {
+          "en": "Take a snapshot from the package camera",
+          "nl": "Maak een momentopname van de 'pakket' camera"
+        },
+        "titleFormatted": {
+          "en": "Take a snapshot from the package camera with an width from [[width]]",
+          "nl": "Maak een momentopname van de 'pakket' camera met een breedte van [[width]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "title": {
+              "en": "Width in pixels",
+              "nl": "Breedte in pixels"
+            },
+            "name": "width",
+            "type": "number",
+            "min": 0,
+            "max": 3840,
+            "placeholder": {
+              "en": "Width in pixels",
+              "nl": "Breedte in pixels"
             }
           }
         ]

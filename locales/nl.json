@@ -52,5 +52,6 @@
       "Disconnected": "Verbinding verbroken",
       "Initialized": "Bezig met starten"
     }
-  }
+  },
+  "package_camera": "__name__ (Pakket camera)"
 }

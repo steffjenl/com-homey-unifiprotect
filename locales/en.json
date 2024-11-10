@@ -49,5 +49,6 @@
             "orange": "Warning",
             "red": "Critical"
         }
-    }
+    },
+    "package_camera": "__name__ (Package camera)"
 }

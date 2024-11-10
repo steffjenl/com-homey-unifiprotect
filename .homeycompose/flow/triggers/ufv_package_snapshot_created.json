@@ -1,8 +1,8 @@
 {
-  "id": "ufv_snapshot_created",
+  "id": "ufv_package_snapshot_created",
   "title": {
-    "en": "A snapshot was created",
-    "nl": "Er is een snapshot gemaakt"
+    "en": "A snapshot was created from the package camera",
+    "nl": "Er is een momentopname gemaakt van de 'pakket' camera"
   },
   "tokens": [
     {
@@ -23,19 +23,6 @@
       "example": {
         "en": "Front door",
         "nl": "Voordeur"
-      }
-    },
-    {
-      "deprecated": true,
-      "name": "ufv_snapshot_snapshot_url",
-      "type": "string",
-      "title": {
-        "en": "Snapshot url",
-        "nl": "Snapshot adres"
-      },
-      "example": {
-        "en": "https://camera/api/....",
-        "nl": "https://camera/api/...."
       }
     },
     {

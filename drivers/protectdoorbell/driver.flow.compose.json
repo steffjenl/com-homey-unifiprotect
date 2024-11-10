@@ -244,6 +244,34 @@
           }
         }
       ]
+    },
+    {
+      "id": "ufv_take_package_snapshot",
+      "title": {
+        "en": "Take a snapshot from the package camera",
+        "nl": "Maak een momentopname van de 'pakket' camera"
+      },
+      "titleFormatted": {
+        "en": "Take a snapshot from the package camera with an width from [[width]]",
+        "nl": "Maak een momentopname van de 'pakket' camera met een breedte van [[width]]"
+      },
+      "args": [
+        {
+          "title": {
+            "en": "Width in pixels",
+            "nl": "Breedte in pixels"
+          },
+          "name": "width",
+          "type": "number",
+          "min": 0,
+          "max": 3840,
+          "placeholder": {
+            "en": "Width in pixels",
+            "nl": "Breedte in pixels"
+          }
+        }
+      ]
     }
+
   ]
 }

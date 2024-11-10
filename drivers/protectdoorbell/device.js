@@ -166,7 +166,7 @@ class Doorbell extends Homey.Device {
         const DoorbellData = this.homey.app.api.getBootstrap();
 
         if (DoorbellData) {
-            DoorbellData.cameras.forEach((Doorbell) => {
+            for (const Doorbell of DoorbellData.cameras) {
                 if (Doorbell.id === this.getData().id) {
                     if (this.hasCapability('ip_address')) {
                         this.setCapabilityValue('ip_address', Doorbell.host);
@@ -198,8 +198,14 @@ class Doorbell extends Homey.Device {
                         this.setCapabilityValue('camera_nightvision_set', Doorbell.ispSettings.irLedMode);
                     }
 
+                    // Package camera
+                    if (Doorbell.featureFlags.hasPackageCamera) {
+                        //
+                        await this._createSnapshotPackageImage();
+                    }
+
                 }
-            });
+            }
         }
     }
 
@@ -300,7 +306,7 @@ class Doorbell extends Homey.Device {
             }).catch(this.error);
 
             // Device trigger
-            this.driver._deviceFingerprintIdentifiedTrigger.trigger(this,{
+            this.driver._deviceFingerprintIdentifiedTrigger.trigger(this, {
                 ufp_device_fingerprint_identified_person: localUsername,
             }).catch(this.error);
         }).catch(this.error);
@@ -330,7 +336,7 @@ class Doorbell extends Homey.Device {
             }).catch(this.error);
 
             // Device trigger
-            this.driver._deviceNFCCardScannedTrigger.trigger(this,{
+            this.driver._deviceNFCCardScannedTrigger.trigger(this, {
                 ufp_device_nfc_card_scanned_person: localUsername,
             }).catch(this.error);
         }).catch(this.error);
@@ -356,7 +362,7 @@ class Doorbell extends Homey.Device {
             }).catch(this.error);
 
             // Device trigger
-            this.driver._deviceDoorAccessTrigger.trigger(this,{
+            this.driver._deviceDoorAccessTrigger.trigger(this, {
                 ufp_device_door_access__person: localUsername,
             }).catch(this.error);
         }).catch(this.error);
@@ -467,19 +473,6 @@ class Doorbell extends Homey.Device {
         }
     }
 
-    async getSnapshot() {
-        this._snapshotImage = await this.homey.images.createImage();
-        this._snapshotImage.setStream(async stream => {
-            let snapshotUrl = `https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg`;
-            // Fetch image
-            const res = await fetch(snapshotUrl);
-            if (!res.ok) throw new Error('Could not fetch snapshot image.');
-
-            return res.body.pipe(stream);
-        });
-        this.setCameraImage('snapshot', this.getName(), this._snapshotImage);
-    }
-
     async _createSnapshotImage(triggerFlow = false) {
         this.homey.app.debug('Creating snapshot image for doorbell ' + this.getName() + '.');
 
@@ -493,8 +486,7 @@ class Doorbell extends Homey.Device {
 
             if (this.homey.app.useCameraSnapshot) {
                 snapshotUrl = `https://${ipAddress}/snap.jpeg`;
-            }
-            else {
+            } else {
                 await this.homey.app.api.createSnapshotUrl(this.getData())
                     .then(url => {
                         snapshotUrl = url;
@@ -529,15 +521,77 @@ class Doorbell extends Homey.Device {
                 this.homey.app.triggerSnapshotTrigger({
                     ufv_snapshot_token: this._snapshotImage,
                     ufv_snapshot_camera: this.getName(),
-                    ufv_snapshot_snapshot_url: this._snapshotImage.cloudUrl,
+                    ufv_snapshot_snapshot_url: '',
                     ufv_snapshot_stream_url: rtspUrl
                 });
-            })).catch(this.homey.app.debug);
+            })).catch(this.log);
         }
 
         this.setCameraImage('snapshot', this.getName(), this._snapshotImage);
 
         this.homey.app.debug('Created snapshot image for doorbell ' + this.getName() + '.');
+    }
+
+    async _createSnapshotPackageImage(triggerFlow = false) {
+        return new Promise(async (resolve, reject) => {
+            this._snapshotPackageImage = await this.homey.images.createImage();
+            this.homey.app.debug('Creating snapshot packages image for doorbell ' + this.getName() + '.');
+
+            const ipAddress = this.getCapabilityValue('ip_address');
+
+            this._snapshotPackageImage.setStream(async stream => {
+                // Obtain snapshot URL
+                let snapshotUrl = null;
+
+                if (this.homey.app.useCameraSnapshot) {
+                    snapshotUrl = `https://${ipAddress}/snap_2.jpeg`;
+                } else {
+                    await this.homey.app.api.createPackageSnapshotUrl(this.getData())
+                        .then(url => {
+                            snapshotUrl = url;
+                        });
+                }
+                reject('Invalid snapshot url.');
+                if (!snapshotUrl) {
+                    reject('Invalid snapshot url.');
+                }
+
+                const headers = {};
+                headers['Cookie'] = this.homey.app.api.getProxyCookieToken();
+
+                const agent = new https.Agent({
+                    rejectUnauthorized: false,
+                    keepAlive: false,
+                });
+
+                // Fetch image
+                const res = await fetch(snapshotUrl, {
+                    agent,
+                    headers
+                });
+                if (!res.ok) {
+                    reject('Could not fetch snapshot image.');
+                }
+
+                return res.body.pipe(stream);
+            });
+
+            if (triggerFlow) {
+                this.homey.app.api.getPackageStreamUrl(this.getData()).then((rtspUrl => {
+                    this.homey.app._packageSnapshotTrigger.trigger({
+                        ufv_snapshot_token: this._snapshotPackageImage,
+                        ufv_snapshot_camera: this.getName(),
+                        ufv_snapshot_snapshot_url: '',
+                        ufv_snapshot_stream_url: rtspUrl
+                    });
+                }));
+            }
+
+            this.setCameraImage('package-snapshot', this.homey.__('package_camera', {name: this.getName()}), this._snapshotPackageImage);
+
+            this.homey.app.debug('Created package snapshot image for doorbell ' + this.getName() + '.');
+            resolve();
+        });
     }
 
     triggerSmartDetectionTriggerUnknown(score) {
@@ -548,7 +602,7 @@ class Doorbell extends Homey.Device {
             score: score
         }).catch(this.error);
         // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
+        this.driver._deviceSmartDetectionTrigger.trigger(this, {
             smart_detection_type: 'unknown',
             score: score
         }).catch(this.error);
@@ -565,7 +619,7 @@ class Doorbell extends Homey.Device {
 
         this.homey.app.debug('this.driver._smartDetectionTrigger.trigger');
         // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
+        this.driver._deviceSmartDetectionTrigger.trigger(this, {
             smart_detection_type: 'person',
             score: score
         }).catch(this.error);
@@ -580,7 +634,7 @@ class Doorbell extends Homey.Device {
 
         this.homey.app.debug('this.driver._deviceSmartDetectionTriggerPerson.trigger');
         // Device trigger
-        this.driver._deviceSmartDetectionTriggerPerson.trigger(this,{
+        this.driver._deviceSmartDetectionTriggerPerson.trigger(this, {
             score: score
         }).catch(this.error).catch(this.error);
     }
@@ -593,7 +647,7 @@ class Doorbell extends Homey.Device {
             score: score
         }).catch(this.error);
         // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
+        this.driver._deviceSmartDetectionTrigger.trigger(this, {
             smart_detection_type: 'vehicle',
             score: score
         }).catch(this.error);
@@ -604,7 +658,7 @@ class Doorbell extends Homey.Device {
             score: score
         }).catch(this.error);
         // Device trigger
-        this.driver._deviceSmartDetectionTriggerVehicle.trigger(this,{
+        this.driver._deviceSmartDetectionTriggerVehicle.trigger(this, {
             score: score
         }).catch(this.error);
     }
@@ -617,7 +671,7 @@ class Doorbell extends Homey.Device {
             score: score
         }).catch(this.error);
         // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
+        this.driver._deviceSmartDetectionTrigger.trigger(this, {
             smart_detection_type: 'animal',
             score: score
         }).catch(this.error);
@@ -628,7 +682,7 @@ class Doorbell extends Homey.Device {
             score: score
         }).catch(this.error);
         // Device trigger
-        this.driver._deviceSmartDetectionTriggerAnimal.trigger(this,{
+        this.driver._deviceSmartDetectionTriggerAnimal.trigger(this, {
             score: score
         }).catch(this.error);
     }
@@ -641,7 +695,7 @@ class Doorbell extends Homey.Device {
             score: score
         }).catch(this.error);
         // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
+        this.driver._deviceSmartDetectionTrigger.trigger(this, {
             smart_detection_type: 'package',
             score: score
         }).catch(this.error);
@@ -652,7 +706,7 @@ class Doorbell extends Homey.Device {
             score: score
         }).catch(this.error);
         // Device trigger
-        this.driver._deviceSmartDetectionTriggerPackage.trigger(this,{
+        this.driver._deviceSmartDetectionTriggerPackage.trigger(this, {
             score: score
         }).catch(this.error);
     }

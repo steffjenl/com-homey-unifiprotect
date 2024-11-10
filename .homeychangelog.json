@@ -177,6 +177,6 @@
     "en": "Feature: Add support for enable status led and sound for camera and doorbell"
   },
   "1.7.0": {
-    "en": "Add support for new functionality and fixed some bugs."
+    "en": "Add support for new functionality and fixed some bugs. In the next release we will remove the 'Snapshot url' token from the snapshot trigger."
   }
 }

@@ -367,6 +367,23 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    createPackageSnapshotUrl(camera, widthInPixels = 1920, useCameraSnapshotUrl = false) {
+        return new Promise((resolve, reject) => {
+            if (!this.webclient.getServerHost()) reject(new Error('Invalid host.'));
+            if (!camera) reject(new Error('Invalid camera'));
+
+            const params = {
+                accessKey: this.webclient.getApiKey(),
+                w: widthInPixels,
+                force: true,
+                ts: Date.now(),
+                ext: '.jpg'
+            };
+
+            return resolve(`https://${this.webclient.getServerHost()}:${this.webclient.getServerPort()}${UFV_API_ENDPOINT}/cameras/${camera.id}/package-snapshot${this.webclient.toQueryString(params)}`);
+        });
+    }
+
     setRecordingMode(camera, mode = 'never') {
         return new Promise((resolve, reject) => {
             this.findCameraById(camera.id)
@@ -497,6 +514,28 @@ class ProtectAPI extends BaseClass {
                 .then(cameraInfo => {
                     cameraInfo.channels.forEach(channel => {
                         if (channel.isRtspEnabled) {
+                            rtspAlias = channel.rtspAlias;
+                        }
+                    });
+
+                    if (!rtspAlias) {
+                        resolve('');
+                    }
+
+                    resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${rtspAlias}`);
+                })
+                .catch(error => reject(new Error(`Error getting steam url: ${error}`)));
+        });
+    }
+
+    getPackageStreamUrl(camera) {
+        return new Promise((resolve, reject) => {
+            let rtspAlias = null;
+
+            this.findCameraById(camera.id)
+                .then(cameraInfo => {
+                    cameraInfo.channels.forEach(channel => {
+                        if (channel.isRtspEnabled && channel.name === 'Package Camera') {
                             rtspAlias = channel.rtspAlias;
                         }
                     });
