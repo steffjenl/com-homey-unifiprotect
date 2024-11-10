@@ -64,8 +64,8 @@ class Doorbell extends Homey.Device {
         });
 
         await this._createMissingCapabilities();
-        await this._initDoorbellData();
         await this._createSnapshotImage();
+        await this._initDoorbellData();
     }
 
     async waitForBootstrap() {
