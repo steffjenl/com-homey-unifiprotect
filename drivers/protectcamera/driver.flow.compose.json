@@ -8,18 +8,6 @@
       },
       "tokens": [
         {
-          "name": "ufp_smart_detection_camera",
-          "type": "string",
-          "title": {
-            "en": "Camera",
-            "nl": "Camera"
-          },
-          "example": {
-            "en": "Doorbell",
-            "nl": "Deurbel"
-          }
-        },
-        {
           "name": "smart_detection_type",
           "type": "string",
           "title": {
@@ -53,18 +41,6 @@
       },
       "tokens": [
         {
-          "name": "ufp_smart_detection_camera",
-          "type": "string",
-          "title": {
-            "en": "Camera",
-            "nl": "Camera"
-          },
-          "example": {
-            "en": "Doorbell",
-            "nl": "Deurbel"
-          }
-        },
-        {
           "name": "score",
           "type": "number",
           "title": {
@@ -85,18 +61,6 @@
         "nl": "Een pakket werd gedetecteerd"
       },
       "tokens": [
-        {
-          "name": "ufp_smart_detection_camera",
-          "type": "string",
-          "title": {
-            "en": "Camera",
-            "nl": "Camera"
-          },
-          "example": {
-            "en": "Doorbell",
-            "nl": "Deurbel"
-          }
-        },
         {
           "name": "score",
           "type": "number",
@@ -119,18 +83,6 @@
       },
       "tokens": [
         {
-          "name": "ufp_smart_detection_camera",
-          "type": "string",
-          "title": {
-            "en": "Camera",
-            "nl": "Camera"
-          },
-          "example": {
-            "en": "Doorbell",
-            "nl": "Deurbel"
-          }
-        },
-        {
           "name": "score",
           "type": "number",
           "title": {
@@ -151,18 +103,6 @@
         "nl": "Een persoon werd gedetecteerd"
       },
       "tokens": [
-        {
-          "name": "ufp_smart_detection_camera",
-          "type": "string",
-          "title": {
-            "en": "Camera",
-            "nl": "Camera"
-          },
-          "example": {
-            "en": "Doorbell",
-            "nl": "Deurbel"
-          }
-        },
         {
           "name": "score",
           "type": "number",

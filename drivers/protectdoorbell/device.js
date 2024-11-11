@@ -290,10 +290,10 @@ class Doorbell extends Homey.Device {
         this.homey.app.debug('[Object] onFingerprintIdentified ' + JSON.stringify(payload));
 
         if (typeof payload !== 'undefined'
-            || typeof payload.metadata !== 'undefined'
-            || typeof payload.metadata.fingerprint !== 'undefined'
-            || typeof payload.metadata.fingerprint.userId !== 'undefined'
-            || payload.metadata.fingerprint.userId !== null) {
+            && typeof payload.metadata !== 'undefined'
+            && typeof payload.metadata.fingerprint !== 'undefined'
+            && typeof payload.metadata.fingerprint.userId !== 'undefined'
+            && payload.metadata.fingerprint.userId !== null) {
             this.homey.app.api.getUsernameById(payload.metadata.fingerprint.userId).then((localUsername) => {
                 // Generic trigger
                 this.homey.app._fingerPrintIdentifiedTrigger.trigger({
@@ -308,10 +308,10 @@ class Doorbell extends Homey.Device {
             }).catch(this.error);
             return true;
         } else if (typeof payload !== 'undefined'
-            || typeof payload.metadata !== 'undefined'
-            || typeof payload.metadata.fingerprint !== 'undefined'
-            || typeof payload.metadata.fingerprint.ulpId !== 'undefined'
-            || payload.metadata.fingerprint.ulpId !== null) {
+            && typeof payload.metadata !== 'undefined'
+            && typeof payload.metadata.fingerprint !== 'undefined'
+            && typeof payload.metadata.fingerprint.ulpId !== 'undefined'
+            && payload.metadata.fingerprint.ulpId !== null) {
             this.homey.app.api.getCloudUsernameById(payload.metadata.fingerprint.ulpId).then((username) => {
                 // Generic trigger
                 this.homey.app._fingerPrintIdentifiedTrigger.trigger({
@@ -335,10 +335,10 @@ class Doorbell extends Homey.Device {
         this.homey.app.debug('[Object] onNFCCardScanned ' + JSON.stringify(payload));
 
         if (typeof payload !== 'undefined'
-            || typeof payload.metadata !== 'undefined'
-            || typeof payload.metadata.nfc !== 'undefined'
-            || typeof payload.metadata.nfc.userId !== 'undefined'
-            || payload.metadata.nfc.userId !== null) {
+            && typeof payload.metadata !== 'undefined'
+            && typeof payload.metadata.nfc !== 'undefined'
+            && typeof payload.metadata.nfc.userId !== 'undefined'
+            && payload.metadata.nfc.userId !== null) {
             this.homey.app.api.getUsernameById(payload.metadata.nfc.userId).then((localUsername) => {
                 // Generic trigger
                 this.homey.app._nfcCardScannedTrigger.trigger({
@@ -353,10 +353,10 @@ class Doorbell extends Homey.Device {
             }).catch(this.error);
             return true;
         } else if (typeof payload !== 'undefined'
-            || typeof payload.metadata !== 'undefined'
-            || typeof payload.metadata.nfc !== 'undefined'
-            || typeof payload.metadata.nfc.ulpId !== 'undefined'
-            || payload.metadata.nfc.ulpId !== null) {
+            && typeof payload.metadata !== 'undefined'
+            && typeof payload.metadata.nfc !== 'undefined'
+            && typeof payload.metadata.nfc.ulpId !== 'undefined'
+            && payload.metadata.nfc.ulpId !== null) {
             this.homey.app.api.getCloudUsernameById(payload.metadata.nfc.ulpId).then((username) => {
                 // Generic trigger
                 this.homey.app._nfcCardScannedTrigger.trigger({
