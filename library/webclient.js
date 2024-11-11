@@ -60,7 +60,12 @@ class ProtectWebClient extends BaseClass {
         this._csrfToken = csrfToken;
     }
 
-    get(resource, params = {}, isBinary = false) {
+    get(resource, params = {}, isBinary = false, isCloudCall = false) {
+        let pathPrefix = `${UFV_API_ENDPOINT}`;
+        if (isCloudCall) {
+            pathPrefix = `/proxy`;
+        }
+
         return new Promise((resolve, reject) => {
             if (!this._serverHost) reject(new Error('Invalid host.'));
             if (!this._cookieToken) reject(new Error('Not logged in.'));
@@ -72,7 +77,7 @@ class ProtectWebClient extends BaseClass {
                 method: 'GET',
                 hostname: this._serverHost,
                 port: this._serverPort,
-                path: `${UFV_API_ENDPOINT}/${resource}${this.toQueryString(params)}`,
+                path: `${pathPrefix}/${resource}${this.toQueryString(params)}`,
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                     Accept: isBinary ? '*/*' : 'application/json',

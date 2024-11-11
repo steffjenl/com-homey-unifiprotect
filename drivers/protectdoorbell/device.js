@@ -289,57 +289,91 @@ class Doorbell extends Homey.Device {
     onFingerprintIdentified(payload, actionType = null, eventId = null) {
         this.homey.app.debug('[Object] onFingerprintIdentified ' + JSON.stringify(payload));
 
-        if (typeof payload === 'undefined'
-            || typeof payload.metadata === 'undefined'
-            || typeof payload.metadata.fingerprint === 'undefined'
-            || typeof payload.metadata.fingerprint.userId === 'undefined'
-            || payload.metadata.fingerprint.userId === null) {
-            this.homey.app.debug('Fingerprint is not valid!');
-            return;
+        if (typeof payload !== 'undefined'
+            || typeof payload.metadata !== 'undefined'
+            || typeof payload.metadata.fingerprint !== 'undefined'
+            || typeof payload.metadata.fingerprint.userId !== 'undefined'
+            || payload.metadata.fingerprint.userId !== null) {
+            this.homey.app.api.getUsernameById(payload.metadata.fingerprint.userId).then((localUsername) => {
+                // Generic trigger
+                this.homey.app._fingerPrintIdentifiedTrigger.trigger({
+                    ufp_fingerprint_identified_camera: this.getName(),
+                    ufp_fingerprint_identified_person: localUsername
+                }).catch(this.error);
+
+                // Device trigger
+                this.driver._deviceFingerprintIdentifiedTrigger.trigger(this, {
+                    ufp_device_fingerprint_identified_person: localUsername,
+                }).catch(this.error);
+            }).catch(this.error);
+            return true;
+        } else if (typeof payload !== 'undefined'
+            || typeof payload.metadata !== 'undefined'
+            || typeof payload.metadata.fingerprint !== 'undefined'
+            || typeof payload.metadata.fingerprint.ulpId !== 'undefined'
+            || payload.metadata.fingerprint.ulpId !== null) {
+            this.homey.app.api.getCloudUsernameById(payload.metadata.fingerprint.ulpId).then((username) => {
+                // Generic trigger
+                this.homey.app._fingerPrintIdentifiedTrigger.trigger({
+                    ufp_fingerprint_identified_camera: this.getName(),
+                    ufp_fingerprint_identified_person: username
+                }).catch(this.error);
+
+                // Device trigger
+                this.driver._deviceFingerprintIdentifiedTrigger.trigger(this, {
+                    ufp_device_fingerprint_identified_person: username,
+                }).catch(this.error);
+            }).catch(this.error);
+            return true;
         }
-
-        this.homey.app.api.getUsernameById(payload.metadata.fingerprint.userId).then((localUsername) => {
-            // Generic trigger
-            this.homey.app._fingerPrintIdentifiedTrigger.trigger({
-                ufp_fingerprint_identified_camera: this.getName(),
-                ufp_fingerprint_identified_person: localUsername
-            }).catch(this.error);
-
-            // Device trigger
-            this.driver._deviceFingerprintIdentifiedTrigger.trigger(this, {
-                ufp_device_fingerprint_identified_person: localUsername,
-            }).catch(this.error);
-        }).catch(this.error);
+        // Fingerprint is not valid
+        this.homey.app.debug('Fingerprint is not valid!');
+        return false;
     }
 
     onNFCCardScanned(payload, actionType = null, eventId = null) {
-        this.homey.app.debug('A [Object] onNFCCardScanned ' + JSON.stringify(payload));
+        this.homey.app.debug('[Object] onNFCCardScanned ' + JSON.stringify(payload));
 
-        if (typeof payload === 'undefined'
-            || typeof payload.metadata === 'undefined'
-            || typeof payload.metadata.nfc === 'undefined'
-            || typeof payload.metadata.nfc.userId === 'undefined'
-            || payload.metadata.nfc.userId === null) {
-            this.homey.app.debug('NFC Card Event is not valid!');
-            return;
+        if (typeof payload !== 'undefined'
+            || typeof payload.metadata !== 'undefined'
+            || typeof payload.metadata.nfc !== 'undefined'
+            || typeof payload.metadata.nfc.userId !== 'undefined'
+            || payload.metadata.nfc.userId !== null) {
+            this.homey.app.api.getUsernameById(payload.metadata.nfc.userId).then((localUsername) => {
+                // Generic trigger
+                this.homey.app._nfcCardScannedTrigger.trigger({
+                    ufp_nfc_card_scanned_camera: this.getName(),
+                    ufp_nfc_card_scanned_person: localUsername
+                }).catch(this.error);
+
+                // Device trigger
+                this.driver._deviceNFCCardScannedTrigger.trigger(this, {
+                    ufp_device_nfc_card_scanned_person: localUsername,
+                }).catch(this.error);
+            }).catch(this.error);
+            return true;
+        } else if (typeof payload !== 'undefined'
+            || typeof payload.metadata !== 'undefined'
+            || typeof payload.metadata.nfc !== 'undefined'
+            || typeof payload.metadata.nfc.ulpId !== 'undefined'
+            || payload.metadata.nfc.ulpId !== null) {
+            this.homey.app.api.getCloudUsernameById(payload.metadata.nfc.ulpId).then((username) => {
+                // Generic trigger
+                this.homey.app._nfcCardScannedTrigger.trigger({
+                    ufp_nfc_card_scanned_camera: this.getName(),
+                    ufp_nfc_card_scanned_person: username
+                }).catch(this.error);
+
+                // Device trigger
+                this.driver._deviceNFCCardScannedTrigger.trigger(this, {
+                    ufp_device_nfc_card_scanned_person: username,
+                }).catch(this.error);
+            }).catch(this.error);
+            return true;
         }
 
-        this.homey.app.debug('B [Object] onNFCCardScanned ' + JSON.stringify(payload));
-
-        this.homey.app.api.getUsernameById(payload.metadata.nfc.userId).then((localUsername) => {
-
-            this.homey.app.debug('C [Object] onNFCCardScanned ' + JSON.stringify(localUsername));
-            // Generic trigger
-            this.homey.app._nfcCardScannedTrigger.trigger({
-                ufp_nfc_card_scanned_camera: this.getName(),
-                ufp_nfc_card_scanned_person: localUsername
-            }).catch(this.error);
-
-            // Device trigger
-            this.driver._deviceNFCCardScannedTrigger.trigger(this, {
-                ufp_device_nfc_card_scanned_person: localUsername,
-            }).catch(this.error);
-        }).catch(this.error);
+        this.homey.app.debug('NFC Card Event is not valid!');
+        return false;
     }
 
     onDoorAccess(payload, actionType = null, eventId = null) {

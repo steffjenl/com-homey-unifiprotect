@@ -694,12 +694,38 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    getCloudUsers() {
+        return new Promise((resolve, reject) => {
+            const params = {
+                page_num: 1,
+                page_size: 200
+            }
+            this.webclient.get('users/api/v2/users/search', params, false, true)
+                .then(response => {
+                    const result = JSON.parse(response);
+                    return resolve(result.data);
+                })
+                .catch(error => reject(error));
+        });
+    }
+
     getUsernameById(id) {
         return new Promise((resolve, reject) => {
             this.getUsers()
                 .then(users => {
                     const user = users.find(user => user.id === id);
                     return resolve(user.localUsername);
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    getCloudUsernameById(id) {
+        return new Promise((resolve, reject) => {
+            this.getCloudUsers()
+                .then(users => {
+                    const user = users.find(user => user.unique_id === id);
+                    return resolve(user.email !== "" ? user.email : user.username);
                 })
                 .catch(error => reject(error));
         });
