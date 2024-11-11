@@ -181,5 +181,8 @@
   },
   "1.7.1": {
     "en": "Change order for Package Camera"
+  },
+  "1.7.2": {
+    "en": "Fixed Smart Detections for normal camera's"
   }
 }
