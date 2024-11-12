@@ -7,8 +7,8 @@
     "en": "Ubiquiti UniFi Protect"
   },
   "description": {
-    "en": "Protect your home with UniFi Protect devices.",
-    "nl": "Bescherm je huis met UniFi Protect apparaten."
+    "en": "Protect your home with UniFi Protect & Access devices.",
+    "nl": "Bescherm je huis met UniFi Protect & Access apparaten."
   },
   "tags": {
     "en": [
@@ -18,7 +18,8 @@
       "security",
       "camera",
       "snapshot",
-      "recording"
+      "recording",
+      "access"
     ],
     "nl": [
       "ubiquiti",
@@ -27,7 +28,8 @@
       "beveiligingscamera",
       "camera",
       "momentopname",
-      "opname"
+      "opname",
+      "toegang"
     ]
   },
   "images": {
@@ -40,7 +42,7 @@
     "video"
   ],
   "version": "1.7.2",
-  "compatibility": ">=5.0.0",
+  "compatibility": ">=12.2.0",
   "author": {
     "name": "Stèphan Eizinga",
     "email": "stephan@monkeysoft.nl"
@@ -123,6 +125,10 @@
         "title": {
           "en": "A door access event",
           "nl": "Een deurtoegang event"
+        },
+        "hint": {
+          "en": "Triggered when a door is openend by UniFi Access",
+          "nl": "Geschakeld wanneer een deur wordt geopend door UniFi Access"
         },
         "tokens": [
           {
@@ -1625,6 +1631,63 @@
       "connectivity": [
         "cloud"
       ]
+    },
+    {
+      "name": {
+        "en": "UniFi OS"
+      },
+      "class": "other",
+      "capabilities": [
+        "measure_data_size.free",
+        "measure_data_size.used",
+        "measure_data_size.total",
+        "measure_temperature"
+      ],
+      "capabilitiesOptions": {
+        "measure_data_size.free": {
+          "title": {
+            "en": "Free Space",
+            "nl": "Vrije ruimte"
+          }
+        },
+        "measure_data_size.used": {
+          "title": {
+            "en": "Used Space",
+            "nl": "Gebruikte ruimte"
+          }
+        },
+        "measure_data_size.total": {
+          "title": {
+            "en": "Total Space",
+            "nl": "Totale ruimte"
+          }
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/unifi-os/assets/images/small.png",
+        "large": "/drivers/unifi-os/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "unifi-os"
     }
   ],
   "capabilities": {

@@ -6,8 +6,8 @@
     "en": "Ubiquiti UniFi Protect"
   },
   "description": {
-    "en": "Protect your home with UniFi Protect devices.",
-    "nl": "Bescherm je huis met UniFi Protect apparaten."
+    "en": "Protect your home with UniFi Protect & Access devices.",
+    "nl": "Bescherm je huis met UniFi Protect & Access apparaten."
   },
   "tags": {
     "en": [
@@ -17,7 +17,8 @@
       "security",
       "camera",
       "snapshot",
-      "recording"
+      "recording",
+      "access"
     ],
     "nl": [
       "ubiquiti",
@@ -26,7 +27,8 @@
       "beveiligingscamera",
       "camera",
       "momentopname",
-      "opname"
+      "opname",
+      "toegang"
     ]
   },
   "images": {
@@ -39,7 +41,7 @@
     "video"
   ],
   "version": "1.7.2",
-  "compatibility": ">=5.0.0",
+  "compatibility": ">=12.2.0",
   "author": {
     "name": "Stèphan Eizinga",
     "email": "stephan@monkeysoft.nl"

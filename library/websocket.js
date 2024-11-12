@@ -196,6 +196,9 @@ class ProtectWebSocket extends BaseClass {
         } else if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'event') {
             // Smart detections
             return true;
+        } else if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'nvr') {
+            // NVR updates
+            return true;
         }
 
 
@@ -220,8 +223,8 @@ class ProtectWebSocket extends BaseClass {
             }
 
             // if (
-            //     updatePacket.action.modelKey !== 'nvr'
-            //     && updatePacket.action.modelKey !== 'sensor'
+            //     // updatePacket.action.modelKey !== 'nvr'
+            //     updatePacket.action.modelKey !== 'sensor'
             //     && updatePacket.action.modelKey !== 'bridge'
             //     && updatePacket.action.modelKey !== 'user'
             //     && typeof updatePacket.payload.wifiConnectionState === 'undefined'
@@ -366,6 +369,19 @@ class ProtectWebSocket extends BaseClass {
                 if (deviceDoorbell) {
                     // Parse Websocket payload message
                     driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
+                }
+            }  else if (
+                typeof updatePacket.action.modelKey !== 'undefined'
+                && updatePacket.action.modelKey === 'nvr'
+            ) {
+                this.homey.app.debug('nvr event');
+                // get doorbell driver
+                const driver = this.homey.drivers.getDriver('unifi-os');
+                // Get device from camera id
+                const device = driver.getUnifiDeviceById('unifi-os-controller');
+                if (device) {
+                    // Parse Websocket payload message
+                    driver.onParseWebsocketMessage(device, payload);
                 }
             } else if (updatePacket.action.modelKey === 'light') {
                 // get protectlight driver
