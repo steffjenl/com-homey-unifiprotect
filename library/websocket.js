@@ -16,9 +16,11 @@ class ProtectWebSocket extends BaseClass {
         this.homey.log('Send heartbeat ping to websocket');
         this.homey.clearInterval(this.pingTimeout);
 
-        this.pingTimeout = this.homey.setInterval(() => {
-            this._eventListener.ping();
-        }, 30000);
+        if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
+            this.pingTimeout = this.homey.setInterval(() => {
+                this._eventListener.ping();
+            }, 30000);
+        }
     }
 
     isWebsocketConnected() {
