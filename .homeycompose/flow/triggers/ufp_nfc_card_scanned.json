@@ -29,7 +29,6 @@
         "nl": "Jan Jansen"
       }
     },
-    ,
     {
       "name": "ufp_nfc_card_scanned_first_name",
       "type": "string",
