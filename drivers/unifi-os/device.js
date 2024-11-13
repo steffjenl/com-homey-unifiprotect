@@ -76,14 +76,12 @@ module.exports = class UniFiOSDevice extends Homey.Device {
   }
 
   onTemperatureChange(temperature) {
-    this.homey.app.debug('onTemperatureChange');
     if (this.hasCapability('measure_temperature')) {
       this.setCapabilityValue('measure_temperature', temperature);
     }
   }
 
   onStorageChange(storage) {
-    this.homey.app.debug('onStorageChange');
     if (storage.hasOwnProperty('available')) {
       if (this.hasCapability('measure_data_size.free')) {
         this.setCapabilityValue('measure_data_size.free', storage.available);

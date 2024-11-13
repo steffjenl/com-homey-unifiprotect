@@ -223,8 +223,8 @@ class ProtectWebSocket extends BaseClass {
             }
 
             // if (
-            //     // updatePacket.action.modelKey !== 'nvr'
-            //     updatePacket.action.modelKey !== 'sensor'
+            //     updatePacket.action.modelKey !== 'nvr'
+            //     && updatePacket.action.modelKey !== 'sensor'
             //     && updatePacket.action.modelKey !== 'bridge'
             //     && updatePacket.action.modelKey !== 'user'
             //     && typeof updatePacket.payload.wifiConnectionState === 'undefined'
@@ -316,7 +316,6 @@ class ProtectWebSocket extends BaseClass {
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'fingerprintIdentified'
             ) {
-                this.homey.app.debug('fingerprintIdentified event');
                 // get doorbell driver
                 const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
                 // Get device from camera id
@@ -331,7 +330,6 @@ class ProtectWebSocket extends BaseClass {
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'nfcCardScanned'
             ) {
-                this.homey.app.debug('nfcCardScanned event');
                 // get doorbell driver
                 const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
                 // Get device from camera id
@@ -346,7 +344,6 @@ class ProtectWebSocket extends BaseClass {
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'doorAccess'
             ) {
-                this.homey.app.debug('doorAccess event');
                 // get doorbell driver
                 const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
                 // Get device from camera id
@@ -361,7 +358,6 @@ class ProtectWebSocket extends BaseClass {
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'ring'
             ) {
-                this.homey.app.debug('ring event');
                 // get doorbell driver
                 const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
                 // Get device from camera id
@@ -374,7 +370,6 @@ class ProtectWebSocket extends BaseClass {
                 typeof updatePacket.action.modelKey !== 'undefined'
                 && updatePacket.action.modelKey === 'nvr'
             ) {
-                this.homey.app.debug('nvr event');
                 // get doorbell driver
                 const driver = this.homey.drivers.getDriver('unifi-os');
                 // Get device from camera id

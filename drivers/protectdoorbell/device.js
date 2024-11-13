@@ -312,16 +312,22 @@ class Doorbell extends Homey.Device {
             && typeof payload.metadata.fingerprint !== 'undefined'
             && typeof payload.metadata.fingerprint.ulpId !== 'undefined'
             && payload.metadata.fingerprint.ulpId !== null) {
-            this.homey.app.api.getCloudUsernameById(payload.metadata.fingerprint.ulpId).then((username) => {
+            this.homey.app.api.getCloudUserById(payload.metadata.fingerprint.ulpId).then((user) => {
                 // Generic trigger
                 this.homey.app._fingerPrintIdentifiedTrigger.trigger({
                     ufp_fingerprint_identified_camera: this.getName(),
-                    ufp_fingerprint_identified_person: username
+                    ufp_fingerprint_identified_person: (user.email !== "" ? user.email : user.username),
+                    ufp_fingerprint_identified_name: user.first_name,
+                    ufp_fingerprint_identified_last_name: user.last_name,
+                    ufp_fingerprint_identified_user_unique_id: user.unique_id,
                 }).catch(this.error);
 
                 // Device trigger
                 this.driver._deviceFingerprintIdentifiedTrigger.trigger(this, {
-                    ufp_device_fingerprint_identified_person: username,
+                    ufp_device_fingerprint_identified_person: (user.email !== "" ? user.email : user.username),
+                    ufp_device_fingerprint_identified_name: user.first_name,
+                    ufp_device_fingerprint_identified_last_name: user.last_name,
+                    ufp_device_fingerprint_identified_user_unique_id: user.unique_id,
                 }).catch(this.error);
             }).catch(this.error);
             return true;
@@ -357,16 +363,24 @@ class Doorbell extends Homey.Device {
             && typeof payload.metadata.nfc !== 'undefined'
             && typeof payload.metadata.nfc.ulpId !== 'undefined'
             && payload.metadata.nfc.ulpId !== null) {
-            this.homey.app.api.getCloudUsernameById(payload.metadata.nfc.ulpId).then((username) => {
+            this.homey.app.api.getCloudUserById(payload.metadata.nfc.ulpId).then((user) => {
                 // Generic trigger
                 this.homey.app._nfcCardScannedTrigger.trigger({
                     ufp_nfc_card_scanned_camera: this.getName(),
-                    ufp_nfc_card_scanned_person: username
+                    ufp_nfc_card_scanned_person: (user.email !== "" ? user.email : user.username),
+                    ufp_nfc_card_scanned_first_name: user.first_name,
+                    ufp_nfc_card_scanned_last_name: user.last_name,
+                    ufp_nfc_card_scanned_user_unique_id: user.unique_id,
+                    ufp_nfc_card_scanned_card_id: payload.metadata.nfc.nfcId
                 }).catch(this.error);
 
                 // Device trigger
                 this.driver._deviceNFCCardScannedTrigger.trigger(this, {
-                    ufp_device_nfc_card_scanned_person: username,
+                    ufp_device_nfc_card_scanned_person: (user.email !== "" ? user.email : user.username),
+                    ufp_device_nfc_card_scanned_first_name: user.first_name,
+                    ufp_device_nfc_card_scanned_last_name: user.last_name,
+                    ufp_device_nfc_card_scanned_user_unique_id: user.unique_id,
+                    ufp_device_nfc_card_scanned_card_id: payload.metadata.nfc.nfcId
                 }).catch(this.error);
             }).catch(this.error);
             return true;

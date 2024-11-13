@@ -32,12 +32,48 @@
           "name": "ufp_device_fingerprint_identified_person",
           "type": "string",
           "title": {
-            "en": "Person",
-            "nl": "Persoon"
+            "en": "Username",
+            "nl": "Gebruikersnaam"
           },
           "example": {
             "en": "John Doe",
             "nl": "Jan Jansen"
+          }
+        },
+        {
+          "name": "ufp_device_fingerprint_identified_first_name",
+          "type": "string",
+          "title": {
+            "en": "First name",
+            "nl": "Voornaam"
+          },
+          "example": {
+            "en": "John",
+            "nl": "Jan"
+          }
+        },
+        {
+          "name": "ufp_device_fingerprint_identified_last_name",
+          "type": "string",
+          "title": {
+            "en": "Last name",
+            "nl": "Achternaam"
+          },
+          "example": {
+            "en": "Doe",
+            "nl": "Jansen"
+          }
+        },
+        {
+          "name": "ufp_device_fingerprint_identified_user_unique_id",
+          "type": "string",
+          "title": {
+            "en": "User Unique ID",
+            "nl": "Gebruiker Unieke ID"
+          },
+          "example": {
+            "en": "xxx-xxx-xxx",
+            "nl": "xxx-xxx-xxx"
           }
         }
       ]
@@ -53,8 +89,8 @@
           "name": "ufp_device_door_access_person",
           "type": "string",
           "title": {
-            "en": "Person",
-            "nl": "Persoon"
+            "en": "Username",
+            "nl": "Gebruikersnaam"
           },
           "example": {
             "en": "John Doe",
@@ -74,12 +110,60 @@
           "name": "ufp_device_nfc_card_scanned_person",
           "type": "string",
           "title": {
-            "en": "Person",
-            "nl": "Persoon"
+            "en": "Username",
+            "nl": "Gebruikersnaam"
           },
           "example": {
             "en": "John Doe",
             "nl": "Jan Jansen"
+          }
+        },
+        {
+          "name": "ufp_device_nfc_card_scanned_first_name",
+          "type": "string",
+          "title": {
+            "en": "First name",
+            "nl": "Voornaam"
+          },
+          "example": {
+            "en": "John",
+            "nl": "Jan"
+          }
+        },
+        {
+          "name": "ufp_device_nfc_card_scanned_last_name",
+          "type": "string",
+          "title": {
+            "en": "Last name",
+            "nl": "Achternaam"
+          },
+          "example": {
+            "en": "Doe",
+            "nl": "Jansen"
+          }
+        },
+        {
+          "name": "ufp_device_nfc_card_scanned_user_unique_id",
+          "type": "string",
+          "title": {
+            "en": "User Unique ID",
+            "nl": "Gebruiker Unieke ID"
+          },
+          "example": {
+            "en": "xxx-xxx-xxx",
+            "nl": "xxx-xxx-xxx"
+          }
+        },
+        {
+          "name": "ufp_device_nfc_card_scanned_card_id",
+          "type": "string",
+          "title": {
+            "en": "Card ID",
+            "nl": "Kaart ID"
+          },
+          "example": {
+            "en": "xxxxxx",
+            "nl": "xxxxxx"
           }
         }
       ]

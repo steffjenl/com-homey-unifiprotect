@@ -731,6 +731,17 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    getCloudUserById(id) {
+        return new Promise((resolve, reject) => {
+            this.getCloudUsers()
+                .then(users => {
+                    const user = users.find(user => user.unique_id === id);
+                    return resolve(user);
+                })
+                .catch(error => reject(error));
+        });
+    }
+
     setStatusLed(camera, enabled) {
         return new Promise((resolve, reject) => {
             const params = {
