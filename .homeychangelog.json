@@ -187,5 +187,8 @@
   },
   "1.7.3": {
     "en": "Add support for UniFi OS driver and extra flow tags for fingerprint and nfc"
+  },
+  "1.7.4": {
+    "en": "Add support for UniFi Access open events"
   }
 }
