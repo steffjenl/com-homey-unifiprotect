@@ -25,12 +25,48 @@
       "name": "ufp_door_access_person",
       "type": "string",
       "title": {
-        "en": "Person",
-        "nl": "Persoon"
+        "en": "Username",
+        "nl": "Gebruikersnaam"
       },
       "example": {
         "en": "John Doe",
         "nl": "Jan Jansen"
+      }
+    },
+    {
+      "name": "ufp_door_access_first_name",
+      "type": "string",
+      "title": {
+        "en": "First name",
+        "nl": "Voornaam"
+      },
+      "example": {
+        "en": "John",
+        "nl": "Jan"
+      }
+    },
+    {
+      "name": "ufp_door_access_last_name",
+      "type": "string",
+      "title": {
+        "en": "Last name",
+        "nl": "Achternaam"
+      },
+      "example": {
+        "en": "Doe",
+        "nl": "Jansen"
+      }
+    },
+    {
+      "name": "ufp_door_access_user_unique_id",
+      "type": "string",
+      "title": {
+        "en": "User Unique ID",
+        "nl": "Gebruiker Unieke ID"
+      },
+      "example": {
+        "en": "xxx-xxx-xxx",
+        "nl": "xxx-xxx-xxx"
       }
     }
   ]

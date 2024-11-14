@@ -292,32 +292,15 @@ class Doorbell extends Homey.Device {
         if (typeof payload !== 'undefined'
             && typeof payload.metadata !== 'undefined'
             && typeof payload.metadata.fingerprint !== 'undefined'
-            && typeof payload.metadata.fingerprint.userId !== 'undefined'
-            && payload.metadata.fingerprint.userId !== null) {
-            this.homey.app.api.getUsernameById(payload.metadata.fingerprint.userId).then((localUsername) => {
-                // Generic trigger
-                this.homey.app._fingerPrintIdentifiedTrigger.trigger({
-                    ufp_fingerprint_identified_camera: this.getName(),
-                    ufp_fingerprint_identified_person: localUsername
-                }).catch(this.error);
-
-                // Device trigger
-                this.driver._deviceFingerprintIdentifiedTrigger.trigger(this, {
-                    ufp_device_fingerprint_identified_person: localUsername,
-                }).catch(this.error);
-            }).catch(this.error);
-            return true;
-        } else if (typeof payload !== 'undefined'
-            && typeof payload.metadata !== 'undefined'
-            && typeof payload.metadata.fingerprint !== 'undefined'
             && typeof payload.metadata.fingerprint.ulpId !== 'undefined'
             && payload.metadata.fingerprint.ulpId !== null) {
             this.homey.app.api.getCloudUserById(payload.metadata.fingerprint.ulpId).then((user) => {
+                this.homey.app.debug('Fingerprint identified for user: ' + JSON.stringify(user));
                 // Generic trigger
                 this.homey.app._fingerPrintIdentifiedTrigger.trigger({
                     ufp_fingerprint_identified_camera: this.getName(),
                     ufp_fingerprint_identified_person: (user.email !== "" ? user.email : user.username),
-                    ufp_fingerprint_identified_name: user.first_name,
+                    ufp_fingerprint_identified_first_name: user.first_name,
                     ufp_fingerprint_identified_last_name: user.last_name,
                     ufp_fingerprint_identified_user_unique_id: user.unique_id,
                 }).catch(this.error);
@@ -325,7 +308,7 @@ class Doorbell extends Homey.Device {
                 // Device trigger
                 this.driver._deviceFingerprintIdentifiedTrigger.trigger(this, {
                     ufp_device_fingerprint_identified_person: (user.email !== "" ? user.email : user.username),
-                    ufp_device_fingerprint_identified_name: user.first_name,
+                    ufp_device_fingerprint_identified_first_name: user.first_name,
                     ufp_device_fingerprint_identified_last_name: user.last_name,
                     ufp_device_fingerprint_identified_user_unique_id: user.unique_id,
                 }).catch(this.error);
@@ -341,24 +324,6 @@ class Doorbell extends Homey.Device {
         this.homey.app.debug('[Object] onNFCCardScanned ' + JSON.stringify(payload));
 
         if (typeof payload !== 'undefined'
-            && typeof payload.metadata !== 'undefined'
-            && typeof payload.metadata.nfc !== 'undefined'
-            && typeof payload.metadata.nfc.userId !== 'undefined'
-            && payload.metadata.nfc.userId !== null) {
-            this.homey.app.api.getUsernameById(payload.metadata.nfc.userId).then((localUsername) => {
-                // Generic trigger
-                this.homey.app._nfcCardScannedTrigger.trigger({
-                    ufp_nfc_card_scanned_camera: this.getName(),
-                    ufp_nfc_card_scanned_person: localUsername
-                }).catch(this.error);
-
-                // Device trigger
-                this.driver._deviceNFCCardScannedTrigger.trigger(this, {
-                    ufp_device_nfc_card_scanned_person: localUsername,
-                }).catch(this.error);
-            }).catch(this.error);
-            return true;
-        } else if (typeof payload !== 'undefined'
             && typeof payload.metadata !== 'undefined'
             && typeof payload.metadata.nfc !== 'undefined'
             && typeof payload.metadata.nfc.ulpId !== 'undefined'
@@ -393,27 +358,37 @@ class Doorbell extends Homey.Device {
     onDoorAccess(payload, actionType = null, eventId = null) {
         this.homey.app.debug('[Object] onDoorAccess ' + JSON.stringify(payload));
 
-        if (typeof payload === 'undefined'
-            || typeof payload.metadata === 'undefined'
-            || typeof payload.metadata.fingerprint === 'undefined'
-            || typeof payload.metadata.fingerprint.userId === 'undefined'
-            || payload.user === null) {
-            this.homey.app.debug('DoorAccess event is not valid!');
-            return;
+        if (typeof payload !== 'undefined'
+            && typeof payload.type !== 'undefined'
+            && payload.type === 'doorAccess'
+            && typeof payload.metadata !== 'undefined'
+            && typeof payload.metadata.unique_id === 'undefined'
+            && payload.metadata.unique_id === null) {
+
+            this.homey.app.api.getCloudUserById(payload.metadata.unique_id).then((user) => {
+                // Generic trigger
+                this.homey.app._doorAccessTrigger.trigger({
+                    ufp_door_access_camera: this.getName(),
+                    ufp_door_access_person: (user.email !== "" ? user.email : user.username),
+                    ufp_door_access_first_name: user.first_name,
+                    ufp_door_access_last_name: user.last_name,
+                    ufp_door_access_user_unique_id: user.unique_id
+                }).catch(this.error);
+
+                // Device trigger
+                this.driver._deviceDoorAccessTrigger.trigger(this, {
+                    ufp_device_door_access_person: (user.email !== "" ? user.email : user.username),
+                    ufp_device_door_access_first_name: user.first_name,
+                    ufp_device_door_access_last_name: user.last_name,
+                    ufp_device_door_access_user_unique_id: user.unique_id
+                }).catch(this.error);
+            }).catch(this.error);
+
+            return true;
         }
 
-        this.homey.app.api.getUsernameById(payload.user).then((localUsername) => {
-            // Generic trigger
-            this.homey.app._doorAccessTrigger.trigger({
-                ufp_door_access__camera: this.getName(),
-                ufp_door_access__person: localUsername
-            }).catch(this.error);
-
-            // Device trigger
-            this.driver._deviceDoorAccessTrigger.trigger(this, {
-                ufp_device_door_access__person: localUsername,
-            }).catch(this.error);
-        }).catch(this.error);
+        this.homey.app.debug('DoorAccess event is not valid!');
+        return false;
     }
 
     onSmartDetection(payload, actionType = null, eventId = null) {
