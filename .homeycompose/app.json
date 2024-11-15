@@ -28,7 +28,8 @@
       "camera",
       "momentopname",
       "opname",
-      "toegang"
+      "toegang",
+      "access"
     ]
   },
   "images": {
@@ -65,7 +66,7 @@
     "url": "https://github.com/steffjenl/com-homey-unifiprotect/issues"
   },
   "source": "https://github.com/steffjenl/com-homey-unifiprotect/",
-  "support": "mailto:stephan@monkeysoft.nl",
+  "support": "https://github.com/steffjenl/com-homey-unifiprotect/issues",
   "homeyCommunityTopicId": 42966,
   "platforms": [
     "local"
