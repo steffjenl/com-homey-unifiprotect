@@ -360,14 +360,15 @@ class ProtectWebSocket extends BaseClass {
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'ring'
             ) {
-                // get doorbell driver
-                const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-                // Get device from camera id
-                const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
-                if (deviceDoorbell) {
-                    // Parse Websocket payload message
-                    driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
-                }
+                // TODO: implement ring event and remove old doorbell code
+                // // get doorbell driver
+                // const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
+                // // Get device from camera id
+                // const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
+                // if (deviceDoorbell) {
+                //     // Parse Websocket payload message
+                //     driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
+                // }
             }  else if (
                 typeof updatePacket.action.modelKey !== 'undefined'
                 && updatePacket.action.modelKey === 'nvr'
