@@ -190,5 +190,8 @@
   },
   "1.7.4": {
     "en": "Add support for UniFi Access open events"
+  },
+  "1.7.5": {
+    "en": "Fixed doorAccess event for UniFi Access"
   }
 }
