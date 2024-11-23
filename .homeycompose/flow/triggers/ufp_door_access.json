@@ -10,18 +10,6 @@
   },
   "tokens": [
     {
-      "name": "ufp_door_access_camera",
-      "type": "string",
-      "title": {
-        "en": "Camera",
-        "nl": "Camera"
-      },
-      "example": {
-        "en": "Doorbell",
-        "nl": "Deurbel"
-      }
-    },
-    {
       "name": "ufp_door_access_person",
       "type": "string",
       "title": {
@@ -67,6 +55,30 @@
       "example": {
         "en": "xxx-xxx-xxx",
         "nl": "xxx-xxx-xxx"
+      }
+    },
+    {
+      "name": "ufp_door_access_direction",
+      "type": "string",
+      "title": {
+        "en": "Direction",
+        "nl": "Richting"
+      },
+      "example": {
+        "en": "entry",
+        "nl": "entry"
+      }
+    },
+    {
+      "name": "ufp_door_access_door_name",
+      "type": "string",
+      "title": {
+        "en": "Door name",
+        "nl": "Deur naam"
+      },
+      "example": {
+        "en": "Front door",
+        "nl": "Voordeur"
       }
     }
   ]

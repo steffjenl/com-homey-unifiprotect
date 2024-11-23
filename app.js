@@ -364,6 +364,45 @@ class UniFiProtect extends Homey.App {
         return Math.floor(Date.now());
     }
 
+    onDoorAccess(payload) {
+        this.homey.app.debug('[APP] onDoorAccess ' + JSON.stringify(payload));
+
+        if (typeof payload !== 'undefined'
+            && typeof payload.type !== 'undefined'
+            && payload.type === 'doorAccess'
+            && typeof payload.metadata !== 'undefined'
+            && typeof payload.metadata.unique_id !== 'undefined'
+            && payload.metadata.unique_id !== null) {
+
+            this.homey.app.api.getCloudUserById(payload.metadata.unique_id).then((user) => {
+                // Generic trigger
+                this.homey.app._doorAccessTrigger.trigger({
+                    ufp_door_access_person: (user.email !== "" ? user.email : user.username),
+                    ufp_door_access_first_name: user.first_name,
+                    ufp_door_access_last_name: user.last_name,
+                    ufp_door_access_user_unique_id: user.unique_id,
+                    ufp_door_access_direction: payload.metadata.direction,
+                    ufp_door_access_door_name: payload.metadata.door_name,
+                }).catch(this.error);
+            }).catch(this.error);
+
+            return true;
+        }
+
+        this.homey.app.debug('DoorAccess event is not valid!');
+        return false;
+    }
+
+    onParseWebsocketMessage(camera, payload) {
+        if (payload.hasOwnProperty('type')) {
+
+            if (payload.type === 'doorAccess') {
+                this.onDoorAccess(payload);
+            }
+
+        }
+    }
+
     debug() {
         if (Homey.env.DEBUG === 'true') {
         const args = Array.prototype.slice.call(arguments);

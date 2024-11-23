@@ -346,14 +346,8 @@ class ProtectWebSocket extends BaseClass {
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'doorAccess'
             ) {
-                // get doorbell driver
-                const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-                // Get device from camera id
-                const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
-                if (deviceDoorbell) {
-                    // Parse Websocket payload message
-                    driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
-                }
+                // application event
+                this.homey.app.onParseWebsocketMessage(deviceDoorbell, payload);
             }  else if (
                 updatePacket.action.modelKey === 'event'
                 && typeof updatePacket.action.recordId !== 'undefined'
