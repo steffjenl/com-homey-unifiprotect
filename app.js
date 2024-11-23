@@ -393,7 +393,7 @@ class UniFiProtect extends Homey.App {
         return false;
     }
 
-    onParseWebsocketMessage(camera, payload) {
+    onParseWebsocketMessage(payload) {
         if (payload.hasOwnProperty('type')) {
 
             if (payload.type === 'doorAccess') {

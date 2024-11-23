@@ -347,7 +347,7 @@ class ProtectWebSocket extends BaseClass {
                 && updatePacket.payload.type === 'doorAccess'
             ) {
                 // application event
-                this.homey.app.onParseWebsocketMessage(deviceDoorbell, payload);
+                this.homey.app.onParseWebsocketMessage(payload);
             }  else if (
                 updatePacket.action.modelKey === 'event'
                 && typeof updatePacket.action.recordId !== 'undefined'
