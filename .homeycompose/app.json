@@ -65,8 +65,7 @@
   "bugs": {
     "url": "https://github.com/steffjenl/com-homey-unifiprotect/issues"
   },
-  "source": "https://github.com/steffjenl/com-homey-unifiprotect/",
-  "support": "https://github.com/steffjenl/com-homey-unifiprotect/issues",
+  "support": "https://community.homey.app/t/app-pro-ubiquiti-unifi-protect/42966",
   "homeyCommunityTopicId": 42966,
   "platforms": [
     "local"
