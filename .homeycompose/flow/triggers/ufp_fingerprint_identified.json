@@ -1,8 +1,8 @@
 {
   "id": "ufp_fingerprint_identified",
   "title": {
-    "en": "A fingerprint identified event",
-    "nl": "Een vingerafdruk geïdentificeerd event"
+    "en": "A fingerprint was identified",
+    "nl": "Een vingerafdruk is geïdentificeerd"
   },
   "tokens": [
     {

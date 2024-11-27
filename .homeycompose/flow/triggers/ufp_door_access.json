@@ -1,8 +1,8 @@
 {
   "id": "ufp_door_access",
   "title": {
-    "en": "A door access event (UniFi Access)",
-    "nl": "Een deurtoegang event (UniFi Access)"
+    "en": "A door acces event is detected",
+    "nl": "Een deur toegangsevenement is gedetecteerd"
   },
   "hint": {
     "en": "Triggered when a door is openend by UniFi Access",

@@ -24,8 +24,8 @@
     {
       "id": "ufp_device_fingerprint_identified",
       "title": {
-        "en": "A fingerprint identified event",
-        "nl": "Een vingerafdruk geïdentificeerd event"
+        "en": "A fingerprint was identified",
+        "nl": "Een vingerafdruk is geïdentificeerd"
       },
       "tokens": [
         {
@@ -79,10 +79,11 @@
       ]
     },
     {
+      "deprecated": true,
       "id": "ufp_device_door_access",
       "title": {
-        "en": "A door access event",
-        "nl": "Een deurtoegang event"
+        "en": "A door acces event is detected",
+        "nl": "Een deur toegang event is gedetecteerd"
       },
       "tokens": [
         {
@@ -138,8 +139,8 @@
     {
       "id": "ufp_device_nfc_card_scanned",
       "title": {
-        "en": "A NFC card scanned event",
-        "nl": "Een NFC kaart gescand event"
+        "en": "A NFC card was scanned",
+        "nl": "Een NFC kaart is gescand"
       },
       "tokens": [
         {

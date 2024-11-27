@@ -1,8 +1,8 @@
 {
   "id": "ufp_nfc_card_scanned",
   "title": {
-    "en": "A NFC card scanned event",
-    "nl": "Een NFC kaart gescand event"
+    "en": "A NFC card was scanned",
+    "nl": "Een NFC kaart is gescand"
   },
   "tokens": [
     {
