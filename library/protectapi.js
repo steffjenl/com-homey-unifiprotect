@@ -206,19 +206,23 @@ class ProtectAPI extends BaseClass {
 
     getBootstrapInfo() {
         return new Promise((resolve, reject) => {
+            console.log('Getting bootstrap info...');
             this.webclient.get('bootstrap')
                 .then(response => {
                     const result = JSON.parse(response);
+                    console.log('Bootstrap info obtained.');
 
                     if (result) {
+                        console.log('Setting bootstrap info...');
                         this._bootstrap = result;
 
-                        if (result.accessKey) {
-                            this.webclient.setApiKey(result.accessKey);
+                        if (result.cameras) {
+                            console.log('Setting API key...');
                             this._rtspPort = result.nvr.ports.rtsp;
                             this._lastUpdateId = result.lastUpdateId;
 
                             if (this.ws.isWebsocketConnected() === false) {
+                                console.log('Connecting to websocket...');
                                 // lastUpdateId is changed, please reconnect to websocket when websocket is disconnected.
                                 this.ws.reconnectUpdatesListener();
                             }

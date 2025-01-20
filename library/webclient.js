@@ -71,7 +71,8 @@ class ProtectWebClient extends BaseClass {
             if (!this._cookieToken) reject(new Error('Not logged in.'));
 
             // eslint-disable-next-line no-param-reassign
-            params.accessKey = this._apiKey;
+            const params = {
+            };
 
             const options = {
                 method: 'GET',
@@ -133,7 +134,6 @@ class ProtectWebClient extends BaseClass {
             const body = JSON.stringify(payload);
 
             const params = {
-                apiKey: this._apiKey,
             };
 
             const options = {
