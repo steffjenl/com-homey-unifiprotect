@@ -193,5 +193,8 @@
   },
   "1.7.5": {
     "en": "Fixed doorAccess event for UniFi Access"
+  },
+  "1.7.6": {
+    "en": "Fixed Websocket problem because an change in latest Protect version."
   }
 }
