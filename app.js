@@ -371,10 +371,10 @@ class UniFiProtect extends Homey.App {
             && typeof payload.type !== 'undefined'
             && payload.type === 'doorAccess'
             && typeof payload.metadata !== 'undefined'
-            && typeof payload.metadata.unique_id !== 'undefined'
-            && payload.metadata.unique_id !== null) {
+            && typeof payload.metadata.uniqueId !== 'undefined'
+            && payload.metadata.uniqueId !== null) {
 
-            this.homey.app.api.getCloudUserById(payload.metadata.unique_id).then((user) => {
+            this.homey.app.api.getCloudUserById(payload.metadata.uniqueId).then((user) => {
                 // Generic trigger
                 this.homey.app._doorAccessTrigger.trigger({
                     ufp_door_access_person: (user.email !== "" ? user.email : user.username),
@@ -382,7 +382,7 @@ class UniFiProtect extends Homey.App {
                     ufp_door_access_last_name: user.last_name,
                     ufp_door_access_user_unique_id: user.unique_id,
                     ufp_door_access_direction: payload.metadata.direction,
-                    ufp_door_access_door_name: payload.metadata.door_name,
+                    ufp_door_access_door_name: payload.metadata.doorName,
                 }).catch(this.error);
             }).catch(this.error);
 
