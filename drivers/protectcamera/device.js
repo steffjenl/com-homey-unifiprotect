@@ -280,6 +280,7 @@ class Camera extends Homey.Device {
         let score = null;
         let smartDetectTypes = null;
         let event = null;
+        let zones = "";
 
         if (actionType === 'add') {
             event = this.setSmartDetectionEvent(eventId, payload.start, payload.smartDetectTypes, payload.score);
@@ -296,6 +297,13 @@ class Camera extends Homey.Device {
             lastDetectionAt = event.detectionTime;
             score = event.detectionScore;
             smartDetectTypes = event.detectionTypes;
+
+            if (payload?.metadata?.zonesStatus && typeof payload.metadata.zonesStatus === 'object') {
+                zones = Object.entries(payload.metadata.zonesStatus)
+                    .filter(([_, zone]) => zone.status !== "none")
+                    .map(([key, _]) => key)
+                    .join(", ");
+            }
         } else {
             this.homey.app.debug('[404] Event not found [' + eventId + '] ' + JSON.stringify(payload));
             return;
@@ -320,17 +328,17 @@ class Camera extends Homey.Device {
                 this.homey.app.debug(`smart detection event on Doorbell ${this.getData().id}, with type ${smartDetectionType}`);
                 // fire trigger
                 if (smartDetectionType === 'person') {
-                    this.triggerSmartDetectionTriggerPerson(score);
+                    this.triggerSmartDetectionTriggerPerson(score, zones);
                 } else if (smartDetectionType === 'vehicle') {
-                    this.triggerSmartDetectionTriggerVehicle(score);
+                    this.triggerSmartDetectionTriggerVehicle(score, zones);
                 } else if (smartDetectionType === 'animal') {
-                    this.triggerSmartDetectionTriggerAnimal(score);
+                    this.triggerSmartDetectionTriggerAnimal(score, zones);
                 } else if (smartDetectionType === 'package') {
-                    this.triggerSmartDetectionTriggerPackage(score);
+                    this.triggerSmartDetectionTriggerPackage(score, zones);
                 }
             }
         } else {
-            this.triggerSmartDetectionTriggerUnknown(score);
+            this.triggerSmartDetectionTriggerUnknown(score, zones);
         }
     }
 
@@ -438,121 +446,139 @@ class Camera extends Homey.Device {
         this.homey.app.debug('Created snapshot image for camera ' + this.getName() + '.');
     }
 
-    triggerSmartDetectionTriggerUnknown(score) {
+    triggerSmartDetectionTriggerUnknown(score, zones) {
         // Generic trigger
         this.homey.app._smartDetectionTrigger.trigger({
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'unknown',
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
         // device
         this.driver._deviceSmartDetectionTrigger.trigger(this,{
             smart_detection_type: 'unknown',
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
     }
 
-    triggerSmartDetectionTriggerPerson(score) {
+    triggerSmartDetectionTriggerPerson(score, zones) {
         // Generic trigger
         this.homey.app._smartDetectionTrigger.trigger({
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'person',
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
         // device
         this.driver._deviceSmartDetectionTrigger.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'person',
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
         // Detection Type trigger
         // App trigger
         this.homey.app._smartDetectionTriggerPerson.trigger({
             ufp_smart_detection_camera: this.getName(),
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
         // Device trigger
         this.driver._deviceSmartDetectionTriggerPerson.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
     }
 
-    triggerSmartDetectionTriggerVehicle(score) {
+    triggerSmartDetectionTriggerVehicle(score, zones) {
         // Generic trigger
         this.homey.app._smartDetectionTrigger.trigger({
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'vehicle',
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
         // device
         this.driver._deviceSmartDetectionTrigger.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'vehicle',
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
         // Detection Type trigger
         // App trigger
         this.homey.app._smartDetectionTriggerVehicle.trigger({
             ufp_smart_detection_camera: this.getName(),
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
         // Device trigger
         this.driver._deviceSmartDetectionTriggerAnimal.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
     }
 
-    triggerSmartDetectionTriggerAnimal(score) {
+    triggerSmartDetectionTriggerAnimal(score, zones) {
         // Generic trigger
         this.homey.app._smartDetectionTrigger.trigger({
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'animal',
-            score: score
+            score: score,
+            zones: zones
         });
         // device
         this.driver._deviceSmartDetectionTrigger.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'animal',
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
         // Detection Type trigger
         // App trigger
         this.homey.app._smartDetectionTriggerAnimal.trigger({
             ufp_smart_detection_camera: this.getName(),
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
         // Device trigger
         this.driver._deviceSmartDetectionTriggerAnimal.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
     }
 
-    triggerSmartDetectionTriggerPackage(score) {
+    triggerSmartDetectionTriggerPackage(score, zones) {
         // Generic trigger
         this.homey.app._smartDetectionTrigger.trigger({
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'package',
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
         // device
         this.driver._deviceSmartDetectionTrigger.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
             smart_detection_type: 'package',
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
         // Detection Type trigger
         // App trigger
         this.homey.app._smartDetectionTriggerPackage.trigger({
             ufp_smart_detection_camera: this.getName(),
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
         // Device trigger
         this.driver._deviceSmartDetectionTriggerPackage.trigger(this,{
             ufp_smart_detection_camera: this.getName(),
-            score: score
+            score: score,
+            zones: zones
         }).catch(this.error);
     }
     getSmartDetectionEvent(event_id) {
