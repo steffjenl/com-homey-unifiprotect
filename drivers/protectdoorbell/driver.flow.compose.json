@@ -235,6 +235,18 @@
             "en": "62",
             "nl": "62"
           }
+        },
+        {
+          "name": "zones",
+          "type": "string",
+          "title": {
+            "en": "Zones",
+            "nl": "Zones"
+          },
+          "example": {
+            "en": "1, 2",
+            "nl": "1, 2"
+          }
         }
       ]
     },
@@ -255,6 +267,18 @@
           "example": {
             "en": "62",
             "nl": "62"
+          }
+        },
+        {
+          "name": "zones",
+          "type": "string",
+          "title": {
+            "en": "Zones",
+            "nl": "Zones"
+          },
+          "example": {
+            "en": "1, 2",
+            "nl": "1, 2"
           }
         }
       ]
@@ -277,6 +301,18 @@
             "en": "62",
             "nl": "62"
           }
+        },
+        {
+          "name": "zones",
+          "type": "string",
+          "title": {
+            "en": "Zones",
+            "nl": "Zones"
+          },
+          "example": {
+            "en": "1, 2",
+            "nl": "1, 2"
+          }
         }
       ]
     },
@@ -298,6 +334,18 @@
             "en": "62",
             "nl": "62"
           }
+        },
+        {
+          "name": "zones",
+          "type": "string",
+          "title": {
+            "en": "Zones",
+            "nl": "Zones"
+          },
+          "example": {
+            "en": "1, 2",
+            "nl": "1, 2"
+          }
         }
       ]
     },
@@ -318,6 +366,18 @@
           "example": {
             "en": "62",
             "nl": "62"
+          }
+        },
+        {
+          "name": "zones",
+          "type": "string",
+          "title": {
+            "en": "Zones",
+            "nl": "Zones"
+          },
+          "example": {
+            "en": "1, 2",
+            "nl": "1, 2"
           }
         }
       ]
