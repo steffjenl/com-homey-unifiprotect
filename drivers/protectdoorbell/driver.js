@@ -15,6 +15,13 @@ class UniFiDoorbellDriver extends Homey.Driver {
     this._deviceSmartDetectionTriggerVehicle = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_VEHICLE);
     this._deviceSmartDetectionTriggerAnimal = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_ANIMAL);
     this._deviceSmartDetectionTriggerPackage = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_PACKAGE);
+    this._deviceSmartDetectionTriggerLicensePlate = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_LICENSEPLATE);
+    this._deviceSmartDetectionTriggerFace = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_FACE);
+    this._deviceAudioDetectionTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_AUDIO_DETECTION);
+    this._deviceAudioDetectionTrigger.registerRunListener(async (args, state) => {
+        // Check if "any" is selected or if the detected audio type matches the selected type
+        return args.audio_type === 'any' || args.audio_type === state.audio_detection_type;
+    });
     this._deviceFingerprintIdentifiedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_FINGERPRINT_IDENTIFIED);
     this._deviceDoorAccessTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOOR_ACCESS);
     this._deviceNFCCardScannedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_NFC_CARD_SCANNED);

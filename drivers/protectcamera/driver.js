@@ -17,6 +17,13 @@ class UniFiCameraDriver extends Homey.Driver {
     this._deviceSmartDetectionTriggerVehicle = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION_VEHICLE);
     this._deviceSmartDetectionTriggerAnimal = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION_ANIMAL);
     this._deviceSmartDetectionTriggerPackage = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION_PACKAGE);
+    this._deviceSmartDetectionTriggerLicensePlate = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION_LICENSEPLATE);
+    this._deviceSmartDetectionTriggerFace = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION_FACE);
+    this._deviceAudioDetectionTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_AUDIO_DETECTION);
+    this._deviceAudioDetectionTrigger.registerRunListener(async (args, state) => {
+        // Check if "any" is selected or if the detected audio type matches the selected type
+        return args.audio_type === 'any' || args.audio_type === state.audio_detection_type;
+    });
 
     //
     this.homey.app.debug('UnifiCamera Driver has been initialized');

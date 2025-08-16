@@ -186,6 +186,9 @@ class ProtectWebSocket extends BaseClass {
         } else if (updatePacket.action.action === 'add' && updatePacket.payload.type === 'smartDetectZone') {
             // Smart detections
             return true;
+        } else if (updatePacket.action.action === 'add' && updatePacket.payload.type === 'smartAudioDetect') {
+            // Smart audio detections
+            return true;
         } else if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'light') {
             // Updates lastMotion or the lastRing
             return true;
@@ -348,6 +351,31 @@ class ProtectWebSocket extends BaseClass {
             ) {
                 // application event
                 this.homey.app.onParseWebsocketMessage(payload);
+            }  else if (
+                updatePacket.action.modelKey === 'event'
+                && typeof updatePacket.action.recordId !== 'undefined'
+                && typeof updatePacket.payload.type !== 'undefined'
+                && updatePacket.payload.type === 'smartAudioDetect'
+            ) {
+                // Audio detection event - smartDetectTypes may be empty initially
+                this.homey.app.debug('smartAudioDetect event: ' + JSON.stringify(updatePacket.payload));
+                
+                // get protectcamera driver
+                const driverCamera = this.homey.drivers.getDriver('protectcamera');
+                // Get device from camera id
+                const deviceCamera = driverCamera.getUnifiDeviceById(updatePacket.action.recordId);
+                if (deviceCamera) {
+                    // Parse Websocket payload message for audio detection
+                    deviceCamera.onAudioDetection(updatePacket.payload, updatePacket.action.action, updatePacket.action.id);
+                }
+                // get doorbell driver
+                const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
+                // Get device from camera id
+                const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
+                if (deviceDoorbell) {
+                    // Parse Websocket payload message for audio detection
+                    deviceDoorbell.onAudioDetection(updatePacket.payload, updatePacket.action.action, updatePacket.action.id);
+                }
             }  else if (
                 updatePacket.action.modelKey === 'event'
                 && typeof updatePacket.action.recordId !== 'undefined'

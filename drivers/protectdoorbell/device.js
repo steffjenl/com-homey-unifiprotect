@@ -452,11 +452,70 @@ class Doorbell extends Homey.Device {
                     this.triggerSmartDetectionTriggerAnimal(score, zones);
                 } else if (smartDetectionType === 'package') {
                     this.triggerSmartDetectionTriggerPackage(score, zones);
+                } else if (smartDetectionType === 'licensePlate') {
+                    this.triggerSmartDetectionTriggerLicensePlate(score, zones);
+                } else if (smartDetectionType === 'face') {
+                    this.triggerSmartDetectionTriggerFace(score, zones);
                 }
             }
         } else {
             this.triggerSmartDetectionTriggerUnknown(score, zones);
         }
+    }
+
+    onAudioDetection(payload, actionType = null, eventId = null) {
+        let score = null;
+        let audioDetectTypes = null;
+        let event = null;
+
+        if (actionType === 'add') {
+            event = this.setSmartDetectionEvent(eventId, payload.start, payload.smartDetectTypes, payload.score);
+        } else if (actionType === 'update') {
+            event = this.getSmartDetectionEvent(eventId);
+            if (event !== null) {
+                event.detectionTypes = payload.smartDetectTypes;
+            }
+        }
+
+        this.homey.app.debug('[Audio Doorbell] onAudioDetection ' + JSON.stringify(event));
+
+        if (event !== null) {
+            score = event.detectionScore;
+            audioDetectTypes = event.detectionTypes;
+        }
+
+        // Fire triggers for audio detection
+        if (audioDetectTypes && audioDetectTypes.length > 0) {
+            // Fire triggers for each specific audio type detected
+            for (let audioDetectionType of audioDetectTypes) {
+                this.homey.app.debug(`audio detection event on Doorbell ${this.getData().id}, with type ${audioDetectionType}`);
+                
+                // Map the internal API names to readable names
+                let readableType = this.mapAudioDetectionType(audioDetectionType);
+                
+                // Fire audio detection trigger with the mapped type
+                this.triggerAudioDetectionTrigger(audioDetectionType, readableType, score);
+            }
+        } else {
+            // No specific types detected (or empty array), but still fire "any" trigger
+            this.homey.app.debug(`audio detection event on Doorbell ${this.getData().id}, with unspecified type (any)`);
+            this.triggerAudioDetectionTrigger('any', 'any', score || 0);
+        }
+    }
+
+    mapAudioDetectionType(apiType) {
+        const typeMap = {
+            'alrmSmoke': 'smoke',
+            'alrmCmonx': 'cmonx',
+            'alrmSiren': 'siren',
+            'alrmBabyCry': 'baby_cry',
+            'alrmSpeak': 'speak',
+            'alrmBark': 'bark',
+            'alrmBurglar': 'burglar',
+            'alrmCarHorn': 'car_horn',
+            'alrmGlassBreak': 'glass_break'
+        };
+        return typeMap[apiType] || apiType;
     }
 
     onConnectionChanged(connectionStatus) {
@@ -759,6 +818,86 @@ class Doorbell extends Homey.Device {
             zones: zones
         }).catch(this.error);
     }
+
+    triggerSmartDetectionTriggerLicensePlate(score, zones) {
+        // Generic trigger
+        this.homey.app._smartDetectionTrigger.trigger({
+            ufp_smart_detection_camera: this.getName(),
+            smart_detection_type: 'licensePlate',
+            score: score,
+            zones: zones
+        }).catch(this.error);
+        // Dedicated trigger
+        this.homey.app._smartDetectionTriggerLicensePlate.trigger({
+            ufp_smart_detection_camera: this.getName(),
+            score: score,
+            zones: zones
+        }).catch(this.error);
+        // Device trigger
+        this.driver._deviceSmartDetectionTrigger.trigger(this, {
+            smart_detection_type: 'licensePlate',
+            score: score,
+            zones: zones
+        }).catch(this.error);
+        // Device trigger
+        this.driver._deviceSmartDetectionTriggerLicensePlate.trigger(this, {
+            score: score,
+            zones: zones
+        }).catch(this.error);
+    }
+
+    triggerSmartDetectionTriggerFace(score, zones) {
+        // Generic trigger
+        this.homey.app._smartDetectionTrigger.trigger({
+            ufp_smart_detection_camera: this.getName(),
+            smart_detection_type: 'face',
+            score: score,
+            zones: zones
+        }).catch(this.error);
+        // Dedicated trigger
+        this.homey.app._smartDetectionTriggerFace.trigger({
+            ufp_smart_detection_camera: this.getName(),
+            score: score,
+            zones: zones
+        }).catch(this.error);
+        // Device trigger
+        this.driver._deviceSmartDetectionTrigger.trigger(this, {
+            smart_detection_type: 'face',
+            score: score,
+            zones: zones
+        }).catch(this.error);
+        // Device trigger
+        this.driver._deviceSmartDetectionTriggerFace.trigger(this, {
+            score: score,
+            zones: zones
+        }).catch(this.error);
+    }
+
+    triggerAudioDetectionTrigger(audioType, readableType, score) {
+        // Map internal audio type to dropdown value
+        const audioTypeMap = {
+            'alrmSmoke': 'smoke',
+            'alrmCmonx': 'cmonx',
+            'alrmSiren': 'siren',
+            'alrmBabyCry': 'baby_cry',
+            'alrmSpeak': 'speak',
+            'alrmBark': 'bark',
+            'alrmBurglar': 'burglar',
+            'alrmCarHorn': 'car_horn',
+            'alrmGlassBreak': 'glass_break'
+        };
+        
+        const mappedType = audioTypeMap[audioType] || audioType;
+        
+        // Device-specific audio detection trigger with state for dropdown filter
+        this.driver._deviceAudioDetectionTrigger.trigger(this, {
+            audio_detection_type: mappedType,
+            score: score
+        }, {
+            audio_detection_type: mappedType
+        }).catch(this.error);
+    }
+
 
     getSmartDetectionEvent(event_id) {
         return this.getStoreValue(event_id);
