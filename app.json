@@ -455,6 +455,72 @@
         ]
       },
       {
+        "id": "ufp_smart_detection_face",
+        "title": {
+          "en": "A face was detected",
+          "nl": "Een gezicht werd gedetecteerd"
+        },
+        "tokens": [
+          {
+            "name": "ufp_smart_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_smart_detection_licenseplate",
+        "title": {
+          "en": "A license plate was detected",
+          "nl": "Een kenteken werd gedetecteerd"
+        },
+        "tokens": [
+          {
+            "name": "ufp_smart_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          }
+        ]
+      },
+      {
         "id": "ufp_smart_detection_package",
         "title": {
           "en": "A package was detected",
@@ -857,6 +923,210 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectcamera"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_camera_smart_detection_licenseplate",
+        "title": {
+          "en": "A license plate was detected",
+          "nl": "Een kenteken werd gedetecteerd"
+        },
+        "tokens": [
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          },
+          {
+            "name": "zones",
+            "type": "string",
+            "title": {
+              "en": "Zones",
+              "nl": "Zones"
+            },
+            "example": {
+              "en": "1, 2",
+              "nl": "1, 2"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectcamera"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_camera_smart_detection_face",
+        "title": {
+          "en": "A face was detected",
+          "nl": "Een gezicht werd gedetecteerd"
+        },
+        "tokens": [
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          },
+          {
+            "name": "zones",
+            "type": "string",
+            "title": {
+              "en": "Zones",
+              "nl": "Zones"
+            },
+            "example": {
+              "en": "1, 2",
+              "nl": "1, 2"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectcamera"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_camera_audio_detection",
+        "title": {
+          "en": "An audio event was detected",
+          "nl": "Er is een audio gebeurtenis gedetecteerd"
+        },
+        "titleFormatted": {
+          "en": "[[audio_type]] was detected",
+          "nl": "[[audio_type]] werd gedetecteerd"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectcamera"
+          },
+          {
+            "type": "dropdown",
+            "name": "audio_type",
+            "title": {
+              "en": "Audio type",
+              "nl": "Audio type"
+            },
+            "values": [
+              {
+                "id": "any",
+                "title": {
+                  "en": "Any audio event",
+                  "nl": "Elk audio gebeurtenis"
+                }
+              },
+              {
+                "id": "smoke",
+                "title": {
+                  "en": "Smoke alarm",
+                  "nl": "Rookmelder"
+                }
+              },
+              {
+                "id": "cmonx",
+                "title": {
+                  "en": "CO alarm",
+                  "nl": "CO melder"
+                }
+              },
+              {
+                "id": "siren",
+                "title": {
+                  "en": "Siren",
+                  "nl": "Sirene"
+                }
+              },
+              {
+                "id": "baby_cry",
+                "title": {
+                  "en": "Baby crying",
+                  "nl": "Baby huilen"
+                }
+              },
+              {
+                "id": "speak",
+                "title": {
+                  "en": "Speaking",
+                  "nl": "Praten"
+                }
+              },
+              {
+                "id": "bark",
+                "title": {
+                  "en": "Dog barking",
+                  "nl": "Hond blaffen"
+                }
+              },
+              {
+                "id": "burglar",
+                "title": {
+                  "en": "Burglar alarm",
+                  "nl": "Inbraakalarm"
+                }
+              },
+              {
+                "id": "car_horn",
+                "title": {
+                  "en": "Car horn",
+                  "nl": "Autoclaxon"
+                }
+              },
+              {
+                "id": "glass_break",
+                "title": {
+                  "en": "Glass breaking",
+                  "nl": "Glasbreuk"
+                }
+              }
+            ]
+          }
+        ],
+        "tokens": [
+          {
+            "name": "audio_detection_type",
+            "type": "string",
+            "title": {
+              "en": "Audio detection type",
+              "nl": "Audio detectie type"
+            },
+            "example": {
+              "en": "smoke",
+              "nl": "rook"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "85",
+              "nl": "85"
+            }
           }
         ]
       },
@@ -1302,6 +1572,210 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_doorbell_smart_detection_licenseplate",
+        "title": {
+          "en": "A license plate was detected",
+          "nl": "Een kenteken werd gedetecteerd"
+        },
+        "tokens": [
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          },
+          {
+            "name": "zones",
+            "type": "string",
+            "title": {
+              "en": "Zones",
+              "nl": "Zones"
+            },
+            "example": {
+              "en": "1, 2",
+              "nl": "1, 2"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_doorbell_smart_detection_face",
+        "title": {
+          "en": "A face was detected",
+          "nl": "Een gezicht werd gedetecteerd"
+        },
+        "tokens": [
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "62",
+              "nl": "62"
+            }
+          },
+          {
+            "name": "zones",
+            "type": "string",
+            "title": {
+              "en": "Zones",
+              "nl": "Zones"
+            },
+            "example": {
+              "en": "1, 2",
+              "nl": "1, 2"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_doorbell_audio_detection",
+        "title": {
+          "en": "An audio event was detected",
+          "nl": "Er is een audio gebeurtenis gedetecteerd"
+        },
+        "titleFormatted": {
+          "en": "[[audio_type]] was detected",
+          "nl": "[[audio_type]] werd gedetecteerd"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "type": "dropdown",
+            "name": "audio_type",
+            "title": {
+              "en": "Audio type",
+              "nl": "Audio type"
+            },
+            "values": [
+              {
+                "id": "any",
+                "title": {
+                  "en": "Any audio event",
+                  "nl": "Elk audio gebeurtenis"
+                }
+              },
+              {
+                "id": "smoke",
+                "title": {
+                  "en": "Smoke alarm",
+                  "nl": "Rookmelder"
+                }
+              },
+              {
+                "id": "cmonx",
+                "title": {
+                  "en": "CO alarm",
+                  "nl": "CO melder"
+                }
+              },
+              {
+                "id": "siren",
+                "title": {
+                  "en": "Siren",
+                  "nl": "Sirene"
+                }
+              },
+              {
+                "id": "baby_cry",
+                "title": {
+                  "en": "Baby crying",
+                  "nl": "Baby huilen"
+                }
+              },
+              {
+                "id": "speak",
+                "title": {
+                  "en": "Speaking",
+                  "nl": "Praten"
+                }
+              },
+              {
+                "id": "bark",
+                "title": {
+                  "en": "Dog barking",
+                  "nl": "Hond blaffen"
+                }
+              },
+              {
+                "id": "burglar",
+                "title": {
+                  "en": "Burglar alarm",
+                  "nl": "Inbraakalarm"
+                }
+              },
+              {
+                "id": "car_horn",
+                "title": {
+                  "en": "Car horn",
+                  "nl": "Autoclaxon"
+                }
+              },
+              {
+                "id": "glass_break",
+                "title": {
+                  "en": "Glass breaking",
+                  "nl": "Glasbreuk"
+                }
+              }
+            ]
+          }
+        ],
+        "tokens": [
+          {
+            "name": "audio_detection_type",
+            "type": "string",
+            "title": {
+              "en": "Audio detection type",
+              "nl": "Audio detectie type"
+            },
+            "example": {
+              "en": "smoke",
+              "nl": "rook"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "85",
+              "nl": "85"
+            }
           }
         ]
       }

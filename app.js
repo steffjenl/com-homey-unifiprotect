@@ -39,6 +39,8 @@ class UniFiProtect extends Homey.App {
         this._smartDetectionTriggerVehicle = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_VEHICLE);
         this._smartDetectionTriggerAnimal = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_ANIMAL);
         this._smartDetectionTriggerPackage = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_PACKAGE);
+        this._smartDetectionTriggerLicensePlate = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_LICENSEPLATE);
+        this._smartDetectionTriggerFace = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_FACE);
         this._fingerPrintIdentifiedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_FINGERPRINT_IDENTIFIED);
         this._doorAccessTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOOR_ACCESS);
         this._nfcCardScannedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_NFC_CARD_SCANNED);
