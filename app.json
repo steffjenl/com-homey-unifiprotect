@@ -42,7 +42,7 @@
     "security",
     "video"
   ],
-  "version": "1.7.6",
+  "version": "1.7.7",
   "compatibility": ">=12.2.0",
   "author": {
     "name": "Stèphan Eizinga",
@@ -66,7 +66,7 @@
   "bugs": {
     "url": "https://github.com/steffjenl/com-homey-unifiprotect/issues"
   },
-  "support": "https://community.homey.app/t/app-pro-ubiquiti-unifi-protect/42966",
+  "support": "https://monkeysoft.nl/homey-integrations-support/",
   "homeyCommunityTopicId": 42966,
   "platforms": [
     "local"
