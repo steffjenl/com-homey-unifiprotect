@@ -637,6 +637,27 @@
           }
         }
       ]
+    },
+    {
+      "id": "ufv_set_device_doorbell_blackout",
+      "title": {
+        "en": "Set doorbell view to black",
+        "nl": "Zet deurbel beeld op zwart"
+      },
+      "titleFormatted": {
+        "en": "Set camera view to black [[enabled]]",
+        "nl": "Zet deurbel beeld op zwart [[enabled]]"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "enabled",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld"
+          }
+        }
+      ]
     }
 
   ]

@@ -458,6 +458,65 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    setCameraBlackout(camera, enabled) {
+        /*
+        {"privacyZones":[{"id":1,"name":"New Zone","color":"#5a6cea","points":[[0.002336448598130841,0.004155124653739612],[0.49221184989002265,0],[0.48831772135796947,0.03670364337614699],[0,0.22506933661378983]],"update":false,"uniqueId":"privacyZones-1"},{"id":2,"name":"New Privacy Blackout 001","color":"#586CED","points":[[0,0],[1,0],[1,1],[0,1]],"isTriggerLightEnabled":false,"direction":null,"uniqueId":"privacyZones-2","mergeId":null,"objectTypes":[],"sensitivity":null,"loiterTriggers":[],"quality":null,"isTargetCounting":null,"plan":null,"originalType":null,"zoneIds":null}]}
+         */
+        return new Promise((resolve, reject) => {
+            this.findCameraById(camera.id)
+                .then(cameraInfo => {
+                    this.homey.app.debug('Current privacy zones: ' + JSON.stringify(cameraInfo.privacyZones));
+                    const privacyZones = cameraInfo.privacyZones;
+                    if (enabled) {
+                        // Add blackout zone
+                        if (privacyZones.filter(zone => zone.name === 'Homey Blackout Zone').length === 0) {
+                            const newZone = {
+                                id: privacyZones.length + 1,
+                                name: 'Homey Blackout Zone',
+                                color: '#586CED',
+                                points: [
+                                    [0, 0],
+                                    [1, 0],
+                                    [1, 1],
+                                    [0, 1]
+                                ],
+                                isTriggerLightEnabled: false,
+                                direction: null,
+                                uniqueId: `privacyZones-${privacyZones.length + 1}`,
+                                mergeId: null,
+                                objectTypes: [],
+                                sensitivity: null,
+                                loiterTriggers: [],
+                                quality: null,
+                                isTargetCounting: null,
+                                plan: null,
+                                originalType: null,
+                                zoneIds: null
+                            };
+                            privacyZones.push(newZone);
+                        }
+                    } else {
+                        // Remove blackout zone
+                        const index = privacyZones.findIndex(zone => zone.name === 'Homey Blackout Zone');
+                        if (index !== -1) {
+                            privacyZones.splice(index, 1);
+                        }
+                    }
+
+                    const params = {
+                        privacyZones
+                    };
+
+                    this.homey.app.debug('Updated privacy zones: ' + JSON.stringify(privacyZones));
+
+                    return this.webclient.patch(`cameras/${camera.id}`, params)
+                        .then(() => resolve('Blackout mode successfully set.'))
+                        .catch(error => reject(new Error(`Error setting Blackout mode: ${error}`)));
+                })
+                .catch(error => reject(new Error(`Error setting Blackout mode: ${error}`)));
+        });
+    }
+
     setLCDMessage(camera, message = '', resetAt = null) {
         return new Promise((resolve, reject) => {
             const params = {

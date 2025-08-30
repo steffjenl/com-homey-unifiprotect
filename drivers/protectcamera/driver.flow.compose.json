@@ -384,6 +384,27 @@
           }
         }
       ]
+    },
+    {
+      "id": "ufv_set_device_camera_blackout",
+      "title": {
+        "en": "Set cameraview to black",
+        "nl": "Zet camerabeeld op zwart"
+      },
+      "titleFormatted": {
+        "en": "Set cameraview to black [[enabled]]",
+        "nl": "Zet camerabeeld op zwart [[enabled]]"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "enabled",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld"
+          }
+        }
+      ]
     }
   ]
 }

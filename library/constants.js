@@ -28,7 +28,8 @@ module.exports.ACTION_SET_DOORBELL_STATUS_SOUND = 'ufv_set_doorbell_status_sound
 module.exports.ACTION_SET_DEVICE_CAMERA_STATUS_LED = 'ufv_set_device_camera_status_led';
 module.exports.ACTION_SET_DEVICE_DOORBELL_STATUS_LED = 'ufv_set_device_doorbell_status_led';
 module.exports.ACTION_SET_DEVICE_DOORBELL_STATUS_SOUND = 'ufv_set_device_doorbell_status_sound';
-
+module.exports.ACTION_SET_DEVICE_CAMERA_BLACKOUT = 'ufv_set_device_camera_blackout';
+module.exports.ACTION_SET_DEVICE_DOORBELL_BLACKOUT = 'ufv_set_device_doorbell_blackout';
 
 module.exports.EVENT_CONNECTION_KEEPALIVE = 'ufv_event_connection_keepalive';
 module.exports.EVENT_CONNECTION_ERROR = 'ufv_event_connection_error';
@@ -98,10 +99,9 @@ module.exports.PROTECT_MOTION_DURATION = 10;
 // How often, in seconds, should we try to reconnect with an MQTT broker, if we have one configured.
 module.exports.PROTECT_MQTT_RECONNECT_INTERVAL = 60;
 // Default MQTT topic to use when publishing events. This is in the form of: unifi/protect/camera/event
-module.exports.PROTECT_MQTT_TOPIC = "unifi/protect";
+module.exports.PROTECT_MQTT_TOPIC = 'unifi/protect';
 // How often, in seconds, should we check Protect controllers for new or removed devices.
 // This will NOT impact motion or doorbell event detection on UniFi OS devices.
 module.exports.PROTECT_NVR_UNIFIOS_REFRESH_INTERVAL = 10;
-
 
 module.exports.PROTECT_SENSOR_MOTION_TIMER_WAIT_IN_SEC = 10 * 1000;
