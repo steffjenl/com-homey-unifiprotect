@@ -199,5 +199,8 @@
   },
   "1.7.7": {
     "en": "Add support for AI and new support url"
+  },
+  "1.7.8": {
+    "en": "Add action card to set camera screen to black for privancy reasons."
   }
 }
