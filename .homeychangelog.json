@@ -202,5 +202,8 @@
   },
   "1.7.8": {
     "en": "Add action card to set camera screen to black for privancy reasons."
+  },
+  "1.7.9": {
+    "en": "Add new app images"
   }
 }
