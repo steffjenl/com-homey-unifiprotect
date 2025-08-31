@@ -522,7 +522,7 @@ class Camera extends Homey.Device {
       })).catch(this.log);
     }
 
-    this.setCameraImage('snapshot', this.getName(), this._snapshotImage);
+    await this.setCameraImage('snapshot', this.getName(), this._snapshotImage);
     this.homey.app.debug(`Created snapshot image for camera ${this.getName()}.`);
   }
 

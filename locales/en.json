@@ -18,6 +18,7 @@
         "credentials": "User credentials",
         "username": "Username",
         "password": "Password",
+        "apiKey": "API Key",
         "apply": "Apply",
         "saved": "Settings saved.",
         "settings": "Settings",

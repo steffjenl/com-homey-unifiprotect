@@ -54,6 +54,12 @@
         <label class="homey-form-label" for="txt_password" data-i18n="settings.password"></label>
         <input class="homey-form-input" id="txt_password" type="password" value=""/>
     </div>
+
+    <!-- Password -->
+    <div class="field row">
+        <label class="homey-form-label" for="txt_apiKey" data-i18n="settings.apiKey"></label>
+        <input class="homey-form-input" id="txt_apiKey" type="password" value=""/>
+    </div>
 </fieldset>
 
 <!-- Settings -->
@@ -83,6 +89,7 @@
     var txtNvrPort = document.getElementById('txt_nvrport');
     var txtUsername = document.getElementById('txt_username');
     var txtPassword = document.getElementById('txt_password');
+    var txtApiKey = document.getElementById('txt_apiKey');
     var txtuseCameraSnapshot = document.getElementById('txt_useCameraSnapshot');
     var btnApply = document.getElementById('btn_apply');
     var btnTest = document.getElementById('btn_test');
@@ -115,6 +122,7 @@
                 if (credentials) {
                     txtUsername.value = credentials.username;
                     txtPassword.value = credentials.password;
+                    txtApiKey.value = credentials.apiKey;
                 } else {
                     console.warn('[SETTINGS] Could not read credentials.');
                 }
@@ -143,7 +151,8 @@
 
             const credentials = {
                 'username': txtUsername.value,
-                'password': txtPassword.value
+                'password': txtPassword.value,
+                'apiKey': txtApiKey.value
             };
 
             Homey.set('ufp:credentials', credentials, (error, result) => {
@@ -169,6 +178,7 @@
                 'port': txtNvrPort.value,
                 'user': txtUsername.value,
                 'pass': txtPassword.value,
+                'apiKey': txtApiKey.value
             };
 
             Homey.api("POST", "/test", settings, function (err, response) {

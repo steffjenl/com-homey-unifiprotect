@@ -5,6 +5,7 @@
 const Homey = require('homey');
 const { Log } = require('homey-log');
 const ProtectAPI = require('./library/protectapi');
+const ProtectAPIV2 = require('./library/integration-api/protect-api');
 const UfvConstants = require('./library/constants');
 
 // 2700000 miliseconds is 45 minutes
@@ -23,6 +24,17 @@ class UniFiProtect extends Homey.App {
     this.nvrPassword = null;
     this.useCameraSnapshot = false;
     this._refreshAuthTokensnterval = 60 * 60 * 1000; // 1 hour
+
+    this.credentials = this.homey.settings.get('ufp:credentials');
+
+    if (typeof this.credentials !== 'undefined' && this.credentials.apiKey !== null) {
+      this.debug('Credentials apiKey found in settings.');
+      this.apiV2 = new ProtectAPIV2();
+      this.apiV2.setHomeyObject(this.homey);
+      this.apiV2.setSettings(this.homey.settings.get('ufp:nvrip'), this.homey.settings.get('ufp:nvrport'), this.credentials.apiKey);
+      this.apiV2.wsDevices.reconnectNotificationsListener();
+      this.apiV2.wsEvents.reconnectNotificationsListener();
+    }
 
     // Single API instance for all devices
     this.api = new ProtectAPI();
