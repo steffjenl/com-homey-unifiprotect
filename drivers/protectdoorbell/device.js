@@ -159,7 +159,14 @@ class Doorbell extends Homey.Device {
       await this.addCapability('ip_address');
       this.homey.app.debug(`created capability ip_address for ${this.getName()}`);
     }
-
+    if (!this.hasCapability('last_fingerprint_identified_at')) {
+      await this.addCapability('last_fingerprint_identified_at');
+      this.homey.app.debug(`created capability last_fingerprint_identified_at for ${this.getName()}`);
+    }
+    if (!this.hasCapability('last_nfc_card_scanned_at')) {
+      await this.addCapability('last_nfc_card_scanned_at');
+      this.homey.app.debug(`created capability last_nfc_card_scanned_at for ${this.getName()}`);
+    }
   }
 
   async _initDoorbellData() {
@@ -288,32 +295,38 @@ class Doorbell extends Homey.Device {
 
   onFingerprintIdentified(payload, actionType = null, eventId = null) {
     this.homey.app.debug(`[Object] onFingerprintIdentified ${JSON.stringify(payload)}`);
+    const lastFingerprintIdentifiedAt = this.getCapabilityValue('last_fingerprint_identified_at');
 
     if (typeof payload !== 'undefined'
             && typeof payload.metadata !== 'undefined'
             && typeof payload.metadata.fingerprint !== 'undefined'
             && typeof payload.metadata.fingerprint.ulpId !== 'undefined'
             && payload.metadata.fingerprint.ulpId !== null) {
-      this.homey.app.api.getCloudUserById(payload.metadata.fingerprint.ulpId).then((user) => {
-        this.homey.app.debug(`Fingerprint identified for user: ${JSON.stringify(user)}`);
-        // Generic trigger
-        this.homey.app._fingerPrintIdentifiedTrigger.trigger({
-          ufp_fingerprint_identified_camera: this.getName(),
-          ufp_fingerprint_identified_person: (user.email !== '' ? user.email : user.username),
-          ufp_fingerprint_identified_first_name: user.first_name,
-          ufp_fingerprint_identified_last_name: user.last_name,
-          ufp_fingerprint_identified_user_unique_id: user.unique_id,
-        }).catch(this.error);
+      this.setCapabilityValue('last_fingerprint_identified_at', payload.start).catch(this.error);
+      if (payload.start <= (lastFingerprintIdentifiedAt + 2)) {
+        this.homey.app.api.getCloudUserById(payload.metadata.fingerprint.ulpId).then((user) => {
+          this.homey.app.debug(`Fingerprint identified for user: ${JSON.stringify(user)}`);
+          // Generic trigger
+          this.homey.app._fingerPrintIdentifiedTrigger.trigger({
+            ufp_fingerprint_identified_camera: this.getName(),
+            ufp_fingerprint_identified_person: (user.email !== '' ? user.email : user.username),
+            ufp_fingerprint_identified_first_name: user.first_name,
+            ufp_fingerprint_identified_last_name: user.last_name,
+            ufp_fingerprint_identified_user_unique_id: user.unique_id,
+          }).catch(this.error);
 
-        // Device trigger
-        this.driver._deviceFingerprintIdentifiedTrigger.trigger(this, {
-          ufp_device_fingerprint_identified_person: (user.email !== '' ? user.email : user.username),
-          ufp_device_fingerprint_identified_first_name: user.first_name,
-          ufp_device_fingerprint_identified_last_name: user.last_name,
-          ufp_device_fingerprint_identified_user_unique_id: user.unique_id,
+          // Device trigger
+          this.driver._deviceFingerprintIdentifiedTrigger.trigger(this, {
+            ufp_device_fingerprint_identified_person: (user.email !== '' ? user.email : user.username),
+            ufp_device_fingerprint_identified_first_name: user.first_name,
+            ufp_device_fingerprint_identified_last_name: user.last_name,
+            ufp_device_fingerprint_identified_user_unique_id: user.unique_id,
+          }).catch(this.error);
         }).catch(this.error);
-      }).catch(this.error);
-      return true;
+        return true;
+      }
+      this.homey.app.debug('Event is not newer then last event');
+      return false;
     }
     // Fingerprint is not valid
     this.homey.app.debug('Fingerprint is not valid!');
@@ -322,33 +335,38 @@ class Doorbell extends Homey.Device {
 
   onNFCCardScanned(payload, actionType = null, eventId = null) {
     this.homey.app.debug(`[Object] onNFCCardScanned ${JSON.stringify(payload)}`);
-
+    const lastNFCCardScannedAt = this.getCapabilityValue('last_nfc_card_scanned_at');
     if (typeof payload !== 'undefined'
             && typeof payload.metadata !== 'undefined'
             && typeof payload.metadata.nfc !== 'undefined'
             && typeof payload.metadata.nfc.ulpId !== 'undefined'
             && payload.metadata.nfc.ulpId !== null) {
-      this.homey.app.api.getCloudUserById(payload.metadata.nfc.ulpId).then((user) => {
-        // Generic trigger
-        this.homey.app._nfcCardScannedTrigger.trigger({
-          ufp_nfc_card_scanned_camera: this.getName(),
-          ufp_nfc_card_scanned_person: (user.email !== '' ? user.email : user.username),
-          ufp_nfc_card_scanned_first_name: user.first_name,
-          ufp_nfc_card_scanned_last_name: user.last_name,
-          ufp_nfc_card_scanned_user_unique_id: user.unique_id,
-          ufp_nfc_card_scanned_card_id: payload.metadata.nfc.nfcId,
-        }).catch(this.error);
+      this.setCapabilityValue('last_nfc_card_scanned_at', payload.start).catch(this.error);
+      if (payload.start > (lastNFCCardScannedAt + 2)) {
+        this.homey.app.api.getCloudUserById(payload.metadata.nfc.ulpId).then((user) => {
+          // Generic trigger
+          this.homey.app._nfcCardScannedTrigger.trigger({
+            ufp_nfc_card_scanned_camera: this.getName(),
+            ufp_nfc_card_scanned_person: (user.email !== '' ? user.email : user.username),
+            ufp_nfc_card_scanned_first_name: user.first_name,
+            ufp_nfc_card_scanned_last_name: user.last_name,
+            ufp_nfc_card_scanned_user_unique_id: user.unique_id,
+            ufp_nfc_card_scanned_card_id: payload.metadata.nfc.nfcId,
+          }).catch(this.error);
 
-        // Device trigger
-        this.driver._deviceNFCCardScannedTrigger.trigger(this, {
-          ufp_device_nfc_card_scanned_person: (user.email !== '' ? user.email : user.username),
-          ufp_device_nfc_card_scanned_first_name: user.first_name,
-          ufp_device_nfc_card_scanned_last_name: user.last_name,
-          ufp_device_nfc_card_scanned_user_unique_id: user.unique_id,
-          ufp_device_nfc_card_scanned_card_id: payload.metadata.nfc.nfcId,
+          // Device trigger
+          this.driver._deviceNFCCardScannedTrigger.trigger(this, {
+            ufp_device_nfc_card_scanned_person: (user.email !== '' ? user.email : user.username),
+            ufp_device_nfc_card_scanned_first_name: user.first_name,
+            ufp_device_nfc_card_scanned_last_name: user.last_name,
+            ufp_device_nfc_card_scanned_user_unique_id: user.unique_id,
+            ufp_device_nfc_card_scanned_card_id: payload.metadata.nfc.nfcId,
+          }).catch(this.error);
         }).catch(this.error);
-      }).catch(this.error);
-      return true;
+        return true;
+      }
+      this.homey.app.debug('Event is not newer then last event');
+      return false;
     }
 
     this.homey.app.debug('NFC Card Event is not valid!');

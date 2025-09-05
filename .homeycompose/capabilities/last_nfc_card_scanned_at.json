@@ -1,0 +1,10 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Last NFC card scanned at",
+    "nl": "Laatst NFC-kaart gescand op"
+  },
+  "uiComponent": null,
+  "getable": true,
+  "setable": false
+}

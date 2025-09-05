@@ -2727,6 +2727,16 @@
       "getable": true,
       "setable": false
     },
+    "last_fingerprint_identified_at": {
+      "type": "number",
+      "title": {
+        "en": "Last fingerprint identified at",
+        "nl": "Laatste vingerafdruk herkend op"
+      },
+      "uiComponent": null,
+      "getable": true,
+      "setable": false
+    },
     "last_motion_at": {
       "type": "number",
       "title": {
@@ -2779,6 +2789,16 @@
         "en": "Last motion on",
         "nl": "Laatste beweging om"
       },
+      "getable": true,
+      "setable": false
+    },
+    "last_nfc_card_scanned_at": {
+      "type": "number",
+      "title": {
+        "en": "Last NFC card scanned at",
+        "nl": "Laatst NFC-kaart gescand op"
+      },
+      "uiComponent": null,
       "getable": true,
       "setable": false
     },
