@@ -165,7 +165,9 @@ class ProtectAPI extends BaseClass {
 
                     res.on('data', chunk => body.push(chunk));
                     res.on('end', () => {
-                        const json = JSON.parse(body);
+                        if (res.statusCode !== 200) {
+                            return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode})`));
+                        }
 
                         // Obtain authorization header
                         res.rawHeaders.forEach((item, index) => {
