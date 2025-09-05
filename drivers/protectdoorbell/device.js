@@ -237,7 +237,7 @@ class Doorbell extends Homey.Device {
     const lastRingAt = this.getCapabilityValue('last_ring_at');
 
     // Check if the event date is newer
-    if (!lastRingAt || lastRing > lastRingAt) {
+    if (!lastRingAt || lastRing > (lastRingAt + 2)) {
       this.homey.app._doorbellRingingTrigger.trigger({
         ufp_ringing_camera: this.getName(),
       });
