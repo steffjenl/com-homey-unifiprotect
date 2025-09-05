@@ -1,7 +1,7 @@
 'use strict';
 
 const Homey = require('homey');
-const UfvConstants = require("../../library/constants");
+const UfvConstants = require('../../library/constants');
 
 class UniFiCameraDriver extends Homey.Driver {
   /**
@@ -9,9 +9,6 @@ class UniFiCameraDriver extends Homey.Driver {
    */
   async onInit() {
     // Register flow cards
-    //this._connectionStatusTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_CONNECTION_CHANGED);
-    //this._doorbellRingingTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOORBELL_RINGING);
-    //this._smartDetectionTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION);
     this._deviceSmartDetectionTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION);
     this._deviceSmartDetectionTriggerPerson = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION_PERSON);
     this._deviceSmartDetectionTriggerVehicle = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION_VEHICLE);
@@ -21,8 +18,8 @@ class UniFiCameraDriver extends Homey.Driver {
     this._deviceSmartDetectionTriggerFace = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION_FACE);
     this._deviceAudioDetectionTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_AUDIO_DETECTION);
     this._deviceAudioDetectionTrigger.registerRunListener(async (args, state) => {
-        // Check if "any" is selected or if the detected audio type matches the selected type
-        return args.audio_type === 'any' || args.audio_type === state.audio_detection_type;
+      // Check if "any" is selected or if the detected audio type matches the selected type
+      return args.audio_type === 'any' || args.audio_type === state.audio_detection_type;
     });
 
     //
@@ -30,16 +27,16 @@ class UniFiCameraDriver extends Homey.Driver {
   }
 
   onPair(session) {
-    const homey = this.homey;
-    session.setHandler("validate", async function (data) {
+    const { homey } = this;
+    session.setHandler('validate', async (data) => {
       const nvrip = homey.settings.get('ufp:nvrip');
       return (nvrip ? 'ok' : 'nok');
     });
 
-    session.setHandler("list_devices", async function (data) {
-      return Object.values(await homey.app.api.getCameras()).map(camera => {
+    session.setHandler('list_devices', async (data) => {
+      return Object.values(await homey.app.api.getCameras()).map((camera) => {
         return {
-          data: {id: String(camera.id)},
+          data: { id: String(camera.id) },
           name: camera.name,
         };
       });
@@ -85,7 +82,7 @@ class UniFiCameraDriver extends Homey.Driver {
       }
 
       if (payload.hasOwnProperty('smartDetectTypes')) {
-        this.homey.app.debug('onParseWebsocketMessage ' + JSON.stringify(payload));
+        this.homey.app.debug(`onParseWebsocketMessage ${JSON.stringify(payload)}`);
         camera.onSmartDetection(payload, actionType, eventId);
       }
     }
@@ -98,8 +95,7 @@ class UniFiCameraDriver extends Homey.Driver {
       });
 
       return device;
-    }
-    catch(Error) {
+    } catch (Error) {
       return false;
     }
   }
