@@ -11,16 +11,16 @@ class UniFiChimeDriver extends Homey.Driver {
   }
 
   onPair(session) {
-    const homey = this.homey;
-    session.setHandler("validate", async function (data) {
-      const nvrip = homey.settings.get('ufp:nvrip');
-      return (nvrip ? 'ok' : 'nok');
+    const { homey } = this;
+    session.setHandler('validate', async (data) => {
+      const nvrsettings = homey.settings.get('ufp:credentials') || {};
+      return (nvrsettings.apiKey ? 'ok' : 'nok');
     });
 
-    session.setHandler("list_devices", async function (data) {
-      return Object.values(await homey.app.api.getChimes()).map(light => {
+    session.setHandler('list_devices', async (data) => {
+      return Object.values(await homey.app.apiV2.getChimes()).map((light) => {
         return {
-          data: {id: String(light.id)},
+          data: { id: String(light.id) },
           name: light.name,
         };
       });
@@ -42,8 +42,7 @@ class UniFiChimeDriver extends Homey.Driver {
       });
 
       return device;
-    }
-    catch(Error) {
+    } catch (Error) {
       return false;
     }
   }

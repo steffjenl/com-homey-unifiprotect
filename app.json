@@ -66,6 +66,7 @@
   "bugs": {
     "url": "https://github.com/steffjenl/com-homey-unifiprotect/issues"
   },
+  "source": "https://github.com/steffjenl/com-homey-unifiprotect/",
   "support": "https://monkeysoft.nl/homey-integrations-support/",
   "homeyCommunityTopicId": 42966,
   "platforms": [

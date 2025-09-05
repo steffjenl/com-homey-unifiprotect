@@ -5,7 +5,7 @@
 const Homey = require('homey');
 const { Log } = require('homey-log');
 const ProtectAPI = require('./library/protectapi');
-const ProtectAPIV2 = require('./library/integration-api/protect-api');
+const ProtectAPIV2 = require('./library/protect-api-v2/protect-api');
 const UfvConstants = require('./library/constants');
 
 // 2700000 miliseconds is 45 minutes

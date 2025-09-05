@@ -169,33 +169,33 @@ class Doorbell extends Homey.Device {
       for (const Doorbell of DoorbellData.cameras) {
         if (Doorbell.id === this.getData().id) {
           if (this.hasCapability('ip_address')) {
-            this.setCapabilityValue('ip_address', Doorbell.host);
+            this.setCapabilityValue('ip_address', Doorbell.host).catch(this.error);
           }
           if (this.hasCapability('camera_recording_status')) {
-            this.setCapabilityValue('camera_recording_status', Doorbell.isRecording);
+            this.setCapabilityValue('camera_recording_status', Doorbell.isRecording).catch(this.error);
           }
           if (this.hasCapability('camera_recording_mode')) {
             this.setCapabilityValue('camera_recording_mode',
               this.homey.__(`events.doorbell.${String(Doorbell.recordingSettings.mode)
-                .toLowerCase()}`));
+                .toLowerCase()}`)).catch(this.error);
           }
           if (this.hasCapability('camera_microphone_status')) {
-            this.setCapabilityValue('camera_microphone_status', Doorbell.isMicEnabled);
+            this.setCapabilityValue('camera_microphone_status', Doorbell.isMicEnabled).catch(this.error);
           }
           if (this.hasCapability('camera_nightvision_status')) {
-            this.setCapabilityValue('camera_nightvision_status', Doorbell.isDark);
+            this.setCapabilityValue('camera_nightvision_status', Doorbell.isDark).catch(this.error);
           }
           if (this.hasCapability('camera_microphone_volume')) {
-            this.setCapabilityValue('camera_microphone_volume', Doorbell.micVolume);
+            this.setCapabilityValue('camera_microphone_volume', Doorbell.micVolume).catch(this.error);
           }
           if (this.hasCapability('camera_connection_status')) {
             if (this.getCapabilityValue('camera_connection_status') !== Doorbell.isConnected) {
               this.onConnectionChanged(Doorbell.isConnected);
             }
-            this.setCapabilityValue('camera_connection_status', Doorbell.isConnected);
+            this.setCapabilityValue('camera_connection_status', Doorbell.isConnected).catch(this.error);
           }
           if (this.hasCapability('camera_nightvision_set')) {
-            this.setCapabilityValue('camera_nightvision_set', Doorbell.ispSettings.irLedMode);
+            this.setCapabilityValue('camera_nightvision_set', Doorbell.ispSettings.irLedMode).catch(this.error);
           }
 
           // Package camera
@@ -211,25 +211,25 @@ class Doorbell extends Homey.Device {
 
   onMotionStart() {
     this.homey.app.debug('onMotionStart');
-    this.setCapabilityValue('alarm_motion', true);
+    this.setCapabilityValue('alarm_motion', true).catch(this.error);
   }
 
   onMotionEnd() {
     this.homey.app.debug('onMotionEnd');
-    this.setCapabilityValue('alarm_motion', false);
+    this.setCapabilityValue('alarm_motion', false).catch(this.error);
   }
 
   onIsDark(isDark) {
     // Debug information about playload
     if (this.hasCapability('camera_nightvision_status')) {
-      this.setCapabilityValue('camera_nightvision_status', isDark);
+      this.setCapabilityValue('camera_nightvision_status', isDark).catch(this.error);
     }
   }
 
   onNightVisionMode(mode) {
     // Debug information about playload
     if (this.hasCapability('camera_nightvision_set')) {
-      this.setCapabilityValue('camera_nightvision_set', mode);
+      this.setCapabilityValue('camera_nightvision_set', mode).catch(this.error);
     }
   }
 
@@ -237,7 +237,7 @@ class Doorbell extends Homey.Device {
     const lastRingAt = this.getCapabilityValue('last_ring_at');
 
     // Check if the event date is newer
-    if (!lastRingAt || lastRing > lastRingAt) {
+    if (!lastRingAt || lastRing > (lastRingAt + 2)) {
       this.homey.app._doorbellRingingTrigger.trigger({
         ufp_ringing_camera: this.getName(),
       });
@@ -247,7 +247,7 @@ class Doorbell extends Homey.Device {
       });
     }
 
-    if (!lastRingAt) {
+    if (lastRing) {
       if (this.homey.env.DEBUG) this.homey.app.debug(`set last_ring_at to last datetime: ${this.getData().id}`);
       this.setCapabilityValue('last_ring_at', lastRing)
         .catch(this.error);

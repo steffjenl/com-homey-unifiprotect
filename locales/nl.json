@@ -3,7 +3,7 @@
   "pair": {
     "validate": {
       "title": "UniFi Cloud Key valideren",
-      "instruction": "Graag eerst bij Instellingen de Cloud Key instellen."
+      "instruction": "Voer de integratie api-sleutel in de instellingen in."
     },
     "login": {
       "title": "Inloggen"
@@ -18,7 +18,9 @@
     "credentials": "Gebruikersgegevens",
     "username": "Gebruikersnaam",
     "password": "Wachtwoord",
-    "apiKey": "API sleutel",
+    "apiKeys": "API Sleutels",
+    "apiKey": "Protect API sleutel",
+    "apiKeyAccess": "Access API sleutel",
     "apply": "Toepassen",
     "saved": "Instellingen opgeslagen.",
     "settings": "Instellingen",

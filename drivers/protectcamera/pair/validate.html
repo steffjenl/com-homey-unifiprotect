@@ -7,7 +7,6 @@
     Homey.setTitle(__('pair.validate.title'))
     Homey.showLoadingOverlay();
 
-
     Homey.emit("validate", null).then(function (result) {
       if (result === 'ok') {
         Homey.showView('list_devices');

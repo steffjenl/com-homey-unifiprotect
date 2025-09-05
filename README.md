@@ -2,26 +2,6 @@
 
 Adds support for Ubiquiti UniFi Protect devices in Homey.
 
-## Supported devices
-
-* UniFi® Protect (Network Video Recorder):
-	* UniFi® Cloud Key v2 Pro
-	* UniFi® Dream Machine Pro (UnifiOs)
-	* UniFi® Protect Network Video Recorder (UnifiOs)
-* UniFi® Video Camera G3 series:
-	* UVC-G3
-	* UVC-G3-AF
-	* UVC-G3-DOME
-	* UVC-G3-FLEX
-	* UVC-G3-MICRO
-	* UVC-G3-PRO
-* UniFi® Video Camera G4 series:
-	* UVC-G4-PRO
-	* UVC-G4-BULLET
-* UniFi® Doorbell G4 series:
-	* UVC-G4-DOORBELL
-    * UVC-G4-DOORBELL-PRO
-
 ## Getting started
 
 1. Create a local access user in the UniFi Protect web interface (used only for Homey.
@@ -30,6 +10,7 @@ Adds support for Ubiquiti UniFi Protect devices in Homey.
 4. You will be prompted to enter the credentials of the UniFi Video user you created in step 2 and some network information.
 5. Start the 'add device wizard' in Homey, search for your UniFi Cloud Key and/or cameras and add them to your devices.
 6. If the user credentials changed in UniFi Protect, they can be updated on the UniFi Protect app's settings page.
+7. Also see the [configuration instructions](docs/configure-api-key.md) for creating an API key for UniFi Protect.
 
 ## Usage
 

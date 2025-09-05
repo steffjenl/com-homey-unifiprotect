@@ -1,12 +1,12 @@
 'use strict';
 
 const Homey = require('homey');
-const UfvConstants = require("../../library/constants");
+const UfvConstants = require('../../library/constants');
 
 class UniFiDoorbellDriver extends Homey.Driver {
   /**
-   * onInit is called when the driver is initialized.
-   */
+     * onInit is called when the driver is initialized.
+     */
   async onInit() {
     // Register flow cards
     this._doorbellPressetTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_PRESET);
@@ -19,8 +19,8 @@ class UniFiDoorbellDriver extends Homey.Driver {
     this._deviceSmartDetectionTriggerFace = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_FACE);
     this._deviceAudioDetectionTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_AUDIO_DETECTION);
     this._deviceAudioDetectionTrigger.registerRunListener(async (args, state) => {
-        // Check if "any" is selected or if the detected audio type matches the selected type
-        return args.audio_type === 'any' || args.audio_type === state.audio_detection_type;
+      // Check if "any" is selected or if the detected audio type matches the selected type
+      return args.audio_type === 'any' || args.audio_type === state.audio_detection_type;
     });
     this._deviceFingerprintIdentifiedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_FINGERPRINT_IDENTIFIED);
     this._deviceDoorAccessTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOOR_ACCESS);
@@ -30,16 +30,16 @@ class UniFiDoorbellDriver extends Homey.Driver {
   }
 
   onPair(session) {
-    const homey = this.homey;
-    session.setHandler("validate", async function (data) {
-      const nvrip = homey.settings.get('ufp:nvrip');
-      return (nvrip ? 'ok' : 'nok');
+    const { homey } = this;
+    session.setHandler('validate', async (data) => {
+      const nvrsettings = homey.settings.get('ufp:credentials') || {};
+      return (nvrsettings.apiKey ? 'ok' : 'nok');
     });
 
-    session.setHandler("list_devices", async function (data) {
-      return Object.values(await homey.app.api.getDoorbells()).map(camera => {
+    session.setHandler('list_devices', async (data) => {
+      return Object.values(await homey.app.apiV2.getDoorbells()).map((camera) => {
         return {
-          data: {id: String(camera.id)},
+          data: { id: String(camera.id) },
           name: camera.name,
         };
       });
@@ -56,6 +56,7 @@ class UniFiDoorbellDriver extends Homey.Driver {
         camera.onIsMicEnabled(payload.isMicEnabled);
       }
 
+      // eslint-disable-next-line no-prototype-builtins
       if (payload.hasOwnProperty('micVolume')) {
         camera.onMicVolume(payload.micVolume);
       }
@@ -69,7 +70,7 @@ class UniFiDoorbellDriver extends Homey.Driver {
       }
 
       if (payload.hasOwnProperty('lastMotion')) {
-        this.homey.app.debug('lastMotion ' + JSON.stringify(payload));
+        this.homey.app.debug(`lastMotion ${JSON.stringify(payload)}`);
         camera.onMotionDetected(payload.lastMotion, payload.isMotionDetected);
       }
 
@@ -86,27 +87,27 @@ class UniFiDoorbellDriver extends Homey.Driver {
       }
 
       if (payload.hasOwnProperty('smartDetectTypes')) {
-        this.homey.app.debug('onParseWebsocketMessage ' + JSON.stringify(payload));
+        this.homey.app.debug(`onParseWebsocketMessage ${JSON.stringify(payload)}`);
         camera.onSmartDetection(payload, actionType, eventId);
       }
 
       if (payload.hasOwnProperty('type') && payload.type === 'fingerprintIdentified') {
-        this.homey.app.debug('fingerprintIdentified ' + JSON.stringify(payload));
+        this.homey.app.debug(`fingerprintIdentified ${JSON.stringify(payload)}`);
         camera.onFingerprintIdentified(payload, actionType, eventId);
       }
 
       if (payload.hasOwnProperty('type') && payload.type === 'nfcCardScanned') {
-        this.homey.app.debug('nfcCardScanned ' + JSON.stringify(payload));
+        this.homey.app.debug(`nfcCardScanned ${JSON.stringify(payload)}`);
         camera.onNFCCardScanned(payload, actionType, eventId);
       }
 
       if (payload.hasOwnProperty('type') && payload.type === 'doorAccess') {
-        this.homey.app.debug('doorAccess ' + JSON.stringify(payload));
+        this.homey.app.debug(`doorAccess ${JSON.stringify(payload)}`);
         camera.onDoorAccess(payload, actionType, eventId);
       }
 
       if (payload.hasOwnProperty('type') && payload.type === 'ring') {
-        this.homey.app.debug('ring ' + JSON.stringify(payload));
+        this.homey.app.debug(`ring ${JSON.stringify(payload)}`);
         camera.onDoorbellRinging(payload.start, actionType, eventId);
       }
 
@@ -120,7 +121,7 @@ class UniFiDoorbellDriver extends Homey.Driver {
       });
 
       return device;
-    } catch(Error) {
+    } catch (Error) {
       return false;
     }
   }

@@ -9,9 +9,6 @@ class UniFiCameraDriver extends Homey.Driver {
    */
   async onInit() {
     // Register flow cards
-    // this._connectionStatusTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_CONNECTION_CHANGED);
-    // this._doorbellRingingTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOORBELL_RINGING);
-    // this._smartDetectionTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION);
     this._deviceSmartDetectionTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION);
     this._deviceSmartDetectionTriggerPerson = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION_PERSON);
     this._deviceSmartDetectionTriggerVehicle = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION_VEHICLE);
@@ -32,12 +29,12 @@ class UniFiCameraDriver extends Homey.Driver {
   onPair(session) {
     const { homey } = this;
     session.setHandler('validate', async (data) => {
-      const nvrip = homey.settings.get('ufp:nvrip');
-      return (nvrip ? 'ok' : 'nok');
+      const nvrsettings = homey.settings.get('ufp:credentials') || {};
+      return (nvrsettings.apiKey ? 'ok' : 'nok');
     });
 
     session.setHandler('list_devices', async (data) => {
-      return Object.values(await homey.app.api.getCameras()).map((camera) => {
+      return Object.values(await homey.app.apiV2.getCameras()).map((camera) => {
         return {
           data: { id: String(camera.id) },
           name: camera.name,

@@ -53,12 +53,12 @@ class Camera extends Homey.Device {
   async initCamera() {
     this.registerCapabilityListener('camera_microphone_volume', async (value) => {
       this.homey.app.debug('camera_microphone_volume');
-      return this.homey.app.api.setMicVolume(this.getData(), value);
+      return this.homey.app.apiV2.setMicVolume(this.getData().id, value);
     });
 
     this.registerCapabilityListener('camera_nightvision_set', async (value) => {
       this.homey.app.debug('camera_nightvision_set');
-      return this.homey.app.api.setNightVisionMode(this.getData(), value);
+      return this.homey.app.apiV2.setNightVisionMode(this.getData(), value);
     });
 
     await this._createMissingCapabilities();

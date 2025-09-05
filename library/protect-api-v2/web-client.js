@@ -8,6 +8,7 @@ class WebClient extends BaseClient {
     this._serverHost = null;
     this._serverPort = 443;
     this._apiToken = null;
+    this._prefix = '/proxy/protect/integration/v1/';
   }
 
   async get(resource, params = {}) {
@@ -20,7 +21,7 @@ class WebClient extends BaseClient {
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
           Accept: '*/*',
-          Authorization: `Bearer ${this._apiToken}`,
+          'X-API-KEY': `${this._apiToken}`,
         },
         maxRedirects: 20,
         rejectUnauthorized: false,
@@ -64,7 +65,7 @@ class WebClient extends BaseClient {
           'Content-Type': 'application/json; charset=utf-8',
           'Content-Length': Buffer.byteLength(body),
           Accept: '*/*',
-          Authorization: `Bearer ${this._apiToken}`,
+          'X-API-KEY': `${this._apiToken}`,
         },
         maxRedirects: 20,
         rejectUnauthorized: false,
@@ -110,7 +111,7 @@ class WebClient extends BaseClient {
           'Content-Type': 'application/json; charset=utf-8',
           'Content-Length': Buffer.byteLength(body),
           Accept: '*/*',
-          Authorization: `Bearer ${this._apiToken}`,
+          'X-API-KEY': `${this._apiToken}`,
         },
         maxRedirects: 20,
         rejectUnauthorized: false,
@@ -156,7 +157,7 @@ class WebClient extends BaseClient {
           'Content-Type': 'application/json; charset=utf-8',
           'Content-Length': Buffer.byteLength(body),
           Accept: '*/*',
-          Authorization: `Bearer ${this._apiToken}`,
+          'X-API-KEY': `${this._apiToken}`,
         },
         maxRedirects: 20,
         rejectUnauthorized: false,

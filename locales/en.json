@@ -3,7 +3,7 @@
     "pair": {
         "validate": {
             "title": "Validating UniFi Cloud Key",
-            "instruction": "Please set the Cloud Key in Settings first."
+            "instruction": "Please enter integration api-key in the settings."
         },
         "login": {
             "title": "Log in"
