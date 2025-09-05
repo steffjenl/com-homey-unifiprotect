@@ -1,323 +1,339 @@
 'use strict';
 
-const BaseClass = require('./baseclass');
 const https = require('https');
+const BaseClass = require('./baseclass');
 
-let UFV_API_ENDPOINT = '/proxy/protect/api';
+const UFV_API_ENDPOINT = '/proxy/protect/api';
 
 class ProtectWebClient extends BaseClass {
 
-    constructor(...props) {
-        super(...props);
-        this._serverHost = null;
-        this._serverPort = null;
-        this._cookieToken = null;
-        this._apiKey = null;
-        this._csrfToken = null;
+  constructor(...props) {
+    super(...props);
+    this._serverHost = null;
+    this._serverPort = null;
+    this._cookieToken = null;
+    this._apiKey = null;
+    this._csrfToken = null;
+  }
+
+  setHomeyObject(homey) {
+    this.homey = homey;
+  }
+
+  setServerHost(hostName) {
+    this._serverHost = hostName;
+  }
+
+  setServerPort(serverPort) {
+    this._serverPort = serverPort;
+  }
+
+  setCookieToken(cookieToken) {
+    this._cookieToken = cookieToken;
+  }
+
+  setApiKey(apiKey) {
+    this._apiKey = apiKey;
+  }
+
+  getServerHost() {
+    return this._serverHost;
+  }
+
+  getServerPort() {
+    return this._serverPort;
+  }
+
+  getCookieToken() {
+    return this._cookieToken;
+  }
+
+  getApiKey() {
+    return this._apiKey;
+  }
+
+  getCSRFToken() {
+    return this._csrfToken;
+  }
+
+  setCSRFToken(csrfToken) {
+    this._csrfToken = csrfToken;
+  }
+
+  get(resource, params = {}, isBinary = false, isCloudCall = false) {
+    let pathPrefix = `${UFV_API_ENDPOINT}`;
+    if (isCloudCall) {
+      pathPrefix = '/proxy';
     }
 
-    setHomeyObject(homey) {
-        this.homey = homey;
-    }
+    return new Promise((resolve, reject) => {
+      if (!this._serverHost) reject(new Error('Invalid host.'));
+      if (!this._cookieToken) reject(new Error('Not logged in.'));
 
-    setServerHost(hostName) {
-        this._serverHost = hostName;
-    }
+      // eslint-disable-next-line no-param-reassign
+      const params = {
+      };
 
-    setServerPort(serverPort) {
-        this._serverPort = serverPort;
-    }
+      const options = {
+        method: 'GET',
+        hostname: this._serverHost,
+        port: this._serverPort,
+        path: `${pathPrefix}/${resource}${this.toQueryString(params)}`,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: isBinary ? '*/*' : 'application/json',
+          Cookie: this._cookieToken,
+        },
+        maxRedirects: 20,
+        rejectUnauthorized: false,
+        keepAlive: true,
+      };
 
-    setCookieToken(cookieToken) {
-        this._cookieToken = cookieToken;
-    }
+      const req = https.request(options, (res) => {
+        const data = [];
 
-    setApiKey(apiKey) {
-        this._apiKey = apiKey;
-    }
+        res.on('data', (chunk) => data.push(chunk));
+        res.on('end', () => {
+          // Obtain authorization header
+          res.rawHeaders.forEach((item, index) => {
+            if (item.toLowerCase() === 'set-cookie') {
+              this._cookieToken = res.rawHeaders[index + 1];
+            }
 
-    getServerHost() {
-        return this._serverHost;
-    }
+            if (item.toLowerCase() === 'x-csrf-token') {
+              this._csrfToken = res.rawHeaders[index + 1];
+            }
+          });
 
-    getServerPort() {
-        return this._serverPort;
-    }
+          if (res.statusCode === 401) {
+            return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
+          }
 
-    getCookieToken() {
-        return this._cookieToken;
-    }
+          if (res.statusCode === 403) {
+            return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
+          }
 
-    getApiKey() {
-        return this._apiKey;
-    }
+          if (res.statusCode !== 200) {
+            return reject(new Error(`Failed to GET url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+          }
 
-    getCSRFToken() {
-        return this._csrfToken;
-    }
+          if (isBinary) {
+            return resolve(Buffer.concat(data));
+          }
+          return resolve(data.join(''));
 
-    setCSRFToken(csrfToken) {
-        this._csrfToken = csrfToken;
-    }
-
-    get(resource, params = {}, isBinary = false, isCloudCall = false) {
-        let pathPrefix = `${UFV_API_ENDPOINT}`;
-        if (isCloudCall) {
-            pathPrefix = `/proxy`;
-        }
-
-        return new Promise((resolve, reject) => {
-            if (!this._serverHost) reject(new Error('Invalid host.'));
-            if (!this._cookieToken) reject(new Error('Not logged in.'));
-
-            // eslint-disable-next-line no-param-reassign
-            const params = {
-            };
-
-            const options = {
-                method: 'GET',
-                hostname: this._serverHost,
-                port: this._serverPort,
-                path: `${pathPrefix}/${resource}${this.toQueryString(params)}`,
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                    Accept: isBinary ? '*/*' : 'application/json',
-                    'Cookie': this._cookieToken,
-                },
-                maxRedirects: 20,
-                rejectUnauthorized: false,
-                keepAlive: true,
-            };
-
-            const req = https.request(options, res => {
-                const data = [];
-
-                res.on('data', chunk => data.push(chunk));
-                res.on('end', () => {
-                    // Obtain authorization header
-                    res.rawHeaders.forEach((item, index) => {
-                        if (item.toLowerCase() === 'set-cookie') {
-                            this._cookieToken = res.rawHeaders[index + 1];
-                        }
-
-                        if (item.toLowerCase() === 'x-csrf-token') {
-                            this._csrfToken = res.rawHeaders[index + 1];
-                        }
-                    });
-
-                    if (res.statusCode === 403) {
-                        return reject(new Error(`Homey user has no permission to perform this action. Please check the user's role.`));
-                    }
-
-                    if (res.statusCode !== 200) {
-                        return reject(new Error(`Failed to GET url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
-                    }
-
-                    if (isBinary) {
-                        return resolve(Buffer.concat(data));
-                    } else {
-                        return resolve(data.join(''));
-                    }
-                });
-            });
-
-            req.on('error', error => reject(error));
-            req.end();
         });
-    }
+      });
 
-    put(resource, payload = {}) {
-        return new Promise((resolve, reject) => {
-            if (!this._serverHost) reject(new Error('Invalid host.'));
-            if (!this._cookieToken) reject(new Error('Not logged in.'));
+      req.on('error', (error) => reject(error));
+      req.end();
+    });
+  }
 
-            const body = JSON.stringify(payload);
+  put(resource, payload = {}) {
+    return new Promise((resolve, reject) => {
+      if (!this._serverHost) reject(new Error('Invalid host.'));
+      if (!this._cookieToken) reject(new Error('Not logged in.'));
 
-            const params = {
-            };
+      const body = JSON.stringify(payload);
 
-            const options = {
-                host: this._serverHost,
-                port: this._serverPort,
-                path: `${UFV_API_ENDPOINT}/${resource}${this.toQueryString(params)}`,
-                method: 'PUT',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json; charset=utf-8',
-                    'Content-Length': Buffer.byteLength(body),
-                    'Cookie': this._cookieToken,
-                    'x-csrf-token': this._csrfToken,
-                },
-                maxRedirects: 20,
-                rejectUnauthorized: false,
-                keepAlive: true,
-            };
+      const params = {
+      };
 
-            const req = https.request(options, res => {
-                res.setEncoding('utf8');
-                const data = [];
+      const options = {
+        host: this._serverHost,
+        port: this._serverPort,
+        path: `${UFV_API_ENDPOINT}/${resource}${this.toQueryString(params)}`,
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
+          'Content-Length': Buffer.byteLength(body),
+          Cookie: this._cookieToken,
+          'x-csrf-token': this._csrfToken,
+        },
+        maxRedirects: 20,
+        rejectUnauthorized: false,
+        keepAlive: true,
+      };
 
-                res.on('data', chunk => data.push(chunk));
-                res.on('end', () => {
-                    // Obtain authorization header
-                    res.rawHeaders.forEach((item, index) => {
-                        if (item.toLowerCase() === 'set-cookie') {
-                            this._cookieToken = res.rawHeaders[index + 1];
-                        }
+      const req = https.request(options, (res) => {
+        res.setEncoding('utf8');
+        const data = [];
 
-                        if (item.toLowerCase() === 'x-csrf-token') {
-                            //this._csrfToken = res.rawHeaders[index + 1];
-                        }
-                    });
+        res.on('data', (chunk) => data.push(chunk));
+        res.on('end', () => {
+          // Obtain authorization header
+          res.rawHeaders.forEach((item, index) => {
+            if (item.toLowerCase() === 'set-cookie') {
+              this._cookieToken = res.rawHeaders[index + 1];
+            }
 
-                    if (res.statusCode === 403) {
-                        return reject(new Error(`Homey user has no permission to perform this action. Please check the user's role.`));
-                    }
+            if (item.toLowerCase() === 'x-csrf-token') {
+              // this._csrfToken = res.rawHeaders[index + 1];
+            }
+          });
 
-                    if (res.statusCode !== 200) {
-                        return reject(new Error(`Failed to PUT to url: ${options.host}${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
-                    }
+          if (res.statusCode === 401) {
+            return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
+          }
 
-                    return resolve(data.join(''));
-                });
-            });
+          if (res.statusCode === 403) {
+            return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
+          }
 
-            req.on('error', error => reject(error));
-            req.write(body);
-            req.end();
+          if (res.statusCode !== 200) {
+            return reject(new Error(`Failed to PUT to url: ${options.host}${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+          }
+
+          return resolve(data.join(''));
         });
-    }
+      });
 
-    patch(resource, payload = {}) {
-        return new Promise((resolve, reject) => {
-            if (!this._serverHost) reject(new Error('Invalid host.'));
-            if (!this._cookieToken) reject(new Error('Not logged in.'));
+      req.on('error', (error) => reject(error));
+      req.write(body);
+      req.end();
+    });
+  }
 
-            const body = JSON.stringify(payload);
+  patch(resource, payload = {}) {
+    return new Promise((resolve, reject) => {
+      if (!this._serverHost) reject(new Error('Invalid host.'));
+      if (!this._cookieToken) reject(new Error('Not logged in.'));
 
-            const options = {
-                host: this._serverHost,
-                port: this._serverPort,
-                path: `${UFV_API_ENDPOINT}/${resource}`,
-                method: 'PATCH',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json; charset=utf-8',
-                    'Content-Length': Buffer.byteLength(body),
-                    'Cookie': this._cookieToken,
-                    'x-csrf-token': this._csrfToken,
-                },
-                maxRedirects: 20,
-                rejectUnauthorized: false,
-                keepAlive: true,
-            };
+      const body = JSON.stringify(payload);
 
-            const req = https.request(options, res => {
-                res.setEncoding('utf8');
-                const data = [];
+      const options = {
+        host: this._serverHost,
+        port: this._serverPort,
+        path: `${UFV_API_ENDPOINT}/${resource}`,
+        method: 'PATCH',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
+          'Content-Length': Buffer.byteLength(body),
+          Cookie: this._cookieToken,
+          'x-csrf-token': this._csrfToken,
+        },
+        maxRedirects: 20,
+        rejectUnauthorized: false,
+        keepAlive: true,
+      };
 
-                res.on('data', chunk => data.push(chunk));
-                res.on('end', () => {
-                    // Obtain authorization header
-                    res.rawHeaders.forEach((item, index) => {
-                        if (item.toLowerCase() === 'set-cookie') {
-                            this._cookieToken = res.rawHeaders[index + 1];
-                        }
+      const req = https.request(options, (res) => {
+        res.setEncoding('utf8');
+        const data = [];
 
-                        if (item.toLowerCase() === 'x-csrf-token') {
-                            //this._csrfToken = res.rawHeaders[index + 1];
-                        }
-                    });
+        res.on('data', (chunk) => data.push(chunk));
+        res.on('end', () => {
+          // Obtain authorization header
+          res.rawHeaders.forEach((item, index) => {
+            if (item.toLowerCase() === 'set-cookie') {
+              this._cookieToken = res.rawHeaders[index + 1];
+            }
 
-                    if (res.statusCode === 403) {
-                        return reject(new Error(`Homey user has no permission to perform this action. Please check the user's role.`));
-                    }
+            if (item.toLowerCase() === 'x-csrf-token') {
+              // this._csrfToken = res.rawHeaders[index + 1];
+            }
+          });
 
-                    if (res.statusCode !== 200) {
-                        return reject(new Error(`Failed to PATCH url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
-                    }
+          if (res.statusCode === 401) {
+            return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
+          }
 
-                    return resolve(data.join(''));
-                });
-            });
+          if (res.statusCode === 403) {
+            return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
+          }
 
-            req.on('error', error => reject(error));
-            req.write(body);
-            req.end();
+          if (res.statusCode !== 200) {
+            return reject(new Error(`Failed to PATCH url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+          }
+
+          return resolve(data.join(''));
         });
-    }
+      });
 
-    post(resource, payload = {}) {
-        return new Promise((resolve, reject) => {
-            if (!this._serverHost) reject(new Error('Invalid host.'));
-            if (!this._cookieToken) reject(new Error('Not logged in.'));
+      req.on('error', (error) => reject(error));
+      req.write(body);
+      req.end();
+    });
+  }
 
-            const body = JSON.stringify(payload);
+  post(resource, payload = {}) {
+    return new Promise((resolve, reject) => {
+      if (!this._serverHost) reject(new Error('Invalid host.'));
+      if (!this._cookieToken) reject(new Error('Not logged in.'));
 
-            const options = {
-                host: this._serverHost,
-                port: this._serverPort,
-                path: `${UFV_API_ENDPOINT}/${resource}`,
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json; charset=utf-8',
-                    'Content-Length': Buffer.byteLength(body),
-                    'Cookie': this._cookieToken,
-                    'x-csrf-token': this._csrfToken,
-                },
-                maxRedirects: 20,
-                rejectUnauthorized: false,
-                keepAlive: true,
-            };
+      const body = JSON.stringify(payload);
 
-            const req = https.request(options, res => {
-                res.setEncoding('utf8');
-                const data = [];
+      const options = {
+        host: this._serverHost,
+        port: this._serverPort,
+        path: `${UFV_API_ENDPOINT}/${resource}`,
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
+          'Content-Length': Buffer.byteLength(body),
+          Cookie: this._cookieToken,
+          'x-csrf-token': this._csrfToken,
+        },
+        maxRedirects: 20,
+        rejectUnauthorized: false,
+        keepAlive: true,
+      };
 
-                res.on('data', chunk => data.push(chunk));
-                res.on('end', () => {
-                    // Obtain authorization header
-                    res.rawHeaders.forEach((item, index) => {
-                        if (item.toLowerCase() === 'set-cookie') {
-                            this._cookieToken = res.rawHeaders[index + 1];
-                        }
+      const req = https.request(options, (res) => {
+        res.setEncoding('utf8');
+        const data = [];
 
-                        if (item.toLowerCase() === 'x-csrf-token') {
-                            //this._csrfToken = res.rawHeaders[index + 1];
-                        }
-                    });
+        res.on('data', (chunk) => data.push(chunk));
+        res.on('end', () => {
+          // Obtain authorization header
+          res.rawHeaders.forEach((item, index) => {
+            if (item.toLowerCase() === 'set-cookie') {
+              this._cookieToken = res.rawHeaders[index + 1];
+            }
 
-                    if (res.statusCode === 403) {
-                        return reject(new Error(`Homey user has no permission to perform this action. Please check the user's role.`));
-                    }
+            if (item.toLowerCase() === 'x-csrf-token') {
+              // this._csrfToken = res.rawHeaders[index + 1];
+            }
+          });
 
-                    if (res.statusCode !== 200) {
-                        return reject(new Error(`Failed to POST to url: ${options.host}${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
-                    }
+          if (res.statusCode === 401) {
+            return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
+          }
 
-                    return resolve(data.join(''));
-                });
-            });
+          if (res.statusCode === 403) {
+            return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
+          }
 
-            req.on('error', error => reject(error));
-            req.write(body);
-            req.end();
+          if (res.statusCode !== 200) {
+            return reject(new Error(`Failed to POST to url: ${options.host}${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+          }
+
+          return resolve(data.join(''));
         });
-    }
+      });
 
-    download(resource, params) {
-        return this.get(resource, params, true);
-    }
+      req.on('error', (error) => reject(error));
+      req.write(body);
+      req.end();
+    });
+  }
 
-    toQueryString(obj) {
-        if (obj === null || typeof obj === 'undefined' || Object.keys(obj).length === 0) {
-            return '';
-        }
-        return `?${Object.keys(obj)
-            .map(k => `${k}=${encodeURIComponent(obj[k])}`)
-            .join('&')}`;
+  download(resource, params) {
+    return this.get(resource, params, true);
+  }
+
+  toQueryString(obj) {
+    if (obj === null || typeof obj === 'undefined' || Object.keys(obj).length === 0) {
+      return '';
     }
+    return `?${Object.keys(obj)
+      .map((k) => `${k}=${encodeURIComponent(obj[k])}`)
+      .join('&')}`;
+  }
 }
 
 module.exports = ProtectWebClient;
