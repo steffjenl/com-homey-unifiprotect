@@ -205,5 +205,11 @@
   },
   "1.7.9": {
     "en": "Add new app images"
+  },
+  "1.7.10": {
+    "en": "Fixing setRecordingState"
+  },
+  "1.7.11": {
+    "en": "Fixing setRecording and setNightvision"
   }
 }

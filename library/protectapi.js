@@ -394,18 +394,12 @@ class ProtectAPI extends BaseClass {
                 .then(cameraInfo => {
                     const recordingSettings = cameraInfo.recordingSettings;
                     const channels = cameraInfo.channels;
-                    const smartDetectSettings = cameraInfo.smartDetectSettings;
                     recordingSettings.mode = mode;
 
                     const params = {
                         channels,
                         recordingSettings
                     };
-
-                    // Only add smartDetectSettings when the camera supports it
-                    if (cameraInfo.featureFlags.hasSmartDetect) {
-                        params['smartDetectSettings'] = smartDetectSettings;
-                    }
 
                     return this.webclient.patch(`cameras/${camera.id}`, params)
                         .then(() => resolve('Recording mode successfully set.'))
@@ -419,22 +413,11 @@ class ProtectAPI extends BaseClass {
         return new Promise((resolve, reject) => {
             this.findCameraById(camera.id)
                 .then(cameraInfo => {
-                    const homekitSettings = cameraInfo.homekitSettings;
-                    const ispSettings = cameraInfo.ispSettings;
-                    const ledSettings = cameraInfo.ledSettings;
-                    const micVolume = cameraInfo.micVolume;
-                    const name = cameraInfo.name;
-                    const speakerSettings = cameraInfo.speakerSettings;
-                    ispSettings.irLedMode = mode;
-
                     const params = {
-                        homekitSettings,
-                        ispSettings,
-                        ledSettings,
-                        micVolume,
-                        name,
-                        speakerSettings
-                    };
+                        ispSettings: {
+                            irLedMode: mode
+                        }
+                    }
 
                     return this.webclient.patch(`cameras/${camera.id}`, params)
                         .then(() => resolve('Night Vision mode successfully set.'))
