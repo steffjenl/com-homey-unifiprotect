@@ -211,5 +211,8 @@
   },
   "1.7.11": {
     "en": "Fixing setRecording and setNightvision"
+  },
+  "1.7.12": {
+    "en": "Bugfix mulitple bugs and make app more stable, Validate login now checks on 429 status code"
   }
 }
