@@ -214,5 +214,8 @@
   },
   "1.7.12": {
     "en": "Bugfix mulitple bugs and make app more stable, Validate login now checks on 429 status code"
+  },
+  "1.7.13": {
+    "en": "Fix fingerprint scanner"
   }
 }
