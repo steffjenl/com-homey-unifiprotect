@@ -302,8 +302,8 @@ class Doorbell extends Homey.Device {
             && typeof payload.metadata.fingerprint !== 'undefined'
             && typeof payload.metadata.fingerprint.ulpId !== 'undefined'
             && payload.metadata.fingerprint.ulpId !== null) {
-      this.setCapabilityValue('last_fingerprint_identified_at', payload.start).catch(this.error);
-      if (payload.start <= (lastFingerprintIdentifiedAt + 2)) {
+      if (payload.start > (lastFingerprintIdentifiedAt + 2)) {
+        this.setCapabilityValue('last_fingerprint_identified_at', payload.start).catch(this.error);
         this.homey.app.api.getCloudUserById(payload.metadata.fingerprint.ulpId).then((user) => {
           this.homey.app.debug(`Fingerprint identified for user: ${JSON.stringify(user)}`);
           // Generic trigger
@@ -341,8 +341,8 @@ class Doorbell extends Homey.Device {
             && typeof payload.metadata.nfc !== 'undefined'
             && typeof payload.metadata.nfc.ulpId !== 'undefined'
             && payload.metadata.nfc.ulpId !== null) {
-      this.setCapabilityValue('last_nfc_card_scanned_at', payload.start).catch(this.error);
       if (payload.start > (lastNFCCardScannedAt + 2)) {
+        this.setCapabilityValue('last_nfc_card_scanned_at', payload.start).catch(this.error);
         this.homey.app.api.getCloudUserById(payload.metadata.nfc.ulpId).then((user) => {
           // Generic trigger
           this.homey.app._nfcCardScannedTrigger.trigger({
