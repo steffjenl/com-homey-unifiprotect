@@ -12,6 +12,12 @@ module.exports = {
   async getLastWebsocketMessageTime({ homey, query }) {
     return homey.app.api.ws.getLastWebsocketMessageTime();
   },
+  async getAccessWebsocketStatus({ homey, query }) {
+    return homey.app.accessApi.websocket.isWebsocketConnected() ? 'Connected' : 'Unknown';
+  },
+  async getLastAccessWebsocketMessageTime({ homey, query }) {
+    return homey.app.accessApi.websocket.getLastWebsocketMessageTime();
+  },
   async testCredentials({ homey, body }) {
     try {
       return new Promise((resolve, reject) => {

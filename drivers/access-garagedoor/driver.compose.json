@@ -1,0 +1,35 @@
+{
+  "name": {
+    "en": "Access Garage door",
+    "nl": "Access Garage deur"
+  },
+  "class": "garagedoor",
+  "capabilities": [
+    "garagedoor_closed"
+  ],
+  "platforms": [
+    "local"
+  ],
+  "connectivity": ["cloud"],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

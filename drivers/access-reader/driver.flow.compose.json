@@ -1,0 +1,88 @@
+{
+  "actions": [
+    {
+      "id": "ufv_set_reader_access_method_wave",
+      "title": {
+        "en": "Set Reader Access Method Wave",
+        "nl": "Stel Reader Toegangsmodus Handbeweging in"
+      },
+      "titleFormatted": {
+        "en": "Set Reader Access Method Wave [[enabled]]",
+        "nl": "Stel Reader Toegangsmodus Handbeweging in [[enabled]]"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "enabled",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufv_set_reader_access_method_nfc",
+      "title": {
+        "en": "Set Reader Access Method NFC",
+        "nl": "Stel Reader Toegangsmodus NFC in"
+      },
+      "titleFormatted": {
+        "en": "Set Reader Access Method NFC [[enabled]]",
+        "nl": "Stel Reader Toegangsmodus NFC in [[enabled]]"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "enabled",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufv_set_reader_access_method_bt-tap",
+      "title": {
+        "en": "Set Reader Access Method Mobile Tap",
+        "nl": "Stel Reader Toegangsmodus Mobiele Tik in"
+      },
+      "titleFormatted": {
+        "en": "Set Reader Access Method Mobile Tap [[enabled]]",
+        "nl": "Stel Reader Toegangsmodus Mobiele Tik in [[enabled]]"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "enabled",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufv_set_reader_access_method_bt-button",
+      "title": {
+        "en": "Set Reader Access Method Mobile Button",
+        "nl": "Stel Reader Toegangsmodus Mobiele Knop in"
+      },
+      "titleFormatted": {
+        "en": "Set Reader Access Method Mobile Button [[enabled]]",
+        "nl": "Stel Reader Toegangsmodus Mobiele Knop in [[enabled]]"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "enabled",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld"
+          }
+        }
+      ]
+    }
+  ]
+}

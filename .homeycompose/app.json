@@ -86,6 +86,14 @@
     "getLastWebsocketMessageTime": {
       "method": "GET",
       "path": "/getLastWebsocketMessageTime"
+    },
+    "getAccessWebsocketStatus": {
+      "method": "GET",
+      "path": "/accesswebsocketstatus"
+    },
+    "getLastAccessWebsocketMessageTime": {
+      "method": "GET",
+      "path": "/getLastAccessWebsocketMessageTime"
     }
   }
 }

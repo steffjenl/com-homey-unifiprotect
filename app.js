@@ -6,6 +6,7 @@ const Homey = require('homey');
 const { Log } = require('homey-log');
 const ProtectAPI = require('./library/protectapi');
 const UfvConstants = require('./library/constants');
+const AccessAPI = require('./library/access-api-v2/access-api');
 
 // 2700000 miliseconds is 45 minutes
 const RefreshCookieTime = 2700000;
@@ -22,11 +23,17 @@ class UniFiProtect extends Homey.App {
     this.nvrUsername = null;
     this.nvrPassword = null;
     this.useCameraSnapshot = false;
+    this.ignoreEventsNfcFingerprint = 5; // seconds
+    this.ignoreEventsDoorbell = 5; // seconds
     this._refreshAuthTokensnterval = 60 * 60 * 1000; // 1 hour
+    this.lastDoorAccessEvent = null;
 
     // Single API instance for all devices
     this.api = new ProtectAPI();
     this.api.setHomeyObject(this.homey);
+    //
+    this.accessApi = new AccessAPI();
+    this.accessApi.setHomeyObject(this.homey);
 
     // Register snapshot image token
     this._registerSnapshotToken();
@@ -174,7 +181,7 @@ class UniFiProtect extends Homey.App {
           return device._createSnapshotPackageImage(true);
         }
       }
-      return Promise.reject('No device found');
+      return Promise.reject(new Error('No device found'));
     });
 
     const _actionSetCameraBlackout = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_CAMERA_BLACKOUT);
@@ -188,7 +195,7 @@ class UniFiProtect extends Homey.App {
           return this.homey.app.api.setCameraBlackout(device.getData(), args.enabled).catch(this.error);
         }
       }
-      return Promise.reject('No device found');
+      return Promise.reject(new Error('No device found'));
     });
 
     const _actionSetDoorbellBlackout = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_BLACKOUT);
@@ -203,6 +210,63 @@ class UniFiProtect extends Homey.App {
       return Promise.reject('No device found');
     });
 
+    const _setReaderAccessMethodWaveConfig = this.homey.flow.getActionCard('ufv_set_reader_access_method_wave');
+    _setReaderAccessMethodWaveConfig.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.accessApi.setReaderWave(args.device.getData().id, args.enabled);
+      }
+      return Promise.resolve(true);
+    });
+    const _setReaderAccessMethodNGCConfig = this.homey.flow.getActionCard('ufv_set_reader_access_method_nfc');
+    _setReaderAccessMethodNGCConfig.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.accessApi.setReaderNFC(args.device.getData().id, args.enabled);
+      }
+      return Promise.resolve(true);
+    });
+    const _setReaderAccessMethodMobileButtonConfig = this.homey.flow.getActionCard('ufv_set_reader_access_method_bt-button');
+    _setReaderAccessMethodMobileButtonConfig.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.accessApi.setReaderMobileButton(args.device.getData().id, args.enabled);
+      }
+      return Promise.resolve(true);
+    });
+    const _setReaderAccessMethodMobileTapConfig = this.homey.flow.getActionCard('ufv_set_reader_access_method_bt-tap');
+    _setReaderAccessMethodMobileTapConfig.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.accessApi.setReaderMobileTap(args.device.getData().id, args.enabled);
+      }
+      return Promise.resolve(true);
+    });
+    const _setDoorTempLockingRule = this.homey.flow.getActionCard('ufv_set_reader_door_locking_rule');
+    _setDoorTempLockingRule.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.accessApi.setTempDoorLockingRule(args.device.getData().id, args.type, args.interval);
+      }
+      return Promise.resolve(true);
+    });
+    const _setGarageDoorTempLockingRule = this.homey.flow.getActionCard('ufv_set_reader_garagedoor_locking_rule');
+    _setGarageDoorTempLockingRule.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.accessApi.setTempDoorLockingRule(args.device.getData().id, args.type, args.interval);
+      }
+      return Promise.resolve(true);
+    });
+    const _setDoorUnlock = this.homey.flow.getActionCard('ufv_set_reader_door_unlock');
+    _setDoorUnlock.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.accessApi.setDoorUnLock(args.device.getData().id);
+      }
+      return Promise.resolve(true);
+    });
+    const _setGarageDoorUnlock = this.homey.flow.getActionCard('ufv_set_reader_garagedoor_unlock');
+    _setGarageDoorUnlock.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.accessApi.setDoorUnLock(args.device.getData().id);
+      }
+      return Promise.resolve(true);
+    });
+
     // Subscribe to credentials updates
     this.homey.settings.on('set', (key) => {
       if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {
@@ -211,6 +275,8 @@ class UniFiProtect extends Homey.App {
       if (key === 'ufp:settings') {
         const settings = this.homey.settings.get('ufp:settings');
         this.useCameraSnapshot = settings.useCameraSnapshot;
+        this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
+        this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
       }
     });
 
@@ -218,6 +284,23 @@ class UniFiProtect extends Homey.App {
     const settings = this.homey.settings.get('ufp:settings');
     if (settings) {
       this.useCameraSnapshot = settings.useCameraSnapshot;
+      this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
+      this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
+    }
+
+    this.homey.settings.on('set', (key) => {
+      if (key === 'ufp:tokens') {
+        this.loginToAccess().catch(this.error);
+      }
+    });
+
+    const tokens = this.homey.settings.get('ufp:tokens');
+    if (tokens) {
+      this.accessApiKey = tokens.accessApiKey;
+    }
+
+    if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
+      this.loginToAccess().catch(this.error);
     }
 
     this._appLogin();
@@ -225,6 +308,31 @@ class UniFiProtect extends Homey.App {
     await this.refreshAuthTokens();
 
     this.debug('UniFiProtect has been initialized');
+  }
+
+  async loginToAccess() {
+    // Validate NVR IP address
+    const nvrip = this.homey.settings.get('ufp:nvrip');
+    if (!nvrip) {
+      this.log('NVR IP address not set.');
+      return;
+    }
+
+    // Setting NVR Port when set
+    // const nvrport = this.homey.settings.get('ufp:nvrport');
+
+    // Validate NVR credentials
+    const tokens = this.homey.settings.get('ufp:tokens');
+    if (!tokens) {
+      this.log('Tokens not set.');
+      return;
+    }
+
+    this.accessApi.setSettings(nvrip, 12445, tokens.accessApiKey);
+
+    this.accessApi.websocket.reconnectNotificationsListener();
+
+    this.accessApi.loggedInStatus = 'Connected';
   }
 
   async refreshAuthTokens() {
@@ -400,20 +508,22 @@ class UniFiProtect extends Homey.App {
             && typeof payload.metadata !== 'undefined'
             && typeof payload.metadata.uniqueId !== 'undefined'
             && payload.metadata.uniqueId !== null) {
-
-      this.homey.app.api.getCloudUserById(payload.metadata.uniqueId).then((user) => {
-        // Generic trigger
-        this.homey.app._doorAccessTrigger.trigger({
-          ufp_door_access_person: (user.email !== '' ? user.email : user.username),
-          ufp_door_access_first_name: user.first_name,
-          ufp_door_access_last_name: user.last_name,
-          ufp_door_access_user_unique_id: user.unique_id,
-          ufp_door_access_direction: payload.metadata.direction,
-          ufp_door_access_door_name: payload.metadata.doorName,
+      if (!this.lastDoorAccessEvent || (this.getUnixTimestamp() - this.lastDoorAccessEvent) > (this.ignoreEventsNfcFingerprint * 1000)) {
+        this.homey.app.api.getCloudUserById(payload.metadata.uniqueId).then((user) => {
+          // Generic trigger
+          if (user) {
+            this.homey.app._doorAccessTrigger.trigger({
+              ufp_door_access_person: (user.email !== '' ? user.email : user.username),
+              ufp_door_access_first_name: user.first_name,
+              ufp_door_access_last_name: user.last_name,
+              ufp_door_access_user_unique_id: user.unique_id,
+              ufp_door_access_direction: payload.metadata.direction,
+              ufp_door_access_door_name: payload.metadata.doorName,
+            }).catch(this.error);
+          }
         }).catch(this.error);
-      }).catch(this.error);
-
-      return true;
+        return true;
+      }
     }
 
     this.homey.app.debug('DoorAccess event is not valid!');

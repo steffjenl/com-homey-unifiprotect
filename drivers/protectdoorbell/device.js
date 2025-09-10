@@ -176,33 +176,33 @@ class Doorbell extends Homey.Device {
       for (const Doorbell of DoorbellData.cameras) {
         if (Doorbell.id === this.getData().id) {
           if (this.hasCapability('ip_address')) {
-            this.setCapabilityValue('ip_address', Doorbell.host);
+            this.setCapabilityValue('ip_address', Doorbell.host).catch(this.error);
           }
           if (this.hasCapability('camera_recording_status')) {
-            this.setCapabilityValue('camera_recording_status', Doorbell.isRecording);
+            this.setCapabilityValue('camera_recording_status', Doorbell.isRecording).catch(this.error);
           }
           if (this.hasCapability('camera_recording_mode')) {
             this.setCapabilityValue('camera_recording_mode',
               this.homey.__(`events.doorbell.${String(Doorbell.recordingSettings.mode)
-                .toLowerCase()}`));
+                .toLowerCase()}`)).catch(this.error);
           }
           if (this.hasCapability('camera_microphone_status')) {
-            this.setCapabilityValue('camera_microphone_status', Doorbell.isMicEnabled);
+            this.setCapabilityValue('camera_microphone_status', Doorbell.isMicEnabled).catch(this.error);
           }
           if (this.hasCapability('camera_nightvision_status')) {
-            this.setCapabilityValue('camera_nightvision_status', Doorbell.isDark);
+            this.setCapabilityValue('camera_nightvision_status', Doorbell.isDark).catch(this.error);
           }
           if (this.hasCapability('camera_microphone_volume')) {
-            this.setCapabilityValue('camera_microphone_volume', Doorbell.micVolume);
+            this.setCapabilityValue('camera_microphone_volume', Doorbell.micVolume).catch(this.error);
           }
           if (this.hasCapability('camera_connection_status')) {
             if (this.getCapabilityValue('camera_connection_status') !== Doorbell.isConnected) {
-              this.onConnectionChanged(Doorbell.isConnected);
+              this.onConnectionChanged(Doorbell.isConnected).catch(this.error);
             }
-            this.setCapabilityValue('camera_connection_status', Doorbell.isConnected);
+            this.setCapabilityValue('camera_connection_status', Doorbell.isConnected).catch(this.error);
           }
           if (this.hasCapability('camera_nightvision_set')) {
-            this.setCapabilityValue('camera_nightvision_set', Doorbell.ispSettings.irLedMode);
+            this.setCapabilityValue('camera_nightvision_set', Doorbell.ispSettings.irLedMode).catch(this.error);
           }
 
           // Package camera
@@ -218,25 +218,25 @@ class Doorbell extends Homey.Device {
 
   onMotionStart() {
     this.homey.app.debug('onMotionStart');
-    this.setCapabilityValue('alarm_motion', true);
+    this.setCapabilityValue('alarm_motion', true).catch(this.error);
   }
 
   onMotionEnd() {
     this.homey.app.debug('onMotionEnd');
-    this.setCapabilityValue('alarm_motion', false);
+    this.setCapabilityValue('alarm_motion', false).catch(this.error);
   }
 
   onIsDark(isDark) {
     // Debug information about playload
     if (this.hasCapability('camera_nightvision_status')) {
-      this.setCapabilityValue('camera_nightvision_status', isDark);
+      this.setCapabilityValue('camera_nightvision_status', isDark).catch(this.error);
     }
   }
 
   onNightVisionMode(mode) {
     // Debug information about playload
     if (this.hasCapability('camera_nightvision_set')) {
-      this.setCapabilityValue('camera_nightvision_set', mode);
+      this.setCapabilityValue('camera_nightvision_set', mode).catch(this.error);
     }
   }
 
@@ -244,7 +244,7 @@ class Doorbell extends Homey.Device {
     const lastRingAt = this.getCapabilityValue('last_ring_at');
 
     // Check if the event date is newer
-    if (!lastRingAt || lastRing > (lastRingAt + 2)) {
+    if (!lastRingAt || lastRing > (lastRingAt + this.homey.app.ignoreEventsDoorbell)) {
       this.homey.app._doorbellRingingTrigger.trigger({
         ufp_ringing_camera: this.getName(),
       });
@@ -302,7 +302,7 @@ class Doorbell extends Homey.Device {
             && typeof payload.metadata.fingerprint !== 'undefined'
             && typeof payload.metadata.fingerprint.ulpId !== 'undefined'
             && payload.metadata.fingerprint.ulpId !== null) {
-      if (payload.start > (lastFingerprintIdentifiedAt + 2)) {
+      if (payload.start > (lastFingerprintIdentifiedAt + this.homey.app.ignoreEventsNfcFingerprint)) {
         this.setCapabilityValue('last_fingerprint_identified_at', payload.start).catch(this.error);
         this.homey.app.api.getCloudUserById(payload.metadata.fingerprint.ulpId).then((user) => {
           this.homey.app.debug(`Fingerprint identified for user: ${JSON.stringify(user)}`);
@@ -341,7 +341,7 @@ class Doorbell extends Homey.Device {
             && typeof payload.metadata.nfc !== 'undefined'
             && typeof payload.metadata.nfc.ulpId !== 'undefined'
             && payload.metadata.nfc.ulpId !== null) {
-      if (payload.start > (lastNFCCardScannedAt + 2)) {
+      if (payload.start > (lastNFCCardScannedAt + this.homey.app.ignoreEventsNfcFingerprint)) {
         this.setCapabilityValue('last_nfc_card_scanned_at', payload.start).catch(this.error);
         this.homey.app.api.getCloudUserById(payload.metadata.nfc.ulpId).then((user) => {
           // Generic trigger

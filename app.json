@@ -87,6 +87,14 @@
     "getLastWebsocketMessageTime": {
       "method": "GET",
       "path": "/getLastWebsocketMessageTime"
+    },
+    "getAccessWebsocketStatus": {
+      "method": "GET",
+      "path": "/accesswebsocketstatus"
+    },
+    "getLastAccessWebsocketMessageTime": {
+      "method": "GET",
+      "path": "/getLastAccessWebsocketMessageTime"
     }
   },
   "flow": {
@@ -711,6 +719,42 @@
               "en": "rtsp://........:7447/........",
               "nl": "rtsp://........:7447/........"
             }
+          }
+        ]
+      },
+      {
+        "id": "ufv_reader_garagedoor_opened",
+        "title": {
+          "en": "Garage door opened",
+          "nl": "Garage deur geopend"
+        },
+        "hint": {
+          "en": "Triggers when the garage door is opened",
+          "nl": "Wordt geactiveerd wanneer de garage deur wordt geopend"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
+        "id": "ufv_reader_garagedoor_closed",
+        "title": {
+          "en": "Garage door closed",
+          "nl": "Garage deur gesloten"
+        },
+        "hint": {
+          "en": "Triggers when the garage door is closed",
+          "nl": "Wordt geactiveerd wanneer de garage deur wordt gesloten"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
           }
         ]
       },
@@ -2160,6 +2204,317 @@
         ]
       },
       {
+        "id": "ufv_set_reader_door_locking_rule",
+        "title": {
+          "en": "Set Door Temporary Locking Rule",
+          "nl": "Deur tijdelijke vergrendelingsregel instellen"
+        },
+        "titleFormatted": {
+          "en": "Set Door Temporary Locking Rule [[type]] for [[interval]] minutes",
+          "nl": "Deur tijdelijke vergrendelingsregel [[type]] voor [[interval]] minuten instellen"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-door"
+          },
+          {
+            "type": "dropdown",
+            "name": "type",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            },
+            "values": [
+              {
+                "id": "keep_lock",
+                "title": {
+                  "en": "Keep locked",
+                  "nl": "Vergrendeld houden"
+                }
+              },
+              {
+                "id": "keep_unlock",
+                "title": {
+                  "en": "Keep unlocked",
+                  "nl": "Ontgrendeld houden"
+                }
+              },
+              {
+                "id": "reset",
+                "title": {
+                  "en": "Reset"
+                }
+              },
+              {
+                "id": "lock_early",
+                "title": {
+                  "en": "Lock early",
+                  "nl": "Vroeg vergrendelen"
+                }
+              },
+              {
+                "id": "lock_now",
+                "title": {
+                  "en": "Lock now",
+                  "nl": "Nu vergrendelen"
+                }
+              },
+              {
+                "id": "custom",
+                "title": {
+                  "en": "Custom",
+                  "nl": "Aangepast"
+                }
+              }
+            ]
+          },
+          {
+            "type": "number",
+            "name": "interval",
+            "title": {
+              "en": "Duration (minutes)",
+              "nl": "Duur (minuten)"
+            },
+            "min": 1,
+            "max": 1440,
+            "default": 5,
+            "visibleIf": {
+              "type": [
+                "custom"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_reader_door_unlock",
+        "title": {
+          "en": "Set Door Temporary Locking Rule",
+          "nl": "Deur tijdelijke vergrendelingsregel instellen"
+        },
+        "titleFormatted": {
+          "en": "Unlock door",
+          "nl": "Deur ontgrendelen"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-door"
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_reader_garagedoor_locking_rule",
+        "title": {
+          "en": "Set Door Temporary Locking Rule",
+          "nl": "Deur tijdelijke vergrendelingsregel instellen"
+        },
+        "titleFormatted": {
+          "en": "Set Door Temporary Locking Rule [[type]] for [[interval]] minutes",
+          "nl": "Deur tijdelijke vergrendelingsregel [[type]] voor [[interval]] minuten instellen"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
+          },
+          {
+            "type": "dropdown",
+            "name": "type",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            },
+            "values": [
+              {
+                "id": "keep_lock",
+                "title": {
+                  "en": "Keep locked",
+                  "nl": "Vergrendeld houden"
+                }
+              },
+              {
+                "id": "keep_unlock",
+                "title": {
+                  "en": "Keep unlocked",
+                  "nl": "Ontgrendeld houden"
+                }
+              },
+              {
+                "id": "reset",
+                "title": {
+                  "en": "Reset",
+                  "nl": "Reset"
+                }
+              },
+              {
+                "id": "lock_early",
+                "title": {
+                  "en": "Lock early",
+                  "nl": "Vroeg vergrendelen"
+                }
+              },
+              {
+                "id": "lock_now",
+                "title": {
+                  "en": "Lock now",
+                  "nl": "Nu vergrendelen"
+                }
+              },
+              {
+                "id": "custom",
+                "title": {
+                  "en": "Custom (Duration)",
+                  "nl": "Aangepast (Duur)"
+                }
+              }
+            ]
+          },
+          {
+            "type": "number",
+            "name": "interval",
+            "title": {
+              "en": "Duration (minutes)",
+              "nl": "Duur (minuten)"
+            },
+            "min": 1,
+            "max": 1440,
+            "default": 5,
+            "visibleIf": {
+              "type": [
+                "custom"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_reader_garagedoor_unlock",
+        "title": {
+          "en": "Unlock garage door",
+          "nl": "Garage deur ontgrendelen"
+        },
+        "titleFormatted": {
+          "en": "Unlock garage door",
+          "nl": "Garage deur ontgrendelen"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_reader_access_method_wave",
+        "title": {
+          "en": "Set Reader Access Method Wave",
+          "nl": "Stel Reader Toegangsmodus Handbeweging in"
+        },
+        "titleFormatted": {
+          "en": "Set Reader Access Method Wave [[enabled]]",
+          "nl": "Stel Reader Toegangsmodus Handbeweging in [[enabled]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-reader"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_reader_access_method_nfc",
+        "title": {
+          "en": "Set Reader Access Method NFC",
+          "nl": "Stel Reader Toegangsmodus NFC in"
+        },
+        "titleFormatted": {
+          "en": "Set Reader Access Method NFC [[enabled]]",
+          "nl": "Stel Reader Toegangsmodus NFC in [[enabled]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-reader"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_reader_access_method_bt-tap",
+        "title": {
+          "en": "Set Reader Access Method Mobile Tap",
+          "nl": "Stel Reader Toegangsmodus Mobiele Tik in"
+        },
+        "titleFormatted": {
+          "en": "Set Reader Access Method Mobile Tap [[enabled]]",
+          "nl": "Stel Reader Toegangsmodus Mobiele Tik in [[enabled]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-reader"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_reader_access_method_bt-button",
+        "title": {
+          "en": "Set Reader Access Method Mobile Button",
+          "nl": "Stel Reader Toegangsmodus Mobiele Knop in"
+        },
+        "titleFormatted": {
+          "en": "Set Reader Access Method Mobile Button [[enabled]]",
+          "nl": "Stel Reader Toegangsmodus Mobiele Knop in [[enabled]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-reader"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            }
+          }
+        ]
+      },
+      {
         "id": "ufv_set_device_camera_status_led",
         "title": {
           "en": "Set camera status LED",
@@ -2324,6 +2679,161 @@
     ]
   },
   "drivers": [
+    {
+      "name": {
+        "en": "Access Lock",
+        "nl": "Access Slot"
+      },
+      "class": "lock",
+      "capabilities": [
+        "alarm_contact",
+        "locked"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ],
+      "images": {
+        "small": "/drivers/access-door/assets/images/small.png",
+        "large": "/drivers/access-door/assets/images/large.png",
+        "xlarge": "/drivers/access-door/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "access-door"
+    },
+    {
+      "name": {
+        "en": "Access Garage door",
+        "nl": "Access Garage deur"
+      },
+      "class": "garagedoor",
+      "capabilities": [
+        "garagedoor_closed"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ],
+      "images": {
+        "small": "/drivers/access-garagedoor/assets/images/small.png",
+        "large": "/drivers/access-garagedoor/assets/images/large.png",
+        "xlarge": "/drivers/access-garagedoor/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "access-garagedoor"
+    },
+    {
+      "name": {
+        "en": "Access Hub",
+        "nl": "Access Hub"
+      },
+      "class": "lock",
+      "capabilities": [],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ],
+      "images": {
+        "small": "/drivers/access-hub/assets/images/small.png",
+        "large": "/drivers/access-hub/assets/images/large.png",
+        "xlarge": "/drivers/access-hub/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "access-hub"
+    },
+    {
+      "name": {
+        "en": "Access Reader",
+        "de": "Access Leser"
+      },
+      "class": "doorbell",
+      "capabilities": [
+        "reader_nfc_enabled",
+        "reader_wave_enabled",
+        "reader_touch-pass_enabled",
+        "reader_mobile-tap_enabled",
+        "reader_mobile-button_enabled"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ],
+      "images": {
+        "small": "/drivers/access-reader/assets/images/small.png",
+        "large": "/drivers/access-reader/assets/images/large.png",
+        "xlarge": "/drivers/access-reader/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "access-reader"
+    },
     {
       "id": "protectcamera",
       "class": "camera",
@@ -2717,6 +3227,17 @@
       "uiComponent": "sensor",
       "icon": "/assets/recording.svg"
     },
+    "garagedoor_closed": {
+      "type": "boolean",
+      "title": {
+        "en": "Garage Door Open",
+        "nl": "Garage Deur Open"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "toggle",
+      "uiQuickAction": true
+    },
     "ip_address": {
       "type": "string",
       "title": {
@@ -2962,6 +3483,56 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/assets/traffic.svg"
+    },
+    "reader_mobile-button_enabled": {
+      "type": "boolean",
+      "title": {
+        "en": "Mobile Buton",
+        "nl": "Mobiele Knop"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "toggle"
+    },
+    "reader_mobile-tap_enabled": {
+      "type": "boolean",
+      "title": {
+        "en": "Mobile Tap",
+        "nl": "Mobiel Tik"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "toggle"
+    },
+    "reader_nfc_enabled": {
+      "type": "boolean",
+      "title": {
+        "en": "NFC",
+        "nl": "NFC"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "toggle"
+    },
+    "reader_touch-pass_enabled": {
+      "type": "boolean",
+      "title": {
+        "en": "Touch-pass",
+        "nl": "Touch-pass"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "toggle"
+    },
+    "reader_wave_enabled": {
+      "type": "boolean",
+      "title": {
+        "en": "Wave",
+        "nl": "Handgebaar"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "toggle"
     }
   }
 }

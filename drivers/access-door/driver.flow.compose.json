@@ -1,0 +1,95 @@
+{
+  "actions": [
+    {
+      "id": "ufv_set_reader_door_locking_rule",
+      "title": {
+        "en": "Set Door Temporary Locking Rule",
+        "nl": "Deur tijdelijke vergrendelingsregel instellen"
+      },
+      "titleFormatted": {
+        "en": "Set Door Temporary Locking Rule [[type]] for [[interval]] minutes",
+        "nl": "Deur tijdelijke vergrendelingsregel [[type]] voor [[interval]] minuten instellen"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "type",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld"
+          },
+          "values": [
+            {
+              "id": "keep_lock",
+              "title": {
+                "en": "Keep locked",
+                "nl": "Vergrendeld houden"
+              }
+            },
+            {
+              "id": "keep_unlock",
+              "title": {
+                "en": "Keep unlocked",
+                "nl": "Ontgrendeld houden"
+              }
+            },
+            {
+              "id": "reset",
+              "title": {
+                "en": "Reset"
+              }
+            },
+            {
+              "id": "lock_early",
+              "title": {
+                "en": "Lock early",
+                "nl": "Vroeg vergrendelen"
+              }
+            },
+            {
+              "id": "lock_now",
+              "title": {
+                "en": "Lock now",
+                "nl": "Nu vergrendelen"
+              }
+            },
+            {
+              "id": "custom",
+              "title": {
+                "en": "Custom",
+                "nl": "Aangepast"
+              }
+            }
+          ]
+        },
+        {
+          "type": "number",
+          "name": "interval",
+          "title": {
+            "en": "Duration (minutes)",
+            "nl": "Duur (minuten)"
+          },
+          "min": 1,
+          "max": 1440,
+          "default": 5,
+          "visibleIf": {
+            "type": [
+              "custom"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufv_set_reader_door_unlock",
+      "title": {
+        "en": "Set Door Temporary Locking Rule",
+        "nl": "Deur tijdelijke vergrendelingsregel instellen"
+      },
+      "titleFormatted": {
+        "en": "Unlock door",
+        "nl": "Deur ontgrendelen"
+      }
+    }
+  ]
+}

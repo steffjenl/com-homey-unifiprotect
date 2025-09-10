@@ -1,0 +1,10 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Wave",
+    "nl": "Handgebaar"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "toggle"
+}

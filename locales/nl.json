@@ -22,7 +22,16 @@
     "saved": "Instellingen opgeslagen.",
     "settings": "Instellingen",
     "useCameraSnapshot": "Gebruik camera afbeelding",
-    "useCameraSnapshotInstruction": "Gebruik 'Gebruik camera afbeelding' alleen wanneer 'Anonieme snapshot inschakelen' is ingeschakeld in de lokale camerainstellingen. Weet u zeker dat u dit wilt inschakelen?"
+    "useCameraSnapshotInstruction": "Gebruik 'Gebruik camera afbeelding' alleen wanneer 'Anonieme snapshot inschakelen' is ingeschakeld in de lokale camerainstellingen. Weet u zeker dat u dit wilt inschakelen?",
+    "accessApiKey": "API-sleutel",
+    "accessCredentials": "UniFi Access inloggegevens",
+    "ignoreEventsNfcFingerprint": "Cooldown-periode tussen NFC/vingerafdruk gebeurtenissen (in seconden)",
+    "ignoreEventsDoorbell": "Cooldown-periode tussen deurbel gebeurtenissen (in seconden)",
+    "testConnection": "Verbinding testen",
+    "test_status": {
+        "success": "Inloggegevens zijn geldig.",
+        "failure": "Inloggegevens zijn ongeldig."
+    }
   },
   "events": {
     "camera": {

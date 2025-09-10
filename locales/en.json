@@ -1,54 +1,58 @@
 {
-    "title": "UniFi Protect",
-    "pair": {
-        "validate": {
-            "title": "Validating UniFi Cloud Key",
-            "instruction": "Please set the Cloud Key in Settings first."
-        },
-        "login": {
-            "title": "Log in"
-        }
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Validating UniFi Cloud Key",
+      "instruction": "Please set the Cloud Key in Settings first."
     },
-    "settings": {
-        "title": "UniFi Protect Settings",
-        "instruction": "Log in with the credentials of the UniFi Protect user.",
-        "nvr": "Server details",
-        "nvrip": "IP address",
-        "nvrport": "Port",
-        "credentials": "User credentials",
-        "username": "Username",
-        "password": "Password",
-        "apply": "Apply",
-        "saved": "Settings saved.",
-        "settings": "Settings",
-        "useCameraSnapshot": "Use camera snapshot",
-        "useCameraSnapshotInstruction": "Use 'Use camera snapshot' only when 'Enable Anonymous Snapshot' is enabled in the local camera settings. Are you sure you want to enable this?",
-        "testConnection": "Test connection",
-        "test_status": {
-            "success": "Credentials are valid.",
-            "failure": "Credentials are invalid."
-        }
+    "login": {
+      "title": "Log in"
+    }
+  },
+  "settings": {
+    "title": "UniFi Protect Settings",
+    "instruction": "Log in with the credentials of the UniFi Protect user.",
+    "nvr": "Server details",
+    "nvrip": "IP address",
+    "nvrport": "Port",
+    "credentials": "User credentials",
+    "username": "Username",
+    "password": "Password",
+    "apply": "Apply",
+    "saved": "Settings saved.",
+    "settings": "Settings",
+    "useCameraSnapshot": "Use camera snapshot",
+    "useCameraSnapshotInstruction": "Use 'Use camera snapshot' only when 'Enable Anonymous Snapshot' is enabled in the local camera settings. Are you sure you want to enable this?",
+    "testConnection": "Test connection",
+    "test_status": {
+      "success": "Credentials are valid.",
+      "failure": "Credentials are invalid."
     },
-    "events": {
-        "camera": {
-            "motion_started": "Motion started",
-            "motion_ended": "Motion ended",
-            "motion_inprogress": "Motion",
-            "ftr_inprogress": "Full time",
-            "disabled": "Disabled",
-            "failed": "Failed",
-            "done": "Done",
-            "always": "Always",
-            "motion": "Motion",
-            "never": "Never",
-            "detections": "Detections"
-        },
-        "health": {
-            "unknown": "Unknown",
-            "green": "Healthy",
-            "orange": "Warning",
-            "red": "Critical"
-        }
+    "accessApiKey": "API Key",
+    "accessCredentials": "UniFi Access credentials",
+    "ignoreEventsNfcFingerprint": "Cooldown period between NFC/Fingerprint events (in seconds)",
+    "ignoreEventsDoorbell": "Cooldown period between Doorbell events (in seconds)"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Motion started",
+      "motion_ended": "Motion ended",
+      "motion_inprogress": "Motion",
+      "ftr_inprogress": "Full time",
+      "disabled": "Disabled",
+      "failed": "Failed",
+      "done": "Done",
+      "always": "Always",
+      "motion": "Motion",
+      "never": "Never",
+      "detections": "Detections"
     },
-    "package_camera": "__name__ (Package camera)"
+    "health": {
+      "unknown": "Unknown",
+      "green": "Healthy",
+      "orange": "Warning",
+      "red": "Critical"
+    }
+  },
+  "package_camera": "__name__ (Package camera)"
 }

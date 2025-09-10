@@ -15,10 +15,10 @@
 
 <p><span data-i18n="settings.status">Status</span>: <span id="unifi_status" style="font-weight: bold;">Unknown</span>
 </p>
-<p><span data-i18n="settings.websocket.status">Realtime updates Status</span>: <span id="unifi_websocket_status"
+<p><span data-i18n="settings.websocket.status">Protect Realtime Status</span>: <span id="unifi_websocket_status"
                                                                                      style="font-weight: bold;">Unknown</span>
 </p>
-<p><span data-i18n="settings.websocket.at">Last update at</span>: <span id="unifi_websocket_at"
+<p><span data-i18n="settings.websocket.at">Protect Last update at</span>: <span id="unifi_websocket_at"
                                                                         style="font-weight: bold;">Unknown</span>
 </p>
 <!-- NVR -->
@@ -56,6 +56,23 @@
     </div>
 </fieldset>
 
+<!-- Access Credentials -->
+<fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend" data-i18n="settings.accessCredentials"></legend>
+
+    <p><span data-i18n="settings.accessWebsocket.status">Access Realtime Status</span>: <span id="unifi_access_websocket_status"
+                                                                                              style="font-weight: bold;">Unknown</span>
+    </p>
+    <p><span data-i18n="settings.accessWebsocket.at">Access Last update at</span>: <span id="unifi_access_websocket_at"
+                                                                                         style="font-weight: bold;">Unknown</span>
+
+        <!-- Username -->
+    <div class="field row">
+        <label class="homey-form-label" for="txt_accessApiKey" data-i18n="settings.accessApiKey"></label>
+        <input class="homey-form-input" id="txt_accessApiKey" type="text" value=""/>
+    </div>
+</fieldset>
+
 <!-- Settings -->
 <fieldset class="homey-form-fieldset">
     <legend class="homey-form-legend" data-i18n="settings.settings"></legend>
@@ -67,6 +84,18 @@
             <span class="homey-form-checkbox-checkmark"></span>
             <span class="homey-form-checkbox-text"><span data-i18n="settings.useCameraSnapshot"></span></span>
         </label>
+    </div>
+
+    <!-- ignoreEventsNfcFingerprint -->
+    <div class="field row">
+        <label class="homey-form-label" for="txt_ignoreEventsNfcFingerprint" data-i18n="settings.ignoreEventsNfcFingerprint"></label>
+        <input class="homey-form-input" id="txt_ignoreEventsNfcFingerprint" type="number" value="5"/>
+    </div>
+
+    <!-- ignoreEventsDoorbell -->
+    <div class="field row">
+        <label class="homey-form-label" for="txt_ignoreEventsDoorbell" data-i18n="settings.ignoreEventsDoorbell"></label>
+        <input class="homey-form-input" id="txt_ignoreEventsDoorbell" type="number" value="5"/>
     </div>
 
 </fieldset>
@@ -83,7 +112,10 @@
     var txtNvrPort = document.getElementById('txt_nvrport');
     var txtUsername = document.getElementById('txt_username');
     var txtPassword = document.getElementById('txt_password');
+    var txtAccessApiKey = document.getElementById('txt_accessApiKey');
     var txtuseCameraSnapshot = document.getElementById('txt_useCameraSnapshot');
+    var txtIgnoreEventsNfcFingerprint = document.getElementById('txt_ignoreEventsNfcFingerprint');
+    var txtIgnoreEventsDoorbell = document.getElementById('txt_ignoreEventsDoorbell');
     var btnApply = document.getElementById('btn_apply');
     var btnTest = document.getElementById('btn_test');
 
@@ -120,10 +152,22 @@
                 }
             });
 
+            Homey.get('ufp:tokens', (error, credentials) => {
+                if (error) return Homey.alert(error);
+
+                if (credentials) {
+                    txtAccessApiKey.value = credentials.accessApiKey;
+                } else {
+                    console.warn('[SETTINGS] Could not read tokens credentials.');
+                }
+            });
+
             Homey.get('ufp:settings', (error, settings) => {
                 if (error) return Homey.alert(error);
                 if (settings) {
                     txtuseCameraSnapshot.checked = settings.useCameraSnapshot;
+                    txtIgnoreEventsNfcFingerprint.value = settings.ignoreEventsNfcFingerprint || 5;
+                    txtIgnoreEventsDoorbell.value = settings.ignoreEventsDoorbell || 5;
                 } else {
                     console.warn('[SETTINGS] Could not read settings.');
                 }
@@ -151,8 +195,19 @@
                 console.log('[SETTINGS] credentials saved.');
             });
 
+            const apiTokens = {
+                'accessApiKey': txtAccessApiKey.value
+            };
+
+            Homey.set('ufp:tokens', apiTokens, (error, result) => {
+                if (error) return Homey.alert(error);
+                console.log('[SETTINGS] tokens saved.');
+            });
+
             const settings = {
-                'useCameraSnapshot': (!!txtuseCameraSnapshot.checked)
+                'useCameraSnapshot': (!!txtuseCameraSnapshot.checked),
+                'ignoreEventsNfcFingerprint': parseInt(txtIgnoreEventsNfcFingerprint.value) || 5,
+                'ignoreEventsDoorbell': parseInt(txtIgnoreEventsDoorbell.value) || 5
             };
 
             Homey.set('ufp:settings', settings, (error, result) => {
@@ -169,6 +224,7 @@
                 'port': txtNvrPort.value,
                 'user': txtUsername.value,
                 'pass': txtPassword.value,
+                'accessApiKey': txtAccessApiKey.value
             };
 
             Homey.api("POST", "/test", settings, function (err, response) {
@@ -254,14 +310,47 @@
             document.getElementById('unifi_websocket_at').innerHTML = data;
         }
 
+        const updateAccessWebsocketStatusField = (err, data) => {
+            if (err) {
+                return err;
+            }
+            var color = 'darkred';
+            if (data === 'Connected') color = 'darkgreen';
+            if (data === 'Connecting...') color = 'orange';
+
+            var statusField = document.getElementById('unifi_access_websocket_status');
+            statusField.style.color = color;
+
+            var translationKey = 'status.connection.' + data;
+            var translation = Homey.__(translationKey);
+
+            if (translation === translationKey || translation === '' || typeof translation === 'undefined') {
+                statusField.innerHTML = data;
+            } else {
+                statusField.innerHTML = translation;
+            }
+        }
+
+        const updateAccessWebsocketAtField = (err, data) => {
+            if (err) {
+                return err;
+            }
+
+            document.getElementById('unifi_access_websocket_at').innerHTML = data;
+        }
+
         Homey.on('com.ubnt.unifiprotect.status', (data) => {
             updateStatusField(null, data);
         });
         Homey.on('com.ubnt.unifiprotect.websocket.status', (data) => {
             updateWebsocketStatusField(null, data);
         });
+        Homey.on('com.ubnt.unifiprotect.accessWebsocket.status', (data) => {
+            updateAccessWebsocketStatusField(null, data);
+        });
         Homey.get('com.ubnt.unifiprotect.status', updateStatusField);
         Homey.get('com.ubnt.unifiprotect.websocket.status', updateWebsocketStatusField);
+        Homey.get('com.ubnt.unifiprotect.accessWebsocket.status', updateAccessWebsocketStatusField);
 
         Homey.api("GET", "/status", null, function (err, result) {
             updateStatusField(null, result);
@@ -275,6 +364,16 @@
 
         Homey.api("GET", "/getLastWebsocketMessageTime", null, function (err, result) {
             updateWebsocketAtField(null, result);
+            if (err) return Homey.alert(err);
+        });
+
+        Homey.api("GET", "/accesswebsocketstatus", null, function (err, result) {
+            updateAccessWebsocketStatusField(null, result);
+            if (err) return Homey.alert(err);
+        });
+
+        Homey.api("GET", "/getLastAccessWebsocketMessageTime", null, function (err, result) {
+            updateAccessWebsocketAtField(null, result);
             if (err) return Homey.alert(err);
         });
     }
