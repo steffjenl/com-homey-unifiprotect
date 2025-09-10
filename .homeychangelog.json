@@ -217,5 +217,8 @@
   },
   "1.7.13": {
     "en": "Fix fingerprint scanner"
+  },
+  "1.7.14": {
+    "en": "Add unifi-access devices, and make cooldown method for events configurable."
   }
 }
