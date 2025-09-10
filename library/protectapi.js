@@ -1,7 +1,7 @@
 'use strict';
 
-const BaseClass = require('./baseclass');
 const https = require('https');
+const BaseClass = require('./baseclass');
 const ProtectWebClient = require('./webclient');
 const ProtectWebSocket = require('./websocket');
 const UfvConstants = require('./constants');
@@ -130,101 +130,101 @@ class ProtectAPI extends BaseClass {
 
             //this.getCSRFToken(host, port).then(response => {
 
-                this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connecting');
-                this.loggedInStatus = 'Connecting';
+            this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connecting');
+            this.loggedInStatus = 'Connecting';
 
-                if (!host) reject(new Error('Invalid host.'));
-                if (!username) reject(new Error('Invalid username.'));
-                if (!password) reject(new Error('Invalid password.'));
+            if (!host) reject(new Error('Invalid host.'));
+            if (!username) reject(new Error('Invalid username.'));
+            if (!password) reject(new Error('Invalid password.'));
 
-                const credentials = JSON.stringify({
-                    username,
-                    password,
-                });
+            const credentials = JSON.stringify({
+                username,
+                password,
+            });
 
-                const options = {
-                    method: 'POST',
-                    hostname: host,
-                    port: port,
-                    path: '/api/auth/login',
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8',
-                        Accept: 'application/json',
-                    },
-                    maxRedirects: 20,
-                    rejectUnauthorized: false,
-                    timeout: 2000,
-                    keepAlive: true,
-                };
+            const options = {
+                method: 'POST',
+                hostname: host,
+                port: port,
+                path: '/api/auth/login',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    Accept: 'application/json',
+                },
+                maxRedirects: 20,
+                rejectUnauthorized: false,
+                timeout: 2000,
+                keepAlive: true,
+            };
 
-                const req = https.request(options, res => {
+            const req = https.request(options, res => {
+                if (res.statusCode !== 200) {
+                    return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode}) (creds: ${credentials}`));
+                }
+                const body = [];
+
+                res.on('data', chunk => body.push(chunk));
+                res.on('end', () => {
                     if (res.statusCode !== 200) {
-                        return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode}) (creds: ${credentials}`));
+                        return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode})`));
                     }
-                    const body = [];
 
-                    res.on('data', chunk => body.push(chunk));
-                    res.on('end', () => {
-                        if (res.statusCode !== 200) {
-                            return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode})`));
+                    // Obtain authorization header
+                    res.rawHeaders.forEach((item, index) => {
+                        if (item.toLowerCase() === 'set-cookie') {
+                            this.webclient.setCookieToken(res.rawHeaders[index + 1]);
                         }
 
-                        // Obtain authorization header
-                        res.rawHeaders.forEach((item, index) => {
-                            if (item.toLowerCase() === 'set-cookie') {
-                                this.webclient.setCookieToken(res.rawHeaders[index + 1]);
-                            }
-
-                            // X-CSRF-Token
-                            if (item.toLowerCase() === 'x-csrf-token') {
-                                this.webclient.setCSRFToken(res.rawHeaders[index + 1]);
-                            }
-                        });
-
-                        if (this.webclient.getCookieToken() === null) {
-                            reject(new Error('Invalid set-cookie header.'));
-                            return;
+                        // X-CSRF-Token
+                        if (item.toLowerCase() === 'x-csrf-token') {
+                            this.webclient.setCSRFToken(res.rawHeaders[index + 1]);
                         }
-
-                        // Connected
-                        this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connected');
-                        this.loggedInStatus = 'Connected';
-                        //
-                        return resolve('Logged in...');
                     });
+
+                    if (this.webclient.getCookieToken() === null) {
+                        reject(new Error('Invalid set-cookie header.'));
+                        return;
+                    }
+
+                    // Connected
+                    this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connected');
+                    this.loggedInStatus = 'Connected';
+                    //
+                    return resolve('Logged in...');
                 });
+            });
 
-                req.on('error', error => {
-                    this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
-                    this.loggedInStatus = 'Disconnected';
-                    return reject(error);
-                });
+            req.on('error', error => {
+                this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
+                this.loggedInStatus = 'Disconnected';
+                return reject(error);
+            });
 
-                req.write(credentials);
-                req.end();
+            req.write(credentials);
+            req.end();
 
-            }).catch(error => this.homey.error(error));
+        }).catch(error => this.homey.error(error));
     }
 
     getBootstrapInfo() {
         return new Promise((resolve, reject) => {
-            console.log('Getting bootstrap info...');
+            this.homey.log('Getting bootstrap info...');
             this.webclient.get('bootstrap')
                 .then(response => {
                     const result = JSON.parse(response);
-                    console.log('Bootstrap info obtained.');
+                    this.homey.log('Bootstrap info obtained.');
 
                     if (result) {
-                        console.log('Setting bootstrap info...');
+                        this.homey.log('Setting bootstrap info...');
                         this._bootstrap = result;
 
                         if (result.cameras) {
-                            console.log('Setting API key...');
+                            this.homey.log('Setting API key...');
                             this._rtspPort = result.nvr.ports.rtsp;
                             this._lastUpdateId = result.lastUpdateId;
 
                             if (this.ws.isWebsocketConnected() === false) {
-                                console.log('Connecting to websocket...');
+                                this.homey.log('Connecting to websocket...');
                                 // lastUpdateId is changed, please reconnect to websocket when websocket is disconnected.
                                 this.ws.reconnectUpdatesListener();
                             }
@@ -734,11 +734,11 @@ class ProtectAPI extends BaseClass {
 
     getUsers() {
         return new Promise((resolve, reject) => {
-        this.getBootstrapInfo()
-            .then((result) => {
-                return resolve(result.users);
-            })
-            .catch(error => this.error(error));
+            this.getBootstrapInfo()
+                .then((result) => {
+                    return resolve(result.users);
+                })
+                .catch(error => this.error(error));
         });
     }
 
