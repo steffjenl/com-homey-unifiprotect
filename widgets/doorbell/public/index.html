@@ -50,7 +50,7 @@
                 .then((result) => {
                     console.log('Received image URL:', result);
                     if (result !== 'loading.png') {
-                        document.getElementById('camera').src = String(result);
+                        document.getElementById('camera').src = String(result) + '?t=' + new Date().getTime(); // Prevent caching
                         document.getElementById('camera').className = 'camera';
                     } else {
                         document.getElementById('camera').src = String(result);
