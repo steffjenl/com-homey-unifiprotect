@@ -223,5 +223,8 @@
   },
   "1.7.15": {
     "en": "Add camera and doorbell widgets"
+  },
+  "1.8.0": {
+    "en": "Prepare Video support for Homey 12.7 and bugfixes"
   }
 }
