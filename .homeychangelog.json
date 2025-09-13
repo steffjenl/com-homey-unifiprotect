@@ -220,5 +220,8 @@
   },
   "1.7.14": {
     "en": "Add unifi-access devices, and make cooldown method for events configurable."
+  },
+  "1.7.15": {
+    "en": "Add camera and doorbell widgets"
   }
 }
