@@ -3105,7 +3105,7 @@
         "en": "Camera",
         "nl": "Camera"
       },
-      "height": 300,
+      "height": 270,
       "settings": [
         {
           "id": "device",
@@ -3139,7 +3139,7 @@
         "en": "Doorbell",
         "nl": "Deurbel"
       },
-      "height": 300,
+      "height": 270,
       "settings": [
         {
           "id": "device",
@@ -3152,7 +3152,7 @@
         {
           "id": "packageCamera",
           "type": "checkbox",
-          "default": false,
+          "value": false,
           "title": {
             "en": "Package Camera",
             "nl": "Pakket Camera"
