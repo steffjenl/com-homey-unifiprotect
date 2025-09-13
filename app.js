@@ -83,35 +83,28 @@ class UniFiProtect extends Homey.App {
     // refresh auth tokens every hour
     await this.appProtect.refreshAuthTokens();
 
+    const cameraWidget = this.homey.dashboards.getWidget('camera');
+    cameraWidget.registerSettingAutocompleteListener('device', async (query, settings) => {
+      const cameraDevices = await this.homey.drivers.getDriver('protectcamera').getDevices();
+      const returnDevices = [];
+      cameraDevices.forEach((device) => {
+        returnDevices.push({ name: device.getName(), id: device.getData().id, driverId: 'protectcamera' });
+      });
+      return returnDevices;
+    });
+
+    const doorbellWidget = this.homey.dashboards.getWidget('doorbell');
+    doorbellWidget.registerSettingAutocompleteListener('device', async (query, settings) => {
+      const cameraDevices = await this.homey.drivers.getDriver('protectdoorbell').getDevices();
+      const returnDevices = [];
+      cameraDevices.forEach((device) => {
+        returnDevices.push({ name: device.getName(), id: device.getData().id, driverId: 'protectdoorbell' });
+      });
+      return returnDevices;
+    });
+
     this.debug('UniFiProtect has been initialized');
   }
-  //
-  // async triggerSnapshotTrigger(tokens) {
-  //   await this._snapshotTrigger
-  //     .trigger(tokens)
-  //     .catch(this.error);
-  // }
-  //
-  // async triggerConnectionStatusTrigger(tokens) {
-  //   await this._connectionStatusTrigger
-  //     .trigger(tokens)
-  //     .then(this.debug)
-  //     .catch(this.error);
-  // }
-  //
-  // async triggerDoorbellRingingTrigger(tokens) {
-  //   await this._doorbellRingingTrigger
-  //     .trigger(tokens)
-  //     .then(this.debug)
-  //     .catch(this.error);
-  // }
-  //
-  // async triggerSmartDetectionTrigger(tokens) {
-  //   await this._smartDetectionTrigger
-  //     .trigger(tokens)
-  //     .then(this.debug)
-  //     .catch(this.error);
-  // }
 
   /**
      * Convert a Homey time to a local time

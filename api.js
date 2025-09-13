@@ -1,10 +1,11 @@
+'use strict';
+
 const https = require('https');
 const ProtectWebClient = require('./library/webclient');
 
 module.exports = {
   async getStatus({ homey, query }) {
-    const result = await homey.app.api.loggedInStatus;
-    return result;
+    return homey.app.api.loggedInStatus;
   },
   async getWebsocketStatus({ homey, query }) {
     return homey.app.api.ws.isWebsocketConnected() ? 'Connected' : 'Unknown';
@@ -88,7 +89,7 @@ module.exports = {
         };
       });
     } catch (error) {
-      console.log('testCredentials error', error);
+      homey.log('testCredentials error', error);
       return {
         status: 'failure',
         error: error.message,

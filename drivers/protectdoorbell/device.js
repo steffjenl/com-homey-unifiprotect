@@ -11,6 +11,8 @@ class Doorbell extends Homey.Device {
      */
   async onInit() {
     this.device = this;
+    this.cloudUrl = null;
+    this.cloudUrlPackage = null;
     await this.waitForBootstrap();
     this.cleanSmartDetectionEvents();
     this.homey.app.debug('UnifiDoorbell Device has been initialized');
@@ -197,7 +199,7 @@ class Doorbell extends Homey.Device {
           }
           if (this.hasCapability('camera_connection_status')) {
             if (this.getCapabilityValue('camera_connection_status') !== Doorbell.isConnected) {
-              this.onConnectionChanged(Doorbell.isConnected).catch(this.error);
+              this.onConnectionChanged(Doorbell.isConnected);
             }
             this.setCapabilityValue('camera_connection_status', Doorbell.isConnected).catch(this.error);
           }
@@ -245,6 +247,7 @@ class Doorbell extends Homey.Device {
 
     // Check if the event date is newer
     if (!lastRingAt || lastRing > (lastRingAt + this.homey.app.ignoreEventsDoorbell)) {
+      this.homey.api.realtime('com.ubnt.unifiprotect.updateWidgetDoorbell', { deviceId: this.getData().id });
       this.homey.app._doorbellRingingTrigger.trigger({
         ufp_ringing_camera: this.getName(),
       });
@@ -656,7 +659,9 @@ class Doorbell extends Homey.Device {
       })).catch(this.log);
     }
 
-    this.setCameraImage('snapshot', this.getName(), this._snapshotImage);
+    this.setCameraImage('snapshot', this.getName(), this._snapshotImage).catch(this.error);
+
+    this.cloudUrl = this._snapshotImage.cloudUrl;
 
     this.homey.app.debug(`Created snapshot image for doorbell ${this.getName()}.`);
   }
@@ -716,7 +721,9 @@ class Doorbell extends Homey.Device {
         }));
       }
 
-      this.setCameraImage('package-snapshot', this.homey.__('package_camera', { name: this.getName() }), this._snapshotPackageImage);
+      this.setCameraImage('package-snapshot', this.homey.__('package_camera', { name: this.getName() }), this._snapshotPackageImage).catch(this.error);
+
+      this.cloudUrlPackage = this._snapshotPackageImage.cloudUrl;
 
       this.homey.app.debug(`Created package snapshot image for doorbell ${this.getName()}.`);
       resolve();

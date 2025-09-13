@@ -121,6 +121,7 @@ class AppAccess extends BaseClass {
         }).catch(this.error);
         return true;
       }
+      this.homey.app.debug('DoorAccess event ignored to prevent duplicates!');
     }
 
     this.homey.app.debug('DoorAccess event is not valid!');

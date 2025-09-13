@@ -11,8 +11,9 @@ class Camera extends Homey.Device {
      */
   async onInit() {
     this.device = this;
+    this.cloudUrl = null;
     await this.waitForBootstrap();
-    this.homey.app.debug('UnifiCamera Device has been initialized');
+    this.log('UnifiCamera Device has been initialized');
   }
 
   /**
@@ -169,33 +170,33 @@ class Camera extends Homey.Device {
         if (camera.id === this.getData().id) {
 
           if (this.hasCapability('ip_address')) {
-            this.setCapabilityValue('ip_address', camera.host);
+            this.setCapabilityValue('ip_address', camera.host).catch(this.error);
           }
           if (this.hasCapability('camera_recording_status')) {
-            this.setCapabilityValue('camera_recording_status', camera.isRecording);
+            this.setCapabilityValue('camera_recording_status', camera.isRecording).catch(this.error);
           }
           if (this.hasCapability('camera_recording_mode')) {
             this.setCapabilityValue('camera_recording_mode',
               this.homey.__(`events.camera.${String(camera.recordingSettings.mode)
-                .toLowerCase()}`));
+                .toLowerCase()}`)).catch(this.error);
           }
           if (this.hasCapability('camera_microphone_status')) {
-            this.setCapabilityValue('camera_microphone_status', camera.isMicEnabled);
+            this.setCapabilityValue('camera_microphone_status', camera.isMicEnabled).catch(this.error);
           }
           if (this.hasCapability('camera_nightvision_status')) {
-            this.setCapabilityValue('camera_nightvision_status', camera.isDark);
+            this.setCapabilityValue('camera_nightvision_status', camera.isDark).catch(this.error);
           }
           if (this.hasCapability('camera_microphone_volume')) {
-            this.setCapabilityValue('camera_microphone_volume', camera.micVolume);
+            this.setCapabilityValue('camera_microphone_volume', camera.micVolume).catch(this.error);
           }
           if (this.hasCapability('camera_connection_status')) {
             if (this.getCapabilityValue('camera_connection_status') !== camera.isConnected) {
               this.onConnectionChanged(camera.isConnected);
             }
-            this.setCapabilityValue('camera_connection_status', camera.isConnected);
+            this.setCapabilityValue('camera_connection_status', camera.isConnected).catch(this.error);
           }
           if (this.hasCapability('camera_nightvision_set')) {
-            this.setCapabilityValue('camera_nightvision_set', camera.ispSettings.irLedMode);
+            this.setCapabilityValue('camera_nightvision_set', camera.ispSettings.irLedMode).catch(this.error);
           }
 
         }
@@ -205,25 +206,25 @@ class Camera extends Homey.Device {
 
   onMotionStart() {
     this.homey.app.debug('onMotionStart');
-    this.setCapabilityValue('alarm_motion', true);
+    this.setCapabilityValue('alarm_motion', true).catch(this.error);
   }
 
   onMotionEnd() {
     this.homey.app.debug('onMotionEnd');
-    this.setCapabilityValue('alarm_motion', false);
+    this.setCapabilityValue('alarm_motion', false).catch(this.error);
   }
 
   onIsDark(isDark) {
     // Debug information about playload
     if (this.hasCapability('camera_nightvision_status')) {
-      this.setCapabilityValue('camera_nightvision_status', isDark);
+      this.setCapabilityValue('camera_nightvision_status', isDark).catch(this.error);
     }
   }
 
   onNightVisionMode(mode) {
     // Debug information about playload
     if (this.hasCapability('camera_nightvision_set')) {
-      this.setCapabilityValue('camera_nightvision_set', mode);
+      this.setCapabilityValue('camera_nightvision_set', mode).catch(this.error);
     }
   }
 
@@ -232,6 +233,7 @@ class Camera extends Homey.Device {
 
     // Check if the event date is newer
     if (!lastRingAt || lastRing > lastRingAt) {
+      this.homey.api.realtime('com.ubnt.unifiprotect.updateWidgetCamera', { deviceId: this.getData().id });
       this.homey.app._doorbellRingingTrigger.trigger({
         ufp_ringing_camera: this.getName(),
       });
@@ -411,14 +413,14 @@ class Camera extends Homey.Device {
   onIsRecording(isRecording) {
     // Debug information about playload
     if (this.hasCapability('camera_recording_status')) {
-      this.setCapabilityValue('camera_recording_status', isRecording);
+      this.setCapabilityValue('camera_recording_status', isRecording).catch(this.error);
     }
   }
 
   onIsMicEnabled(isMicEnabled) {
     // Debug information about playload
     if (this.hasCapability('camera_microphone_status')) {
-      this.setCapabilityValue('camera_microphone_status', isMicEnabled);
+      this.setCapabilityValue('camera_microphone_status', isMicEnabled).catch(this.error);
     }
   }
 
@@ -427,13 +429,13 @@ class Camera extends Homey.Device {
     if (this.getCapabilityValue('camera_connection_status') !== isConnected) {
       this.onConnectionChanged(isConnected);
     }
-    this.setCapabilityValue('camera_connection_status', isConnected);
+    this.setCapabilityValue('camera_connection_status', isConnected).catch(this.error);
   }
 
   onMicVolume(micVolume) {
     // Debug information about playload
     if (this.hasCapability('camera_microphone_volume')) {
-      this.setCapabilityValue('camera_microphone_volume', micVolume);
+      this.setCapabilityValue('camera_microphone_volume', micVolume).catch(this.error);
     }
   }
 
@@ -442,7 +444,7 @@ class Camera extends Homey.Device {
     if (this.hasCapability('camera_recording_mode')) {
       this.setCapabilityValue('camera_recording_mode',
         this.homey.__(`events.camera.${String(mode)
-          .toLowerCase()}`));
+          .toLowerCase()}`)).catch(this.error);
     }
   }
 
@@ -472,7 +474,6 @@ class Camera extends Homey.Device {
     this.homey.app.debug(`Creating snapshot image for camera ${this.getName()}.`);
 
     this._snapshotImage = await this.homey.images.createImage();
-
     const ipAddress = this.getCapabilityValue('ip_address');
 
     this._snapshotImage.setStream(async (stream) => {
@@ -522,7 +523,9 @@ class Camera extends Homey.Device {
       })).catch(this.log);
     }
 
-    this.setCameraImage('snapshot', this.getName(), this._snapshotImage);
+    this.cloudUrl = this._snapshotImage.cloudUrl;
+
+    this.setCameraImage('snapshot', this.getName(), this._snapshotImage).catch(this.error);
     this.homey.app.debug(`Created snapshot image for camera ${this.getName()}.`);
   }
 
