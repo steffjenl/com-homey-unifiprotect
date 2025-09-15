@@ -226,5 +226,8 @@
   },
   "1.8.0": {
     "en": "Prepare Video support for Homey 12.7 and bugfixes"
+  },
+  "1.8.1": {
+    "en": "Add new driver icons, widget previews and new langaues"
   }
 }
