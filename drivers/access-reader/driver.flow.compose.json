@@ -4,11 +4,31 @@
       "id": "ufv_set_reader_access_method_wave",
       "title": {
         "en": "Set Reader Access Method Wave",
-        "nl": "Stel Reader Toegangsmodus Handbeweging in"
+        "nl": "Stel Reader Toegangsmodus Handbeweging in",
+        "de": "Lesemethode Wave einstellen",
+        "fr": "Définir la méthode d'accès lecteur Wave",
+        "it": "Imposta metodo di accesso lettore Wave",
+        "sv": "Ställ in läsarens åtkomstmetod Wave",
+        "no": "Angi leserens tilgangsmetode Wave",
+        "es": "Establecer método de acceso lector Wave",
+        "da": "Indstil læserens adgangsmetode Wave",
+        "ru": "Установить метод доступа Wave",
+        "pl": "Ustaw metodę dostępu czytnika Wave",
+        "ko": "리더 액세스 방법 Wave 설정"
       },
       "titleFormatted": {
         "en": "Set Reader Access Method Wave [[enabled]]",
-        "nl": "Stel Reader Toegangsmodus Handbeweging in [[enabled]]"
+        "nl": "Stel Reader Toegangsmodus Handbeweging in [[enabled]]",
+        "de": "Lesemethode Wave einstellen [[enabled]]",
+        "fr": "Définir la méthode d'accès lecteur Wave [[enabled]]",
+        "it": "Imposta metodo di accesso lettore Wave [[enabled]]",
+        "sv": "Ställ in läsarens åtkomstmetod Wave [[enabled]]",
+        "no": "Angi leserens tilgangsmetode Wave [[enabled]]",
+        "es": "Establecer método de acceso lector Wave [[enabled]]",
+        "da": "Indstil læserens adgangsmetode Wave [[enabled]]",
+        "ru": "Установить метод доступа Wave [[enabled]]",
+        "pl": "Ustaw metodę dostępu czytnika Wave [[enabled]]",
+        "ko": "리더 액세스 방법 Wave [[enabled]] 설정"
       },
       "args": [
         {
@@ -16,7 +36,17 @@
           "name": "enabled",
           "title": {
             "en": "Enabled",
-            "nl": "Ingeschakeld"
+            "nl": "Ingeschakeld",
+            "de": "Aktiviert",
+            "fr": "Activé",
+            "it": "Abilitato",
+            "sv": "Aktiverad",
+            "no": "Aktivert",
+            "es": "Habilitado",
+            "da": "Aktiveret",
+            "ru": "Включено",
+            "pl": "Włączone",
+            "ko": "활성화됨"
           }
         }
       ]
@@ -25,11 +55,31 @@
       "id": "ufv_set_reader_access_method_nfc",
       "title": {
         "en": "Set Reader Access Method NFC",
-        "nl": "Stel Reader Toegangsmodus NFC in"
+        "nl": "Stel Reader Toegangsmodus NFC in",
+        "de": "Lesemethode NFC einstellen",
+        "fr": "Définir la méthode d'accès lecteur NFC",
+        "it": "Imposta metodo di accesso lettore NFC",
+        "sv": "Ställ in läsarens åtkomstmetod NFC",
+        "no": "Angi leserens tilgangsmetode NFC",
+        "es": "Establecer método de acceso lector NFC",
+        "da": "Indstil læserens adgangsmetode NFC",
+        "ru": "Установить метод доступа NFC",
+        "pl": "Ustaw metodę dostępu czytnika NFC",
+        "ko": "리더 액세스 방법 NFC 설정"
       },
       "titleFormatted": {
         "en": "Set Reader Access Method NFC [[enabled]]",
-        "nl": "Stel Reader Toegangsmodus NFC in [[enabled]]"
+        "nl": "Stel Reader Toegangsmodus NFC in [[enabled]]",
+        "de": "Lesemethode NFC einstellen [[enabled]]",
+        "fr": "Définir la méthode d'accès lecteur NFC [[enabled]]",
+        "it": "Imposta metodo di accesso lettore NFC [[enabled]]",
+        "sv": "Ställ in läsarens åtkomstmetod NFC [[enabled]]",
+        "no": "Angi leserens tilgangsmetode NFC [[enabled]]",
+        "es": "Establecer método de acceso lector NFC [[enabled]]",
+        "da": "Indstil læserens adgangsmetode NFC [[enabled]]",
+        "ru": "Установить метод доступа NFC [[enabled]]",
+        "pl": "Ustaw metodę dostępu czytnika NFC [[enabled]]",
+        "ko": "리더 액세스 방법 NFC [[enabled]] 설정"
       },
       "args": [
         {
@@ -37,7 +87,17 @@
           "name": "enabled",
           "title": {
             "en": "Enabled",
-            "nl": "Ingeschakeld"
+            "nl": "Ingeschakeld",
+            "de": "Aktiviert",
+            "fr": "Activé",
+            "it": "Abilitato",
+            "sv": "Aktiverad",
+            "no": "Aktivert",
+            "es": "Habilitado",
+            "da": "Aktiveret",
+            "ru": "Включено",
+            "pl": "Włączone",
+            "ko": "활성화됨"
           }
         }
       ]
@@ -46,11 +106,31 @@
       "id": "ufv_set_reader_access_method_bt-tap",
       "title": {
         "en": "Set Reader Access Method Mobile Tap",
-        "nl": "Stel Reader Toegangsmodus Mobiele Tik in"
+        "nl": "Stel Reader Toegangsmodus Mobiele Tik in",
+        "de": "Lesemethode Mobile Tap einstellen",
+        "fr": "Définir la méthode d'accès lecteur Mobile Tap",
+        "it": "Imposta metodo di accesso lettore Mobile Tap",
+        "sv": "Ställ in läsarens åtkomstmetod Mobile Tap",
+        "no": "Angi leserens tilgangsmetode Mobile Tap",
+        "es": "Establecer método de acceso lector Mobile Tap",
+        "da": "Indstil læserens adgangsmetode Mobile Tap",
+        "ru": "Установить метод доступа Mobile Tap",
+        "pl": "Ustaw metodę dostępu czytnika Mobile Tap",
+        "ko": "리더 액세스 방법 Mobile Tap 설정"
       },
       "titleFormatted": {
         "en": "Set Reader Access Method Mobile Tap [[enabled]]",
-        "nl": "Stel Reader Toegangsmodus Mobiele Tik in [[enabled]]"
+        "nl": "Stel Reader Toegangsmodus Mobiele Tik in [[enabled]]",
+        "de": "Lesemethode Mobile Tap einstellen [[enabled]]",
+        "fr": "Définir la méthode d'accès lecteur Mobile Tap [[enabled]]",
+        "it": "Imposta metodo di accesso lettore Mobile Tap [[enabled]]",
+        "sv": "Ställ in läsarens åtkomstmetod Mobile Tap [[enabled]]",
+        "no": "Angi leserens tilgangsmetode Mobile Tap [[enabled]]",
+        "es": "Establecer método de acceso lector Mobile Tap [[enabled]]",
+        "da": "Indstil læserens adgangsmetode Mobile Tap [[enabled]]",
+        "ru": "Установить метод доступа Mobile Tap [[enabled]]",
+        "pl": "Ustaw metodę dostępu czytnika Mobile Tap [[enabled]]",
+        "ko": "리더 액세스 방법 Mobile Tap [[enabled]] 설정"
       },
       "args": [
         {
@@ -58,7 +138,17 @@
           "name": "enabled",
           "title": {
             "en": "Enabled",
-            "nl": "Ingeschakeld"
+            "nl": "Ingeschakeld",
+            "de": "Aktiviert",
+            "fr": "Activé",
+            "it": "Abilitato",
+            "sv": "Aktiverad",
+            "no": "Aktivert",
+            "es": "Habilitado",
+            "da": "Aktiveret",
+            "ru": "Включено",
+            "pl": "Włączone",
+            "ko": "활성화됨"
           }
         }
       ]
@@ -67,11 +157,31 @@
       "id": "ufv_set_reader_access_method_bt-button",
       "title": {
         "en": "Set Reader Access Method Mobile Button",
-        "nl": "Stel Reader Toegangsmodus Mobiele Knop in"
+        "nl": "Stel Reader Toegangsmodus Mobiele Knop in",
+        "de": "Lesemethode Mobile Button einstellen",
+        "fr": "Définir la méthode d'accès lecteur Mobile Button",
+        "it": "Imposta metodo di accesso lettore Mobile Button",
+        "sv": "Ställ in läsarens åtkomstmetod Mobile Button",
+        "no": "Angi leserens tilgangsmetode Mobile Button",
+        "es": "Establecer método de acceso lector Mobile Button",
+        "da": "Indstil læserens adgangsmetode Mobile Button",
+        "ru": "Установить метод доступа Mobile Button",
+        "pl": "Ustaw metodę dostępu czytnika Mobile Button",
+        "ko": "리더 액세스 방법 Mobile Button 설정"
       },
       "titleFormatted": {
         "en": "Set Reader Access Method Mobile Button [[enabled]]",
-        "nl": "Stel Reader Toegangsmodus Mobiele Knop in [[enabled]]"
+        "nl": "Stel Reader Toegangsmodus Mobiele Knop in [[enabled]]",
+        "de": "Lesemethode Mobile Button einstellen [[enabled]]",
+        "fr": "Définir la méthode d'accès lecteur Mobile Button [[enabled]]",
+        "it": "Imposta metodo di accesso lettore Mobile Button [[enabled]]",
+        "sv": "Ställ in läsarens åtkomstmetod Mobile Button [[enabled]]",
+        "no": "Angi leserens tilgangsmetode Mobile Button [[enabled]]",
+        "es": "Establecer método de acceso lector Mobile Button [[enabled]]",
+        "da": "Indstil læserens adgangsmetode Mobile Button [[enabled]]",
+        "ru": "Установить метод доступа Mobile Button [[enabled]]",
+        "pl": "Ustaw metodę dostępu czytnika Mobile Button [[enabled]]",
+        "ko": "리더 액세스 방법 Mobile Button [[enabled]] 설정"
       },
       "args": [
         {
@@ -79,7 +189,17 @@
           "name": "enabled",
           "title": {
             "en": "Enabled",
-            "nl": "Ingeschakeld"
+            "nl": "Ingeschakeld",
+            "de": "Aktiviert",
+            "fr": "Activé",
+            "it": "Abilitato",
+            "sv": "Aktiverad",
+            "no": "Aktivert",
+            "es": "Habilitado",
+            "da": "Aktiveret",
+            "ru": "Включено",
+            "pl": "Włączone",
+            "ko": "활성화됨"
           }
         }
       ]

@@ -1,7 +1,16 @@
 {
   "name": {
     "en": "Access Reader",
-    "de": "Access Leser"
+    "de": "Access Leser",
+    "fr": "Lecteur d'accès",
+    "it": "Lettore di accesso",
+    "sv": "Passerläsare",
+    "no": "Tilgangsleser",
+    "es": "Lector de acceso",
+    "da": "Adgangslæser",
+    "ru": "Считыватель доступа",
+    "pl": "Czytnik dostępu",
+    "ko": "액세스 리더기"
   },
   "class": "doorbell",
   "capabilities": [

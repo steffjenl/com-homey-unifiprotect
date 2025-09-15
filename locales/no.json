@@ -1,0 +1,105 @@
+{
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Valider UniFi Cloud Key",
+      "instruction": "Vennligst sett Cloud Key i Innstillinger først."
+    },
+    "login": {
+      "title": "Logg inn"
+    }
+  },
+  "settings": {
+    "title": "UniFi Protect-innstillinger",
+    "instruction": "Logg inn med UniFi Protect-brukerens legitimasjon.",
+    "nvr": "Serverdetaljer",
+    "nvrip": "IP-adresse",
+    "nvrport": "Port",
+    "credentials": "Brukerlegitimasjon",
+    "username": "Brukernavn",
+    "password": "Passord",
+    "apply": "Bruk",
+    "saved": "Innstillinger lagret.",
+    "settings": "Innstillinger",
+    "useCameraSnapshot": "Bruk kamera snapshot",
+    "useCameraSnapshotInstruction": "Bruk 'Bruk kamera snapshot' kun når 'Aktiver anonym snapshot' er aktivert i lokale kamerainnstillinger. Er du sikker på at du vil aktivere dette?",
+    "testConnection": "Test tilkobling",
+    "test_status": {
+      "success": "Legitimasjonene er gyldige.",
+      "failure": "Legitimasjonene er ugyldige."
+    },
+    "accessApiKey": "API-nøkkel",
+    "accessCredentials": "UniFi Access legitimasjon",
+    "ignoreEventsNfcFingerprint": "Nedkjølingsperiode mellom NFC/fingeravtrykk hendelser (i sekunder)",
+    "ignoreEventsDoorbell": "Nedkjølingsperiode mellom ringeklokke hendelser (i sekunder)"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Bevegelse startet",
+      "motion_ended": "Bevegelse avsluttet",
+      "motion_inprogress": "Bevegelse",
+      "ftr_inprogress": "Full tid",
+      "disabled": "Deaktivert",
+      "failed": "Mislyktes",
+      "done": "Ferdig",
+      "always": "Alltid",
+      "motion": "Bevegelse",
+      "never": "Aldri",
+      "detections": "Deteksjoner"
+    },
+    "health": {}
+  }
+}
+{
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Validierung UniFi Cloud Key",
+      "instruction": "Bitte zuerst den Cloud Key in den Einstellungen festlegen."
+    },
+    "login": {
+      "title": "Anmelden"
+    }
+  },
+  "settings": {
+    "title": "UniFi Protect Einstellungen",
+    "instruction": "Melden Sie sich mit den Zugangsdaten des UniFi Protect-Benutzers an.",
+    "nvr": "Serverdetails",
+    "nvrip": "IP-Adresse",
+    "nvrport": "Port",
+    "credentials": "Benutzerdaten",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "apply": "Anwenden",
+    "saved": "Einstellungen gespeichert.",
+    "settings": "Einstellungen",
+    "useCameraSnapshot": "Kamera-Snapshot verwenden",
+    "useCameraSnapshotInstruction": "Verwenden Sie 'Kamera-Snapshot verwenden' nur, wenn 'Anonymen Snapshot aktivieren' in den lokalen Kameraeinstellungen aktiviert ist. Möchten Sie dies wirklich aktivieren?",
+    "testConnection": "Verbindung testen",
+    "test_status": {
+      "success": "Zugangsdaten sind gültig.",
+      "failure": "Zugangsdaten sind ungültig."
+    },
+    "accessApiKey": "API-Schlüssel",
+    "accessCredentials": "UniFi Access Zugangsdaten",
+    "ignoreEventsNfcFingerprint": "Abklingzeit zwischen NFC/Fingerabdruck-Ereignissen (in Sekunden)",
+    "ignoreEventsDoorbell": "Abklingzeit zwischen Türklingel-Ereignissen (in Sekunden)"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Bewegung gestartet",
+      "motion_ended": "Bewegung beendet",
+      "motion_inprogress": "Bewegung",
+      "ftr_inprogress": "Dauerbetrieb",
+      "disabled": "Deaktiviert",
+      "failed": "Fehlgeschlagen",
+      "done": "Fertig",
+      "always": "Immer",
+      "motion": "Bewegung",
+      "never": "Nie",
+      "detections": "Erkennungen"
+    },
+    "health": {}
+  }
+}
+

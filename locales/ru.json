@@ -1,0 +1,53 @@
+{
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Проверка UniFi Cloud Key",
+      "instruction": "Пожалуйста, сначала установите Cloud Key в настройках."
+    },
+    "login": {
+      "title": "Войти"
+    }
+  },
+  "settings": {
+    "title": "Настройки UniFi Protect",
+    "instruction": "Войдите с учетными данными пользователя UniFi Protect.",
+    "nvr": "Детали сервера",
+    "nvrip": "IP-адрес",
+    "nvrport": "Порт",
+    "credentials": "Учетные данные пользователя",
+    "username": "Имя пользователя",
+    "password": "Пароль",
+    "apply": "Применить",
+    "saved": "Настройки сохранены.",
+    "settings": "Настройки",
+    "useCameraSnapshot": "Использовать снимок камеры",
+    "useCameraSnapshotInstruction": "Используйте 'Использовать снимок камеры' только если 'Включить анонимный снимок' включен в локальных настройках камеры. Вы уверены, что хотите включить это?",
+    "testConnection": "Проверить соединение",
+    "test_status": {
+      "success": "Учетные данные действительны.",
+      "failure": "Учетные данные недействительны."
+    },
+    "accessApiKey": "API-ключ",
+    "accessCredentials": "Учетные данные UniFi Access",
+    "ignoreEventsNfcFingerprint": "Период между событиями NFC/отпечатка пальца (в секундах)",
+    "ignoreEventsDoorbell": "Период между событиями звонка (в секундах)"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Движение началось",
+      "motion_ended": "Движение завершено",
+      "motion_inprogress": "Движение",
+      "ftr_inprogress": "Полное время",
+      "disabled": "Отключено",
+      "failed": "Не удалось",
+      "done": "Готово",
+      "always": "Всегда",
+      "motion": "Движение",
+      "never": "Никогда",
+      "detections": "Обнаружения"
+    },
+    "health": {}
+  }
+}
+

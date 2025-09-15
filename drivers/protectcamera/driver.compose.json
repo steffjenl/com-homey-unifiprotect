@@ -10,7 +10,17 @@
     "camera_nightvision_set"
   ],
   "name": {
-    "en": "Camera"
+    "en": "Camera",
+    "de": "Kamera",
+    "fr": "Caméra",
+    "it": "Telecamera",
+    "sv": "Kamera",
+    "no": "Kamera",
+    "es": "Cámara",
+    "da": "Kamera",
+    "ru": "Камера",
+    "pl": "Kamera",
+    "ko": "카메라"
   },
   "images": {
     "large": "drivers/protectcamera/assets/images/large.png",

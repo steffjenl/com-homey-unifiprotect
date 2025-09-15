@@ -1,0 +1,53 @@
+{
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Validazione UniFi Cloud Key",
+      "instruction": "Imposta prima la Cloud Key nelle impostazioni."
+    },
+    "login": {
+      "title": "Accedi"
+    }
+  },
+  "settings": {
+    "title": "Impostazioni UniFi Protect",
+    "instruction": "Accedi con le credenziali dell'utente UniFi Protect.",
+    "nvr": "Dettagli server",
+    "nvrip": "Indirizzo IP",
+    "nvrport": "Porta",
+    "credentials": "Credenziali utente",
+    "username": "Nome utente",
+    "password": "Password",
+    "apply": "Applica",
+    "saved": "Impostazioni salvate.",
+    "settings": "Impostazioni",
+    "useCameraSnapshot": "Usa snapshot della telecamera",
+    "useCameraSnapshotInstruction": "Usa 'Usa snapshot della telecamera' solo quando 'Abilita snapshot anonimo' è abilitato nelle impostazioni locali della telecamera. Sei sicuro di volerlo abilitare?",
+    "testConnection": "Test connessione",
+    "test_status": {
+      "success": "Credenziali valide.",
+      "failure": "Credenziali non valide."
+    },
+    "accessApiKey": "Chiave API",
+    "accessCredentials": "Credenziali UniFi Access",
+    "ignoreEventsNfcFingerprint": "Periodo di raffreddamento tra eventi NFC/impronta digitale (in secondi)",
+    "ignoreEventsDoorbell": "Periodo di raffreddamento tra eventi campanello (in secondi)"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Movimento iniziato",
+      "motion_ended": "Movimento terminato",
+      "motion_inprogress": "Movimento",
+      "ftr_inprogress": "Tempo pieno",
+      "disabled": "Disabilitato",
+      "failed": "Fallito",
+      "done": "Fatto",
+      "always": "Sempre",
+      "motion": "Movimento",
+      "never": "Mai",
+      "detections": "Rilevamenti"
+    },
+    "health": {}
+  }
+}
+

@@ -1,0 +1,53 @@
+{
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Validera UniFi Cloud Key",
+      "instruction": "Ställ först in Cloud Key i Inställningar."
+    },
+    "login": {
+      "title": "Logga in"
+    }
+  },
+  "settings": {
+    "title": "UniFi Protect-inställningar",
+    "instruction": "Logga in med UniFi Protect-användarens uppgifter.",
+    "nvr": "Serverdetaljer",
+    "nvrip": "IP-adress",
+    "nvrport": "Port",
+    "credentials": "Användaruppgifter",
+    "username": "Användarnamn",
+    "password": "Lösenord",
+    "apply": "Verkställ",
+    "saved": "Inställningar sparade.",
+    "settings": "Inställningar",
+    "useCameraSnapshot": "Använd kamerabild",
+    "useCameraSnapshotInstruction": "Använd 'Använd kamerabild' endast när 'Aktivera anonym bild' är aktiverat i kamerans lokala inställningar. Är du säker på att du vill aktivera detta?",
+    "testConnection": "Testa anslutning",
+    "test_status": {
+      "success": "Uppgifterna är giltiga.",
+      "failure": "Uppgifterna är ogiltiga."
+    },
+    "accessApiKey": "API-nyckel",
+    "accessCredentials": "UniFi Access-uppgifter",
+    "ignoreEventsNfcFingerprint": "Nedkylningsperiod mellan NFC/fingeravtryckshändelser (i sekunder)",
+    "ignoreEventsDoorbell": "Nedkylningsperiod mellan dörrklockshändelser (i sekunder)"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Rörelse startad",
+      "motion_ended": "Rörelse avslutad",
+      "motion_inprogress": "Rörelse",
+      "ftr_inprogress": "Full tid",
+      "disabled": "Inaktiverad",
+      "failed": "Misslyckades",
+      "done": "Klar",
+      "always": "Alltid",
+      "motion": "Rörelse",
+      "never": "Aldrig",
+      "detections": "Detekteringar"
+    },
+    "health": {}
+  }
+}
+

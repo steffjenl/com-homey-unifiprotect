@@ -11,7 +11,17 @@
     "light_mode_unifi"
   ],
   "name": {
-    "en": "Light"
+    "en": "Light",
+    "de": "Licht",
+    "fr": "Lumière",
+    "it": "Luce",
+    "sv": "Lampa",
+    "no": "Lys",
+    "es": "Luz",
+    "da": "Lys",
+    "ru": "Свет",
+    "pl": "Światło",
+    "ko": "조명"
   },
   "images": {
     "large": "drivers/protectlight/assets/images/large.png",

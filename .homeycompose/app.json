@@ -3,11 +3,32 @@
   "sdk": 3,
   "brandColor": "#159EDA",
   "name": {
-    "en": "Ubiquiti UniFi Protect"
+    "en": "Ubiquiti UniFi Protect",
+    "nl": "Ubiquiti UniFi Protect",
+    "de": "Ubiquiti UniFi Protect",
+    "fr": "Ubiquiti UniFi Protect",
+    "it": "Ubiquiti UniFi Protect",
+    "sv": "Ubiquiti UniFi Protect",
+    "no": "Ubiquiti UniFi Protect",
+    "es": "Ubiquiti UniFi Protect",
+    "da": "Ubiquiti UniFi Protect",
+    "ru": "Ubiquiti UniFi Protect",
+    "pl": "Ubiquiti UniFi Protect",
+    "ko": "Ubiquiti UniFi Protect"
   },
   "description": {
     "en": "Protect your home with UniFi Protect & Access devices.",
-    "nl": "Bescherm je huis met UniFi Protect & Access apparaten."
+    "nl": "Bescherm je huis met UniFi Protect & Access apparaten.",
+    "de": "Schützen Sie Ihr Zuhause mit UniFi Protect & Access Geräten.",
+    "fr": "Protégez votre maison avec les appareils UniFi Protect & Access.",
+    "it": "Proteggi la tua casa con i dispositivi UniFi Protect & Access.",
+    "sv": "Skydda ditt hem med UniFi Protect & Access-enheter.",
+    "no": "Beskytt hjemmet ditt med UniFi Protect & Access-enheter.",
+    "es": "Protege tu hogar con dispositivos UniFi Protect & Access.",
+    "da": "Beskyt dit hjem med UniFi Protect & Access-enheder.",
+    "ru": "Защитите свой дом с помощью устройств UniFi Protect & Access.",
+    "pl": "Chroń swój dom za pomocą urządzeń UniFi Protect & Access.",
+    "ko": "UniFi Protect 및 Access 장치로 집을 보호하세요."
   },
   "tags": {
     "en": [
@@ -29,6 +50,106 @@
       "momentopname",
       "opname",
       "toegang",
+      "access"
+    ],
+    "de": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "fr": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "it": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "sv": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "no": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "es": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "da": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "ru": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "pl": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "ko": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
       "access"
     ]
   },

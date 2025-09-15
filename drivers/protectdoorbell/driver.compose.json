@@ -13,7 +13,17 @@
   ],
   "name": {
     "en": "Doorbell",
-    "nl": "Deurbel"
+    "nl": "Deurbel",
+    "de": "Türklingel",
+    "fr": "Sonnette",
+    "it": "Campanello",
+    "sv": "Dörrklocka",
+    "no": "Ringeklokke",
+    "es": "Timbre",
+    "da": "Dørklokke",
+    "ru": "Дверной звонок",
+    "pl": "Dzwonek do drzwi",
+    "ko": "초인종"
   },
   "images": {
     "large": "drivers/protectdoorbell/assets/images/large.png",

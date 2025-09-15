@@ -4,7 +4,17 @@
       "id": "ufp_device_camera_smart_detection",
       "title": {
         "en": "A object was detected",
-        "nl": "Er is een object gedetecteerd"
+        "nl": "Er is een object gedetecteerd",
+        "de": "Ein Objekt wurde erkannt",
+        "fr": "Un objet a été détecté",
+        "it": "È stato rilevato un oggetto",
+        "sv": "Ett objekt har upptäckts",
+        "no": "Et objekt ble oppdaget",
+        "es": "Se ha detectado un objeto",
+        "da": "Et objekt blev registreret",
+        "ru": "Объект обнаружен",
+        "pl": "Wykryto obiekt",
+        "ko": "객체가 감지되었습니다"
       },
       "tokens": [
         {
@@ -12,11 +22,31 @@
           "type": "string",
           "title": {
             "en": "Smart detection type",
-            "nl": "Slim detectie type"
+            "nl": "Slim detectie type",
+            "de": "Typ der intelligenten Erkennung",
+            "fr": "Type de détection intelligente",
+            "it": "Tipo di rilevamento intelligente",
+            "sv": "Typ av smart detektion",
+            "no": "Type smart deteksjon",
+            "es": "Tipo de detección inteligente",
+            "da": "Smart detektionstype",
+            "ru": "Тип интеллектуального обнаружения",
+            "pl": "Typ inteligentnego wykrywania",
+            "ko": "스마트 감지 유형"
           },
           "example": {
             "en": "vehicle",
-            "nl": "vehicle"
+            "nl": "vehicle",
+            "de": "Fahrzeug",
+            "fr": "véhicule",
+            "it": "veicolo",
+            "sv": "fordon",
+            "no": "kjøretøy",
+            "es": "vehículo",
+            "da": "køretøj",
+            "ru": "транспортное средство",
+            "pl": "pojazd",
+            "ko": "차량"
           }
         },
         {
@@ -24,11 +54,31 @@
           "type": "number",
           "title": {
             "en": "Score",
-            "nl": "Score"
+            "nl": "Score",
+            "de": "Punktzahl",
+            "fr": "Score",
+            "it": "Punteggio",
+            "sv": "Poäng",
+            "no": "Poeng",
+            "es": "Puntuación",
+            "da": "Score",
+            "ru": "Оценка",
+            "pl": "Wynik",
+            "ko": "점수"
           },
           "example": {
             "en": "62",
-            "nl": "62"
+            "nl": "62",
+            "de": "62",
+            "fr": "62",
+            "it": "62",
+            "sv": "62",
+            "no": "62",
+            "es": "62",
+            "da": "62",
+            "ru": "62",
+            "pl": "62",
+            "ko": "62"
           }
         },
         {
@@ -36,11 +86,31 @@
           "type": "string",
           "title": {
             "en": "Zones",
-            "nl": "Zones"
+            "nl": "Zones",
+            "de": "Zonen",
+            "fr": "Zones",
+            "it": "Zone",
+            "sv": "Zoner",
+            "no": "Soner",
+            "es": "Zonas",
+            "da": "Zoner",
+            "ru": "Зоны",
+            "pl": "Strefy",
+            "ko": "존"
           },
           "example": {
             "en": "1, 2",
-            "nl": "1, 2"
+            "nl": "1, 2",
+            "de": "1, 2",
+            "fr": "1, 2",
+            "it": "1, 2",
+            "sv": "1, 2",
+            "no": "1, 2",
+            "es": "1, 2",
+            "da": "1, 2",
+            "ru": "1, 2",
+            "pl": "1, 2",
+            "ko": "1, 2"
           }
         }
       ]
@@ -49,7 +119,17 @@
       "id": "ufp_device_camera_smart_detection_vehicle",
       "title": {
         "en": "A vehicle was detected",
-        "nl": "Een voertuig werd gedetecteerd"
+        "nl": "Een voertuig werd gedetecteerd",
+        "de": "Ein Fahrzeug wurde erkannt",
+        "fr": "Un véhicule a été détecté",
+        "it": "È stato rilevato un veicolo",
+        "sv": "Ett fordon har upptäckts",
+        "no": "Et kjøretøy ble oppdaget",
+        "es": "Se ha detectado un vehículo",
+        "da": "Et køretøj blev registreret",
+        "ru": "Транспортное средство обнаружено",
+        "pl": "Wykryto pojazd",
+        "ko": "차량이 감지되었습니다"
       },
       "tokens": [
         {
@@ -57,11 +137,31 @@
           "type": "number",
           "title": {
             "en": "Score",
-            "nl": "Score"
+            "nl": "Score",
+            "de": "Punktzahl",
+            "fr": "Score",
+            "it": "Punteggio",
+            "sv": "Poäng",
+            "no": "Poeng",
+            "es": "Puntuación",
+            "da": "Score",
+            "ru": "Оценка",
+            "pl": "Wynik",
+            "ko": "점수"
           },
           "example": {
             "en": "62",
-            "nl": "62"
+            "nl": "62",
+            "de": "62",
+            "fr": "62",
+            "it": "62",
+            "sv": "62",
+            "no": "62",
+            "es": "62",
+            "da": "62",
+            "ru": "62",
+            "pl": "62",
+            "ko": "62"
           }
         },
         {
@@ -69,11 +169,31 @@
           "type": "string",
           "title": {
             "en": "Zones",
-            "nl": "Zones"
+            "nl": "Zones",
+            "de": "Zonen",
+            "fr": "Zones",
+            "it": "Zone",
+            "sv": "Zoner",
+            "no": "Soner",
+            "es": "Zonas",
+            "da": "Zoner",
+            "ru": "Зоны",
+            "pl": "Strefy",
+            "ko": "존"
           },
           "example": {
             "en": "1, 2",
-            "nl": "1, 2"
+            "nl": "1, 2",
+            "de": "1, 2",
+            "fr": "1, 2",
+            "it": "1, 2",
+            "sv": "1, 2",
+            "no": "1, 2",
+            "es": "1, 2",
+            "da": "1, 2",
+            "ru": "1, 2",
+            "pl": "1, 2",
+            "ko": "1, 2"
           }
         }
       ]
@@ -82,7 +202,17 @@
       "id": "ufp_device_camera_smart_detection_package",
       "title": {
         "en": "A package was detected",
-        "nl": "Een pakket werd gedetecteerd"
+        "nl": "Een pakket werd gedetecteerd",
+        "de": "Ein Paket wurde erkannt",
+        "fr": "Un colis a été détecté",
+        "it": "È stato rilevato un pacco",
+        "sv": "Ett paket har upptäckts",
+        "no": "En pakke ble oppdaget",
+        "es": "Se ha detectado un paquete",
+        "da": "En pakke blev registreret",
+        "ru": "Посылка обнаружена",
+        "pl": "Wykryto paczkę",
+        "ko": "소포가 감지되었습니다"
       },
       "tokens": [
         {
@@ -90,11 +220,31 @@
           "type": "number",
           "title": {
             "en": "Score",
-            "nl": "Score"
+            "nl": "Score",
+            "de": "Punktzahl",
+            "fr": "Score",
+            "it": "Punteggio",
+            "sv": "Poäng",
+            "no": "Poeng",
+            "es": "Puntuación",
+            "da": "Score",
+            "ru": "Оценка",
+            "pl": "Wynik",
+            "ko": "점수"
           },
           "example": {
             "en": "62",
-            "nl": "62"
+            "nl": "62",
+            "de": "62",
+            "fr": "62",
+            "it": "62",
+            "sv": "62",
+            "no": "62",
+            "es": "62",
+            "da": "62",
+            "ru": "62",
+            "pl": "62",
+            "ko": "62"
           }
         },
         {
@@ -102,11 +252,31 @@
           "type": "string",
           "title": {
             "en": "Zones",
-            "nl": "Zones"
+            "nl": "Zones",
+            "de": "Zonen",
+            "fr": "Zones",
+            "it": "Zone",
+            "sv": "Zoner",
+            "no": "Soner",
+            "es": "Zonas",
+            "da": "Zoner",
+            "ru": "Зоны",
+            "pl": "Strefy",
+            "ko": "존"
           },
           "example": {
             "en": "1, 2",
-            "nl": "1, 2"
+            "nl": "1, 2",
+            "de": "1, 2",
+            "fr": "1, 2",
+            "it": "1, 2",
+            "sv": "1, 2",
+            "no": "1, 2",
+            "es": "1, 2",
+            "da": "1, 2",
+            "ru": "1, 2",
+            "pl": "1, 2",
+            "ko": "1, 2"
           }
         }
       ]
@@ -115,7 +285,17 @@
       "id": "ufp_device_camera_smart_detection_animal",
       "title": {
         "en": "A animal was detected",
-        "nl": "Een dier werd gedetecteerd"
+        "nl": "Een dier werd gedetecteerd",
+        "de": "Ein Tier wurde erkannt",
+        "fr": "Un animal a été détecté",
+        "it": "È stato rilevato un animale",
+        "sv": "Ett djur har upptäckts",
+        "no": "Et dyr ble oppdaget",
+        "es": "Se ha detectado un animal",
+        "da": "Et dyr blev registreret",
+        "ru": "Животное обнаружено",
+        "pl": "Wykryto zwierzę",
+        "ko": "동물이 감지되었습니다"
       },
       "tokens": [
         {
@@ -123,11 +303,31 @@
           "type": "number",
           "title": {
             "en": "Score",
-            "nl": "Score"
+            "nl": "Score",
+            "de": "Punktzahl",
+            "fr": "Score",
+            "it": "Punteggio",
+            "sv": "Poäng",
+            "no": "Poeng",
+            "es": "Puntuación",
+            "da": "Score",
+            "ru": "Оценка",
+            "pl": "Wynik",
+            "ko": "점수"
           },
           "example": {
             "en": "62",
-            "nl": "62"
+            "nl": "62",
+            "de": "62",
+            "fr": "62",
+            "it": "62",
+            "sv": "62",
+            "no": "62",
+            "es": "62",
+            "da": "62",
+            "ru": "62",
+            "pl": "62",
+            "ko": "62"
           }
         },
         {
@@ -135,11 +335,31 @@
           "type": "string",
           "title": {
             "en": "Zones",
-            "nl": "Zones"
+            "nl": "Zones",
+            "de": "Zonen",
+            "fr": "Zones",
+            "it": "Zone",
+            "sv": "Zoner",
+            "no": "Soner",
+            "es": "Zonas",
+            "da": "Zoner",
+            "ru": "Зоны",
+            "pl": "Strefy",
+            "ko": "존"
           },
           "example": {
             "en": "1, 2",
-            "nl": "1, 2"
+            "nl": "1, 2",
+            "de": "1, 2",
+            "fr": "1, 2",
+            "it": "1, 2",
+            "sv": "1, 2",
+            "no": "1, 2",
+            "es": "1, 2",
+            "da": "1, 2",
+            "ru": "1, 2",
+            "pl": "1, 2",
+            "ko": "1, 2"
           }
         }
       ]
@@ -148,7 +368,17 @@
       "id": "ufp_device_camera_smart_detection_person",
       "title": {
         "en": "A person was detected",
-        "nl": "Een persoon werd gedetecteerd"
+        "nl": "Een persoon werd gedetecteerd",
+        "de": "Eine Person wurde erkannt",
+        "fr": "Une personne a été détectée",
+        "it": "È stata rilevata una persona",
+        "sv": "En person har upptäckts",
+        "no": "En person ble oppdaget",
+        "es": "Se ha detectado una persona",
+        "da": "En person blev registreret",
+        "ru": "Человек обнаружен",
+        "pl": "Wykryto osobę",
+        "ko": "사람이 감지되었습니다"
       },
       "tokens": [
         {
@@ -156,11 +386,31 @@
           "type": "number",
           "title": {
             "en": "Score",
-            "nl": "Score"
+            "nl": "Score",
+            "de": "Punktzahl",
+            "fr": "Score",
+            "it": "Punteggio",
+            "sv": "Poäng",
+            "no": "Poeng",
+            "es": "Puntuación",
+            "da": "Score",
+            "ru": "Оценка",
+            "pl": "Wynik",
+            "ko": "점수"
           },
           "example": {
             "en": "62",
-            "nl": "62"
+            "nl": "62",
+            "de": "62",
+            "fr": "62",
+            "it": "62",
+            "sv": "62",
+            "no": "62",
+            "es": "62",
+            "da": "62",
+            "ru": "62",
+            "pl": "62",
+            "ko": "62"
           }
         },
         {
@@ -168,11 +418,31 @@
           "type": "string",
           "title": {
             "en": "Zones",
-            "nl": "Zones"
+            "nl": "Zones",
+            "de": "Zonen",
+            "fr": "Zones",
+            "it": "Zone",
+            "sv": "Zoner",
+            "no": "Soner",
+            "es": "Zonas",
+            "da": "Zoner",
+            "ru": "Зоны",
+            "pl": "Strefy",
+            "ko": "존"
           },
           "example": {
             "en": "1, 2",
-            "nl": "1, 2"
+            "nl": "1, 2",
+            "de": "1, 2",
+            "fr": "1, 2",
+            "it": "1, 2",
+            "sv": "1, 2",
+            "no": "1, 2",
+            "es": "1, 2",
+            "da": "1, 2",
+            "ru": "1, 2",
+            "pl": "1, 2",
+            "ko": "1, 2"
           }
         }
       ]
@@ -181,7 +451,17 @@
       "id": "ufp_device_camera_smart_detection_licenseplate",
       "title": {
         "en": "A license plate was detected",
-        "nl": "Een kenteken werd gedetecteerd"
+        "nl": "Een kenteken werd gedetecteerd",
+        "de": "Ein Nummernschild wurde erkannt",
+        "fr": "Une plaque d'immatriculation a été détectée",
+        "it": "È stata rilevata una targa",
+        "sv": "En registreringsskylt har upptäckts",
+        "no": "En registreringsskilt ble oppdaget",
+        "es": "Se ha detectado una matrícula",
+        "da": "En nummerplade blev registreret",
+        "ru": "Номерной знак обнаружен",
+        "pl": "Wykryto tablicę rejestracyjną",
+        "ko": "번호판이 감지되었습니다"
       },
       "tokens": [
         {
@@ -189,11 +469,31 @@
           "type": "number",
           "title": {
             "en": "Score",
-            "nl": "Score"
+            "nl": "Score",
+            "de": "Punktzahl",
+            "fr": "Score",
+            "it": "Punteggio",
+            "sv": "Poäng",
+            "no": "Poeng",
+            "es": "Puntuación",
+            "da": "Score",
+            "ru": "Оценка",
+            "pl": "Wynik",
+            "ko": "점수"
           },
           "example": {
             "en": "62",
-            "nl": "62"
+            "nl": "62",
+            "de": "62",
+            "fr": "62",
+            "it": "62",
+            "sv": "62",
+            "no": "62",
+            "es": "62",
+            "da": "62",
+            "ru": "62",
+            "pl": "62",
+            "ko": "62"
           }
         },
         {
@@ -201,11 +501,31 @@
           "type": "string",
           "title": {
             "en": "Zones",
-            "nl": "Zones"
+            "nl": "Zones",
+            "de": "Zonen",
+            "fr": "Zones",
+            "it": "Zone",
+            "sv": "Zoner",
+            "no": "Soner",
+            "es": "Zonas",
+            "da": "Zoner",
+            "ru": "Зоны",
+            "pl": "Strefy",
+            "ko": "존"
           },
           "example": {
             "en": "1, 2",
-            "nl": "1, 2"
+            "nl": "1, 2",
+            "de": "1, 2",
+            "fr": "1, 2",
+            "it": "1, 2",
+            "sv": "1, 2",
+            "no": "1, 2",
+            "es": "1, 2",
+            "da": "1, 2",
+            "ru": "1, 2",
+            "pl": "1, 2",
+            "ko": "1, 2"
           }
         }
       ]
@@ -214,7 +534,17 @@
       "id": "ufp_device_camera_smart_detection_face",
       "title": {
         "en": "A face was detected",
-        "nl": "Een gezicht werd gedetecteerd"
+        "nl": "Een gezicht werd gedetecteerd",
+        "de": "Ein Gesicht wurde erkannt",
+        "fr": "Un visage a été détecté",
+        "it": "È stato rilevato un volto",
+        "sv": "Ett ansikte har upptäckts",
+        "no": "Et ansikt ble oppdaget",
+        "es": "Se ha detectado un rostro",
+        "da": "Et ansigt blev registreret",
+        "ru": "Лицо обнаружено",
+        "pl": "Wykryto twarz",
+        "ko": "얼굴이 감지되었습니다"
       },
       "tokens": [
         {
@@ -222,11 +552,31 @@
           "type": "number",
           "title": {
             "en": "Score",
-            "nl": "Score"
+            "nl": "Score",
+            "de": "Punktzahl",
+            "fr": "Score",
+            "it": "Punteggio",
+            "sv": "Poäng",
+            "no": "Poeng",
+            "es": "Puntuación",
+            "da": "Score",
+            "ru": "Оценка",
+            "pl": "Wynik",
+            "ko": "점수"
           },
           "example": {
             "en": "62",
-            "nl": "62"
+            "nl": "62",
+            "de": "62",
+            "fr": "62",
+            "it": "62",
+            "sv": "62",
+            "no": "62",
+            "es": "62",
+            "da": "62",
+            "ru": "62",
+            "pl": "62",
+            "ko": "62"
           }
         },
         {
@@ -234,11 +584,31 @@
           "type": "string",
           "title": {
             "en": "Zones",
-            "nl": "Zones"
+            "nl": "Zones",
+            "de": "Zonen",
+            "fr": "Zones",
+            "it": "Zone",
+            "sv": "Zoner",
+            "no": "Soner",
+            "es": "Zonas",
+            "da": "Zoner",
+            "ru": "Зоны",
+            "pl": "Strefy",
+            "ko": "존"
           },
           "example": {
             "en": "1, 2",
-            "nl": "1, 2"
+            "nl": "1, 2",
+            "de": "1, 2",
+            "fr": "1, 2",
+            "it": "1, 2",
+            "sv": "1, 2",
+            "no": "1, 2",
+            "es": "1, 2",
+            "da": "1, 2",
+            "ru": "1, 2",
+            "pl": "1, 2",
+            "ko": "1, 2"
           }
         }
       ]
@@ -247,11 +617,31 @@
       "id": "ufp_device_camera_audio_detection",
       "title": {
         "en": "An audio event was detected",
-        "nl": "Er is een audio gebeurtenis gedetecteerd"
+        "nl": "Er is een audio gebeurtenis gedetecteerd",
+        "de": "Ein Audioereignis wurde erkannt",
+        "fr": "Un événement audio a été détecté",
+        "it": "È stato rilevato un evento audio",
+        "sv": "Ett ljudhändelse har upptäckts",
+        "no": "En lydhendelse ble oppdaget",
+        "es": "Se ha detectado un evento de audio",
+        "da": "En lydhændelse blev registreret",
+        "ru": "Обнаружено аудиособытие",
+        "pl": "Wykryto zdarzenie audio",
+        "ko": "오디오 이벤트가 감지되었습니다"
       },
       "titleFormatted": {
         "en": "[[audio_type]] was detected",
-        "nl": "[[audio_type]] werd gedetecteerd"
+        "nl": "[[audio_type]] werd gedetecteerd",
+        "de": "[[audio_type]] wurde erkannt",
+        "fr": "[[audio_type]] a été détecté",
+        "it": "[[audio_type]] è stato rilevato",
+        "sv": "[[audio_type]] har upptäckts",
+        "no": "[[audio_type]] ble oppdaget",
+        "es": "[[audio_type]] ha sido detectado",
+        "da": "[[audio_type]] blev registreret",
+        "ru": "[[audio_type]] обнаружен",
+        "pl": "[[audio_type]] wykryty",
+        "ko": "[[audio_type]] 감지됨"
       },
       "args": [
         {
@@ -259,77 +649,187 @@
           "name": "audio_type",
           "title": {
             "en": "Audio type",
-            "nl": "Audio type"
+            "nl": "Audio type",
+            "de": "Audio Typ",
+            "fr": "Type audio",
+            "it": "Tipo audio",
+            "sv": "Ljudtyp",
+            "no": "Lydtype",
+            "es": "Tipo de audio",
+            "da": "Lyde type",
+            "ru": "Тип аудио",
+            "pl": "Typ audio",
+            "ko": "오디오 유형"
           },
           "values": [
             {
               "id": "any",
               "title": {
                 "en": "Any audio event",
-                "nl": "Elk audio gebeurtenis"
+                "nl": "Elk audio gebeurtenis",
+                "de": "Jedes Audioereignis",
+                "fr": "Tout événement audio",
+                "it": "Qualsiasi evento audio",
+                "sv": "Alla ljudhändelser",
+                "no": "Alle lydhendelser",
+                "es": "Cualquier evento de audio",
+                "da": "Enhver lydhændelse",
+                "ru": "Событие аудио любого типа",
+                "pl": "Każde zdarzenie audio",
+                "ko": "모든 오디오 이벤트"
               }
             },
             {
               "id": "smoke",
               "title": {
                 "en": "Smoke alarm",
-                "nl": "Rookmelder"
+                "nl": "Rookmelder",
+                "de": "Rauchmelder",
+                "fr": "Détecteur de fumée",
+                "it": "Rilevatore di fumo",
+                "sv": "Röksensor",
+                "no": "Røykvarsler",
+                "es": "Detector de humo",
+                "da": "Røgalarm",
+                "ru": "Дымовой сигнализатор",
+                "pl": "Czujnik dymu",
+                "ko": "연기 감지기"
               }
             },
             {
               "id": "cmonx",
               "title": {
                 "en": "CO alarm",
-                "nl": "CO melder"
+                "nl": "CO melder",
+                "de": "CO-Melder",
+                "fr": "Détecteur de CO",
+                "it": "Rilevatore di CO",
+                "sv": "CO-sensor",
+                "no": "CO-varsler",
+                "es": "Detector de CO",
+                "da": "CO-alarm",
+                "ru": "Сигнализатор CO",
+                "pl": "Czujnik CO",
+                "ko": "일산화탄소 경고음"
               }
             },
             {
               "id": "siren",
               "title": {
                 "en": "Siren",
-                "nl": "Sirene"
+                "nl": "Sirene",
+                "de": "Sirene",
+                "fr": "Sirène",
+                "it": "Sirena",
+                "sv": "Siren",
+                "no": "Sirene",
+                "es": "Sirena",
+                "da": "Sirene",
+                "ru": "Сирена",
+                "pl": "Syrena",
+                "ko": "사이렌"
               }
             },
             {
               "id": "baby_cry",
               "title": {
                 "en": "Baby crying",
-                "nl": "Baby huilen"
+                "nl": "Baby huilen",
+                "de": "Weinen des Babys",
+                "fr": "Bébé qui pleure",
+                "it": "Pianto del bambino",
+                "sv": "Bebisgråt",
+                "no": "Bebisgråt",
+                "es": "Llanto de bebé",
+                "da": "Babygråd",
+                "ru": "Плач ребенка",
+                "pl": "Płacz dziecka",
+                "ko": "아기 울음"
               }
             },
             {
               "id": "speak",
               "title": {
                 "en": "Speaking",
-                "nl": "Praten"
+                "nl": "Praten",
+                "de": "Sprechen",
+                "fr": "Parler",
+                "it": "Parlare",
+                "sv": "Tala",
+                "no": "Snakke",
+                "es": "Hablando",
+                "da": "Tale",
+                "ru": "Говорит",
+                "pl": "Mówić",
+                "ko": "말하기"
               }
             },
             {
               "id": "bark",
               "title": {
                 "en": "Dog barking",
-                "nl": "Hond blaffen"
+                "nl": "Hond blaffen",
+                "de": "Hundebellen",
+                "fr": "Aboyer",
+                "it": "Abbaiare",
+                "sv": "Hundskall",
+                "no": "Hundebjeff",
+                "es": "Ladrido de perro",
+                "da": "Hundegøen",
+                "ru": "Лай собаки",
+                "pl": "Szczekanie psa",
+                "ko": "개 짖는 소리"
               }
             },
             {
               "id": "burglar",
               "title": {
                 "en": "Burglar alarm",
-                "nl": "Inbraakalarm"
+                "nl": "Inbraakalarm",
+                "de": "Einbruchsalarm",
+                "fr": "Alarme anti-intrusion",
+                "it": "Allarme antifurto",
+                "sv": "Inbrottslarm",
+                "no": "Innbruddsalarm",
+                "es": "Alarma de intrusión",
+                "da": "Indbrudsalarm",
+                "ru": "Сигнализация при взломе",
+                "pl": "Alarm przeciwwłamaniowy",
+                "ko": "도난 경고음"
               }
             },
             {
               "id": "car_horn",
               "title": {
                 "en": "Car horn",
-                "nl": "Autoclaxon"
+                "nl": "Autoclaxon",
+                "de": "Autohorn",
+                "fr": "Klaxon",
+                "it": "Clacson",
+                "sv": "Bilhorn",
+                "no": "Bilhorn",
+                "es": "Claxon",
+                "da": "Bilhorn",
+                "ru": "Автомобильный сигнал",
+                "pl": "Klakson",
+                "ko": "차 경적"
               }
             },
             {
               "id": "glass_break",
               "title": {
                 "en": "Glass breaking",
-                "nl": "Glasbreuk"
+                "nl": "Glasbreuk",
+                "de": "Glasbruch",
+                "fr": "Bris de glace",
+                "it": "Rottura di vetro",
+                "sv": "Glasbrott",
+                "no": "Glassbrudd",
+                "es": "Cristal roto",
+                "da": "Glasbrud",
+                "ru": "Разбитое стекло",
+                "pl": "Stłuczone szkło",
+                "ko": "유리 깨짐"
               }
             }
           ]
@@ -341,11 +841,31 @@
           "type": "string",
           "title": {
             "en": "Audio detection type",
-            "nl": "Audio detectie type"
+            "nl": "Audio detectie type",
+            "de": "Audioerkennungstyp",
+            "fr": "Type de détection audio",
+            "it": "Tipo di rilevamento audio",
+            "sv": "Typ av ljuddetektion",
+            "no": "Type lyddeteksjon",
+            "es": "Tipo de detección de audio",
+            "da": "Lyd detectie type",
+            "ru": "Тип аудиообнаружения",
+            "pl": "Typ wykrywania audio",
+            "ko": "오디오 감지 유형"
           },
           "example": {
             "en": "smoke",
-            "nl": "rook"
+            "nl": "rook",
+            "de": "rauch",
+            "fr": "fumée",
+            "it": "fumo",
+            "sv": "rök",
+            "no": "røyk",
+            "es": "humo",
+            "da": "røg",
+            "ru": "дым",
+            "pl": "dym",
+            "ko": "연기"
           }
         },
         {
@@ -353,11 +873,31 @@
           "type": "number",
           "title": {
             "en": "Score",
-            "nl": "Score"
+            "nl": "Score",
+            "de": "Punktzahl",
+            "fr": "Score",
+            "it": "Punteggio",
+            "sv": "Poäng",
+            "no": "Poeng",
+            "es": "Puntuación",
+            "da": "Score",
+            "ru": "Оценка",
+            "pl": "Wynik",
+            "ko": "점수"
           },
           "example": {
             "en": "85",
-            "nl": "85"
+            "nl": "85",
+            "de": "85",
+            "fr": "85",
+            "it": "85",
+            "sv": "85",
+            "no": "85",
+            "es": "85",
+            "da": "85",
+            "ru": "85",
+            "pl": "85",
+            "ko": "85"
           }
         }
       ]

@@ -1,6 +1,16 @@
 {
   "name": {
-    "en": "UniFi OS"
+    "en": "UniFi OS",
+    "de": "UniFi OS",
+    "fr": "UniFi OS",
+    "it": "UniFi OS",
+    "sv": "UniFi OS",
+    "no": "UniFi OS",
+    "es": "UniFi OS",
+    "da": "UniFi OS",
+    "ru": "UniFi OS",
+    "pl": "UniFi OS",
+    "ko": "UniFi OS"
   },
   "class": "other",
   "capabilities": [

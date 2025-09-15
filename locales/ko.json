@@ -1,0 +1,105 @@
+{
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "UniFi Cloud Key 확인",
+      "instruction": "설정에서 Cloud Key를 먼저 설정하세요."
+    },
+    "login": {
+      "title": "로그인"
+    }
+  },
+  "settings": {
+    "title": "UniFi Protect 설정",
+    "instruction": "UniFi Protect 사용자 자격 증명으로 로그인하세요.",
+    "nvr": "서버 세부 정보",
+    "nvrip": "IP 주소",
+    "nvrport": "포트",
+    "credentials": "사용자 자격 증명",
+    "username": "사용자 이름",
+    "password": "비밀번호",
+    "apply": "적용",
+    "saved": "설정이 저장되었습니다.",
+    "settings": "설정",
+    "useCameraSnapshot": "카메라 스냅샷 사용",
+    "useCameraSnapshotInstruction": "'카메라 스냅샷 사용'은 로컬 카메라 설정에서 '익명 스냅샷 활성화'가 활성화된 경우에만 사용하세요. 정말 활성화하시겠습니까?",
+    "testConnection": "연결 테스트",
+    "test_status": {
+      "success": "자격 증명이 유효합니다.",
+      "failure": "자격 증명이 유효하지 않습니다."
+    },
+    "accessApiKey": "API 키",
+    "accessCredentials": "UniFi Access 자격 증명",
+    "ignoreEventsNfcFingerprint": "NFC/지문 이벤트 간 쿨다운 기간(초)",
+    "ignoreEventsDoorbell": "초인종 이벤트 간 쿨다운 기간(초)"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "움직임 시작됨",
+      "motion_ended": "움직임 종료됨",
+      "motion_inprogress": "움직임",
+      "ftr_inprogress": "전체 시간",
+      "disabled": "비활성화됨",
+      "failed": "실패함",
+      "done": "완료됨",
+      "always": "항상",
+      "motion": "움직임",
+      "never": "절대",
+      "detections": "감지"
+    },
+    "health": {}
+  }
+}
+{
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Validando UniFi Cloud Key",
+      "instruction": "Por favor, configure la Cloud Key en Configuración primero."
+    },
+    "login": {
+      "title": "Iniciar sesión"
+    }
+  },
+  "settings": {
+    "title": "Configuración de UniFi Protect",
+    "instruction": "Inicie sesión con las credenciales del usuario de UniFi Protect.",
+    "nvr": "Detalles del servidor",
+    "nvrip": "Dirección IP",
+    "nvrport": "Puerto",
+    "credentials": "Credenciales de usuario",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "apply": "Aplicar",
+    "saved": "Configuración guardada.",
+    "settings": "Configuración",
+    "useCameraSnapshot": "Usar instantánea de la cámara",
+    "useCameraSnapshotInstruction": "Utilice 'Usar instantánea de la cámara' solo cuando 'Habilitar instantánea anónima' esté activado en la configuración local de la cámara. ¿Está seguro de que desea habilitar esto?",
+    "testConnection": "Probar conexión",
+    "test_status": {
+      "success": "Las credenciales son válidas.",
+      "failure": "Las credenciales no son válidas."
+    },
+    "accessApiKey": "Clave API",
+    "accessCredentials": "Credenciales UniFi Access",
+    "ignoreEventsNfcFingerprint": "Periodo de enfriamiento entre eventos NFC/huella digital (en segundos)",
+    "ignoreEventsDoorbell": "Periodo de enfriamiento entre eventos de timbre (en segundos)"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Movimiento iniciado",
+      "motion_ended": "Movimiento finalizado",
+      "motion_inprogress": "Movimiento",
+      "ftr_inprogress": "Tiempo completo",
+      "disabled": "Desactivado",
+      "failed": "Fallido",
+      "done": "Hecho",
+      "always": "Siempre",
+      "motion": "Movimiento",
+      "never": "Nunca",
+      "detections": "Detecciones"
+    },
+    "health": {}
+  }
+}
+

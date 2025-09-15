@@ -1,0 +1,53 @@
+{
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Weryfikacja UniFi Cloud Key",
+      "instruction": "Najpierw ustaw Cloud Key w Ustawieniach."
+    },
+    "login": {
+      "title": "Zaloguj się"
+    }
+  },
+  "settings": {
+    "title": "Ustawienia UniFi Protect",
+    "instruction": "Zaloguj się danymi użytkownika UniFi Protect.",
+    "nvr": "Szczegóły serwera",
+    "nvrip": "Adres IP",
+    "nvrport": "Port",
+    "credentials": "Dane użytkownika",
+    "username": "Nazwa użytkownika",
+    "password": "Hasło",
+    "apply": "Zastosuj",
+    "saved": "Ustawienia zapisane.",
+    "settings": "Ustawienia",
+    "useCameraSnapshot": "Użyj zdjęcia z kamery",
+    "useCameraSnapshotInstruction": "Używaj 'Użyj zdjęcia z kamery' tylko gdy 'Włącz anonimowe zdjęcie' jest aktywne w lokalnych ustawieniach kamery. Czy na pewno chcesz to włączyć?",
+    "testConnection": "Testuj połączenie",
+    "test_status": {
+      "success": "Dane są prawidłowe.",
+      "failure": "Dane są nieprawidłowe."
+    },
+    "accessApiKey": "Klucz API",
+    "accessCredentials": "Dane UniFi Access",
+    "ignoreEventsNfcFingerprint": "Okres pomiędzy zdarzeniami NFC/odcisk palca (w sekundach)",
+    "ignoreEventsDoorbell": "Okres pomiędzy zdarzeniami dzwonka (w sekundach)"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Ruch rozpoczęty",
+      "motion_ended": "Ruch zakończony",
+      "motion_inprogress": "Ruch",
+      "ftr_inprogress": "Pełny czas",
+      "disabled": "Wyłączony",
+      "failed": "Nieudane",
+      "done": "Gotowe",
+      "always": "Zawsze",
+      "motion": "Ruch",
+      "never": "Nigdy",
+      "detections": "Detekcje"
+    },
+    "health": {}
+  }
+}
+

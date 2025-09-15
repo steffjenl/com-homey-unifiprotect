@@ -1,7 +1,17 @@
 {
   "name": {
     "en": "Access Lock",
-    "nl": "Access Slot"
+    "nl": "Access Slot",
+    "de": "Zugangsschloss",
+    "fr": "Serrure d'accès",
+    "it": "Serratura di accesso",
+    "sv": "Passerlås",
+    "no": "Tilgangslås",
+    "es": "Cerradura de acceso",
+    "da": "Adgangslås",
+    "ru": "Замок доступа",
+    "pl": "Zamek dostępu",
+    "ko": "액세스 잠금장치"
   },
   "class": "lock",
   "capabilities": [

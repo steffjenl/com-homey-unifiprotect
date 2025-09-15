@@ -1,7 +1,17 @@
 {
   "name": {
     "en": "Access Hub",
-    "nl": "Access Hub"
+    "nl": "Access Hub",
+    "de": "Zugangshub",
+    "fr": "Hub d'accès",
+    "it": "Hub di accesso",
+    "sv": "Passerhub",
+    "no": "Tilgangshub",
+    "es": "Hub de acceso",
+    "da": "Adgangshub",
+    "ru": "Хаб доступа",
+    "pl": "Hub dostępu",
+    "ko": "액세스 허브"
   },
   "class": "lock",
   "capabilities": [

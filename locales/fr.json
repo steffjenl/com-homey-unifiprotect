@@ -1,0 +1,53 @@
+{
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Validation de la clé UniFi Cloud",
+      "instruction": "Veuillez d'abord définir la clé Cloud dans les paramètres."
+    },
+    "login": {
+      "title": "Connexion"
+    }
+  },
+  "settings": {
+    "title": "Paramètres UniFi Protect",
+    "instruction": "Connectez-vous avec les identifiants de l'utilisateur UniFi Protect.",
+    "nvr": "Détails du serveur",
+    "nvrip": "Adresse IP",
+    "nvrport": "Port",
+    "credentials": "Identifiants utilisateur",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "apply": "Appliquer",
+    "saved": "Paramètres enregistrés.",
+    "settings": "Paramètres",
+    "useCameraSnapshot": "Utiliser l'instantané de la caméra",
+    "useCameraSnapshotInstruction": "Utilisez 'Utiliser l'instantané de la caméra' uniquement lorsque 'Activer l'instantané anonyme' est activé dans les paramètres locaux de la caméra. Voulez-vous vraiment activer cela?",
+    "testConnection": "Tester la connexion",
+    "test_status": {
+      "success": "Les identifiants sont valides.",
+      "failure": "Les identifiants sont invalides."
+    },
+    "accessApiKey": "Clé API",
+    "accessCredentials": "Identifiants UniFi Access",
+    "ignoreEventsNfcFingerprint": "Délai entre les événements NFC/empreinte digitale (en secondes)",
+    "ignoreEventsDoorbell": "Délai entre les événements de sonnette (en secondes)"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Mouvement commencé",
+      "motion_ended": "Mouvement terminé",
+      "motion_inprogress": "Mouvement",
+      "ftr_inprogress": "Temps plein",
+      "disabled": "Désactivé",
+      "failed": "Échec",
+      "done": "Terminé",
+      "always": "Toujours",
+      "motion": "Mouvement",
+      "never": "Jamais",
+      "detections": "Détections"
+    },
+    "health": {}
+  }
+}
+

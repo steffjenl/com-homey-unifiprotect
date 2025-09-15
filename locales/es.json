@@ -1,0 +1,58 @@
+{
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Validando UniFi Cloud Key",
+      "instruction": "Por favor, configure la Cloud Key en Configuración primero."
+    },
+    "login": {
+      "title": "Iniciar sesión"
+    }
+  },
+  "settings": {
+    "title": "Configuración de UniFi Protect",
+    "instruction": "Inicie sesión con las credenciales del usuario de UniFi Protect.",
+    "nvr": "Detalles del servidor",
+    "nvrip": "Dirección IP",
+    "nvrport": "Puerto",
+    "credentials": "Credenciales de usuario",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "apply": "Aplicar",
+    "saved": "Configuración guardada.",
+    "settings": "Configuración",
+    "useCameraSnapshot": "Usar instantánea de la cámara",
+    "useCameraSnapshotInstruction": "Utilice 'Usar instantánea de la cámara' solo cuando 'Habilitar instantánea anónima' esté activado en la configuración local de la cámara. ¿Está seguro de que desea habilitar esto?",
+    "testConnection": "Probar conexión",
+    "test_status": {
+      "success": "Las credenciales son válidas.",
+      "failure": "Las credenciales no son válidas."
+    },
+    "accessApiKey": "Clave API",
+    "accessCredentials": "Credenciales UniFi Access",
+    "ignoreEventsNfcFingerprint": "Periodo de enfriamiento entre eventos NFC/huella digital (en segundos)",
+    "ignoreEventsDoorbell": "Periodo de enfriamiento entre eventos de timbre (en segundos)"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Movimiento iniciado",
+      "motion_ended": "Movimiento finalizado",
+      "motion_inprogress": "Movimiento",
+      "ftr_inprogress": "Tiempo completo",
+      "disabled": "Desactivado",
+      "failed": "Fallido",
+      "done": "Hecho",
+      "always": "Siempre",
+      "motion": "Movimiento",
+      "never": "Nunca",
+      "detections": "Detecciones"
+    },
+    "health": {
+      "unknown": "Desconocido",
+      "green": "Saludable",
+      "orange": "Advertencia",
+      "red": "Crítico"
+    }
+  },
+  "package_camera": "__name__ (Paquete cámara)"
+}

@@ -6,7 +6,17 @@
     "volume_set"
   ],
   "name": {
-    "en": "Chime"
+    "en": "Chime",
+    "de": "Glocke",
+    "fr": "Carillon",
+    "it": "Campanello",
+    "sv": "Klocka",
+    "no": "Ringeklokke",
+    "es": "Timbre",
+    "da": "Klokke",
+    "ru": "Звонок",
+    "pl": "Dzwonek",
+    "ko": "차임벨"
   },
   "images": {
     "large": "drivers/protectchime/assets/images/large.png",

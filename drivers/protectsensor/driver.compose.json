@@ -12,7 +12,17 @@
     "alarm_contact"
   ],
   "name": {
-    "en": "Sensor"
+    "en": "Sensor",
+    "de": "Sensor",
+    "fr": "Capteur",
+    "it": "Sensore",
+    "sv": "Sensor",
+    "no": "Sensor",
+    "es": "Sensor",
+    "da": "Sensor",
+    "ru": "Датчик",
+    "pl": "Czujnik",
+    "ko": "센서"
   },
   "images": {
     "large": "drivers/protectsensor/assets/images/large.png",
