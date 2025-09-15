@@ -135,6 +135,41 @@
               }
             }
           ]
+        },
+        {
+          "type": "number",
+          "name": "interval",
+          "title": {
+            "en": "Interval (minutes)",
+            "nl": "Interval (minuten)",
+            "de": "Intervall (Minuten)",
+            "fr": "Intervalle (minutes)",
+            "it": "Intervallo (minuti)",
+            "sv": "Intervall (minuter)",
+            "no": "Intervall (minutter)",
+            "es": "Intervalo (minutos)",
+            "da": "Interval (minutter)",
+            "ru": "Интервал (минуты)",
+            "pl": "Przedział czasowy (minuty)",
+            "ko": "간격(분)"
+          },
+          "placeholder": {
+            "en": "E.g. 5",
+            "nl": "Bijv. 5",
+            "de": "z.B. 5",
+            "fr": "Par ex. 5",
+            "it": "Es. 5",
+            "sv": "T.ex. 5",
+            "no": "F.eks. 5",
+            "es": "Por ejemplo 5",
+            "da": "F.eks. 5",
+            "ru": "Напр. 5",
+            "pl": "Np. 5",
+            "ko": "예: 5"
+          },
+          "defaultValue": 5,
+          "minValue": 1,
+          "maxValue": 1440
         }
       ]
     },

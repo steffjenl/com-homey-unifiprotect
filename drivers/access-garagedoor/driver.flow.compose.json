@@ -199,6 +199,43 @@
               }
             }
           ]
+        },
+        {
+          "type": "number",
+          "name": "interval",
+          "title": {
+            "en": "Interval (minutes)",
+            "nl": "Interval (minuten)",
+            "de": "Intervall (Minuten)",
+            "fr": "Intervalle (minutes)",
+            "it": "Intervallo (minuti)",
+            "sv": "Intervall (minuter)",
+            "no": "Intervall (minutter)",
+            "es": "Intervalo (minutos)",
+            "da": "Interval (minutter)",
+            "ru": "Интервал (минуты)",
+            "pl": "Interwał (minuty)",
+            "ko": "간격(분)"
+          },
+          "hint": {
+            "en": "Set to 0 for immediate effect",
+            "nl": "Stel in op 0 voor onmiddellijke werking",
+            "de": "Auf 0 setzen für sofortige Wirkung",
+            "fr": "Réglez sur 0 pour un effet immédiat",
+            "it": "Impostare su 0 per effetto immediato",
+            "sv": "Ställ in på 0 för omedelbar effekt",
+            "no": "Sett til 0 for umiddelbar effekt",
+            "es": "Establecer en 0 para efecto inmediato",
+            "da": "Indstil til 0 for øjeblikkelig effekt",
+            "ru": "Установите значение 0 для немедленного эффекта",
+            "pl": "Ustaw na 0, aby uzyskać natychmiastowy efekt",
+            "ko": "즉각적인 효과를 위해 0으로 설정"
+          },
+          "defaultValue": 0,
+          "required": true,
+          "minValue": 0,
+          "maxValue": 1440,
+          "stepValue": 1
         }
       ]
     },

@@ -4,11 +4,32 @@
   "sdk": 3,
   "brandColor": "#159EDA",
   "name": {
-    "en": "Ubiquiti UniFi Protect"
+    "en": "Ubiquiti UniFi Protect",
+    "nl": "Ubiquiti UniFi Protect",
+    "de": "Ubiquiti UniFi Protect",
+    "fr": "Ubiquiti UniFi Protect",
+    "it": "Ubiquiti UniFi Protect",
+    "sv": "Ubiquiti UniFi Protect",
+    "no": "Ubiquiti UniFi Protect",
+    "es": "Ubiquiti UniFi Protect",
+    "da": "Ubiquiti UniFi Protect",
+    "ru": "Ubiquiti UniFi Protect",
+    "pl": "Ubiquiti UniFi Protect",
+    "ko": "Ubiquiti UniFi Protect"
   },
   "description": {
     "en": "Protect your home with UniFi Protect & Access devices.",
-    "nl": "Bescherm je huis met UniFi Protect & Access apparaten."
+    "nl": "Bescherm je huis met UniFi Protect & Access apparaten.",
+    "de": "Schützen Sie Ihr Zuhause mit UniFi Protect & Access Geräten.",
+    "fr": "Protégez votre maison avec les appareils UniFi Protect & Access.",
+    "it": "Proteggi la tua casa con i dispositivi UniFi Protect & Access.",
+    "sv": "Skydda ditt hem med UniFi Protect & Access-enheter.",
+    "no": "Beskytt hjemmet ditt med UniFi Protect & Access-enheter.",
+    "es": "Protege tu hogar con dispositivos UniFi Protect & Access.",
+    "da": "Beskyt dit hjem med UniFi Protect & Access-enheder.",
+    "ru": "Защитите свой дом с помощью устройств UniFi Protect & Access.",
+    "pl": "Chroń swój dom za pomocą urządzeń UniFi Protect & Access.",
+    "ko": "UniFi Protect 및 Access 장치로 집을 보호하세요."
   },
   "tags": {
     "en": [
@@ -31,6 +52,106 @@
       "opname",
       "toegang",
       "access"
+    ],
+    "de": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "fr": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "it": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "sv": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "no": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "es": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "da": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "ru": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "pl": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
+    ],
+    "ko": [
+      "ubiquiti",
+      "unifi",
+      "protect",
+      "security",
+      "camera",
+      "snapshot",
+      "recording",
+      "access"
     ]
   },
   "images": {
@@ -42,7 +163,7 @@
     "security",
     "video"
   ],
-  "version": "1.8.0",
+  "version": "1.8.1",
   "compatibility": ">=12.6.0",
   "author": {
     "name": "Stèphan Eizinga",
@@ -726,11 +847,31 @@
         "id": "ufv_reader_garagedoor_opened",
         "title": {
           "en": "Garage door opened",
-          "nl": "Garage deur geopend"
+          "nl": "Garage deur geopend",
+          "de": "Garagentor geöffnet",
+          "fr": "Porte de garage ouverte",
+          "it": "Porta garage aperta",
+          "sv": "Garageport öppnad",
+          "no": "Garasjeport åpnet",
+          "es": "Puerta de garaje abierta",
+          "da": "Garageport åbnet",
+          "ru": "Гаражные ворота открыты",
+          "pl": "Brama garażowa otwarta",
+          "ko": "차고문 열림"
         },
         "hint": {
           "en": "Triggers when the garage door is opened",
-          "nl": "Wordt geactiveerd wanneer de garage deur wordt geopend"
+          "nl": "Wordt geactiveerd wanneer de garage deur wordt geopend",
+          "de": "Löst aus, wenn das Garagentor geöffnet wird",
+          "fr": "Déclenche lorsque la porte de garage est ouverte",
+          "it": "Si attiva quando la porta del garage è aperta",
+          "sv": "Utlöses när garageporten öppnas",
+          "no": "Utløses når garasjeporten åpnes",
+          "es": "Se activa cuando la puerta de garaje está abierta",
+          "da": "Udløses når garageporten åbnes",
+          "ru": "Срабатывает при открытии гаражных ворот",
+          "pl": "Wyzwala się, gdy brama garażowa jest otwarta",
+          "ko": "차고문이 열릴 때 트리거됨"
         },
         "args": [
           {
@@ -744,11 +885,31 @@
         "id": "ufv_reader_garagedoor_closed",
         "title": {
           "en": "Garage door closed",
-          "nl": "Garage deur gesloten"
+          "nl": "Garage deur gesloten",
+          "de": "Garagentor geschlossen",
+          "fr": "Porte de garage fermée",
+          "it": "Porta garage chiusa",
+          "sv": "Garageport stängd",
+          "no": "Garasjeport lukket",
+          "es": "Puerta de garaje cerrada",
+          "da": "Garageport lukket",
+          "ru": "Гаражные ворота закрыты",
+          "pl": "Brama garażowa zamknięta",
+          "ko": "차고문 닫힘"
         },
         "hint": {
           "en": "Triggers when the garage door is closed",
-          "nl": "Wordt geactiveerd wanneer de garage deur wordt gesloten"
+          "nl": "Wordt geactiveerd wanneer de garage deur wordt gesloten",
+          "de": "Löst aus, wenn das Garagentor geschlossen wird",
+          "fr": "Déclenche lorsque la porte de garage est fermée",
+          "it": "Si attiva quando la porta del garage è chiusa",
+          "sv": "Utlöses när garageporten stängs",
+          "no": "Utløses når garasjeporten lukkes",
+          "es": "Se activa cuando la puerta de garaje está cerrada",
+          "da": "Udløses når garageporten lukkes",
+          "ru": "Срабатывает при закрытии гаражных ворот",
+          "pl": "Wyzwala się, gdy brama garażowa jest zamknięta",
+          "ko": "차고문이 닫힐 때 트리거됨"
         },
         "args": [
           {
@@ -762,7 +923,17 @@
         "id": "ufp_device_camera_smart_detection",
         "title": {
           "en": "A object was detected",
-          "nl": "Er is een object gedetecteerd"
+          "nl": "Er is een object gedetecteerd",
+          "de": "Ein Objekt wurde erkannt",
+          "fr": "Un objet a été détecté",
+          "it": "È stato rilevato un oggetto",
+          "sv": "Ett objekt har upptäckts",
+          "no": "Et objekt ble oppdaget",
+          "es": "Se ha detectado un objeto",
+          "da": "Et objekt blev registreret",
+          "ru": "Объект обнаружен",
+          "pl": "Wykryto obiekt",
+          "ko": "객체가 감지되었습니다"
         },
         "tokens": [
           {
@@ -770,11 +941,31 @@
             "type": "string",
             "title": {
               "en": "Smart detection type",
-              "nl": "Slim detectie type"
+              "nl": "Slim detectie type",
+              "de": "Typ der intelligenten Erkennung",
+              "fr": "Type de détection intelligente",
+              "it": "Tipo di rilevamento intelligente",
+              "sv": "Typ av smart detektion",
+              "no": "Type smart deteksjon",
+              "es": "Tipo de detección inteligente",
+              "da": "Smart detektionstype",
+              "ru": "Тип интеллектуального обнаружения",
+              "pl": "Typ inteligentnego wykrywania",
+              "ko": "스마트 감지 유형"
             },
             "example": {
               "en": "vehicle",
-              "nl": "vehicle"
+              "nl": "vehicle",
+              "de": "Fahrzeug",
+              "fr": "véhicule",
+              "it": "veicolo",
+              "sv": "fordon",
+              "no": "kjøretøy",
+              "es": "vehículo",
+              "da": "køretøj",
+              "ru": "транспортное средство",
+              "pl": "pojazd",
+              "ko": "차량"
             }
           },
           {
@@ -782,11 +973,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poeng",
+              "es": "Puntuación",
+              "da": "Score",
+              "ru": "Оценка",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -794,11 +1005,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -814,7 +1045,17 @@
         "id": "ufp_device_camera_smart_detection_vehicle",
         "title": {
           "en": "A vehicle was detected",
-          "nl": "Een voertuig werd gedetecteerd"
+          "nl": "Een voertuig werd gedetecteerd",
+          "de": "Ein Fahrzeug wurde erkannt",
+          "fr": "Un véhicule a été détecté",
+          "it": "È stato rilevato un veicolo",
+          "sv": "Ett fordon har upptäckts",
+          "no": "Et kjøretøy ble oppdaget",
+          "es": "Se ha detectado un vehículo",
+          "da": "Et køretøj blev registreret",
+          "ru": "Транспортное средство обнаружено",
+          "pl": "Wykryto pojazd",
+          "ko": "차량이 감지되었습니다"
         },
         "tokens": [
           {
@@ -822,11 +1063,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poeng",
+              "es": "Puntuación",
+              "da": "Score",
+              "ru": "Оценка",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -834,11 +1095,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -854,7 +1135,17 @@
         "id": "ufp_device_camera_smart_detection_package",
         "title": {
           "en": "A package was detected",
-          "nl": "Een pakket werd gedetecteerd"
+          "nl": "Een pakket werd gedetecteerd",
+          "de": "Ein Paket wurde erkannt",
+          "fr": "Un colis a été détecté",
+          "it": "È stato rilevato un pacco",
+          "sv": "Ett paket har upptäckts",
+          "no": "En pakke ble oppdaget",
+          "es": "Se ha detectado un paquete",
+          "da": "En pakke blev registreret",
+          "ru": "Посылка обнаружена",
+          "pl": "Wykryto paczkę",
+          "ko": "소포가 감지되었습니다"
         },
         "tokens": [
           {
@@ -862,11 +1153,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poeng",
+              "es": "Puntuación",
+              "da": "Score",
+              "ru": "Оценка",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -874,11 +1185,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -894,7 +1225,17 @@
         "id": "ufp_device_camera_smart_detection_animal",
         "title": {
           "en": "A animal was detected",
-          "nl": "Een dier werd gedetecteerd"
+          "nl": "Een dier werd gedetecteerd",
+          "de": "Ein Tier wurde erkannt",
+          "fr": "Un animal a été détecté",
+          "it": "È stato rilevato un animale",
+          "sv": "Ett djur har upptäckts",
+          "no": "Et dyr ble oppdaget",
+          "es": "Se ha detectado un animal",
+          "da": "Et dyr blev registreret",
+          "ru": "Животное обнаружено",
+          "pl": "Wykryto zwierzę",
+          "ko": "동물이 감지되었습니다"
         },
         "tokens": [
           {
@@ -902,11 +1243,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poeng",
+              "es": "Puntuación",
+              "da": "Score",
+              "ru": "Оценка",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -914,11 +1275,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -934,7 +1315,17 @@
         "id": "ufp_device_camera_smart_detection_person",
         "title": {
           "en": "A person was detected",
-          "nl": "Een persoon werd gedetecteerd"
+          "nl": "Een persoon werd gedetecteerd",
+          "de": "Eine Person wurde erkannt",
+          "fr": "Une personne a été détectée",
+          "it": "È stata rilevata una persona",
+          "sv": "En person har upptäckts",
+          "no": "En person ble oppdaget",
+          "es": "Se ha detectado una persona",
+          "da": "En person blev registreret",
+          "ru": "Человек обнаружен",
+          "pl": "Wykryto osobę",
+          "ko": "사람이 감지되었습니다"
         },
         "tokens": [
           {
@@ -942,11 +1333,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poeng",
+              "es": "Puntuación",
+              "da": "Score",
+              "ru": "Оценка",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -954,11 +1365,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -974,7 +1405,17 @@
         "id": "ufp_device_camera_smart_detection_licenseplate",
         "title": {
           "en": "A license plate was detected",
-          "nl": "Een kenteken werd gedetecteerd"
+          "nl": "Een kenteken werd gedetecteerd",
+          "de": "Ein Nummernschild wurde erkannt",
+          "fr": "Une plaque d'immatriculation a été détectée",
+          "it": "È stata rilevata una targa",
+          "sv": "En registreringsskylt har upptäckts",
+          "no": "En registreringsskilt ble oppdaget",
+          "es": "Se ha detectado una matrícula",
+          "da": "En nummerplade blev registreret",
+          "ru": "Номерной знак обнаружен",
+          "pl": "Wykryto tablicę rejestracyjną",
+          "ko": "번호판이 감지되었습니다"
         },
         "tokens": [
           {
@@ -982,11 +1423,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poeng",
+              "es": "Puntuación",
+              "da": "Score",
+              "ru": "Оценка",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -994,11 +1455,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -1014,7 +1495,17 @@
         "id": "ufp_device_camera_smart_detection_face",
         "title": {
           "en": "A face was detected",
-          "nl": "Een gezicht werd gedetecteerd"
+          "nl": "Een gezicht werd gedetecteerd",
+          "de": "Ein Gesicht wurde erkannt",
+          "fr": "Un visage a été détecté",
+          "it": "È stato rilevato un volto",
+          "sv": "Ett ansikte har upptäckts",
+          "no": "Et ansikt ble oppdaget",
+          "es": "Se ha detectado un rostro",
+          "da": "Et ansigt blev registreret",
+          "ru": "Лицо обнаружено",
+          "pl": "Wykryto twarz",
+          "ko": "얼굴이 감지되었습니다"
         },
         "tokens": [
           {
@@ -1022,11 +1513,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poeng",
+              "es": "Puntuación",
+              "da": "Score",
+              "ru": "Оценка",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -1034,11 +1545,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -1054,11 +1585,31 @@
         "id": "ufp_device_camera_audio_detection",
         "title": {
           "en": "An audio event was detected",
-          "nl": "Er is een audio gebeurtenis gedetecteerd"
+          "nl": "Er is een audio gebeurtenis gedetecteerd",
+          "de": "Ein Audioereignis wurde erkannt",
+          "fr": "Un événement audio a été détecté",
+          "it": "È stato rilevato un evento audio",
+          "sv": "Ett ljudhändelse har upptäckts",
+          "no": "En lydhendelse ble oppdaget",
+          "es": "Se ha detectado un evento de audio",
+          "da": "En lydhændelse blev registreret",
+          "ru": "Обнаружено аудиособытие",
+          "pl": "Wykryto zdarzenie audio",
+          "ko": "오디오 이벤트가 감지되었습니다"
         },
         "titleFormatted": {
           "en": "[[audio_type]] was detected",
-          "nl": "[[audio_type]] werd gedetecteerd"
+          "nl": "[[audio_type]] werd gedetecteerd",
+          "de": "[[audio_type]] wurde erkannt",
+          "fr": "[[audio_type]] a été détecté",
+          "it": "[[audio_type]] è stato rilevato",
+          "sv": "[[audio_type]] har upptäckts",
+          "no": "[[audio_type]] ble oppdaget",
+          "es": "[[audio_type]] ha sido detectado",
+          "da": "[[audio_type]] blev registreret",
+          "ru": "[[audio_type]] обнаружен",
+          "pl": "[[audio_type]] wykryty",
+          "ko": "[[audio_type]] 감지됨"
         },
         "args": [
           {
@@ -1071,77 +1622,187 @@
             "name": "audio_type",
             "title": {
               "en": "Audio type",
-              "nl": "Audio type"
+              "nl": "Audio type",
+              "de": "Audio Typ",
+              "fr": "Type audio",
+              "it": "Tipo audio",
+              "sv": "Ljudtyp",
+              "no": "Lydtype",
+              "es": "Tipo de audio",
+              "da": "Lyde type",
+              "ru": "Тип аудио",
+              "pl": "Typ audio",
+              "ko": "오디오 유형"
             },
             "values": [
               {
                 "id": "any",
                 "title": {
                   "en": "Any audio event",
-                  "nl": "Elk audio gebeurtenis"
+                  "nl": "Elk audio gebeurtenis",
+                  "de": "Jedes Audioereignis",
+                  "fr": "Tout événement audio",
+                  "it": "Qualsiasi evento audio",
+                  "sv": "Alla ljudhändelser",
+                  "no": "Alle lydhendelser",
+                  "es": "Cualquier evento de audio",
+                  "da": "Enhver lydhændelse",
+                  "ru": "Событие аудио любого типа",
+                  "pl": "Każde zdarzenie audio",
+                  "ko": "모든 오디오 이벤트"
                 }
               },
               {
                 "id": "smoke",
                 "title": {
                   "en": "Smoke alarm",
-                  "nl": "Rookmelder"
+                  "nl": "Rookmelder",
+                  "de": "Rauchmelder",
+                  "fr": "Détecteur de fumée",
+                  "it": "Rilevatore di fumo",
+                  "sv": "Röksensor",
+                  "no": "Røykvarsler",
+                  "es": "Detector de humo",
+                  "da": "Røgalarm",
+                  "ru": "Дымовой сигнализатор",
+                  "pl": "Czujnik dymu",
+                  "ko": "연기 감지기"
                 }
               },
               {
                 "id": "cmonx",
                 "title": {
                   "en": "CO alarm",
-                  "nl": "CO melder"
+                  "nl": "CO melder",
+                  "de": "CO-Melder",
+                  "fr": "Détecteur de CO",
+                  "it": "Rilevatore di CO",
+                  "sv": "CO-sensor",
+                  "no": "CO-varsler",
+                  "es": "Detector de CO",
+                  "da": "CO-alarm",
+                  "ru": "Сигнализатор CO",
+                  "pl": "Czujnik CO",
+                  "ko": "일산화탄소 경고음"
                 }
               },
               {
                 "id": "siren",
                 "title": {
                   "en": "Siren",
-                  "nl": "Sirene"
+                  "nl": "Sirene",
+                  "de": "Sirene",
+                  "fr": "Sirène",
+                  "it": "Sirena",
+                  "sv": "Siren",
+                  "no": "Sirene",
+                  "es": "Sirena",
+                  "da": "Sirene",
+                  "ru": "Сирена",
+                  "pl": "Syrena",
+                  "ko": "사이렌"
                 }
               },
               {
                 "id": "baby_cry",
                 "title": {
                   "en": "Baby crying",
-                  "nl": "Baby huilen"
+                  "nl": "Baby huilen",
+                  "de": "Weinen des Babys",
+                  "fr": "Bébé qui pleure",
+                  "it": "Pianto del bambino",
+                  "sv": "Bebisgråt",
+                  "no": "Bebisgråt",
+                  "es": "Llanto de bebé",
+                  "da": "Babygråd",
+                  "ru": "Плач ребенка",
+                  "pl": "Płacz dziecka",
+                  "ko": "아기 울음"
                 }
               },
               {
                 "id": "speak",
                 "title": {
                   "en": "Speaking",
-                  "nl": "Praten"
+                  "nl": "Praten",
+                  "de": "Sprechen",
+                  "fr": "Parler",
+                  "it": "Parlare",
+                  "sv": "Tala",
+                  "no": "Snakke",
+                  "es": "Hablando",
+                  "da": "Tale",
+                  "ru": "Говорит",
+                  "pl": "Mówić",
+                  "ko": "말하기"
                 }
               },
               {
                 "id": "bark",
                 "title": {
                   "en": "Dog barking",
-                  "nl": "Hond blaffen"
+                  "nl": "Hond blaffen",
+                  "de": "Hundebellen",
+                  "fr": "Aboyer",
+                  "it": "Abbaiare",
+                  "sv": "Hundskall",
+                  "no": "Hundebjeff",
+                  "es": "Ladrido de perro",
+                  "da": "Hundegøen",
+                  "ru": "Лай собаки",
+                  "pl": "Szczekanie psa",
+                  "ko": "개 짖는 소리"
                 }
               },
               {
                 "id": "burglar",
                 "title": {
                   "en": "Burglar alarm",
-                  "nl": "Inbraakalarm"
+                  "nl": "Inbraakalarm",
+                  "de": "Einbruchsalarm",
+                  "fr": "Alarme anti-intrusion",
+                  "it": "Allarme antifurto",
+                  "sv": "Inbrottslarm",
+                  "no": "Innbruddsalarm",
+                  "es": "Alarma de intrusión",
+                  "da": "Indbrudsalarm",
+                  "ru": "Сигнализация при взломе",
+                  "pl": "Alarm przeciwwłamaniowy",
+                  "ko": "도난 경고음"
                 }
               },
               {
                 "id": "car_horn",
                 "title": {
                   "en": "Car horn",
-                  "nl": "Autoclaxon"
+                  "nl": "Autoclaxon",
+                  "de": "Autohorn",
+                  "fr": "Klaxon",
+                  "it": "Clacson",
+                  "sv": "Bilhorn",
+                  "no": "Bilhorn",
+                  "es": "Claxon",
+                  "da": "Bilhorn",
+                  "ru": "Автомобильный сигнал",
+                  "pl": "Klakson",
+                  "ko": "차 경적"
                 }
               },
               {
                 "id": "glass_break",
                 "title": {
                   "en": "Glass breaking",
-                  "nl": "Glasbreuk"
+                  "nl": "Glasbreuk",
+                  "de": "Glasbruch",
+                  "fr": "Bris de glace",
+                  "it": "Rottura di vetro",
+                  "sv": "Glasbrott",
+                  "no": "Glassbrudd",
+                  "es": "Cristal roto",
+                  "da": "Glasbrud",
+                  "ru": "Разбитое стекло",
+                  "pl": "Stłuczone szkło",
+                  "ko": "유리 깨짐"
                 }
               }
             ]
@@ -1153,11 +1814,31 @@
             "type": "string",
             "title": {
               "en": "Audio detection type",
-              "nl": "Audio detectie type"
+              "nl": "Audio detectie type",
+              "de": "Audioerkennungstyp",
+              "fr": "Type de détection audio",
+              "it": "Tipo di rilevamento audio",
+              "sv": "Typ av ljuddetektion",
+              "no": "Type lyddeteksjon",
+              "es": "Tipo de detección de audio",
+              "da": "Lyd detectie type",
+              "ru": "Тип аудиообнаружения",
+              "pl": "Typ wykrywania audio",
+              "ko": "오디오 감지 유형"
             },
             "example": {
               "en": "smoke",
-              "nl": "rook"
+              "nl": "rook",
+              "de": "rauch",
+              "fr": "fumée",
+              "it": "fumo",
+              "sv": "rök",
+              "no": "røyk",
+              "es": "humo",
+              "da": "røg",
+              "ru": "дым",
+              "pl": "dym",
+              "ko": "연기"
             }
           },
           {
@@ -1165,11 +1846,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poeng",
+              "es": "Puntuación",
+              "da": "Score",
+              "ru": "Оценка",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "85",
-              "nl": "85"
+              "nl": "85",
+              "de": "85",
+              "fr": "85",
+              "it": "85",
+              "sv": "85",
+              "no": "85",
+              "es": "85",
+              "da": "85",
+              "ru": "85",
+              "pl": "85",
+              "ko": "85"
             }
           }
         ]
@@ -1178,7 +1879,17 @@
         "id": "ufp_device_doorbell_ringing",
         "title": {
           "en": "Doorbell pressed",
-          "nl": "Deurbel ingedrukt"
+          "nl": "Deurbel ingedrukt",
+          "de": "Türklingel gedrückt",
+          "fr": "Sonnette pressée",
+          "it": "Campanello premuto",
+          "sv": "Dörrklocka tryckt",
+          "no": "Ringeklokke trykket",
+          "es": "Timbre presionado",
+          "da": "Dørklokke trykket",
+          "ru": "Нажата дверная кнопка",
+          "pl": "Dzwonek naciśnięty",
+          "ko": "초인종이 눌렸습니다"
         },
         "tokens": [
           {
@@ -1186,11 +1897,31 @@
             "type": "string",
             "title": {
               "en": "Camera",
-              "nl": "Camera"
+              "nl": "Camera",
+              "de": "Kamera",
+              "fr": "Caméra",
+              "it": "Telecamera",
+              "sv": "Kamera",
+              "no": "Kamera",
+              "es": "Cámara",
+              "da": "Kamera",
+              "ru": "Камера",
+              "pl": "Kamera",
+              "ko": "카메라"
             },
             "example": {
               "en": "Doorbell",
-              "nl": "Deurbel"
+              "nl": "Deurbel",
+              "de": "Türklingel",
+              "fr": "Sonnette",
+              "it": "Campanello",
+              "sv": "Dörrklocka",
+              "no": "Ringeklokke",
+              "es": "Timbre",
+              "da": "Dørklokke",
+              "ru": "Дверной звонок",
+              "pl": "Dzwonek do drzwi",
+              "ko": "초인종"
             }
           }
         ],
@@ -1206,7 +1937,17 @@
         "id": "ufp_device_fingerprint_identified",
         "title": {
           "en": "A fingerprint was identified",
-          "nl": "Een vingerafdruk is geïdentificeerd"
+          "nl": "Een vingerafdruk is geïdentificeerd",
+          "de": "Ein Fingerabdruck wurde identifiziert",
+          "fr": "Une empreinte digitale a été identifiée",
+          "it": "È stata identificata un'impronta digitale",
+          "sv": "Ett fingeravtryck har identifierats",
+          "no": "Et fingeravtrykk ble identifisert",
+          "es": "Se ha identificado una huella dactilar",
+          "da": "Et fingeraftryk blev identificeret",
+          "ru": "Обнаружен отпечаток пальца",
+          "pl": "Zidentyfikowano odcisk palca",
+          "ko": "지문이 확인되었습니다"
         },
         "tokens": [
           {
@@ -1214,11 +1955,31 @@
             "type": "string",
             "title": {
               "en": "Username",
-              "nl": "Gebruikersnaam"
+              "nl": "Gebruikersnaam",
+              "de": "Benutzername",
+              "fr": "Nom d'utilisateur",
+              "it": "Nome utente",
+              "sv": "Användarnamn",
+              "no": "Brukernavn",
+              "es": "Nombre de usuario",
+              "da": "Brugernavn",
+              "ru": "Имя пользователя",
+              "pl": "Nazwa użytkownika",
+              "ko": "사용자 이름"
             },
             "example": {
               "en": "John Doe",
-              "nl": "Jan Jansen"
+              "nl": "Jan Jansen",
+              "de": "Max Mustermann",
+              "fr": "Jean Dupont",
+              "it": "Mario Rossi",
+              "sv": "Johan Svensson",
+              "no": "Ola Nordmann",
+              "es": "Juan Pérez",
+              "da": "Jens Hansen",
+              "ru": "Иван Иванов",
+              "pl": "Jan Kowalski",
+              "ko": "홍길동"
             }
           },
           {
@@ -1226,11 +1987,31 @@
             "type": "string",
             "title": {
               "en": "First name",
-              "nl": "Voornaam"
+              "nl": "Voornaam",
+              "de": "Vorname",
+              "fr": "Prénom",
+              "it": "Nome",
+              "sv": "Förnamn",
+              "no": "Fornavn",
+              "es": "Nombre",
+              "da": "Fornavn",
+              "ru": "Имя",
+              "pl": "Imię",
+              "ko": "이름"
             },
             "example": {
               "en": "John",
-              "nl": "Jan"
+              "nl": "Jan",
+              "de": "Max",
+              "fr": "Jean",
+              "it": "Mario",
+              "sv": "Johan",
+              "no": "Ola",
+              "es": "Juan",
+              "da": "Jens",
+              "ru": "Иван",
+              "pl": "Jan",
+              "ko": "길동"
             }
           },
           {
@@ -1238,11 +2019,31 @@
             "type": "string",
             "title": {
               "en": "Last name",
-              "nl": "Achternaam"
+              "nl": "Achternaam",
+              "de": "Nachname",
+              "fr": "Nom de famille",
+              "it": "Cognome",
+              "sv": "Efternamn",
+              "no": "Etternavn",
+              "es": "Apellido",
+              "da": "Efternavn",
+              "ru": "Фамилия",
+              "pl": "Nazwisko",
+              "ko": "성"
             },
             "example": {
               "en": "Doe",
-              "nl": "Jansen"
+              "nl": "Jansen",
+              "de": "Muster",
+              "fr": "Dupont",
+              "it": "Rossi",
+              "sv": "Svensson",
+              "no": "Nordmann",
+              "es": "Pérez",
+              "da": "Hansen",
+              "ru": "Иванов",
+              "pl": "Kowalski",
+              "ko": "김"
             }
           },
           {
@@ -1250,11 +2051,31 @@
             "type": "string",
             "title": {
               "en": "User Unique ID",
-              "nl": "Gebruiker Unieke ID"
+              "nl": "Gebruiker Unieke ID",
+              "de": "Benutzer eindeutige ID",
+              "fr": "ID utilisateur unique",
+              "it": "ID utente univoco",
+              "sv": "Användarunik ID",
+              "no": "Brukernavn unik ID",
+              "es": "ID de usuario único",
+              "da": "Bruger unik ID",
+              "ru": "Уникальный идентификатор пользователя",
+              "pl": "Unikalny identyfikator użytkownika",
+              "ko": "사용자 고유 ID"
             },
             "example": {
               "en": "xxx-xxx-xxx",
-              "nl": "xxx-xxx-xxx"
+              "nl": "xxx-xxx-xxx",
+              "de": "xxx-xxx-xxx",
+              "fr": "xxx-xxx-xxx",
+              "it": "xxx-xxx-xxx",
+              "sv": "xxx-xxx-xxx",
+              "no": "xxx-xxx-xxx",
+              "es": "xxx-xxx-xxx",
+              "da": "xxx-xxx-xxx",
+              "ru": "xxx-xxx-xxx",
+              "pl": "xxx-xxx-xxx",
+              "ko": "xxx-xxx-xxx"
             }
           }
         ],
@@ -1271,7 +2092,17 @@
         "id": "ufp_device_door_access",
         "title": {
           "en": "A door acces event is detected",
-          "nl": "Een deur toegang event is gedetecteerd"
+          "nl": "Een deur toegang event is gedetecteerd",
+          "de": "Ein Türzugangsereignis wurde erkannt",
+          "fr": "Un événement d'accès à la porte a été détecté",
+          "it": "È stato rilevato un evento di accesso alla porta",
+          "sv": "En dörråtkomsthändelse har upptäckts",
+          "no": "En dørtilgangshendelse ble oppdaget",
+          "es": "Se ha detectado un evento de acceso a la puerta",
+          "da": "Der er registreret en døradgangshændelse",
+          "ru": "Обнаружено событие доступа к двери",
+          "pl": "Wykryto zdarzenie dostępu do drzwi",
+          "ko": "출입문 접근 이벤트가 감지되었습니다"
         },
         "tokens": [
           {
@@ -1279,11 +2110,31 @@
             "type": "string",
             "title": {
               "en": "Username",
-              "nl": "Gebruikersnaam"
+              "nl": "Gebruikersnaam",
+              "de": "Benutzername",
+              "fr": "Nom d'utilisateur",
+              "it": "Nome utente",
+              "sv": "Användarnamn",
+              "no": "Brukernavn",
+              "es": "Nombre de usuario",
+              "da": "Brugernavn",
+              "ru": "Имя пользователя",
+              "pl": "Nazwa użytkownika",
+              "ko": "사용자 이름"
             },
             "example": {
               "en": "John Doe",
-              "nl": "Jan Jansen"
+              "nl": "Jan Jansen",
+              "de": "Max Mustermann",
+              "fr": "Jean Dupont",
+              "it": "Mario Rossi",
+              "sv": "Johan Svensson",
+              "no": "Ola Nordmann",
+              "es": "Juan Pérez",
+              "da": "Jens Hansen",
+              "ru": "Иван Иванов",
+              "pl": "Jan Kowalski",
+              "ko": "홍길동"
             }
           },
           {
@@ -1291,11 +2142,31 @@
             "type": "string",
             "title": {
               "en": "First name",
-              "nl": "Voornaam"
+              "nl": "Voornaam",
+              "de": "Vorname",
+              "fr": "Prénom",
+              "it": "Nome",
+              "sv": "Förnamn",
+              "no": "Fornavn",
+              "es": "Nombre",
+              "da": "Fornavn",
+              "ru": "Имя",
+              "pl": "Imię",
+              "ko": "이름"
             },
             "example": {
               "en": "John",
-              "nl": "Jan"
+              "nl": "Jan",
+              "de": "Max",
+              "fr": "Jean",
+              "it": "Mario",
+              "sv": "Johan",
+              "no": "Ola",
+              "es": "Juan",
+              "da": "Jens",
+              "ru": "Иван",
+              "pl": "Jan",
+              "ko": "길동"
             }
           },
           {
@@ -1303,11 +2174,31 @@
             "type": "string",
             "title": {
               "en": "Last name",
-              "nl": "Achternaam"
+              "nl": "Achternaam",
+              "de": "Nachname",
+              "fr": "Nom de famille",
+              "it": "Cognome",
+              "sv": "Efternamn",
+              "no": "Etternavn",
+              "es": "Apellido",
+              "da": "Efternavn",
+              "ru": "Фамилия",
+              "pl": "Nazwisko",
+              "ko": "성"
             },
             "example": {
               "en": "Doe",
-              "nl": "Jansen"
+              "nl": "Jansen",
+              "de": "Muster",
+              "fr": "Dupont",
+              "it": "Rossi",
+              "sv": "Svensson",
+              "no": "Nordmann",
+              "es": "Pérez",
+              "da": "Hansen",
+              "ru": "Иванов",
+              "pl": "Kowalski",
+              "ko": "김"
             }
           },
           {
@@ -1315,11 +2206,31 @@
             "type": "string",
             "title": {
               "en": "User Unique ID",
-              "nl": "Gebruiker Unieke ID"
+              "nl": "Gebruiker Unieke ID",
+              "de": "Benutzer eindeutige ID",
+              "fr": "ID utilisateur unique",
+              "it": "ID utente univoco",
+              "sv": "Användarunik ID",
+              "no": "Brukernavn unik ID",
+              "es": "ID de usuario único",
+              "da": "Bruger unik ID",
+              "ru": "Уникальный идентификатор пользователя",
+              "pl": "Unikalny identyfikator użytkownika",
+              "ko": "사용자 고유 ID"
             },
             "example": {
               "en": "xxx-xxx-xxx",
-              "nl": "xxx-xxx-xxx"
+              "nl": "xxx-xxx-xxx",
+              "de": "xxx-xxx-xxx",
+              "fr": "xxx-xxx-xxx",
+              "it": "xxx-xxx-xxx",
+              "sv": "xxx-xxx-xxx",
+              "no": "xxx-xxx-xxx",
+              "es": "xxx-xxx-xxx",
+              "da": "xxx-xxx-xxx",
+              "ru": "xxx-xxx-xxx",
+              "pl": "xxx-xxx-xxx",
+              "ko": "xxx-xxx-xxx"
             }
           }
         ],
@@ -1335,7 +2246,17 @@
         "id": "ufp_device_nfc_card_scanned",
         "title": {
           "en": "A NFC card was scanned",
-          "nl": "Een NFC kaart is gescand"
+          "nl": "Een NFC kaart is gescand",
+          "de": "Eine NFC-Karte wurde gescannt",
+          "fr": "Une carte NFC a été scannée",
+          "it": "È stata scansionata una scheda NFC",
+          "sv": "Ett NFC-kort har skannats",
+          "no": "Et NFC-kort ble skannet",
+          "es": "Se ha escaneado una tarjeta NFC",
+          "da": "Et NFC-kort blev scannet",
+          "ru": "Сканирована NFC-карта",
+          "pl": "Skanowana karta NFC",
+          "ko": "NFC 카드가 스캔되었습니다"
         },
         "tokens": [
           {
@@ -1343,11 +2264,31 @@
             "type": "string",
             "title": {
               "en": "Username",
-              "nl": "Gebruikersnaam"
+              "nl": "Gebruikersnaam",
+              "de": "Benutzername",
+              "fr": "Nom d'utilisateur",
+              "it": "Nome utente",
+              "sv": "Användarnamn",
+              "no": "Brukernavn",
+              "es": "Nombre de usuario",
+              "da": "Brugernavn",
+              "ru": "Имя пользователя",
+              "pl": "Nazwa użytkownika",
+              "ko": "사용자 이름"
             },
             "example": {
               "en": "John Doe",
-              "nl": "Jan Jansen"
+              "nl": "Jan Jansen",
+              "de": "Max Mustermann",
+              "fr": "Jean Dupont",
+              "it": "Mario Rossi",
+              "sv": "Johan Svensson",
+              "no": "Ola Nordmann",
+              "es": "Juan Pérez",
+              "da": "Jens Hansen",
+              "ru": "Иван Иванов",
+              "pl": "Jan Kowalski",
+              "ko": "홍길동"
             }
           },
           {
@@ -1355,11 +2296,31 @@
             "type": "string",
             "title": {
               "en": "First name",
-              "nl": "Voornaam"
+              "nl": "Voornaam",
+              "de": "Vorname",
+              "fr": "Prénom",
+              "it": "Nome",
+              "sv": "Förnamn",
+              "no": "Fornavn",
+              "es": "Nombre",
+              "da": "Fornavn",
+              "ru": "Имя",
+              "pl": "Imię",
+              "ko": "이름"
             },
             "example": {
               "en": "John",
-              "nl": "Jan"
+              "nl": "Jan",
+              "de": "Max",
+              "fr": "Jean",
+              "it": "Mario",
+              "sv": "Johan",
+              "no": "Ola",
+              "es": "Juan",
+              "da": "Jens",
+              "ru": "Иван",
+              "pl": "Jan",
+              "ko": "길동"
             }
           },
           {
@@ -1367,11 +2328,31 @@
             "type": "string",
             "title": {
               "en": "Last name",
-              "nl": "Achternaam"
+              "nl": "Achternaam",
+              "de": "Nachname",
+              "fr": "Nom de famille",
+              "it": "Cognome",
+              "sv": "Efternamn",
+              "no": "Etternavn",
+              "es": "Apellido",
+              "da": "Efternavn",
+              "ru": "Фамилия",
+              "pl": "Nazwisko",
+              "ko": "성"
             },
             "example": {
               "en": "Doe",
-              "nl": "Jansen"
+              "nl": "Jansen",
+              "de": "Muster",
+              "fr": "Dupont",
+              "it": "Rossi",
+              "sv": "Svensson",
+              "no": "Nordmann",
+              "es": "Pérez",
+              "da": "Hansen",
+              "ru": "Иванов",
+              "pl": "Kowalski",
+              "ko": "김"
             }
           },
           {
@@ -1379,11 +2360,31 @@
             "type": "string",
             "title": {
               "en": "User Unique ID",
-              "nl": "Gebruiker Unieke ID"
+              "nl": "Gebruiker Unieke ID",
+              "de": "Benutzer eindeutige ID",
+              "fr": "ID utilisateur unique",
+              "it": "ID utente univoco",
+              "sv": "Användarunik ID",
+              "no": "Brukernavn unik ID",
+              "es": "ID de usuario único",
+              "da": "Bruger unik ID",
+              "ru": "Уникальный идентификатор пользователя",
+              "pl": "Unikalny identyfikator użytkownika",
+              "ko": "사용자 고유 ID"
             },
             "example": {
               "en": "xxx-xxx-xxx",
-              "nl": "xxx-xxx-xxx"
+              "nl": "xxx-xxx-xxx",
+              "de": "xxx-xxx-xxx",
+              "fr": "xxx-xxx-xxx",
+              "it": "xxx-xxx-xxx",
+              "sv": "xxx-xxx-xxx",
+              "no": "xxx-xxx-xxx",
+              "es": "xxx-xxx-xxx",
+              "da": "xxx-xxx-xxx",
+              "ru": "xxx-xxx-xxx",
+              "pl": "xxx-xxx-xxx",
+              "ko": "xxx-xxx-xxx"
             }
           },
           {
@@ -1391,11 +2392,31 @@
             "type": "string",
             "title": {
               "en": "Card ID",
-              "nl": "Kaart ID"
+              "nl": "Kaart ID",
+              "de": "Karten-ID",
+              "fr": "ID de la carte",
+              "it": "ID della scheda",
+              "sv": "Kort-ID",
+              "no": "Kort-ID",
+              "es": "ID de la tarjeta",
+              "da": "Kort-ID",
+              "ru": "ID карты",
+              "pl": "ID karty",
+              "ko": "카드 ID"
             },
             "example": {
               "en": "xxxxxx",
-              "nl": "xxxxxx"
+              "nl": "xxxxxx",
+              "de": "xxxxxx",
+              "fr": "xxxxxx",
+              "it": "xxxxxx",
+              "sv": "xxxxxx",
+              "no": "xxxxxx",
+              "es": "xxxxxx",
+              "da": "xxxxxx",
+              "ru": "xxxxxx",
+              "pl": "xxxxxx",
+              "ko": "xxxxxx"
             }
           }
         ],
@@ -1411,7 +2432,17 @@
         "id": "ufp_device_doorbell_smart_detection",
         "title": {
           "en": "A object was detected",
-          "nl": "Er is een object gedetecteerd"
+          "nl": "Er is een object gedetecteerd",
+          "de": "Ein Objekt wurde erkannt",
+          "fr": "Un objet a été détecté",
+          "it": "È stato rilevato un oggetto",
+          "sv": "Ett objekt har upptäckts",
+          "no": "Et objekt ble oppdaget",
+          "es": "Se ha detectado un objeto",
+          "da": "Der er registreret et objekt",
+          "ru": "Объект обнаружен",
+          "pl": "Obiekt wykryty",
+          "ko": "물체가 감지되었습니다"
         },
         "tokens": [
           {
@@ -1419,11 +2450,31 @@
             "type": "string",
             "title": {
               "en": "Smart detection type",
-              "nl": "Slim detectie type"
+              "nl": "Slim detectie type",
+              "de": "Intelligente Erkennungstyp",
+              "fr": "Type de détection intelligente",
+              "it": "Tipo di rilevamento intelligente",
+              "sv": "Typ av smart detektering",
+              "no": "Type smart deteksjon",
+              "es": "Tipo de detección inteligente",
+              "da": "Type for smart detektion",
+              "ru": "Тип умного обнаружения",
+              "pl": "Typ inteligentnego wykrywania",
+              "ko": "스마트 감지 유형"
             },
             "example": {
               "en": "vehicle",
-              "nl": "vehicle"
+              "nl": "vehicle",
+              "de": "fahrzeug",
+              "fr": "véhicule",
+              "it": "veicolo",
+              "sv": "fordon",
+              "no": "kjøretøy",
+              "es": "vehículo",
+              "da": "køretøj",
+              "ru": "транспортное средство",
+              "pl": "pojazd",
+              "ko": "차량"
             }
           },
           {
@@ -1431,11 +2482,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poengsum",
+              "es": "Puntuación",
+              "da": "Point",
+              "ru": "Счет",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -1443,11 +2514,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -1463,7 +2554,17 @@
         "id": "ufp_device_doorbell_smart_detection_vehicle",
         "title": {
           "en": "A vehicle was detected",
-          "nl": "Een voertuig werd gedetecteerd"
+          "nl": "Een voertuig werd gedetecteerd",
+          "de": "Ein Fahrzeug wurde erkannt",
+          "fr": "Un véhicule a été détecté",
+          "it": "È stato rilevato un veicolo",
+          "sv": "Ett fordon har upptäckts",
+          "no": "Et kjøretøy ble oppdaget",
+          "es": "Se ha detectado un vehículo",
+          "da": "Der er registreret et køretøj",
+          "ru": "Обнаружено транспортное средство",
+          "pl": "Wykryto pojazd",
+          "ko": "차량이 감지되었습니다"
         },
         "tokens": [
           {
@@ -1471,11 +2572,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poengsum",
+              "es": "Puntuación",
+              "da": "Point",
+              "ru": "Счет",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -1483,11 +2604,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -1503,7 +2644,17 @@
         "id": "ufp_device_doorbell_smart_detection_person",
         "title": {
           "en": "A person was detected",
-          "nl": "Een persoon werd gedetecteerd"
+          "nl": "Een persoon werd gedetecteerd",
+          "de": "Eine Person wurde erkannt",
+          "fr": "Une personne a été détectée",
+          "it": "È stata rilevata una persona",
+          "sv": "En person har upptäckts",
+          "no": "En person ble oppdaget",
+          "es": "Se ha detectado una persona",
+          "da": "Der er registreret en person",
+          "ru": "Обнаружено лицо",
+          "pl": "Wykryto osobę",
+          "ko": "사람이 감지되었습니다"
         },
         "tokens": [
           {
@@ -1511,11 +2662,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poengsum",
+              "es": "Puntuación",
+              "da": "Point",
+              "ru": "Счет",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -1523,11 +2694,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -1543,7 +2734,17 @@
         "id": "ufp_device_doorbell_smart_detection_package",
         "title": {
           "en": "A package was detected",
-          "nl": "Een pakket werd gedetecteerd"
+          "nl": "Een pakket werd gedetecteerd",
+          "de": "Ein Paket wurde erkannt",
+          "fr": "Un colis a été détecté",
+          "it": "È stato rilevato un pacco",
+          "sv": "Ett paket har upptäckts",
+          "no": "En pakke ble oppdaget",
+          "es": "Se ha detectado un paquete",
+          "da": "Der er registreret en pakke",
+          "ru": "Обнаружена посылка",
+          "pl": "Wykryto paczkę",
+          "ko": "소포가 감지되었습니다"
         },
         "tokens": [
           {
@@ -1551,11 +2752,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poengsum",
+              "es": "Puntuación",
+              "da": "Point",
+              "ru": "Счет",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -1563,11 +2784,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -1583,7 +2824,17 @@
         "id": "ufp_device_doorbell_smart_detection_animal",
         "title": {
           "en": "A animal was detected",
-          "nl": "Een dier werd gedetecteerd"
+          "nl": "Een dier werd gedetecteerd",
+          "de": "Ein Tier wurde erkannt",
+          "fr": "Un animal a été détecté",
+          "it": "È stato rilevato un animale",
+          "sv": "Ett djur har upptäckts",
+          "no": "Et dyr ble oppdaget",
+          "es": "Se ha detectado un animal",
+          "da": "Der er registreret et dyr",
+          "ru": "Обнаружено животное",
+          "pl": "Wykryto zwierzę",
+          "ko": "동물이 감지되었습니다"
         },
         "tokens": [
           {
@@ -1591,11 +2842,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poengsum",
+              "es": "Puntuación",
+              "da": "Point",
+              "ru": "Счет",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -1603,11 +2874,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -1623,7 +2914,17 @@
         "id": "ufp_device_doorbell_smart_detection_licenseplate",
         "title": {
           "en": "A license plate was detected",
-          "nl": "Een kenteken werd gedetecteerd"
+          "nl": "Een kenteken werd gedetecteerd",
+          "de": "Ein Nummernschild wurde erkannt",
+          "fr": "Une plaque d'immatriculation a été détectée",
+          "it": "È stata rilevata una targa",
+          "sv": "En registreringsskylt har upptäckts",
+          "no": "Et registreringsskilt ble oppdaget",
+          "es": "Se ha detectado una matrícula",
+          "da": "Der er registreret et nummerplade",
+          "ru": "Обнаружен номерной знак",
+          "pl": "Wykryto tablicę rejestracyjną",
+          "ko": "번호판이 감지되었습니다"
         },
         "tokens": [
           {
@@ -1631,11 +2932,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poengsum",
+              "es": "Puntuación",
+              "da": "Point",
+              "ru": "Счет",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -1643,11 +2964,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -1663,7 +3004,17 @@
         "id": "ufp_device_doorbell_smart_detection_face",
         "title": {
           "en": "A face was detected",
-          "nl": "Een gezicht werd gedetecteerd"
+          "nl": "Een gezicht werd gedetecteerd",
+          "de": "Ein Gesicht wurde erkannt",
+          "fr": "Un visage a été détecté",
+          "it": "È stato rilevato un volto",
+          "sv": "Ett ansikte har upptäckts",
+          "no": "Et ansikt ble oppdaget",
+          "es": "Se ha detectado un rostro",
+          "da": "Der er registreret et ansigt",
+          "ru": "Обнаружено лицо",
+          "pl": "Wykryto twarz",
+          "ko": "얼굴이 감지되었습니다"
         },
         "tokens": [
           {
@@ -1671,11 +3022,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poengsum",
+              "es": "Puntuación",
+              "da": "Point",
+              "ru": "Счет",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "62",
-              "nl": "62"
+              "nl": "62",
+              "de": "62",
+              "fr": "62",
+              "it": "62",
+              "sv": "62",
+              "no": "62",
+              "es": "62",
+              "da": "62",
+              "ru": "62",
+              "pl": "62",
+              "ko": "62"
             }
           },
           {
@@ -1683,11 +3054,31 @@
             "type": "string",
             "title": {
               "en": "Zones",
-              "nl": "Zones"
+              "nl": "Zones",
+              "de": "Zonen",
+              "fr": "Zones",
+              "it": "Zone",
+              "sv": "Zoner",
+              "no": "Soner",
+              "es": "Zonas",
+              "da": "Zoner",
+              "ru": "Зоны",
+              "pl": "Strefy",
+              "ko": "존"
             },
             "example": {
               "en": "1, 2",
-              "nl": "1, 2"
+              "nl": "1, 2",
+              "de": "1, 2",
+              "fr": "1, 2",
+              "it": "1, 2",
+              "sv": "1, 2",
+              "no": "1, 2",
+              "es": "1, 2",
+              "da": "1, 2",
+              "ru": "1, 2",
+              "pl": "1, 2",
+              "ko": "1, 2"
             }
           }
         ],
@@ -1703,11 +3094,31 @@
         "id": "ufp_device_doorbell_audio_detection",
         "title": {
           "en": "An audio event was detected",
-          "nl": "Er is een audio gebeurtenis gedetecteerd"
+          "nl": "Er is een audio gebeurtenis gedetecteerd",
+          "de": "Ein Audioereignis wurde erkannt",
+          "fr": "Un événement audio a été détecté",
+          "it": "È stato rilevato un evento audio",
+          "sv": "Ett ljudhändelse har upptäckts",
+          "no": "En lydhendelse ble oppdaget",
+          "es": "Se ha detectado un evento de audio",
+          "da": "Der er registreret en audiohændelse",
+          "ru": "Обнаружено аудиособытие",
+          "pl": "Wykryto zdarzenie audio",
+          "ko": "오디오 이벤트가 감지되었습니다"
         },
         "titleFormatted": {
           "en": "[[audio_type]] was detected",
-          "nl": "[[audio_type]] werd gedetecteerd"
+          "nl": "[[audio_type]] werd gedetecteerd",
+          "de": "[[audio_type]] wurde erkannt",
+          "fr": "[[audio_type]] a été détecté",
+          "it": "[[audio_type]] è stato rilevato",
+          "sv": "[[audio_type]] har upptäckts",
+          "no": "[[audio_type]] ble oppdaget",
+          "es": "[[audio_type]] ha sido detectado",
+          "da": "[[audio_type]] er blevet registreret",
+          "ru": "[[audio_type]] обнаружен",
+          "pl": "[[audio_type]] wykryty",
+          "ko": "[[audio_type]] 감지됨"
         },
         "args": [
           {
@@ -1720,77 +3131,187 @@
             "name": "audio_type",
             "title": {
               "en": "Audio type",
-              "nl": "Audio type"
+              "nl": "Audio type",
+              "de": "Audioart",
+              "fr": "Type audio",
+              "it": "Tipo audio",
+              "sv": "Ljudtyp",
+              "no": "Lydtype",
+              "es": "Tipo de audio",
+              "da": "Lyde type",
+              "ru": "Тип аудио",
+              "pl": "Typ audio",
+              "ko": "오디오 유형"
             },
             "values": [
               {
                 "id": "any",
                 "title": {
                   "en": "Any audio event",
-                  "nl": "Elk audio gebeurtenis"
+                  "nl": "Elk audio gebeurtenis",
+                  "de": "Jedes Audioereignis",
+                  "fr": "Tout événement audio",
+                  "it": "Qualsiasi evento audio",
+                  "sv": "Alla ljudhändelser",
+                  "no": "Alle lydhendelser",
+                  "es": "Cualquier evento de audio",
+                  "da": "Enhver audiohændelse",
+                  "ru": "Событие аудио любого типа",
+                  "pl": "Każde zdarzenie audio",
+                  "ko": "모든 오디오 이벤트"
                 }
               },
               {
                 "id": "smoke",
                 "title": {
                   "en": "Smoke alarm",
-                  "nl": "Rookmelder"
+                  "nl": "Rookmelder",
+                  "de": "Rauchmelder",
+                  "fr": "Détecteur de fumée",
+                  "it": "Rilevatore di fumo",
+                  "sv": "Brandvarnare",
+                  "no": "Røykvarsler",
+                  "es": "Detector de humo",
+                  "da": "Røgalarm",
+                  "ru": "Датчик дыма",
+                  "pl": "Czujnik dymu",
+                  "ko": "연기 감지기"
                 }
               },
               {
                 "id": "cmonx",
                 "title": {
                   "en": "CO alarm",
-                  "nl": "CO melder"
+                  "nl": "CO melder",
+                  "de": "CO-Melder",
+                  "fr": "Détecteur de CO",
+                  "it": "Rilevatore di CO",
+                  "sv": "CO-detektor",
+                  "no": "CO-varsler",
+                  "es": "Detector de CO",
+                  "da": "CO-alarm",
+                  "ru": "Датчик CO",
+                  "pl": "Czujnik CO",
+                  "ko": "일산화탄소 경보기"
                 }
               },
               {
                 "id": "siren",
                 "title": {
                   "en": "Siren",
-                  "nl": "Sirene"
+                  "nl": "Sirene",
+                  "de": "Sirene",
+                  "fr": "Sirène",
+                  "it": "Sirena",
+                  "sv": "Siren",
+                  "no": "Sirene",
+                  "es": "Sirena",
+                  "da": "Sirene",
+                  "ru": "Сирена",
+                  "pl": "Syrena",
+                  "ko": "사이렌"
                 }
               },
               {
                 "id": "baby_cry",
                 "title": {
                   "en": "Baby crying",
-                  "nl": "Baby huilen"
+                  "nl": "Baby huilen",
+                  "de": "Weinen des Babys",
+                  "fr": "Bébé qui pleure",
+                  "it": "Pianto del bambino",
+                  "sv": "Bebisgråt",
+                  "no": "Bebisgråt",
+                  "es": "Llanto de bebé",
+                  "da": "Babygråd",
+                  "ru": "Плач ребенка",
+                  "pl": "Płacz dziecka",
+                  "ko": "아기 울음"
                 }
               },
               {
                 "id": "speak",
                 "title": {
                   "en": "Speaking",
-                  "nl": "Praten"
+                  "nl": "Praten",
+                  "de": "Sprechen",
+                  "fr": "Parler",
+                  "it": "Parlare",
+                  "sv": "Tala",
+                  "no": "Snakke",
+                  "es": "Hablando",
+                  "da": "Tale",
+                  "ru": "Говорит",
+                  "pl": "Mówić",
+                  "ko": "말하기"
                 }
               },
               {
                 "id": "bark",
                 "title": {
                   "en": "Dog barking",
-                  "nl": "Hond blaffen"
+                  "nl": "Hond blaffen",
+                  "de": "Hund bellt",
+                  "fr": "Chien qui aboie",
+                  "it": "Cane che abbaia",
+                  "sv": "Hundskall",
+                  "no": "Hund som bjeffer",
+                  "es": "Perro ladrando",
+                  "da": "Hund der gør",
+                  "ru": "Собака лает",
+                  "pl": "Pies szczeka",
+                  "ko": "개 짖는 소리"
                 }
               },
               {
                 "id": "burglar",
                 "title": {
                   "en": "Burglar alarm",
-                  "nl": "Inbraakalarm"
+                  "nl": "Inbraakalarm",
+                  "de": "Einbruchmelder",
+                  "fr": "Détecteur d'intrusion",
+                  "it": "Rilevatore di intrusione",
+                  "sv": "Inbrottslarm",
+                  "no": "Innbruddsalarm",
+                  "es": "Alarma de intrusión",
+                  "da": "Indbrudsalarm",
+                  "ru": "Сигнализация о взломе",
+                  "pl": "Alarm włamania",
+                  "ko": "침입 경고"
                 }
               },
               {
                 "id": "car_horn",
                 "title": {
                   "en": "Car horn",
-                  "nl": "Autoclaxon"
+                  "nl": "Autoclaxon",
+                  "de": "Autohorn",
+                  "fr": "Klaxon",
+                  "it": "Clacson",
+                  "sv": "Bilhorn",
+                  "no": "Bilhorn",
+                  "es": "Claxon",
+                  "da": "Bilhorn",
+                  "ru": "Автомобильный гудок",
+                  "pl": "Klakson",
+                  "ko": "차 경적"
                 }
               },
               {
                 "id": "glass_break",
                 "title": {
                   "en": "Glass breaking",
-                  "nl": "Glasbreuk"
+                  "nl": "Glasbreuk",
+                  "de": "Glasbruch",
+                  "fr": "Bris de glace",
+                  "it": "Rottura di vetro",
+                  "sv": "Glasbrott",
+                  "no": "Glassbrudd",
+                  "es": "Ruptura de vidrio",
+                  "da": "Glasbrud",
+                  "ru": "Разбитие стекла",
+                  "pl": "Łamanie szkła",
+                  "ko": "유리 깨짐"
                 }
               }
             ]
@@ -1802,11 +3323,31 @@
             "type": "string",
             "title": {
               "en": "Audio detection type",
-              "nl": "Audio detectie type"
+              "nl": "Audio detectie type",
+              "de": "Audioerkennungstyp",
+              "fr": "Type de détection audio",
+              "it": "Tipo di rilevamento audio",
+              "sv": "Typ av ljuddetektering",
+              "no": "Type lydopplevelse",
+              "es": "Tipo de detección de audio",
+              "da": "Type for lyddetektion",
+              "ru": "Тип аудиообнаружения",
+              "pl": "Typ wykrywania dźwięku",
+              "ko": "오디오 감지 유형"
             },
             "example": {
               "en": "smoke",
-              "nl": "rook"
+              "nl": "rook",
+              "de": "rauch",
+              "fr": "fumée",
+              "it": "fumo",
+              "sv": "rök",
+              "no": "røyk",
+              "es": "humo",
+              "da": "røg",
+              "ru": "дым",
+              "pl": "dym",
+              "ko": "연기"
             }
           },
           {
@@ -1814,11 +3355,31 @@
             "type": "number",
             "title": {
               "en": "Score",
-              "nl": "Score"
+              "nl": "Score",
+              "de": "Punktzahl",
+              "fr": "Score",
+              "it": "Punteggio",
+              "sv": "Poäng",
+              "no": "Poengsum",
+              "es": "Puntuación",
+              "da": "Point",
+              "ru": "Счет",
+              "pl": "Wynik",
+              "ko": "점수"
             },
             "example": {
               "en": "85",
-              "nl": "85"
+              "nl": "85",
+              "de": "85",
+              "fr": "85",
+              "it": "85",
+              "sv": "85",
+              "no": "85",
+              "es": "85",
+              "da": "85",
+              "ru": "85",
+              "pl": "85",
+              "ko": "85"
             }
           }
         ]
@@ -2207,11 +3768,31 @@
         "id": "ufv_set_reader_door_locking_rule",
         "title": {
           "en": "Set Door Temporary Locking Rule",
-          "nl": "Deur tijdelijke vergrendelingsregel instellen"
+          "nl": "Deur tijdelijke vergrendelingsregel instellen",
+          "de": "Temporäre Türverriegelungsregel festlegen",
+          "fr": "Définir la règle de verrouillage temporaire de la porte",
+          "it": "Imposta regola di blocco temporaneo della porta",
+          "sv": "Ställ in tillfällig dörrlåsningsregel",
+          "no": "Angi midlertidig dørlåsningsregel",
+          "es": "Establecer regla de bloqueo temporal de puerta",
+          "da": "Indstil midlertidig dørlåsningsregel",
+          "ru": "Установить временное правило блокировки двери",
+          "pl": "Ustaw tymczasową zasadę blokowania drzwi",
+          "ko": "임시 문 잠금 규칙 설정"
         },
         "titleFormatted": {
           "en": "Set Door Temporary Locking Rule [[type]] for [[interval]] minutes",
-          "nl": "Deur tijdelijke vergrendelingsregel [[type]] voor [[interval]] minuten instellen"
+          "nl": "Deur tijdelijke vergrendelingsregel [[type]] voor [[interval]] minuten instellen",
+          "de": "Temporäre Türverriegelungsregel [[type]] für [[interval]] Minuten festlegen",
+          "fr": "Définir la règle de verrouillage temporaire de la porte [[type]] pour [[interval]] minutes",
+          "it": "Imposta regola di blocco temporaneo della porta [[type]] per [[interval]] minuti",
+          "sv": "Ställ in tillfällig dörrlåsningsregel [[type]] för [[interval]] minuter",
+          "no": "Angi midlertidig dørlåsningsregel [[type]] for [[interval]] minutter",
+          "es": "Establecer regla de bloqueo temporal de puerta [[type]] por [[interval]] minutos",
+          "da": "Indstil midlertidig dørlåsningsregel [[type]] for [[interval]] minutter",
+          "ru": "Установить временное правило блокировки двери [[type]] на [[interval]] минут",
+          "pl": "Ustaw tymczasową zasadę blokowania drzwi [[type]] na [[interval]] minut",
+          "ko": "임시 문 잠금 규칙 [[type]]을 [[interval]]분 동안 설정"
         },
         "args": [
           {
@@ -2224,48 +3805,102 @@
             "name": "type",
             "title": {
               "en": "Enabled",
-              "nl": "Ingeschakeld"
+              "nl": "Ingeschakeld",
+              "de": "Aktiviert",
+              "fr": "Activé",
+              "it": "Abilitato",
+              "sv": "Aktiverad",
+              "no": "Aktivert",
+              "es": "Habilitado",
+              "da": "Aktiveret",
+              "ru": "Включено",
+              "pl": "Włączone",
+              "ko": "활성화됨"
             },
             "values": [
               {
                 "id": "keep_lock",
                 "title": {
                   "en": "Keep locked",
-                  "nl": "Vergrendeld houden"
+                  "nl": "Vergrendeld houden",
+                  "de": "Verriegelt lassen",
+                  "fr": "Garder verrouillé",
+                  "it": "Mantieni bloccato",
+                  "sv": "Behåll låst",
+                  "no": "Hold låst",
+                  "es": "Mantener bloqueado",
+                  "da": "Behold låst",
+                  "ru": "Оставить заблокированным",
+                  "pl": "Pozostaw zablokowane",
+                  "ko": "잠금 상태 유지"
                 }
               },
               {
                 "id": "keep_unlock",
                 "title": {
                   "en": "Keep unlocked",
-                  "nl": "Ontgrendeld houden"
+                  "nl": "Ontgrendeld houden",
+                  "de": "Entriegelt lassen",
+                  "fr": "Garder déverrouillé",
+                  "it": "Mantieni sbloccato",
+                  "sv": "Behåll olåst",
+                  "no": "Hold ulåst",
+                  "es": "Mantener desbloqueado",
+                  "da": "Behold ulåst",
+                  "ru": "Оставить разблокированным",
+                  "pl": "Pozostaw odblokowane",
+                  "ko": "잠금 해제 상태 유지"
                 }
               },
               {
                 "id": "reset",
                 "title": {
-                  "en": "Reset"
+                  "en": "Reset",
+                  "nl": "Reset",
+                  "de": "Zurücksetzen",
+                  "fr": "Réinitialiser",
+                  "it": "Ripristina",
+                  "sv": "Återställ",
+                  "no": "Tilbakestill",
+                  "es": "Restablecer",
+                  "da": "Nulstil",
+                  "ru": "Сбросить",
+                  "pl": "Resetuj",
+                  "ko": "재설정"
                 }
               },
               {
                 "id": "lock_early",
                 "title": {
                   "en": "Lock early",
-                  "nl": "Vroeg vergrendelen"
+                  "nl": "Vroeg vergrendelen",
+                  "de": "Früh verriegeln",
+                  "fr": "Verrouiller tôt",
+                  "it": "Blocca presto",
+                  "sv": "Lås tidigt",
+                  "no": "Lås tidlig",
+                  "es": "Bloquear temprano",
+                  "da": "Lås tidligt",
+                  "ru": "Заблокировать рано",
+                  "pl": "Zablokuj wcześnie",
+                  "ko": "일찍 잠금"
                 }
               },
               {
                 "id": "lock_now",
                 "title": {
                   "en": "Lock now",
-                  "nl": "Nu vergrendelen"
-                }
-              },
-              {
-                "id": "custom",
-                "title": {
-                  "en": "Custom",
-                  "nl": "Aangepast"
+                  "nl": "Nu vergrendelen",
+                  "de": "Jetzt verriegeln",
+                  "fr": "Verrouiller maintenant",
+                  "it": "Blocca ora",
+                  "sv": "Lås nu",
+                  "no": "Lås nå",
+                  "es": "Bloquear ahora",
+                  "da": "Lås nu",
+                  "ru": "Заблокировать сейчас",
+                  "pl": "Zablokuj teraz",
+                  "ko": "지금 잠금"
                 }
               }
             ]
@@ -2274,17 +3909,36 @@
             "type": "number",
             "name": "interval",
             "title": {
-              "en": "Duration (minutes)",
-              "nl": "Duur (minuten)"
+              "en": "Interval (minutes)",
+              "nl": "Interval (minuten)",
+              "de": "Intervall (Minuten)",
+              "fr": "Intervalle (minutes)",
+              "it": "Intervallo (minuti)",
+              "sv": "Intervall (minuter)",
+              "no": "Intervall (minutter)",
+              "es": "Intervalo (minutos)",
+              "da": "Interval (minutter)",
+              "ru": "Интервал (минуты)",
+              "pl": "Przedział czasowy (minuty)",
+              "ko": "간격(분)"
             },
-            "min": 1,
-            "max": 1440,
-            "default": 5,
-            "visibleIf": {
-              "type": [
-                "custom"
-              ]
-            }
+            "placeholder": {
+              "en": "E.g. 5",
+              "nl": "Bijv. 5",
+              "de": "z.B. 5",
+              "fr": "Par ex. 5",
+              "it": "Es. 5",
+              "sv": "T.ex. 5",
+              "no": "F.eks. 5",
+              "es": "Por ejemplo 5",
+              "da": "F.eks. 5",
+              "ru": "Напр. 5",
+              "pl": "Np. 5",
+              "ko": "예: 5"
+            },
+            "defaultValue": 5,
+            "minValue": 1,
+            "maxValue": 1440
           }
         ]
       },
@@ -2292,11 +3946,31 @@
         "id": "ufv_set_reader_door_unlock",
         "title": {
           "en": "Set Door Temporary Locking Rule",
-          "nl": "Deur tijdelijke vergrendelingsregel instellen"
+          "nl": "Deur tijdelijke vergrendelingsregel instellen",
+          "de": "Temporäre Türverriegelungsregel festlegen",
+          "fr": "Définir la règle de verrouillage temporaire de la porte",
+          "it": "Imposta regola di blocco temporaneo della porta",
+          "sv": "Ställ in tillfällig dörrlåsningsregel",
+          "no": "Angi midlertidig dørlåsningsregel",
+          "es": "Establecer regla de bloqueo temporal de puerta",
+          "da": "Indstil midlertidig dørlåsningsregel",
+          "ru": "Установить временное правило блокировки двери",
+          "pl": "Ustaw tymczasową zasadę blokowania drzwi",
+          "ko": "임시 문 잠금 규칙 설정"
         },
         "titleFormatted": {
           "en": "Unlock door",
-          "nl": "Deur ontgrendelen"
+          "nl": "Deur ontgrendelen",
+          "de": "Tür entriegeln",
+          "fr": "Déverrouiller la porte",
+          "it": "Sblocca porta",
+          "sv": "Lås upp dörr",
+          "no": "Lås opp døren",
+          "es": "Desbloquear puerta",
+          "da": "Lås døren op",
+          "ru": "Открыть дверь",
+          "pl": "Otwórz drzwi",
+          "ko": "문 잠금 해제"
         },
         "args": [
           {
@@ -2310,11 +3984,31 @@
         "id": "ufv_set_reader_garagedoor_locking_rule",
         "title": {
           "en": "Set Door Temporary Locking Rule",
-          "nl": "Deur tijdelijke vergrendelingsregel instellen"
+          "nl": "Deur tijdelijke vergrendelingsregel instellen",
+          "de": "Temporäre Türverriegelungsregel festlegen",
+          "fr": "Définir la règle de verrouillage temporaire de la porte",
+          "it": "Imposta regola di blocco temporaneo della porta",
+          "sv": "Ställ in tillfällig dörrlåsningsregel",
+          "no": "Angi midlertidig dørlåsningsregel",
+          "es": "Establecer regla de bloqueo temporal de puerta",
+          "da": "Indstil midlertidig dørlåsningsregel",
+          "ru": "Установить временное правило блокировки двери",
+          "pl": "Ustaw tymczasową zasadę blokowania drzwi",
+          "ko": "임시 문 잠금 규칙 설정"
         },
         "titleFormatted": {
           "en": "Set Door Temporary Locking Rule [[type]] for [[interval]] minutes",
-          "nl": "Deur tijdelijke vergrendelingsregel [[type]] voor [[interval]] minuten instellen"
+          "nl": "Deur tijdelijke vergrendelingsregel [[type]] voor [[interval]] minuten instellen",
+          "de": "Temporäre Türverriegelungsregel [[type]] für [[interval]] Minuten festlegen",
+          "fr": "Définir la règle de verrouillage temporaire de la porte [[type]] pour [[interval]] minutes",
+          "it": "Imposta regola di blocco temporaneo della porta [[type]] per [[interval]] minuti",
+          "sv": "Ställ in tillfällig dörrlåsningsregel [[type]] för [[interval]] minuter",
+          "no": "Angi midlertidig dørlåsningsregel [[type]] for [[interval]] minutter",
+          "es": "Establecer regla de bloqueo temporal de puerta [[type]] por [[interval]] minutos",
+          "da": "Indstil midlertidig dørlåsningsregel [[type]] for [[interval]] minutter",
+          "ru": "Установить временное правило блокировки двери [[type]] на [[interval]] минут",
+          "pl": "Ustaw tymczasową zasadę blokowania drzwi [[type]] na [[interval]] minut",
+          "ko": "임시 문 잠금 규칙 [[type]]을 [[interval]]분 동안 설정"
         },
         "args": [
           {
@@ -2327,49 +4021,102 @@
             "name": "type",
             "title": {
               "en": "Enabled",
-              "nl": "Ingeschakeld"
+              "nl": "Ingeschakeld",
+              "de": "Aktiviert",
+              "fr": "Activé",
+              "it": "Abilitato",
+              "sv": "Aktiverad",
+              "no": "Aktivert",
+              "es": "Habilitado",
+              "da": "Aktiveret",
+              "ru": "Включено",
+              "pl": "Włączone",
+              "ko": "활성화됨"
             },
             "values": [
               {
                 "id": "keep_lock",
                 "title": {
                   "en": "Keep locked",
-                  "nl": "Vergrendeld houden"
+                  "nl": "Vergrendeld houden",
+                  "de": "Verriegelt lassen",
+                  "fr": "Garder verrouillé",
+                  "it": "Mantieni bloccato",
+                  "sv": "Behåll låst",
+                  "no": "Hold låst",
+                  "es": "Mantener bloqueado",
+                  "da": "Behold låst",
+                  "ru": "Оставить заблокированным",
+                  "pl": "Pozostaw zablokowane",
+                  "ko": "잠금 상태 유지"
                 }
               },
               {
                 "id": "keep_unlock",
                 "title": {
                   "en": "Keep unlocked",
-                  "nl": "Ontgrendeld houden"
+                  "nl": "Ontgrendeld houden",
+                  "de": "Entriegelt lassen",
+                  "fr": "Garder déverrouillé",
+                  "it": "Mantieni sbloccato",
+                  "sv": "Behåll olåst",
+                  "no": "Hold ulåst",
+                  "es": "Mantener desbloqueado",
+                  "da": "Behold ulåst",
+                  "ru": "Оставить разблокированным",
+                  "pl": "Pozostaw odblokowane",
+                  "ko": "잠금 해제 상태 유지"
                 }
               },
               {
                 "id": "reset",
                 "title": {
                   "en": "Reset",
-                  "nl": "Reset"
+                  "nl": "Reset",
+                  "de": "Zurücksetzen",
+                  "fr": "Réinitialiser",
+                  "it": "Ripristina",
+                  "sv": "Återställ",
+                  "no": "Tilbakestill",
+                  "es": "Restablecer",
+                  "da": "Nulstil",
+                  "ru": "Сбросить",
+                  "pl": "Resetuj",
+                  "ko": "재설정"
                 }
               },
               {
                 "id": "lock_early",
                 "title": {
                   "en": "Lock early",
-                  "nl": "Vroeg vergrendelen"
+                  "nl": "Vroeg vergrendelen",
+                  "de": "Früh verriegeln",
+                  "fr": "Verrouiller tôt",
+                  "it": "Blocca presto",
+                  "sv": "Lås tidigt",
+                  "no": "Lås tidlig",
+                  "es": "Bloquear temprano",
+                  "da": "Lås tidligt",
+                  "ru": "Заблокировать рано",
+                  "pl": "Zablokuj wcześnie",
+                  "ko": "일찍 잠금"
                 }
               },
               {
                 "id": "lock_now",
                 "title": {
                   "en": "Lock now",
-                  "nl": "Nu vergrendelen"
-                }
-              },
-              {
-                "id": "custom",
-                "title": {
-                  "en": "Custom (Duration)",
-                  "nl": "Aangepast (Duur)"
+                  "nl": "Nu vergrendelen",
+                  "de": "Jetzt verriegeln",
+                  "fr": "Verrouiller maintenant",
+                  "it": "Blocca ora",
+                  "sv": "Lås nu",
+                  "no": "Lås nå",
+                  "es": "Bloquear ahora",
+                  "da": "Lås nu",
+                  "ru": "Заблокировать сейчас",
+                  "pl": "Zablokuj teraz",
+                  "ko": "지금 잠금"
                 }
               }
             ]
@@ -2378,17 +4125,38 @@
             "type": "number",
             "name": "interval",
             "title": {
-              "en": "Duration (minutes)",
-              "nl": "Duur (minuten)"
+              "en": "Interval (minutes)",
+              "nl": "Interval (minuten)",
+              "de": "Intervall (Minuten)",
+              "fr": "Intervalle (minutes)",
+              "it": "Intervallo (minuti)",
+              "sv": "Intervall (minuter)",
+              "no": "Intervall (minutter)",
+              "es": "Intervalo (minutos)",
+              "da": "Interval (minutter)",
+              "ru": "Интервал (минуты)",
+              "pl": "Interwał (minuty)",
+              "ko": "간격(분)"
             },
-            "min": 1,
-            "max": 1440,
-            "default": 5,
-            "visibleIf": {
-              "type": [
-                "custom"
-              ]
-            }
+            "hint": {
+              "en": "Set to 0 for immediate effect",
+              "nl": "Stel in op 0 voor onmiddellijke werking",
+              "de": "Auf 0 setzen für sofortige Wirkung",
+              "fr": "Réglez sur 0 pour un effet immédiat",
+              "it": "Impostare su 0 per effetto immediato",
+              "sv": "Ställ in på 0 för omedelbar effekt",
+              "no": "Sett til 0 for umiddelbar effekt",
+              "es": "Establecer en 0 para efecto inmediato",
+              "da": "Indstil til 0 for øjeblikkelig effekt",
+              "ru": "Установите значение 0 для немедленного эффекта",
+              "pl": "Ustaw na 0, aby uzyskać natychmiastowy efekt",
+              "ko": "즉각적인 효과를 위해 0으로 설정"
+            },
+            "defaultValue": 0,
+            "required": true,
+            "minValue": 0,
+            "maxValue": 1440,
+            "stepValue": 1
           }
         ]
       },
@@ -2396,11 +4164,31 @@
         "id": "ufv_set_reader_garagedoor_unlock",
         "title": {
           "en": "Unlock garage door",
-          "nl": "Garage deur ontgrendelen"
+          "nl": "Garage deur ontgrendelen",
+          "de": "Garagentor entriegeln",
+          "fr": "Déverrouiller la porte de garage",
+          "it": "Sblocca porta garage",
+          "sv": "Lås upp garageport",
+          "no": "Lås opp garasjeport",
+          "es": "Desbloquear puerta de garaje",
+          "da": "Lås garageport op",
+          "ru": "Разблокировать гаражные ворота",
+          "pl": "Odblokuj bramę garażową",
+          "ko": "차고문 잠금 해제"
         },
         "titleFormatted": {
           "en": "Unlock garage door",
-          "nl": "Garage deur ontgrendelen"
+          "nl": "Garage deur ontgrendelen",
+          "de": "Garagentor entriegeln",
+          "fr": "Déverrouiller la porte de garage",
+          "it": "Sblocca porta garage",
+          "sv": "Lås upp garageport",
+          "no": "Lås opp garasjeport",
+          "es": "Desbloquear puerta de garaje",
+          "da": "Lås garageport op",
+          "ru": "Разблокировать гаражные ворота",
+          "pl": "Odblokuj bramę garażową",
+          "ko": "차고문 잠금 해제"
         },
         "args": [
           {
@@ -2414,11 +4202,31 @@
         "id": "ufv_set_reader_access_method_wave",
         "title": {
           "en": "Set Reader Access Method Wave",
-          "nl": "Stel Reader Toegangsmodus Handbeweging in"
+          "nl": "Stel Reader Toegangsmodus Handbeweging in",
+          "de": "Lesemethode Wave einstellen",
+          "fr": "Définir la méthode d'accès lecteur Wave",
+          "it": "Imposta metodo di accesso lettore Wave",
+          "sv": "Ställ in läsarens åtkomstmetod Wave",
+          "no": "Angi leserens tilgangsmetode Wave",
+          "es": "Establecer método de acceso lector Wave",
+          "da": "Indstil læserens adgangsmetode Wave",
+          "ru": "Установить метод доступа Wave",
+          "pl": "Ustaw metodę dostępu czytnika Wave",
+          "ko": "리더 액세스 방법 Wave 설정"
         },
         "titleFormatted": {
           "en": "Set Reader Access Method Wave [[enabled]]",
-          "nl": "Stel Reader Toegangsmodus Handbeweging in [[enabled]]"
+          "nl": "Stel Reader Toegangsmodus Handbeweging in [[enabled]]",
+          "de": "Lesemethode Wave einstellen [[enabled]]",
+          "fr": "Définir la méthode d'accès lecteur Wave [[enabled]]",
+          "it": "Imposta metodo di accesso lettore Wave [[enabled]]",
+          "sv": "Ställ in läsarens åtkomstmetod Wave [[enabled]]",
+          "no": "Angi leserens tilgangsmetode Wave [[enabled]]",
+          "es": "Establecer método de acceso lector Wave [[enabled]]",
+          "da": "Indstil læserens adgangsmetode Wave [[enabled]]",
+          "ru": "Установить метод доступа Wave [[enabled]]",
+          "pl": "Ustaw metodę dostępu czytnika Wave [[enabled]]",
+          "ko": "리더 액세스 방법 Wave [[enabled]] 설정"
         },
         "args": [
           {
@@ -2431,7 +4239,17 @@
             "name": "enabled",
             "title": {
               "en": "Enabled",
-              "nl": "Ingeschakeld"
+              "nl": "Ingeschakeld",
+              "de": "Aktiviert",
+              "fr": "Activé",
+              "it": "Abilitato",
+              "sv": "Aktiverad",
+              "no": "Aktivert",
+              "es": "Habilitado",
+              "da": "Aktiveret",
+              "ru": "Включено",
+              "pl": "Włączone",
+              "ko": "활성화됨"
             }
           }
         ]
@@ -2440,11 +4258,31 @@
         "id": "ufv_set_reader_access_method_nfc",
         "title": {
           "en": "Set Reader Access Method NFC",
-          "nl": "Stel Reader Toegangsmodus NFC in"
+          "nl": "Stel Reader Toegangsmodus NFC in",
+          "de": "Lesemethode NFC einstellen",
+          "fr": "Définir la méthode d'accès lecteur NFC",
+          "it": "Imposta metodo di accesso lettore NFC",
+          "sv": "Ställ in läsarens åtkomstmetod NFC",
+          "no": "Angi leserens tilgangsmetode NFC",
+          "es": "Establecer método de acceso lector NFC",
+          "da": "Indstil læserens adgangsmetode NFC",
+          "ru": "Установить метод доступа NFC",
+          "pl": "Ustaw metodę dostępu czytnika NFC",
+          "ko": "리더 액세스 방법 NFC 설정"
         },
         "titleFormatted": {
           "en": "Set Reader Access Method NFC [[enabled]]",
-          "nl": "Stel Reader Toegangsmodus NFC in [[enabled]]"
+          "nl": "Stel Reader Toegangsmodus NFC in [[enabled]]",
+          "de": "Lesemethode NFC einstellen [[enabled]]",
+          "fr": "Définir la méthode d'accès lecteur NFC [[enabled]]",
+          "it": "Imposta metodo di accesso lettore NFC [[enabled]]",
+          "sv": "Ställ in läsarens åtkomstmetod NFC [[enabled]]",
+          "no": "Angi leserens tilgangsmetode NFC [[enabled]]",
+          "es": "Establecer método de acceso lector NFC [[enabled]]",
+          "da": "Indstil læserens adgangsmetode NFC [[enabled]]",
+          "ru": "Установить метод доступа NFC [[enabled]]",
+          "pl": "Ustaw metodę dostępu czytnika NFC [[enabled]]",
+          "ko": "리더 액세스 방법 NFC [[enabled]] 설정"
         },
         "args": [
           {
@@ -2457,7 +4295,17 @@
             "name": "enabled",
             "title": {
               "en": "Enabled",
-              "nl": "Ingeschakeld"
+              "nl": "Ingeschakeld",
+              "de": "Aktiviert",
+              "fr": "Activé",
+              "it": "Abilitato",
+              "sv": "Aktiverad",
+              "no": "Aktivert",
+              "es": "Habilitado",
+              "da": "Aktiveret",
+              "ru": "Включено",
+              "pl": "Włączone",
+              "ko": "활성화됨"
             }
           }
         ]
@@ -2466,11 +4314,31 @@
         "id": "ufv_set_reader_access_method_bt-tap",
         "title": {
           "en": "Set Reader Access Method Mobile Tap",
-          "nl": "Stel Reader Toegangsmodus Mobiele Tik in"
+          "nl": "Stel Reader Toegangsmodus Mobiele Tik in",
+          "de": "Lesemethode Mobile Tap einstellen",
+          "fr": "Définir la méthode d'accès lecteur Mobile Tap",
+          "it": "Imposta metodo di accesso lettore Mobile Tap",
+          "sv": "Ställ in läsarens åtkomstmetod Mobile Tap",
+          "no": "Angi leserens tilgangsmetode Mobile Tap",
+          "es": "Establecer método de acceso lector Mobile Tap",
+          "da": "Indstil læserens adgangsmetode Mobile Tap",
+          "ru": "Установить метод доступа Mobile Tap",
+          "pl": "Ustaw metodę dostępu czytnika Mobile Tap",
+          "ko": "리더 액세스 방법 Mobile Tap 설정"
         },
         "titleFormatted": {
           "en": "Set Reader Access Method Mobile Tap [[enabled]]",
-          "nl": "Stel Reader Toegangsmodus Mobiele Tik in [[enabled]]"
+          "nl": "Stel Reader Toegangsmodus Mobiele Tik in [[enabled]]",
+          "de": "Lesemethode Mobile Tap einstellen [[enabled]]",
+          "fr": "Définir la méthode d'accès lecteur Mobile Tap [[enabled]]",
+          "it": "Imposta metodo di accesso lettore Mobile Tap [[enabled]]",
+          "sv": "Ställ in läsarens åtkomstmetod Mobile Tap [[enabled]]",
+          "no": "Angi leserens tilgangsmetode Mobile Tap [[enabled]]",
+          "es": "Establecer método de acceso lector Mobile Tap [[enabled]]",
+          "da": "Indstil læserens adgangsmetode Mobile Tap [[enabled]]",
+          "ru": "Установить метод доступа Mobile Tap [[enabled]]",
+          "pl": "Ustaw metodę dostępu czytnika Mobile Tap [[enabled]]",
+          "ko": "리더 액세스 방법 Mobile Tap [[enabled]] 설정"
         },
         "args": [
           {
@@ -2483,7 +4351,17 @@
             "name": "enabled",
             "title": {
               "en": "Enabled",
-              "nl": "Ingeschakeld"
+              "nl": "Ingeschakeld",
+              "de": "Aktiviert",
+              "fr": "Activé",
+              "it": "Abilitato",
+              "sv": "Aktiverad",
+              "no": "Aktivert",
+              "es": "Habilitado",
+              "da": "Aktiveret",
+              "ru": "Включено",
+              "pl": "Włączone",
+              "ko": "활성화됨"
             }
           }
         ]
@@ -2492,11 +4370,31 @@
         "id": "ufv_set_reader_access_method_bt-button",
         "title": {
           "en": "Set Reader Access Method Mobile Button",
-          "nl": "Stel Reader Toegangsmodus Mobiele Knop in"
+          "nl": "Stel Reader Toegangsmodus Mobiele Knop in",
+          "de": "Lesemethode Mobile Button einstellen",
+          "fr": "Définir la méthode d'accès lecteur Mobile Button",
+          "it": "Imposta metodo di accesso lettore Mobile Button",
+          "sv": "Ställ in läsarens åtkomstmetod Mobile Button",
+          "no": "Angi leserens tilgangsmetode Mobile Button",
+          "es": "Establecer método de acceso lector Mobile Button",
+          "da": "Indstil læserens adgangsmetode Mobile Button",
+          "ru": "Установить метод доступа Mobile Button",
+          "pl": "Ustaw metodę dostępu czytnika Mobile Button",
+          "ko": "리더 액세스 방법 Mobile Button 설정"
         },
         "titleFormatted": {
           "en": "Set Reader Access Method Mobile Button [[enabled]]",
-          "nl": "Stel Reader Toegangsmodus Mobiele Knop in [[enabled]]"
+          "nl": "Stel Reader Toegangsmodus Mobiele Knop in [[enabled]]",
+          "de": "Lesemethode Mobile Button einstellen [[enabled]]",
+          "fr": "Définir la méthode d'accès lecteur Mobile Button [[enabled]]",
+          "it": "Imposta metodo di accesso lettore Mobile Button [[enabled]]",
+          "sv": "Ställ in läsarens åtkomstmetod Mobile Button [[enabled]]",
+          "no": "Angi leserens tilgangsmetode Mobile Button [[enabled]]",
+          "es": "Establecer método de acceso lector Mobile Button [[enabled]]",
+          "da": "Indstil læserens adgangsmetode Mobile Button [[enabled]]",
+          "ru": "Установить метод доступа Mobile Button [[enabled]]",
+          "pl": "Ustaw metodę dostępu czytnika Mobile Button [[enabled]]",
+          "ko": "리더 액세스 방법 Mobile Button [[enabled]] 설정"
         },
         "args": [
           {
@@ -2509,7 +4407,17 @@
             "name": "enabled",
             "title": {
               "en": "Enabled",
-              "nl": "Ingeschakeld"
+              "nl": "Ingeschakeld",
+              "de": "Aktiviert",
+              "fr": "Activé",
+              "it": "Abilitato",
+              "sv": "Aktiverad",
+              "no": "Aktivert",
+              "es": "Habilitado",
+              "da": "Aktiveret",
+              "ru": "Включено",
+              "pl": "Włączone",
+              "ko": "활성화됨"
             }
           }
         ]
@@ -2682,7 +4590,17 @@
     {
       "name": {
         "en": "Access Lock",
-        "nl": "Access Slot"
+        "nl": "Access Slot",
+        "de": "Zugangsschloss",
+        "fr": "Serrure d'accès",
+        "it": "Serratura di accesso",
+        "sv": "Passerlås",
+        "no": "Tilgangslås",
+        "es": "Cerradura de acceso",
+        "da": "Adgangslås",
+        "ru": "Замок доступа",
+        "pl": "Zamek dostępu",
+        "ko": "액세스 잠금장치"
       },
       "class": "lock",
       "capabilities": [
@@ -2721,7 +4639,17 @@
     {
       "name": {
         "en": "Access Garage door",
-        "nl": "Access Garage deur"
+        "nl": "Access Garage deur",
+        "de": "Zugangsgaragentor",
+        "fr": "Porte de garage d'accès",
+        "it": "Porta garage di accesso",
+        "sv": "Passergarageport",
+        "no": "Tilgangsgarasjeport",
+        "es": "Puerta de garaje de acceso",
+        "da": "Adgangsgarageport",
+        "ru": "Доступ к гаражным воротам",
+        "pl": "Brama garażowa dostępu",
+        "ko": "액세스 차고문"
       },
       "class": "garagedoor",
       "capabilities": [
@@ -2759,7 +4687,17 @@
     {
       "name": {
         "en": "Access Hub",
-        "nl": "Access Hub"
+        "nl": "Access Hub",
+        "de": "Zugangshub",
+        "fr": "Hub d'accès",
+        "it": "Hub di accesso",
+        "sv": "Passerhub",
+        "no": "Tilgangshub",
+        "es": "Hub de acceso",
+        "da": "Adgangshub",
+        "ru": "Хаб доступа",
+        "pl": "Hub dostępu",
+        "ko": "액세스 허브"
       },
       "class": "lock",
       "capabilities": [],
@@ -2795,7 +4733,16 @@
     {
       "name": {
         "en": "Access Reader",
-        "de": "Access Leser"
+        "de": "Access Leser",
+        "fr": "Lecteur d'accès",
+        "it": "Lettore di accesso",
+        "sv": "Passerläsare",
+        "no": "Tilgangsleser",
+        "es": "Lector de acceso",
+        "da": "Adgangslæser",
+        "ru": "Считыватель доступа",
+        "pl": "Czytnik dostępu",
+        "ko": "액세스 리더기"
       },
       "class": "doorbell",
       "capabilities": [
@@ -2846,7 +4793,17 @@
         "camera_nightvision_set"
       ],
       "name": {
-        "en": "Camera"
+        "en": "Camera",
+        "de": "Kamera",
+        "fr": "Caméra",
+        "it": "Telecamera",
+        "sv": "Kamera",
+        "no": "Kamera",
+        "es": "Cámara",
+        "da": "Kamera",
+        "ru": "Камера",
+        "pl": "Kamera",
+        "ko": "카메라"
       },
       "images": {
         "large": "drivers/protectcamera/assets/images/large.png",
@@ -2883,7 +4840,17 @@
         "volume_set"
       ],
       "name": {
-        "en": "Chime"
+        "en": "Chime",
+        "de": "Glocke",
+        "fr": "Carillon",
+        "it": "Campanello",
+        "sv": "Klocka",
+        "no": "Ringeklokke",
+        "es": "Timbre",
+        "da": "Klokke",
+        "ru": "Звонок",
+        "pl": "Dzwonek",
+        "ko": "차임벨"
       },
       "images": {
         "large": "drivers/protectchime/assets/images/large.png",
@@ -2927,7 +4894,17 @@
       ],
       "name": {
         "en": "Doorbell",
-        "nl": "Deurbel"
+        "nl": "Deurbel",
+        "de": "Türklingel",
+        "fr": "Sonnette",
+        "it": "Campanello",
+        "sv": "Dörrklocka",
+        "no": "Ringeklokke",
+        "es": "Timbre",
+        "da": "Dørklokke",
+        "ru": "Дверной звонок",
+        "pl": "Dzwonek do drzwi",
+        "ko": "초인종"
       },
       "images": {
         "large": "drivers/protectdoorbell/assets/images/large.png",
@@ -2969,7 +4946,17 @@
         "light_mode_unifi"
       ],
       "name": {
-        "en": "Light"
+        "en": "Light",
+        "de": "Licht",
+        "fr": "Lumière",
+        "it": "Luce",
+        "sv": "Lampa",
+        "no": "Lys",
+        "es": "Luz",
+        "da": "Lys",
+        "ru": "Свет",
+        "pl": "Światło",
+        "ko": "조명"
       },
       "images": {
         "large": "drivers/protectlight/assets/images/large.png",
@@ -3012,7 +4999,17 @@
         "alarm_contact"
       ],
       "name": {
-        "en": "Sensor"
+        "en": "Sensor",
+        "de": "Sensor",
+        "fr": "Capteur",
+        "it": "Sensore",
+        "sv": "Sensor",
+        "no": "Sensor",
+        "es": "Sensor",
+        "da": "Sensor",
+        "ru": "Датчик",
+        "pl": "Czujnik",
+        "ko": "센서"
       },
       "images": {
         "large": "drivers/protectsensor/assets/images/large.png",
@@ -3043,7 +5040,17 @@
     },
     {
       "name": {
-        "en": "UniFi OS"
+        "en": "UniFi OS",
+        "de": "UniFi OS",
+        "fr": "UniFi OS",
+        "it": "UniFi OS",
+        "sv": "UniFi OS",
+        "no": "UniFi OS",
+        "es": "UniFi OS",
+        "da": "UniFi OS",
+        "ru": "UniFi OS",
+        "pl": "UniFi OS",
+        "ko": "UniFi OS"
       },
       "class": "other",
       "capabilities": [
