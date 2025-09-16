@@ -451,20 +451,22 @@ class Camera extends Homey.Device {
   async _setVideoUrl() {
     this.homey.app.debug(`Getting rtsp Url for camera ${this.getName()}.`);
     try {
-      const video = await this.homey.videos.createVideoRTSP({
-        allowInvalidCertificates: true,
-        demuxer: 'h265',
-      });
+        const video = await this.homey.videos.createVideoRTSP({
+            allowInvalidCertificates: true,
+            demuxer: 'h264',
+        });
 
-      video.registerVideoUrlListener(async () => {
+        video.registerVideoUrlListener(async () => {
+            return {
+                url: this.rtspUrl,
+            };
+        });
         await this.homey.app.api.getStreamUrl(this.getData()).then(((rtspUrl) => {
-          return {
-            url: rtspUrl,
-          };
-        }));
-      });
+            this.log(`RTSP URL for camera ${this.getName()}: ${rtspUrl}`);
+            this.rtspUrl = rtspUrl;
 
-      await this.setCameraVideo('video', `${this.getName()} Video`, video);
+            this.setCameraVideo('video', `${this.getName()} Video`, video);
+        }));
     } catch (err) {
       this.error('Error creating camera:', err);
     }
