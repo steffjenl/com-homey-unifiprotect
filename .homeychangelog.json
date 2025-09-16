@@ -229,5 +229,8 @@
   },
   "1.8.1": {
     "en": "Add new driver icons, widget previews and new langaues"
+  },
+  "1.8.2": {
+    "en": "Fixed Video Streaming URL"
   }
 }
