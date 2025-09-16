@@ -13,6 +13,9 @@ class Doorbell extends Homey.Device {
         this.device = this;
         this.cloudUrl = null;
         this.cloudUrlPackage = null;
+        this.rtspUrl = null;
+        this.rtspPackageUrl = null;
+        this.settings = this.getSettings();
         await this.waitForBootstrap();
         this.cleanSmartDetectionEvents();
         this.homey.app.debug('UnifiDoorbell Device has been initialized');
@@ -34,6 +37,18 @@ class Doorbell extends Homey.Device {
      * @returns {Promise<string|void>} return a custom message that will be displayed
      */
     async onSettings({oldSettings, newSettings, changedKeys}) {
+        if (newSettings.rtspUrl && newSettings.rtspUrl !== '') {
+            this.rtspUrl = newSettings.rtspUrl;
+            this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspUrl}`);
+            this.setCameraVideo('video', `${this.getName()} Video`, this.video);
+            return;
+        }
+        if (newSettings.rtspPackageUrl && newSettings.rtspPackageUrl !== '') {
+            this.rtspPackageUrl = newSettings.rtspPackageUrl;
+            this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspPackageUrl}`);
+            this.setCameraVideo('package-video', `${this.getName()} Package Video`, this.packageVideo);
+            return;
+        }
         this.homey.app.debug('UnifiDoorbell Device settings where changed');
     }
 
@@ -587,24 +602,64 @@ class Doorbell extends Homey.Device {
         this.homey.app.debug(`Getting rtsp Url for camera ${this.getName()}.`);
         try {
             // Create the video object
-            const video = await this.homey.videos.createVideoRTSP({
+            this.video = await this.homey.videos.createVideoRTSP({
                 allowInvalidCertificates: true,
                 demuxer: 'h264',
             });
 
             // Register the video url listener
-            video.registerVideoUrlListener(async () => {
+            this.video.registerVideoUrlListener(async () => {
                 return {
                     url: this.rtspUrl,
                 };
             });
+
+            // Get rtsp url from device settings
+            if (this.settings.rtspUrl && this.settings.rtspUrl !== '') {
+                this.rtspUrl = this.settings.rtspUrl;
+                this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspUrl}`);
+                this.setCameraVideo('video', `${this.getName()} Video`, this.video);
+                return;
+            }
+
             // get rtsp url from api
             this.homey.app.api.getStreamUrl(this.getData()).then(((rtspUrl) => {
                 this.log(`RTSP URL for doorbell ${this.getName()}: ${rtspUrl}`);
                 this.rtspUrl = rtspUrl;
 
                 // Set the video
-                this.setCameraVideo('video', `${this.getName()} Video`, video);
+                this.setCameraVideo('video', `${this.getName()} Video`, this.video);
+            }));
+
+            // Package camera
+            // Create the video object
+            this.packageVideo = await this.homey.videos.createVideoRTSP({
+                allowInvalidCertificates: true,
+                demuxer: 'h264',
+            });
+
+            // Register the video url listener
+            this.packageVideo.registerVideoUrlListener(async () => {
+                return {
+                    url: this.rtspPackageUrl,
+                };
+            });
+
+            // Get rtsp url from device settings
+            if (this.settings.rtspPackageUrl && this.settings.rtspPackageUrl !== '') {
+                this.rtspPackageUrl = this.settings.rtspPackageUrl;
+                this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspPackageUrl}`);
+                this.setCameraVideo('package-video', `${this.getName()} Package Video`, this.packageVideo);
+                return;
+            }
+
+            // get rtsp url from api
+            this.homey.app.api.getPackageStreamUrl(this.getData()).then(((rtspPackageUrl) => {
+                this.log(`RTSP URL for doorbell ${this.getName()}: ${rtspPackageUrl}`);
+                this.rtspPackageUrl = rtspPackageUrl;
+
+                // Set the video
+                this.setCameraVideo('package-video', `${this.getName()} Package Video`, this.packageVideo);
             }));
         } catch (err) {
             this.error('Error creating camera:', err);

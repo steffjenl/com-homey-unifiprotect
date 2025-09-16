@@ -12,6 +12,7 @@ class Camera extends Homey.Device {
   async onInit() {
     this.device = this;
     this.cloudUrl = null;
+    this.settings = this.getSettings();
     await this.waitForBootstrap();
     this.log('UnifiCamera Device has been initialized');
   }
@@ -461,6 +462,14 @@ class Camera extends Homey.Device {
                 url: this.rtspUrl,
             };
         });
+
+        if (this.settings.rtspUrl && this.settings.rtspUrl !== '') {
+            this.rtspUrl = this.settings.rtspUrl;
+            this.homey.app.debug(`Using custom RTSP URL for camera ${this.getName()}: ${this.rtspUrl}`);
+            this.setCameraVideo('video', `${this.getName()} Video`, video);
+            return;
+        }
+
         await this.homey.app.api.getStreamUrl(this.getData()).then(((rtspUrl) => {
             this.log(`RTSP URL for camera ${this.getName()}: ${rtspUrl}`);
             this.rtspUrl = rtspUrl;

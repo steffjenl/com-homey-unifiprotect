@@ -554,23 +554,19 @@ class ProtectAPI extends BaseClass {
         });
     }
 
-    getStreamUrl(camera) {
+    getStreamUrl(camera, packageCamera = false) {
         return new Promise((resolve, reject) => {
             let rtspAlias = null;
 
             this.findCameraById(camera.id)
                 .then(cameraInfo => {
                     cameraInfo.channels.forEach(channel => {
-                        if (channel.isRtspEnabled) {
-                            rtspAlias = channel.rtspAlias;
+                        if (channel.isRtspEnabled && channel.name !== 'Package Camera') {
+                            resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${channel.rtspAlias}`);
                         }
                     });
 
-                    if (!rtspAlias) {
-                        resolve('');
-                    }
-
-                    resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${rtspAlias}`);
+                    resolve('');
                 })
                 .catch(error => reject(new Error(`Error getting steam url: ${error}`)));
         });
@@ -584,15 +580,11 @@ class ProtectAPI extends BaseClass {
                 .then(cameraInfo => {
                     cameraInfo.channels.forEach(channel => {
                         if (channel.isRtspEnabled && channel.name === 'Package Camera') {
-                            rtspAlias = channel.rtspAlias;
+                            resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${channel.rtspAlias}`);
                         }
                     });
 
-                    if (!rtspAlias) {
-                        resolve('');
-                    }
-
-                    resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${rtspAlias}`);
+                    resolve('');
                 })
                 .catch(error => reject(new Error(`Error getting steam url: ${error}`)));
         });

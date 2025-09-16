@@ -4830,6 +4830,28 @@
       ],
       "connectivity": [
         "cloud"
+      ],
+      "settings": [
+        {
+          "type": "text",
+          "label": {
+            "en": "RTSP Stream URL",
+            "nl": "RTSP Stream URL",
+            "da": "RTSP Stream URL",
+            "de": "RTSP-Stream-URL",
+            "fr": "URL du flux RTSP",
+            "it": "URL del flusso RTSP",
+            "es": "URL de la transmisión RTSP",
+            "pl": "Adres URL strumienia RTSP",
+            "sv": "RTSP-ström URL",
+            "ko": "RTSP 스트림 URL",
+            "no": "RTSP-strøm URL"
+          },
+          "id": "rtspUrl",
+          "placeholder": {
+            "en": "rtsp://proxy.server:8554/stream1"
+          }
+        }
       ]
     },
     {
@@ -4931,6 +4953,48 @@
       ],
       "connectivity": [
         "cloud"
+      ],
+      "settings": [
+        {
+          "type": "text",
+          "label": {
+            "en": "RTSP Stream URL",
+            "nl": "RTSP Stream URL",
+            "da": "RTSP Stream URL",
+            "de": "RTSP-Stream-URL",
+            "fr": "URL du flux RTSP",
+            "it": "URL del flusso RTSP",
+            "es": "URL de la transmisión RTSP",
+            "pl": "Adres URL strumienia RTSP",
+            "sv": "RTSP-ström URL",
+            "ko": "RTSP 스트림 URL",
+            "no": "RTSP-strøm URL"
+          },
+          "id": "rtspUrl",
+          "placeholder": {
+            "en": "rtsp://proxy.server:8554/stream1"
+          }
+        },
+        {
+          "type": "text",
+          "label": {
+            "en": "RTSP Stream URL",
+            "nl": "RTSP Stream URL",
+            "da": "RTSP Stream URL",
+            "de": "RTSP-Stream-URL",
+            "fr": "URL du flux RTSP",
+            "it": "URL del flusso RTSP",
+            "es": "URL de la transmisión RTSP",
+            "pl": "Adres URL strumienia RTSP",
+            "sv": "RTSP-ström URL",
+            "ko": "RTSP 스트림 URL",
+            "no": "RTSP-strøm URL"
+          },
+          "id": "rtspPackageUrl",
+          "placeholder": {
+            "en": "rtsp://proxy.server:8554/stream1"
+          }
+        }
       ]
     },
     {
