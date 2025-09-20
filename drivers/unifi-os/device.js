@@ -84,17 +84,17 @@ module.exports = class UniFiOSDevice extends Homey.Device {
   onStorageChange(storage) {
     if (storage.hasOwnProperty('available')) {
       if (this.hasCapability('measure_data_size.free')) {
-        this.setCapabilityValue('measure_data_size.free', storage.available);
+        this.setCapabilityValue('measure_data_size.free', (((storage.available / 1000) / 1000) / 1000)); // Convert byes to GB
       }
     }
     if (storage.hasOwnProperty('used')) {
       if (this.hasCapability('measure_data_size.used')) {
-        this.setCapabilityValue('measure_data_size.used', storage.used);
+        this.setCapabilityValue('measure_data_size.used', (((storage.used / 1000) / 1000) / 1000)); // Convert byes to GB
       }
     }
     if (storage.hasOwnProperty('size')) {
       if (this.hasCapability('measure_data_size.total')) {
-        this.setCapabilityValue('measure_data_size.total', storage.size);
+        this.setCapabilityValue('measure_data_size.total', (((storage.size / 1000) / 1000) / 1000)); // Convert byes to GB
       }
     }
   }

@@ -4978,17 +4978,17 @@
         {
           "type": "text",
           "label": {
-            "en": "RTSP Stream URL",
-            "nl": "RTSP Stream URL",
-            "da": "RTSP Stream URL",
-            "de": "RTSP-Stream-URL",
-            "fr": "URL du flux RTSP",
-            "it": "URL del flusso RTSP",
-            "es": "URL de la transmisión RTSP",
-            "pl": "Adres URL strumienia RTSP",
-            "sv": "RTSP-ström URL",
-            "ko": "RTSP 스트림 URL",
-            "no": "RTSP-strøm URL"
+            "en": "RTSP Package Stream URL",
+            "nl": "RTSP Pakket Stream URL",
+            "da": "RTSP-pakke Stream URL",
+            "de": "RTSP-Paket-Stream-URL",
+            "fr": "URL du flux de paquet RTSP",
+            "it": "URL del flusso di pacchetti RTSP",
+            "es": "URL de la transmisión de paquetes RTSP",
+            "pl": "Adres URL strumienia pakietów RTSP",
+            "sv": "RTSP-paketström URL",
+            "ko": "RTSP 패키지 스트림 URL",
+            "no": "RTSP-pakkestrøm URL"
           },
           "id": "rtspPackageUrl",
           "placeholder": {
@@ -5128,19 +5128,22 @@
           "title": {
             "en": "Free Space",
             "nl": "Vrije ruimte"
-          }
+          },
+          "units": "GB"
         },
         "measure_data_size.used": {
           "title": {
             "en": "Used Space",
             "nl": "Gebruikte ruimte"
-          }
+          },
+          "units": "GB"
         },
         "measure_data_size.total": {
           "title": {
             "en": "Total Space",
             "nl": "Totale ruimte"
-          }
+          },
+          "units": "GB"
         }
       },
       "platforms": [

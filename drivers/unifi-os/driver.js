@@ -32,7 +32,7 @@ module.exports = class UniFiOSDriver extends Homey.Driver {
 
   onParseWebsocketMessage(device, payload) {
     if (Object.prototype.hasOwnProperty.call(device, '_events')) {
-      if (payload.hasOwnProperty('systemInfo') && payload.systemInfo.hasOwnProperty('cpu')) {
+      if (payload.hasOwnProperty('systemInfo') && payload.systemInfo.hasOwnProperty('cpu') && payload.systemInfo.cpu.hasOwnProperty('temperature')) {
         device.onTemperatureChange(payload.systemInfo.cpu.temperature);
       }
 

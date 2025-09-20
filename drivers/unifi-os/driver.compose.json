@@ -24,19 +24,22 @@
       "title": {
         "en": "Free Space",
         "nl": "Vrije ruimte"
-      }
+      },
+      "units": "GB"
     },
     "measure_data_size.used": {
       "title": {
         "en": "Used Space",
         "nl": "Gebruikte ruimte"
-      }
+      },
+      "units": "GB"
     },
     "measure_data_size.total": {
       "title": {
         "en": "Total Space",
         "nl": "Totale ruimte"
-      }
+      },
+      "units": "GB"
     }
   },
   "platforms": [
