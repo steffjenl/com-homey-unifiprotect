@@ -128,43 +128,6 @@ class ProtectWebSocket extends BaseClass {
     /*  */
     shouldProcessEvent(updatePacket) {
         return true;
-        if (!updatePacket || updatePacket == 'Hello') {
-            return false;
-        }
-        const jsonData = JSON.parse(updatePacket);
-        if (!jsonData || !jsonData.data || jsonData.data.length === 0) {
-            return false;
-        }
-        //
-        if (jsonData.event === 'access.base.info') {
-            return false;
-        }
-
-        if (jsonData.event === 'access.logs.insights.add') {
-            return false;
-        }
-
-        if (jsonData.event === 'access.logs.add') {
-            return false;
-        }
-
-        if (jsonData.event === 'access.data.device.update') {
-            return false;
-        }
-
-        if (jsonData.event === 'access.data.v2.device.update') {
-            if (jsonData.data.hasOwnProperty('configs')) {
-                return false;
-            }
-        }
-
-        /*
-            {
-                "event":"access.data.v2.location.update","receiver_id":"","event_object_id":"9f485e3a-b4a2-46b1-bd14-5780539f0aee","save_to_history":false,
-                "data":{"id":"ce884336-81c8-4f6a-8725-60c8ca76d91f","location_type":"door","name":"Hub Mini","up_id":"7dd4125f-4f38-4645-9739-7f279c1cdaf7","extras":null,"device_ids":["245a4c4ece14","1c0b8beec87e","672e0e8103aadb03e40003ff"],"state":{"lock":"locked","dps":"none","dps_connected":false,"emergency":{"software":"none","hardware":"none"},"is_unavailable":false},"thumbnail":{"type":"thumbnail","url":"/preview/camera_672e0e8103aadb03e40003ff_ce884336-81c8-4f6a-8725-60c8ca76d91f_1756391020.png","door_thumbnail_last_update":1756391020},"last_activity":1756394054},"meta":{"object_type":"location","target_field":null,"all_field":true,"id":"ce884336-81c8-4f6a-8725-60c8ca76d91f","source":""}}
-             */
-
-        return true;
     }
 
     configureNotificationsListener() {
