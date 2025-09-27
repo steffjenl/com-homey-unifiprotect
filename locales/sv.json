@@ -31,7 +31,10 @@
     "accessApiKey": "API-nyckel",
     "accessCredentials": "UniFi Access-uppgifter",
     "ignoreEventsNfcFingerprint": "Nedkylningsperiod mellan NFC/fingeravtryckshändelser (i sekunder)",
-    "ignoreEventsDoorbell": "Nedkylningsperiod mellan dörrklockshändelser (i sekunder)"
+    "ignoreEventsDoorbell": "Nedkylningsperiod mellan dörrklockshändelser (i sekunder)",
+    "protectV2ApiKey": "UniFi Protect V2 API-nyckel",
+    "protectV2Credentials": "UniFi Protect V2-uppgifter",
+    "status": "Status"
   },
   "events": {
     "camera": {

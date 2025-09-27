@@ -31,7 +31,10 @@
     "accessApiKey": "API Key",
     "accessCredentials": "UniFi Access credentials",
     "ignoreEventsNfcFingerprint": "Cooldown period between NFC/Fingerprint events (in seconds)",
-    "ignoreEventsDoorbell": "Cooldown period between Doorbell events (in seconds)"
+    "ignoreEventsDoorbell": "Cooldown period between Doorbell events (in seconds)",
+    "protectV2ApiKey": "UniFi Protect V2 API Key",
+    "protectV2Credentials": "UniFi Protect V2 credentials",
+    "status": "Status"
   },
   "events": {
     "camera": {

@@ -107,7 +107,9 @@ class UniFiDoorbellDriver extends Homey.Driver {
 
       if (payload.hasOwnProperty('type') && payload.type === 'ring') {
         this.homey.app.debug('ring ' + JSON.stringify(payload));
-        camera.onDoorbellRinging(payload.start, actionType, eventId);
+        if (this.homey.app.apiV2.websocket.loggedInStatus !== 'Connected') {
+            camera.onDoorbellRinging(payload.start);
+        }
       }
 
     }

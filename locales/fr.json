@@ -31,7 +31,10 @@
     "accessApiKey": "Clé API",
     "accessCredentials": "Identifiants UniFi Access",
     "ignoreEventsNfcFingerprint": "Délai entre les événements NFC/empreinte digitale (en secondes)",
-    "ignoreEventsDoorbell": "Délai entre les événements de sonnette (en secondes)"
+    "ignoreEventsDoorbell": "Délai entre les événements de sonnette (en secondes)",
+    "protectV2ApiKey": "Clé API UniFi Protect V2",
+    "protectV2Credentials": "Identifiants UniFi Protect V2",
+    "status": "Statut"
   },
   "events": {
     "camera": {

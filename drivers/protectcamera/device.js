@@ -475,7 +475,7 @@ class Camera extends Homey.Device {
             this.rtspUrl = rtspUrl;
 
             this.setCameraVideo('video', `${this.getName()} Video`, video);
-        }));
+        })).catch(this.error);
     } catch (err) {
       this.error('Error creating camera:', err);
     }

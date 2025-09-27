@@ -31,7 +31,10 @@
     "accessApiKey": "API-nøkkel",
     "accessCredentials": "UniFi Access legitimasjon",
     "ignoreEventsNfcFingerprint": "Nedkjølingsperiode mellom NFC/fingeravtrykk hendelser (i sekunder)",
-    "ignoreEventsDoorbell": "Nedkjølingsperiode mellom ringeklokke hendelser (i sekunder)"
+    "ignoreEventsDoorbell": "Nedkjølingsperiode mellom ringeklokke hendelser (i sekunder)",
+    "protectV2ApiKey": "UniFi Protect V2 API-nøkkel",
+    "protectV2Credentials": "UniFi Protect V2 legitimasjon",
+    "status": "Status"
   },
   "events": {
     "camera": {

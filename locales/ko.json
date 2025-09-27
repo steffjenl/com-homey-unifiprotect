@@ -31,7 +31,10 @@
     "accessApiKey": "API 키",
     "accessCredentials": "UniFi Access 자격 증명",
     "ignoreEventsNfcFingerprint": "NFC/지문 이벤트 간 쿨다운 기간(초)",
-    "ignoreEventsDoorbell": "초인종 이벤트 간 쿨다운 기간(초)"
+    "ignoreEventsDoorbell": "초인종 이벤트 간 쿨다운 기간(초)",
+    "protectV2ApiKey": "UniFi Protect V2 API 키",
+    "protectV2Credentials": "UniFi Protect V2 자격 증명",
+    "status": "상태"
   },
   "events": {
     "camera": {

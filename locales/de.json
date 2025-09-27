@@ -31,7 +31,10 @@
     "accessApiKey": "API-Schlüssel",
     "accessCredentials": "UniFi Access Zugangsdaten",
     "ignoreEventsNfcFingerprint": "Abklingzeit zwischen NFC/Fingerabdruck-Ereignissen (in Sekunden)",
-    "ignoreEventsDoorbell": "Abklingzeit zwischen Türklingel-Ereignissen (in Sekunden)"
+    "ignoreEventsDoorbell": "Abklingzeit zwischen Türklingel-Ereignissen (in Sekunden)",
+    "protectV2ApiKey": "UniFi Protect V2 API-Schlüssel",
+    "protectV2Credentials": "UniFi Protect V2 Zugangsdaten",
+    "status": "Status"
   },
   "events": {
     "camera": {

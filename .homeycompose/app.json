@@ -3,18 +3,18 @@
   "sdk": 3,
   "brandColor": "#159EDA",
   "name": {
-    "en": "Ubiquiti UniFi Protect",
-    "nl": "Ubiquiti UniFi Protect",
-    "de": "Ubiquiti UniFi Protect",
-    "fr": "Ubiquiti UniFi Protect",
-    "it": "Ubiquiti UniFi Protect",
-    "sv": "Ubiquiti UniFi Protect",
-    "no": "Ubiquiti UniFi Protect",
-    "es": "Ubiquiti UniFi Protect",
-    "da": "Ubiquiti UniFi Protect",
-    "ru": "Ubiquiti UniFi Protect",
-    "pl": "Ubiquiti UniFi Protect",
-    "ko": "Ubiquiti UniFi Protect"
+    "en": "Ubiquiti UniFi Protect & Access",
+    "nl": "Ubiquiti UniFi Protect & Access",
+    "de": "Ubiquiti UniFi Protect & Access",
+    "fr": "Ubiquiti UniFi Protect & Access",
+    "it": "Ubiquiti UniFi Protect & Access",
+    "sv": "Ubiquiti UniFi Protect & Access",
+    "no": "Ubiquiti UniFi Protect & Access",
+    "es": "Ubiquiti UniFi Protect & Access",
+    "da": "Ubiquiti UniFi Protect & Access",
+    "ru": "Ubiquiti UniFi Protect & Access",
+    "pl": "Ubiquiti UniFi Protect & Access",
+    "ko": "Ubiquiti UniFi Protect & Access"
   },
   "description": {
     "en": "Protect your home with UniFi Protect & Access devices.",
@@ -187,6 +187,7 @@
     "url": "https://github.com/steffjenl/com-homey-unifiprotect/issues"
   },
   "support": "https://monkeysoft.nl/homey-integrations-support/",
+  "homepage": "https://monkeysoft.nl/",
   "homeyCommunityTopicId": 42966,
   "platforms": [
     "local"
@@ -215,6 +216,14 @@
     "getLastAccessWebsocketMessageTime": {
       "method": "GET",
       "path": "/getLastAccessWebsocketMessageTime"
+    },
+    "getProtectV2WebsocketStatus": {
+      "method": "GET",
+      "path": "/protectv2websocketstatus"
+    },
+    "getLastProtectV2WebsocketMessageTime": {
+      "method": "GET",
+      "path": "/getLastProtectV2WebsocketMessageTime"
     }
   }
 }

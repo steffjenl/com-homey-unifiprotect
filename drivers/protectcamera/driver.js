@@ -70,7 +70,7 @@ class UniFiCameraDriver extends Homey.Driver {
       }
 
       if (payload.hasOwnProperty('lastRing')) {
-        camera.onDoorbellRinging(payload.lastRing);
+        // camera.onDoorbellRinging(payload.lastRing);
       }
 
       if (payload.hasOwnProperty('isDark')) {

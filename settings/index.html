@@ -7,20 +7,8 @@
 </head>
 
 <body>
-<!-- Title -->
-<h1 data-i18n="settings.title"></h1>
-
 <!-- Instruction -->
 <p data-i18n="settings.instruction"></p>
-
-<p><span data-i18n="settings.status">Status</span>: <span id="unifi_status" style="font-weight: bold;">Unknown</span>
-</p>
-<p><span data-i18n="settings.websocket.status">Protect Realtime Status</span>: <span id="unifi_websocket_status"
-                                                                                     style="font-weight: bold;">Unknown</span>
-</p>
-<p><span data-i18n="settings.websocket.at">Protect Last update at</span>: <span id="unifi_websocket_at"
-                                                                        style="font-weight: bold;">Unknown</span>
-</p>
 <!-- NVR -->
 <fieldset class="homey-form-fieldset">
     <legend class="homey-form-legend" data-i18n="settings.nvr"></legend>
@@ -54,19 +42,18 @@
         <label class="homey-form-label" for="txt_password" data-i18n="settings.password"></label>
         <input class="homey-form-input" id="txt_password" type="password" value=""/>
     </div>
+
+    <!-- API-Key -->
+    <div class="field row">
+        <label class="homey-form-label" for="txt_protectV2ApiKey" data-i18n="settings.protectV2ApiKey"></label>
+        <input class="homey-form-input" id="txt_protectV2ApiKey" type="text" value=""/>
+    </div>
 </fieldset>
 
-<!-- Access Credentials -->
+<!-- Access API Credentials -->
 <fieldset class="homey-form-fieldset">
     <legend class="homey-form-legend" data-i18n="settings.accessCredentials"></legend>
-
-    <p><span data-i18n="settings.accessWebsocket.status">Access Realtime Status</span>: <span id="unifi_access_websocket_status"
-                                                                                              style="font-weight: bold;">Unknown</span>
-    </p>
-    <p><span data-i18n="settings.accessWebsocket.at">Access Last update at</span>: <span id="unifi_access_websocket_at"
-                                                                                         style="font-weight: bold;">Unknown</span>
-
-        <!-- Username -->
+        <!-- API-Key -->
     <div class="field row">
         <label class="homey-form-label" for="txt_accessApiKey" data-i18n="settings.accessApiKey"></label>
         <input class="homey-form-input" id="txt_accessApiKey" type="text" value=""/>
@@ -107,17 +94,43 @@
     <button id="btn_apply" class="homey-button-primary-full" data-i18n="settings.apply"></button>
 </div>
 
+<hr/>
+<!-- Title -->
+<legend class="homey-form-legend" data-i18n="settings.status"></legend>
+
+<p><span data-i18n="settings.status">Status</span>: <span id="unifi_status" style="font-weight: bold;">Unknown</span>
+</p>
+<p><span data-i18n="settings.websocket.status">Protect V1 Realtime Status</span>: <span id="unifi_websocket_status"
+                                                                                     style="font-weight: bold;">Unknown</span>
+</p>
+<p><span data-i18n="settings.websocket.at">Protect V1 Last update at</span>: <span id="unifi_websocket_at"
+                                                                                style="font-weight: bold;">Unknown</span>
+</p>
+<p><span data-i18n="settings.protectV2Websocket.status">Protect V2 Realtime Status</span>: <span id="unifi_protectV2_websocket_status"
+                                                                                                 style="font-weight: bold;">Unknown</span>
+</p>
+<p><span data-i18n="settings.protectV2Websocket.at">Protect V2 Last update at</span>: <span id="unifi_protectV2_websocket_at"
+                                                                                            style="font-weight: bold;">Unknown</span>
+</p>
+<p><span data-i18n="settings.accessWebsocket.status">Access Realtime Status</span>: <span id="unifi_access_websocket_status"
+                                                                                          style="font-weight: bold;">Unknown</span>
+</p>
+<p><span data-i18n="settings.accessWebsocket.at">Access Last update at</span>: <span id="unifi_access_websocket_at"
+                                                                                     style="font-weight: bold;">Unknown</span>
+</p>
+
 <script type="text/javascript">
-    var txtNvrIp = document.getElementById('txt_nvrip');
-    var txtNvrPort = document.getElementById('txt_nvrport');
-    var txtUsername = document.getElementById('txt_username');
-    var txtPassword = document.getElementById('txt_password');
-    var txtAccessApiKey = document.getElementById('txt_accessApiKey');
-    var txtuseCameraSnapshot = document.getElementById('txt_useCameraSnapshot');
-    var txtIgnoreEventsNfcFingerprint = document.getElementById('txt_ignoreEventsNfcFingerprint');
-    var txtIgnoreEventsDoorbell = document.getElementById('txt_ignoreEventsDoorbell');
-    var btnApply = document.getElementById('btn_apply');
-    var btnTest = document.getElementById('btn_test');
+    const txtNvrIp = document.getElementById('txt_nvrip');
+    const txtNvrPort = document.getElementById('txt_nvrport');
+    const txtUsername = document.getElementById('txt_username');
+    const txtPassword = document.getElementById('txt_password');
+    const txtAccessApiKey = document.getElementById('txt_accessApiKey');
+    const txtProtectV2ApiKey = document.getElementById('txt_protectV2ApiKey');
+    const txtuseCameraSnapshot = document.getElementById('txt_useCameraSnapshot');
+    const txtIgnoreEventsNfcFingerprint = document.getElementById('txt_ignoreEventsNfcFingerprint');
+    const txtIgnoreEventsDoorbell = document.getElementById('txt_ignoreEventsDoorbell');
+    const btnApply = document.getElementById('btn_apply');
+    const btnTest = document.getElementById('btn_test');
 
     function onHomeyReady(Homey) {
         const readSettings = () => {
@@ -156,7 +169,9 @@
                 if (error) return Homey.alert(error);
 
                 if (credentials) {
+                    // LurFVKha5VgGcbhV52xP0jqDIjpgPrAb
                     txtAccessApiKey.value = credentials.accessApiKey;
+                    txtProtectV2ApiKey.value = credentials.protectV2ApiKey;
                 } else {
                     console.warn('[SETTINGS] Could not read tokens credentials.');
                 }
@@ -196,7 +211,8 @@
             });
 
             const apiTokens = {
-                'accessApiKey': txtAccessApiKey.value
+                'accessApiKey': txtAccessApiKey.value,
+                'protectV2ApiKey': txtProtectV2ApiKey.value
             };
 
             Homey.set('ufp:tokens', apiTokens, (error, result) => {
@@ -224,7 +240,8 @@
                 'port': txtNvrPort.value,
                 'user': txtUsername.value,
                 'pass': txtPassword.value,
-                'accessApiKey': txtAccessApiKey.value
+                'accessApiKey': txtAccessApiKey.value,
+                'protectV2ApiKey': txtProtectV2ApiKey.value
             };
 
             Homey.api("POST", "/test", settings, function (err, response) {
@@ -339,6 +356,35 @@
             document.getElementById('unifi_access_websocket_at').innerHTML = data;
         }
 
+        const updateProtectV2WebsocketStatusField = (err, data) => {
+            if (err) {
+                return err;
+            }
+            var color = 'darkred';
+            if (data === 'Connected') color = 'darkgreen';
+            if (data === 'Connecting...') color = 'orange';
+
+            var statusField = document.getElementById('unifi_protectV2_websocket_status');
+            statusField.style.color = color;
+
+            var translationKey = 'status.connection.' + data;
+            var translation = Homey.__(translationKey);
+
+            if (translation === translationKey || translation === '' || typeof translation === 'undefined') {
+                statusField.innerHTML = data;
+            } else {
+                statusField.innerHTML = translation;
+            }
+        }
+
+        const updateProtectV2WebsocketAtField = (err, data) => {
+            if (err) {
+                return err;
+            }
+
+            document.getElementById('unifi_protectV2_websocket_at').innerHTML = data;
+        }
+
         Homey.on('com.ubnt.unifiprotect.status', (data) => {
             updateStatusField(null, data);
         });
@@ -347,6 +393,9 @@
         });
         Homey.on('com.ubnt.unifiprotect.accessWebsocket.status', (data) => {
             updateAccessWebsocketStatusField(null, data);
+        });
+        Homey.on('com.ubnt.unifiprotect.protectV2Websocket.status', (data) => {
+            updateProtectV2WebsocketStatusField(null, data);
         });
         Homey.get('com.ubnt.unifiprotect.status', updateStatusField);
         Homey.get('com.ubnt.unifiprotect.websocket.status', updateWebsocketStatusField);
@@ -374,6 +423,16 @@
 
         Homey.api("GET", "/getLastAccessWebsocketMessageTime", null, function (err, result) {
             updateAccessWebsocketAtField(null, result);
+            if (err) return Homey.alert(err);
+        });
+
+        Homey.api("GET", "/protectv2websocketstatus", null, function (err, result) {
+            updateProtectV2WebsocketStatusField(null, result);
+            if (err) return Homey.alert(err);
+        });
+
+        Homey.api("GET", "/getLastProtectV2WebsocketMessageTime", null, function (err, result) {
+            updateProtectV2WebsocketAtField(null, result);
             if (err) return Homey.alert(err);
         });
     }

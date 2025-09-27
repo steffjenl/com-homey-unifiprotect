@@ -629,7 +629,7 @@ class Doorbell extends Homey.Device {
 
                 // Set the video
                 this.setCameraVideo('video', `${this.getName()} Video`, this.video);
-            }));
+            })).catch(this.error);
 
             // Package camera
             // Create the video object
@@ -660,7 +660,7 @@ class Doorbell extends Homey.Device {
 
                 // Set the video
                 this.setCameraVideo('package-video', `${this.getName()} Package Video`, this.packageVideo);
-            }));
+            })).catch(this.error);
         } catch (err) {
             this.error('Error creating camera:', err);
         }

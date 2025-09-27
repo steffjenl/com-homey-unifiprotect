@@ -189,6 +189,32 @@ class AppProtect extends BaseClass {
 
   }
 
+    async loginToProtectV2() {
+        // Validate NVR IP address
+        const nvrip = this.homey.settings.get('ufp:nvrip');
+        if (!nvrip) {
+            this.log('NVR IP address not set.');
+            return;
+        }
+
+        // Setting NVR Port when set
+        // const nvrport = this.homey.settings.get('ufp:nvrport');
+
+        // Validate NVR credentials
+        const tokens = this.homey.settings.get('ufp:tokens');
+        if (!tokens) {
+            this.log('Tokens not set.');
+            return;
+        }
+
+        this.homey.app.apiV2.setSettings(nvrip, 443, tokens.protectV2ApiKey);
+
+        this.homey.app.apiV2.websocket.reconnectNotificationsListener();
+        this.homey.app.apiV2.websocketDevices.reconnectNotificationsListener();
+
+        this.homey.app.apiV2.loggedInStatus = 'Connected';
+    }
+
   _appLogin() {
     this.homey.app.debug('Protect Logging in...');
 

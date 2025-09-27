@@ -31,7 +31,10 @@
     "accessApiKey": "API-ключ",
     "accessCredentials": "Учетные данные UniFi Access",
     "ignoreEventsNfcFingerprint": "Период между событиями NFC/отпечатка пальца (в секундах)",
-    "ignoreEventsDoorbell": "Период между событиями звонка (в секундах)"
+    "ignoreEventsDoorbell": "Период между событиями звонка (в секундах)",
+    "protectV2ApiKey": "API-ключ UniFi Protect V2",
+    "protectV2Credentials": "Учетные данные UniFi Protect V2",
+    "status": "Статус"
   },
   "events": {
     "camera": {

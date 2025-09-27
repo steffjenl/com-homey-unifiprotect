@@ -31,7 +31,10 @@
     "accessApiKey": "Klucz API",
     "accessCredentials": "Dane UniFi Access",
     "ignoreEventsNfcFingerprint": "Okres pomiędzy zdarzeniami NFC/odcisk palca (w sekundach)",
-    "ignoreEventsDoorbell": "Okres pomiędzy zdarzeniami dzwonka (w sekundach)"
+    "ignoreEventsDoorbell": "Okres pomiędzy zdarzeniami dzwonka (w sekundach)",
+    "protectV2ApiKey": "Klucz API UniFi Protect V2",
+    "protectV2Credentials": "Dane UniFi Protect V2",
+    "status": "Status"
   },
   "events": {
     "camera": {

@@ -31,7 +31,10 @@
     "test_status": {
         "success": "Inloggegevens zijn geldig.",
         "failure": "Inloggegevens zijn ongeldig."
-    }
+    },
+    "protectV2ApiKey": "UniFi Protect V2 API-sleutel",
+    "protectV2Credentials": "UniFi Protect V2 inloggegevens",
+    "status": "Status"
   },
   "events": {
     "camera": {
