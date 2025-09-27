@@ -235,5 +235,8 @@
   },
   "1.8.3": {
     "en": "Fixing UniFi OS Device converting bytes to GB and crash when no temp is found"
+  },
+  "1.8.4": {
+    "en": "Add first steps for new API Integration, Only Doorbell press is added for now"
   }
 }
