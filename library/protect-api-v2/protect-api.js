@@ -25,251 +25,210 @@ class ProtectAPI extends BaseClass {
         this.websocketDevices.setHomeyObject(homey);
     }
 
-    async getDoors() {
+    // Cameras
+    async getCameras() {
         return new Promise((resolve, reject) => {
-            this.webclient.get('doors')
-                .then(response => {
-                    let result = JSON.parse(response);
-
-                    if (result) {
-                        return resolve(result.data);
-                    } else {
-                        return reject(new Error('Error obtaining doors.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
-
-    async getHubs() {
-        return new Promise((resolve, reject) => {
-            this.webclient.get('devices')
-                .then(response => {
-                    let result = JSON.parse(response);
-
-                    let hubs = [];
-                    for (const device of result.data[0]) {
-                        if (device.capabilities.includes('is_hub')) {
-                            hubs.push(device);
-                        }
-                    }
-
-                    if (hubs) {
-                        return resolve(hubs);
-                    } else {
-                        return reject(new Error('Error obtaining hubs.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
-
-    async getReaders() {
-        return new Promise((resolve, reject) => {
-            this.webclient.get('devices')
-                .then(response => {
-                    let result = JSON.parse(response);
-
-                    let readers = [];
-                    for (const device of result.data[0]) {
-                        if (device.capabilities.includes('is_reader')) {
-                            readers.push(device);
-                        }
-                    }
-
-                    if (readers) {
-                        return resolve(readers);
-                    } else {
-                        return reject(new Error('Error obtaining readers.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
-
-    async getDevice(deviceId) {
-        return new Promise((resolve, reject) => {
-            this.webclient.get('devices/' + deviceId + '/settings')
+            this.webclient.get('cameras')
                 .then(response => {
                     let result = JSON.parse(response);
 
                     if (result) {
                         return resolve(result);
                     } else {
-                        return reject(new Error('Error obtaining device settings.'));
+                        return reject(new Error('Error obtaining cameras.'));
                     }
                 })
                 .catch(error => reject(error));
         });
     }
-    async getDoor(deviceId) {
+    async getCamera(cameraId) {
         return new Promise((resolve, reject) => {
-            this.webclient.get('doors/' + deviceId)
+            this.webclient.get('cameras/' + cameraId)
                 .then(response => {
                     let result = JSON.parse(response);
 
                     if (result) {
                         return resolve(result);
                     } else {
-                        return reject(new Error('Error obtaining door info.'));
+                        return reject(new Error('Error obtaining camera.'));
                     }
                 })
                 .catch(error => reject(error));
         });
     }
-
-    async setReaderNFC(deviceId, enable) {
+    async setCamera(cameraId, params) {
         return new Promise((resolve, reject) => {
-            const params = {
-                access_methods: {
-                    nfc: {
-                        enabled: enable ? 'yes' : 'no'
-                    }
-                }
-            };
-            this.webclient.put('devices/' + deviceId + '/settings', params)
+            this.webclient.patch('cameras/' + cameraId, params)
                 .then(response => {
                     let result = JSON.parse(response);
 
                     if (result) {
                         return resolve(result);
                     } else {
-                        return reject(new Error('Error setting NFC enabled.'));
+                        return reject(new Error('Error setting camera.'));
                     }
                 })
                 .catch(error => reject(error));
         });
     }
 
-    async setReaderWave(deviceId, enable) {
+    // Lights
+    async getLights() {
         return new Promise((resolve, reject) => {
-            const params = {
-                access_methods: {
-                    wave: {
-                        enabled: enable ? 'yes' : 'no'
-                    }
-                }
-            };
-            this.webclient.put('devices/' + deviceId + '/settings', params)
+            this.webclient.get('lights')
                 .then(response => {
                     let result = JSON.parse(response);
 
                     if (result) {
                         return resolve(result);
                     } else {
-                        return reject(new Error('Error obtaining readers.'));
+                        return reject(new Error('Error obtaining lights.'));
                     }
                 })
                 .catch(error => reject(error));
         });
     }
-
-    async setReaderTouchPass(deviceId, enable) {
+    async getLight(lightId) {
         return new Promise((resolve, reject) => {
-            const params = {
-                access_methods: {
-                    touch_pass: {
-                        enabled: enable ? 'yes' : 'no'
-                    }
-                }
-            };
-            this.webclient.put('devices/' + deviceId + '/settings', params)
+            this.webclient.get('lights/' + lightId)
                 .then(response => {
                     let result = JSON.parse(response);
 
                     if (result) {
                         return resolve(result);
                     } else {
-                        return reject(new Error('Error obtaining readers.'));
+                        return reject(new Error('Error obtaining light.'));
                     }
                 })
                 .catch(error => reject(error));
         });
     }
-
-    async setReaderMobileTap(deviceId, enable) {
+    async setLight(lightId, params) {
         return new Promise((resolve, reject) => {
-            const params = {
-                access_methods: {
-                    bt_tap: {
-                        enabled: enable ? 'yes' : 'no'
-                    }
-                }
-            };
-            this.webclient.put('devices/' + deviceId + '/settings', params)
+            this.webclient.patch('lights/' + lightId, params)
                 .then(response => {
                     let result = JSON.parse(response);
 
                     if (result) {
                         return resolve(result);
                     } else {
-                        return reject(new Error('Error obtaining readers.'));
+                        return reject(new Error('Error setting light.'));
                     }
                 })
                 .catch(error => reject(error));
         });
     }
-
-    async setReaderMobileButton(deviceId, enable) {
+    // Sensors
+    async getSensors() {
         return new Promise((resolve, reject) => {
-            const params = {
-                access_methods: {
-                    bt_button: {
-                        enabled: enable ? 'yes' : 'no'
-                    }
-                }
-            };
-            this.webclient.put('devices/' + deviceId + '/settings', params)
+            this.webclient.get('sensors')
                 .then(response => {
                     let result = JSON.parse(response);
 
                     if (result) {
                         return resolve(result);
                     } else {
-                        return reject(new Error('Error obtaining readers.'));
+                        return reject(new Error('Error obtaining sensors.'));
                     }
                 })
                 .catch(error => reject(error));
         });
     }
-
-    async setDoorUnLock(deviceId) {
+    async getSensor(sensorId) {
         return new Promise((resolve, reject) => {
-            const params = {
-
-            };
-            this.webclient.put('doors/' + deviceId + '/unlock', params)
+            this.webclient.get('sensors/' + sensorId)
                 .then(response => {
                     let result = JSON.parse(response);
 
                     if (result) {
                         return resolve(result);
                     } else {
-                        return reject(new Error('Error setting Door Unlock enabled.'));
+                        return reject(new Error('Error obtaining sensor.'));
                     }
                 })
                 .catch(error => reject(error));
         });
     }
-    async setTempDoorLockingRule(deviceId, type, interval = 1) {
+    async setSensor(sensorId, params) {
         return new Promise((resolve, reject) => {
-            const params = {
-                type: type,
-                interval: interval
-            };
-            this.webclient.put('doors/' + deviceId + '/lock_rule', params)
+            this.webclient.patch('sensors/' + sensorId, params)
                 .then(response => {
                     let result = JSON.parse(response);
 
                     if (result) {
                         return resolve(result);
                     } else {
-                        return reject(new Error('Error setting NFC enabled.'));
+                        return reject(new Error('Error setting sensor.'));
                     }
                 })
                 .catch(error => reject(error));
         });
     }
+
+    // Chimes
+    async getChimes() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('chimes')
+                .then(response => {
+                    let result = JSON.parse(response);
+
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining chimes.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+    async getChime(chimeId) {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('chimes/' + chimeId)
+                .then(response => {
+                    let result = JSON.parse(response);
+
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining chime.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+    async setChime(chimeId, params) {
+        return new Promise((resolve, reject) => {
+            this.webclient.patch('chimes/' + chimeId, params)
+                .then(response => {
+                    let result = JSON.parse(response);
+
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error setting chime.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    // NVR
+    async getNVR() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('nvrs')
+                .then(response => {
+                    let result = JSON.parse(response);
+
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining chimes.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
 }
 
 module.exports = ProtectAPI;

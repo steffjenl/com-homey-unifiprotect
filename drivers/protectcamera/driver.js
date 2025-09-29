@@ -69,10 +69,6 @@ class UniFiCameraDriver extends Homey.Driver {
         camera.onMotionDetected(payload.lastMotion, payload.isMotionDetected);
       }
 
-      if (payload.hasOwnProperty('lastRing')) {
-        // camera.onDoorbellRinging(payload.lastRing);
-      }
-
       if (payload.hasOwnProperty('isDark')) {
         camera.onIsDark(payload.isDark);
       }

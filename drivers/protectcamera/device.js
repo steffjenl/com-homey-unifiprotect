@@ -135,9 +135,9 @@ class Camera extends Homey.Device {
       await this.addCapability('camera_connection_status');
       this.homey.app.debug(`created capability camera_connection_status for ${this.getName()}`);
     }
-    if (!this.hasCapability('last_ring_at')) {
-      await this.addCapability('last_ring_at');
-      this.homey.app.debug(`created capability last_ring_at for ${this.getName()}`);
+    if (this.hasCapability('last_ring_at')) {
+      await this.removeCapability('last_ring_at');
+      this.homey.app.debug(`removed capability last_ring_at for ${this.getName()}`);
     }
     if (!this.hasCapability('last_smart_detection_at')) {
       await this.addCapability('last_smart_detection_at');
@@ -226,25 +226,6 @@ class Camera extends Homey.Device {
     // Debug information about playload
     if (this.hasCapability('camera_nightvision_set')) {
       this.setCapabilityValue('camera_nightvision_set', mode).catch(this.error);
-    }
-  }
-
-  onDoorbellRinging(lastRing) {
-    const lastRingAt = this.getCapabilityValue('last_ring_at');
-
-    // Check if the event date is newer
-    if (!lastRingAt || lastRing > lastRingAt) {
-      this.homey.api.realtime('com.ubnt.unifiprotect.updateWidgetCamera', { deviceId: this.getData().id });
-      this.homey.app._doorbellRingingTrigger.trigger({
-        ufp_ringing_camera: this.getName(),
-      });
-    }
-
-    if (!lastRingAt) {
-      if (this.homey.env.DEBUG) this.homey.app.debug(`set last_ring_at to last datetime: ${this.getData().id}`);
-      this.setCapabilityValue('last_ring_at', lastRing)
-        .catch(this.error);
-
     }
   }
 
