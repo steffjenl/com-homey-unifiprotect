@@ -187,6 +187,34 @@ class AppProtect extends BaseClass {
       return Promise.reject(new Error('No device found'));
     });
 
+      const _actionSetCameraPatrolStop = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_PATROL_STOP);
+      _actionSetCameraPatrolStop.registerRunListener(async (args, state) => {
+          if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+              this.homey.app.debug(`Set Patrol Stop ${args.device.getData().id}`);
+              // Get device from camera id
+              const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+              if (device) {
+                  this.homey.app.debug(`Found device ${device.getName()}`);
+                  return this.homey.app.api.setPatrolStop(device.getData()).catch(this.error);
+              }
+          }
+          return Promise.reject(new Error('No device found'));
+      });
+
+      const _actionSetCameraPatrolStart = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_PATROL_START);
+      _actionSetCameraPatrolStart.registerRunListener(async (args, state) => {
+          if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+              this.homey.app.debug(`Set Patrol Start ${args.device.getData().id} to ${args.presentId}`);
+              // Get device from camera id
+              const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+              if (device) {
+                  this.homey.app.debug(`Found device ${device.getName()}`);
+                  return this.homey.app.api.setPatrolStart(device.getData(), args.presentId).catch(this.error);
+              }
+          }
+          return Promise.reject(new Error('No device found'));
+      });
+
   }
 
     async loginToProtectV2() {

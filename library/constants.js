@@ -30,6 +30,8 @@ module.exports.ACTION_SET_DEVICE_DOORBELL_STATUS_LED = 'ufv_set_device_doorbell_
 module.exports.ACTION_SET_DEVICE_DOORBELL_STATUS_SOUND = 'ufv_set_device_doorbell_status_sound';
 module.exports.ACTION_SET_DEVICE_CAMERA_BLACKOUT = 'ufv_set_device_camera_blackout';
 module.exports.ACTION_SET_DEVICE_DOORBELL_BLACKOUT = 'ufv_set_device_doorbell_blackout';
+module.exports.ACTION_SET_DEVICE_PATROL_STOP = 'ufv_set_device_camera_patrol_stop';
+module.exports.ACTION_SET_DEVICE_PATROL_START = 'ufv_set_device_camera_patrol_start';
 
 module.exports.EVENT_CONNECTION_KEEPALIVE = 'ufv_event_connection_keepalive';
 module.exports.EVENT_CONNECTION_ERROR = 'ufv_event_connection_error';

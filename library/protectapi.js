@@ -807,6 +807,22 @@ class ProtectAPI extends BaseClass {
                 .catch(error => reject(new Error(`Error setting status sound: ${error}`)));
         });
     }
+
+    setPatrolStop(camera) {
+        return new Promise((resolve, reject) => {
+            return this.webclient.post(`cameras/${camera.id}/ptz/patrol/stop`, {})
+                .then(() => resolve('setPatrolStop successfully set.'))
+                .catch(error => reject(new Error(`Error setting setPatrolStop: ${error}`)));
+        });
+    }
+
+    setPatrolStart(camera, presetId) {
+        return new Promise((resolve, reject) => {
+            return this.webclient.post(`cameras/${camera.id}/ptz/patrol/start/${presetId}`, {})
+                .then(() => resolve('setPatrolStart successfully set.'))
+                .catch(error => reject(new Error(`Error setting setPatrolStart: ${error}`)));
+        });
+    }
 }
 
 module.exports = ProtectAPI;

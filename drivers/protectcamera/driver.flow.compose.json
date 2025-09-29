@@ -945,6 +945,38 @@
           }
         }
       ]
+    },
+    {
+      "id": "ufv_set_device_camera_patrol_stop",
+      "title": {
+        "en": "Stop camera patrol",
+        "nl": "Stop camera patrouille"
+      },
+      "titleFormatted": {
+        "en": "Stop camera patrol",
+        "nl": "Stop camera patrouille"
+      }
+    },
+    {
+      "id": "ufv_set_device_camera_patrol_start",
+      "title": {
+        "en": "Start camera patrol",
+        "nl": "Start camera patrouille"
+      },
+      "titleFormatted": {
+        "en": "Start camera patrol [[presentId]]",
+        "nl": "Start camera patrouille [[presentId]]"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "presentId",
+          "title": {
+            "en": "Present",
+            "nl": "Present"
+          }
+        }
+      ]
     }
   ]
 }
