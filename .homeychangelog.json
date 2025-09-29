@@ -238,5 +238,8 @@
   },
   "1.8.4": {
     "en": "Add first steps for new API Integration, Only Doorbell press is added for now"
+  },
+  "1.8.5": {
+    "en": "Add patrol action cards"
   }
 }
