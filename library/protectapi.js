@@ -823,6 +823,22 @@ class ProtectAPI extends BaseClass {
                 .catch(error => reject(new Error(`Error setting setPatrolStart: ${error}`)));
         });
     }
+
+    setPTZHome(camera) {
+        return new Promise((resolve, reject) => {
+            return this.webclient.post(`cameras/${camera.id}/ptz/goto/-1`, {})
+                .then(() => resolve('setPTZHome successfully set.'))
+                .catch(error => reject(new Error(`Error setting setPTZHome: ${error}`)));
+        });
+    }
+
+    setPTZPreset(camera, presetId) {
+        return new Promise((resolve, reject) => {
+            return this.webclient.post(`cameras/${camera.id}/ptz/goto/${(presetId -1)}`, {})
+                .then(() => resolve('setPTZPreset successfully set.'))
+                .catch(error => reject(new Error(`Error setting setPTZPreset: ${error}`)));
+        });
+    }
 }
 
 module.exports = ProtectAPI;

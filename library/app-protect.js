@@ -215,6 +215,34 @@ class AppProtect extends BaseClass {
           return Promise.reject(new Error('No device found'));
       });
 
+      const _actionSetCameraPTZHome = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_PTZ_HOME);
+      _actionSetCameraPTZHome.registerRunListener(async (args, state) => {
+          if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+              this.homey.app.debug(`PTZ Reset to home position ${args.device.getData().id}`);
+              // Get device from camera id
+              const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+              if (device) {
+                  this.homey.app.debug(`Found device ${device.getName()}`);
+                  return this.homey.app.api.setPTZHome(device.getData()).catch(this.error);
+              }
+          }
+          return Promise.reject(new Error('No device found'));
+      });
+
+      const _actionSetCameraPTZPreset = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_PTZ_PRESET);
+      _actionSetCameraPTZPreset.registerRunListener(async (args, state) => {
+          if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+              this.homey.app.debug(`PTZ Move to preset ${args.device.getData().id} to ${args.presentId}`);
+              // Get device from camera id
+              const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+              if (device) {
+                  this.homey.app.debug(`Found device ${device.getName()}`);
+                  return this.homey.app.api.setPTZPreset(device.getData(), args.presentId).catch(this.error);
+              }
+          }
+          return Promise.reject(new Error('No device found'));
+      });
+
   }
 
     async loginToProtectV2() {

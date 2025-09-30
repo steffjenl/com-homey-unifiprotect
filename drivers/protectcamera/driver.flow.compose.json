@@ -977,6 +977,38 @@
           }
         }
       ]
+    },
+    {
+      "id": "ufv_set_device_camera_ptz_home",
+      "title": {
+        "en": "PTZ Reset to home position",
+        "nl": "PTZ Reset naar home positie"
+      },
+      "titleFormatted": {
+        "en": "PTZ Reset to home position",
+        "nl": "PTZ Reset naar home positie"
+      }
+    },
+    {
+      "id": "ufv_set_device_camera_ptz_preset",
+      "title": {
+        "en": "PTZ Move to preset",
+        "nl": "PTZ Ga naar preset"
+      },
+      "titleFormatted": {
+        "en": "PTZ Move to preset [[presentId]]",
+        "nl": "PTZ Ga naar preset [[presentId]]"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "presentId",
+          "title": {
+            "en": "Present",
+            "nl": "Present"
+          }
+        }
+      ]
     }
   ]
 }
