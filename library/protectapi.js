@@ -839,6 +839,19 @@ class ProtectAPI extends BaseClass {
                 .catch(error => reject(new Error(`Error setting setPTZPreset: ${error}`)));
         });
     }
+
+    setColorNightVision(camera, enabled) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                ispSettings: {
+                    isColorNightVisionEnabled: enabled
+                }
+            };
+            return this.webclient.patch(`cameras/${camera.id}`, params)
+                .then(() => resolve('Color Night Vision successfully set.'))
+                .catch(error => reject(new Error(`Error setting Color Night Vision: ${error}`)));
+        });
+    }
 }
 
 module.exports = ProtectAPI;

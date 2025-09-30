@@ -243,6 +243,20 @@ class AppProtect extends BaseClass {
           return Promise.reject(new Error('No device found'));
       });
 
+      const _actionSetColorNightVision = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_SET_COLOR_NIGHT_VISION);
+      _actionSetColorNightVision.registerRunListener(async (args, state) => {
+          if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+              this.homey.app.debug(`Set Color Night Vision ${args.device.getData().id} to ${args.enabled}`);
+              // Get device from camera id
+              const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+              if (device) {
+                  this.homey.app.debug(`Found device ${device.getName()}`);
+                  return this.homey.app.api.setColorNightVision(device.getData(), args.enabled).catch(this.error);
+              }
+          }
+          return Promise.reject(new Error('No device found'));
+      });
+
   }
 
     async loginToProtectV2() {

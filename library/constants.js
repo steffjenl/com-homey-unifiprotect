@@ -34,6 +34,7 @@ module.exports.ACTION_SET_DEVICE_PATROL_STOP = 'ufv_set_device_camera_patrol_sto
 module.exports.ACTION_SET_DEVICE_PATROL_START = 'ufv_set_device_camera_patrol_start';
 module.exports.ACTION_SET_DEVICE_PTZ_HOME= 'ufv_set_device_camera_ptz_home';
 module.exports.ACTION_SET_DEVICE_PTZ_PRESET= 'ufv_set_device_camera_ptz_preset';
+module.exports.ACTION_SET_DEVICE_SET_COLOR_NIGHT_VISION= 'ufv_set_device_camera_set_color_night_vision';
 
 module.exports.EVENT_CONNECTION_KEEPALIVE = 'ufv_event_connection_keepalive';
 module.exports.EVENT_CONNECTION_ERROR = 'ufv_event_connection_error';

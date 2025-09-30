@@ -1009,6 +1009,27 @@
           }
         }
       ]
+    },
+    {
+      "id": "ufv_set_device_camera_set_color_night_vision",
+      "title": {
+        "en": "Set color night vision",
+        "nl": "Zet kleur nacht visie"
+      },
+      "titleFormatted": {
+        "en": "Set color night vision [[enabled]]",
+        "nl": "Zet kleur nacht visie [[enabled]]"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "enabled",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld"
+          }
+        }
+      ]
     }
   ]
 }

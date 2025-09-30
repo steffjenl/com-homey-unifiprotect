@@ -4572,6 +4572,32 @@
         ]
       },
       {
+        "id": "ufv_set_device_camera_set_color_night_vision",
+        "title": {
+          "en": "Set color night vision",
+          "nl": "Zet kleur nacht visie"
+        },
+        "titleFormatted": {
+          "en": "Set color night vision [[enabled]]",
+          "nl": "Zet kleur nacht visie [[enabled]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectcamera"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            }
+          }
+        ]
+      },
+      {
         "id": "ufv_set_device_doorbell_status_led",
         "title": {
           "en": "Set doorbell status LED",
