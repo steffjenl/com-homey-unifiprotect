@@ -241,5 +241,8 @@
   },
   "1.8.5": {
     "en": "Add patrol action cards"
+  },
+  "1.8.6": {
+    "en": "Add Quick UI for Access Door"
   }
 }
