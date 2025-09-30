@@ -1,0 +1,22 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Locked",
+    "nl": "Op slot",
+    "de": "Verriegelt",
+    "fr": "Verrouillé",
+    "it": "Chiusa",
+    "sv": "Låst",
+    "no": "Låst",
+    "es": "Cerrada",
+    "da": "Låst",
+    "ru": "Закрыто",
+    "pl": "Zablokowane",
+    "ko": "잠금 상태",
+    "ar": "مغلق"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "toggle",
+  "uiQuickAction": true
+}
