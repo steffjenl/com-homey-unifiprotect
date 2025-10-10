@@ -40,7 +40,23 @@
       "camera",
       "snapshot",
       "recording",
-      "access"
+      "access",
+      "door",
+      "bell",
+      "chime",
+      "lock",
+      "intercom",
+      "video",
+      "surveillance",
+      "nvr",
+      "garage",
+      "gate",
+      "garage door",
+      "floodlight",
+      "light",
+      "sensor",
+      "reader",
+      "nfc"
     ],
     "nl": [
       "ubiquiti",
@@ -51,7 +67,23 @@
       "momentopname",
       "opname",
       "toegang",
-      "access"
+      "access",
+      "door",
+      "bell",
+      "chime",
+      "lock",
+      "intercom",
+      "video",
+      "surveillance",
+      "nvr",
+      "garage",
+      "gate",
+      "garage door",
+      "floodlight",
+      "light",
+      "sensor",
+      "reader",
+      "nfc"
     ],
     "de": [
       "ubiquiti",
@@ -71,7 +103,23 @@
       "camera",
       "snapshot",
       "recording",
-      "access"
+      "access",
+      "door",
+      "bell",
+      "chime",
+      "lock",
+      "intercom",
+      "video",
+      "surveillance",
+      "nvr",
+      "garage",
+      "gate",
+      "garage door",
+      "floodlight",
+      "light",
+      "sensor",
+      "reader",
+      "nfc"
     ],
     "it": [
       "ubiquiti",
@@ -81,7 +129,23 @@
       "camera",
       "snapshot",
       "recording",
-      "access"
+      "access",
+      "door",
+      "bell",
+      "chime",
+      "lock",
+      "intercom",
+      "video",
+      "surveillance",
+      "nvr",
+      "garage",
+      "gate",
+      "garage door",
+      "floodlight",
+      "light",
+      "sensor",
+      "reader",
+      "nfc"
     ],
     "sv": [
       "ubiquiti",
@@ -91,7 +155,23 @@
       "camera",
       "snapshot",
       "recording",
-      "access"
+      "access",
+      "door",
+      "bell",
+      "chime",
+      "lock",
+      "intercom",
+      "video",
+      "surveillance",
+      "nvr",
+      "garage",
+      "gate",
+      "garage door",
+      "floodlight",
+      "light",
+      "sensor",
+      "reader",
+      "nfc"
     ],
     "no": [
       "ubiquiti",
@@ -101,7 +181,23 @@
       "camera",
       "snapshot",
       "recording",
-      "access"
+      "access",
+      "door",
+      "bell",
+      "chime",
+      "lock",
+      "intercom",
+      "video",
+      "surveillance",
+      "nvr",
+      "garage",
+      "gate",
+      "garage door",
+      "floodlight",
+      "light",
+      "sensor",
+      "reader",
+      "nfc"
     ],
     "es": [
       "ubiquiti",
@@ -111,7 +207,23 @@
       "camera",
       "snapshot",
       "recording",
-      "access"
+      "access",
+      "door",
+      "bell",
+      "chime",
+      "lock",
+      "intercom",
+      "video",
+      "surveillance",
+      "nvr",
+      "garage",
+      "gate",
+      "garage door",
+      "floodlight",
+      "light",
+      "sensor",
+      "reader",
+      "nfc"
     ],
     "da": [
       "ubiquiti",
@@ -121,7 +233,23 @@
       "camera",
       "snapshot",
       "recording",
-      "access"
+      "access",
+      "door",
+      "bell",
+      "chime",
+      "lock",
+      "intercom",
+      "video",
+      "surveillance",
+      "nvr",
+      "garage",
+      "gate",
+      "garage door",
+      "floodlight",
+      "light",
+      "sensor",
+      "reader",
+      "nfc"
     ],
     "ru": [
       "ubiquiti",
@@ -131,7 +259,23 @@
       "camera",
       "snapshot",
       "recording",
-      "access"
+      "access",
+      "door",
+      "bell",
+      "chime",
+      "lock",
+      "intercom",
+      "video",
+      "surveillance",
+      "nvr",
+      "garage",
+      "gate",
+      "garage door",
+      "floodlight",
+      "light",
+      "sensor",
+      "reader",
+      "nfc"
     ],
     "pl": [
       "ubiquiti",
@@ -141,7 +285,23 @@
       "camera",
       "snapshot",
       "recording",
-      "access"
+      "access",
+      "door",
+      "bell",
+      "chime",
+      "lock",
+      "intercom",
+      "video",
+      "surveillance",
+      "nvr",
+      "garage",
+      "gate",
+      "garage door",
+      "floodlight",
+      "light",
+      "sensor",
+      "reader",
+      "nfc"
     ],
     "ko": [
       "ubiquiti",
@@ -151,7 +311,23 @@
       "camera",
       "snapshot",
       "recording",
-      "access"
+      "access",
+      "door",
+      "bell",
+      "chime",
+      "lock",
+      "intercom",
+      "video",
+      "surveillance",
+      "nvr",
+      "garage",
+      "gate",
+      "garage door",
+      "floodlight",
+      "light",
+      "sensor",
+      "reader",
+      "nfc"
     ]
   },
   "images": {
@@ -4738,6 +4914,24 @@
               "en": "Enabled",
               "nl": "Ingeschakeld"
             }
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_device_doorbell_test_ringtone",
+        "title": {
+          "en": "Test doorbell ringtone",
+          "nl": "Test deurbel ringtone"
+        },
+        "titleFormatted": {
+          "en": "Test doorbell ringtone",
+          "nl": "Test deurbel ringtone"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
           }
         ]
       }
