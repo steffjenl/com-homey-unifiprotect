@@ -852,6 +852,24 @@ class ProtectAPI extends BaseClass {
                 .catch(error => reject(new Error(`Error setting Color Night Vision: ${error}`)));
         });
     }
+
+    setAutoTracking(camera, person, smart_zoom) {
+        return new Promise((resolve, reject) => {
+            let autoTrackingObjectTypes = [];
+            if (person) {
+                autoTrackingObjectTypes.push("person");
+            }
+            const params = {
+                smartDetectSettings: {
+                    autoTrackingWithZoom: smart_zoom,
+                    autoTrackingObjectTypes
+                }
+            };
+            return this.webclient.patch(`cameras/${camera.id}`, params)
+                .then(() => resolve('Auto Tracking successfully set.'))
+                .catch(error => reject(new Error(`Error setting Auto Tracking: ${error}`)));
+        });
+    }
 }
 
 module.exports = ProtectAPI;

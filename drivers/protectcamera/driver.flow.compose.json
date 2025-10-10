@@ -964,8 +964,8 @@
         "nl": "Start camera patrouille"
       },
       "titleFormatted": {
-        "en": "Start camera patrol [[presentId]]",
-        "nl": "Start camera patrouille [[presentId]]"
+        "en": "Start camera patrol present [[presentId]]",
+        "nl": "Start camera patrouille preset [[presentId]]"
       },
       "args": [
         {
@@ -1027,6 +1027,35 @@
           "title": {
             "en": "Enabled",
             "nl": "Ingeschakeld"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufv_set_device_camera_set_auto_tracking",
+      "title": {
+        "en": "Set auto tracking",
+        "nl": "Zet auto tracking"
+      },
+      "titleFormatted": {
+        "en": "Set auto tracking person on [[person]] and smart zoom on [[smart_zoom]]",
+        "nl": "Zet auto tracking persoon op [[person]] en slimme zoom op [[smart_zoom]]"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "person",
+          "title": {
+            "en": "Person",
+            "nl": "Persoon"
+          }
+        },
+        {
+          "type": "checkbox",
+          "name": "smart_zoom",
+          "title": {
+            "en": "Smart zoom",
+            "nl": "Slimme zoom"
           }
         }
       ]

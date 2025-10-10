@@ -257,6 +257,20 @@ class AppProtect extends BaseClass {
           return Promise.reject(new Error('No device found'));
       });
 
+      const _actionSetAutoTracking = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_SET_AUTO_TRACKING);
+      _actionSetAutoTracking.registerRunListener(async (args, state) => {
+          if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+              this.homey.app.debug(`Set Auto Tracking Options ${args.device.getData().id} to ${args.person} and ${args.smart_zoom}`);
+              // Get device from camera id
+              const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+              if (device) {
+                  this.homey.app.debug(`Found device ${device.getName()}`);
+                  return this.homey.app.api.setAutoTracking(device.getData(), args.person, args.smart_zoom).catch(this.error);
+              }
+          }
+          return Promise.reject(new Error('No device found'));
+      });
+
   }
 
     async loginToProtectV2() {
@@ -274,6 +288,11 @@ class AppProtect extends BaseClass {
         const tokens = this.homey.settings.get('ufp:tokens');
         if (!tokens) {
             this.log('Tokens not set.');
+            return;
+        }
+
+        if (!tokens.protectV2ApiKey || tokens.protectV2ApiKey === '' || tokens.protectV2ApiKey === 'undefined') {
+            this.log('Protect V2 API Key not set.');
             return;
         }
 
@@ -397,7 +416,7 @@ class AppProtect extends BaseClass {
   }
 
   async refreshAuthTokens() {
-    const refreshAuthTokens = setInterval(() => {
+    const refreshAuthTokens = this.homey.setInterval(() => {
       try {
         this.homey.app.debug('Refreshing auth tokens');
         this._appLogin();

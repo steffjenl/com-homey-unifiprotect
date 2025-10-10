@@ -169,9 +169,8 @@
                 if (error) return Homey.alert(error);
 
                 if (credentials) {
-                    // LurFVKha5VgGcbhV52xP0jqDIjpgPrAb
-                    txtAccessApiKey.value = credentials.accessApiKey;
-                    txtProtectV2ApiKey.value = credentials.protectV2ApiKey;
+                    txtAccessApiKey.value = credentials.accessApiKey ? credentials.accessApiKey : '';
+                    txtProtectV2ApiKey.value = credentials.protectV2ApiKey ? credentials.protectV2ApiKey : '';
                 } else {
                     console.warn('[SETTINGS] Could not read tokens credentials.');
                 }
