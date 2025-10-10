@@ -870,6 +870,14 @@ class ProtectAPI extends BaseClass {
                 .catch(error => reject(new Error(`Error setting Auto Tracking: ${error}`)));
         });
     }
+
+    testRingtone(camera) {
+        return new Promise((resolve, reject) => {
+            return this.webclient.post(`cameras/${camera.id}/test-ringtone`, {})
+                .then(() => resolve('Ringtone successfully played.'))
+                .catch(error => reject(new Error(`Error playing ringtone: ${error}`)));
+        });
+    }
 }
 
 module.exports = ProtectAPI;

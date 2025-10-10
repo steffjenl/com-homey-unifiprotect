@@ -271,6 +271,20 @@ class AppProtect extends BaseClass {
           return Promise.reject(new Error('No device found'));
       });
 
+      const _actionTestRingtone = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_TEST_RINGTONE);
+      _actionTestRingtone.registerRunListener(async (args, state) => {
+          if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+              this.homey.app.debug(`Test Ringtone on ${args.device.getData().id}`);
+              // Get device from camera id
+              const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+              if (device) {
+                  this.homey.app.debug(`Found device ${device.getName()}`);
+                  return this.homey.app.api.testRingtone(device.getData()).catch(this.error);
+              }
+          }
+          return Promise.reject(new Error('No device found'));
+      });
+
   }
 
     async loginToProtectV2() {

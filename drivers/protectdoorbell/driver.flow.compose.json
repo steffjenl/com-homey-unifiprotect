@@ -1518,6 +1518,17 @@
           }
         }
       ]
+    },
+    {
+      "id": "ufv_set_device_doorbell_test_ringtone",
+      "title": {
+        "en": "Test doorbell ringtone",
+        "nl": "Test deurbel ringtone"
+      },
+      "titleFormatted": {
+        "en": "Test doorbell ringtone",
+        "nl": "Test deurbel ringtone"
+      }
     }
 
   ]
