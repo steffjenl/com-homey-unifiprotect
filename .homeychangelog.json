@@ -253,5 +253,8 @@
   },
   "1.8.9": {
     "en": "Add Test Ringtone action card"
+  },
+  "1.8.10": {
+    "en": "Fixing App crash when devices are removed from Homey"
   }
 }
