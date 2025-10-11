@@ -117,8 +117,7 @@ class UniFiDoorbellDriver extends Homey.Driver {
 
     getUnifiDeviceById(deviceId) {
         try {
-            const driver = this.driver;
-            const devices = driver.getDevices();
+            const devices = this.getDevices();
             const device = devices.find(device => String(device.getData().id) === String(deviceId));
             if (!device) return false;
             return device;
