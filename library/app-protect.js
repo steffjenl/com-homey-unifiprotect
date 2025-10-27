@@ -434,6 +434,20 @@ class AppProtect extends BaseClass {
       try {
         this.homey.app.debug('Refreshing auth tokens');
         this._appLogin();
+
+          const tokens = this.homey.settings.get('ufp:tokens');
+          if (tokens) {
+              this.accessApiKey = tokens.accessApiKey;
+              this.protectV2ApiKey = tokens.protectV2ApiKey;
+          }
+
+          if (
+              tokens && typeof tokens.protectV2ApiKey !== 'undefined'
+              && tokens.protectV2ApiKey !== ''
+              && !this.homey.app.apiV2.websocket.isWebsocketConnected()
+          ) {
+              this.loginToProtectV2().catch(this.error);
+          }
       } catch (error) {
         this.homey.error(`${JSON.stringify(error)}`);
       }

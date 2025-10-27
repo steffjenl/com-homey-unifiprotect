@@ -128,6 +128,30 @@ class AppAccess extends BaseClass {
     return false;
   }
 
+    async checkWebSocketConnection() {
+        const checkWebSocketConnection = this.homey.setInterval(() => {
+            try {
+                this.homey.app.debug('Reconnect Access WebSocket if not connected...');
+
+                const tokens = this.homey.settings.get('ufp:tokens');
+                if (tokens) {
+                    this.accessApiKey = tokens.accessApiKey;
+                    this.protectV2ApiKey = tokens.protectV2ApiKey;
+                }
+
+                if (
+                    tokens && typeof tokens.accessApiKey !== 'undefined'
+                    && tokens.accessApiKey !== ''
+                    && !this.homey.app.accessApi.websocket.isWebsocketConnected()
+                ) {
+                    this.loginToAccess().catch(this.error);
+                }
+            } catch (error) {
+                this.homey.error(`${JSON.stringify(error)}`);
+            }
+        }, this.homey.app._refreshAuthTokensnterval);
+    }
+
 }
 
 module.exports = AppAccess;
