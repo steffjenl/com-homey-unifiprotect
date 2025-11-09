@@ -1,0 +1,15 @@
+{
+  "actions": [
+    {
+      "id": "ufv_set_device_doorbell_test_siren",
+      "title": {
+        "en": "Test siren sound",
+        "nl": "Test sirene geluid"
+      },
+      "titleFormatted": {
+        "en": "Test siren sound",
+        "nl": "Test sirene geluid"
+      }
+    }
+  ]
+}

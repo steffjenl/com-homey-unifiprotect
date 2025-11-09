@@ -878,6 +878,43 @@ class ProtectAPI extends BaseClass {
                 .catch(error => reject(new Error(`Error playing ringtone: ${error}`)));
         });
     }
+
+    getSirens() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('sirens')
+                .then(response => {
+                    const result = JSON.parse(response);
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining sirens.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    setSirenVolume(siren, volumeLevel) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                volume: volumeLevel * 100
+            };
+            return this.webclient.patch(`sirens/${siren.id}`, params)
+                .then(() => resolve('volume successfully set.'))
+                .catch(error => reject(new Error(`Error setting volume: ${error}`)));
+        });
+    }
+
+    testSiren(siren) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                volume: volumeLevel * 100
+            };
+            return this.webclient.post(`sirens/${siren.id}/test-sound`, {})
+                .then(() => resolve('Siren Test successfully send.'))
+                .catch(error => reject(new Error(`Error send test siren: ${error}`)));
+        });
+    }
 }
 
 module.exports = ProtectAPI;

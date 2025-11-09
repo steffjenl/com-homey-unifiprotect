@@ -1,0 +1,79 @@
+/proxy/protect/api/sirens/68b59204000f4c03e406ec79
+PATCH
+
+{
+    "name": "UP Siren PoE",
+    "volume": 20,
+    "ledSettings": {
+        "isEnabled": false
+    }
+}
+
+POST
+/proxy/protect/api/sirens/68b59204000f4c03e406ec79/test-
+[
+    {
+        "mac": "xxxxxxxxxxx",
+        "host": "xxx.xxx.xxx.xxx",
+        "connectionHost": "xxx.xxx.xxx.xxx",
+        "type": "UP-Siren-PoE",
+        "sysid": "0xae9c",
+        "name": "UP Siren PoE",
+        "upSince": 1762681070016,
+        "uptime": 14110,
+        "lastSeen": 1762695180016,
+        "connectedSince": 1762682440063,
+        "state": "CONNECTED",
+        "lastDisconnect": 1762682113379,
+        "hardwareRevision": null,
+        "firmwareVersion": "1.4.1",
+        "latestFirmwareVersion": "1.4.1",
+        "latestFirmwareSizeBytes": 1310708,
+        "firmwareBuild": "e74f7b.250815.1611",
+        "isUpdating": false,
+        "isDownloadingFW": false,
+        "fwUpdateState": "upToDate",
+        "isAdopting": false,
+        "isRestoring": false,
+        "isAdopted": true,
+        "isAdoptedByOther": false,
+        "isProvisioned": false,
+        "isRebooting": false,
+        "isSshEnabled": false,
+        "canAdopt": false,
+        "isAttemptingToConnect": false,
+        "uplinkDevice": null,
+        "guid": "xxxxxxx-xxxxxx-xxxx-xxxx-xxxx",
+        "anonymousDeviceId": "xxxx-xxx-xxx-xxx-xxxxx",
+        "isBlockedByArmMode": false,
+        "volume": 10,
+        "lastEvent": null,
+        "wiredConnectionState": {
+            "phyRate": "100"
+        },
+        "wifiConnectionState": {
+            "channel": null,
+            "frequency": null,
+            "phyRate": null,
+            "txRate": null,
+            "signalQuality": null,
+            "ssid": null,
+            "bssid": null,
+            "apName": null,
+            "experience": null,
+            "signalStrength": null,
+            "connectivity": null
+        },
+        "ledSettings": {
+            "isEnabled": false
+        },
+        "featureFlags": {
+            "hasLedStatus": true
+        },
+        "id": "68b59204000f4c03e406ec79",
+        "nvrMac": "xxxxxxxxxxx",
+        "displayName": "UP Siren PoE",
+        "marketName": "UP Siren PoE",
+        "modelKey": "siren"
+    }
+]

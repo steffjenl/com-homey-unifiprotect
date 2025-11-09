@@ -431,7 +431,17 @@ class ProtectWebSocket extends BaseClass {
           // Parse Websocket payload message
           driver.onParseWebsocketMessage(device, payload);
         }
-      } else {
+      } else if (updatePacket.action.modelKey === 'siren') {
+          // get protect-siren driver
+          const driver = this.homey.drivers.getDriver('protect-siren');
+          // Get device from siren id
+          const deviceId = updatePacket.action.id;
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+              // Parse Websocket payload message
+              driver.onParseWebsocketMessage(device, payload);
+          }
+      }  else {
         // get protectcamera driver
         const driverCamera = this.homey.drivers.getDriver('protectcamera');
         // Get device from camera id
