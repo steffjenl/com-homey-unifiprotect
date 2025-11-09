@@ -268,5 +268,8 @@
   },
   "1.8.14": {
     "en": "Fix in somecases the sensors will not removed"
+  },
+  "1.8.15": {
+    "en": "Add extra text on settings page"
   }
 }
