@@ -9,7 +9,23 @@
       "titleFormatted": {
         "en": "Test siren sound",
         "nl": "Test sirene geluid"
-      }
+      },
+      "args": [
+        {
+          "type": "range",
+          "name": "volume",
+          "title": {
+            "en": "Volume",
+            "nl": "Volume"
+          },
+          "min": 0,
+          "max": 1,
+          "step": 0.01,
+          "label": "%",
+          "labelMultiplier": 100,
+          "labelDecimals": 2
+        }
+      ]
     }
   ]
 }

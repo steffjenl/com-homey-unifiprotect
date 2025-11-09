@@ -74,7 +74,7 @@ class Siren extends Homey.Device {
     async _initSirenData() {
         const bootstrapData = this.homey.app.api.getBootstrap();
         if (bootstrapData) {
-            bootstrapData.chimes.forEach((siren) => {
+            bootstrapData.sirens.forEach((siren) => {
                 if (siren.id === this.getData().id) {
                     if (this.hasCapability('volume_set')) {
                         this.setCapabilityValue('volume_set', siren.volume / 100);

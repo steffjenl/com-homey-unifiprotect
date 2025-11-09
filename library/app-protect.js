@@ -293,7 +293,7 @@ class AppProtect extends BaseClass {
               const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
               if (device) {
                   this.homey.app.debug(`Found device ${device.getName()}`);
-                  return this.homey.app.api.testSiren(device.getData()).catch(this.error);
+                  return this.homey.app.api.testSiren(device.getData(), args.volume).catch(this.error);
               }
           }
           return Promise.reject(new Error('No device found'));

@@ -905,7 +905,7 @@ class ProtectAPI extends BaseClass {
         });
     }
 
-    testSiren(siren) {
+    testSiren(siren, volumeLevel) {
         return new Promise((resolve, reject) => {
             const params = {
                 volume: volumeLevel * 100
