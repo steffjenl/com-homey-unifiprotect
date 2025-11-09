@@ -262,5 +262,8 @@
   },
   "1.8.12": {
     "en": "Add Siren Volume to action card"
+  },
+  "1.8.13": {
+    "en": "Remove capability from sensor when not used on device"
   }
 }
