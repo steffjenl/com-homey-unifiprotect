@@ -7,8 +7,8 @@
         "nl": "Test sirene geluid"
       },
       "titleFormatted": {
-        "en": "Test siren sound",
-        "nl": "Test sirene geluid"
+        "en": "Test siren sound (at [[volume]] volume)",
+        "nl": "Test sirene geluid (op [[volume]] volume)"
       },
       "args": [
         {

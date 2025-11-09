@@ -4622,6 +4622,20 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protect-siren"
+          },
+          {
+            "type": "range",
+            "name": "volume",
+            "title": {
+              "en": "Volume",
+              "nl": "Volume"
+            },
+            "min": 0,
+            "max": 1,
+            "step": 0.01,
+            "label": "%",
+            "labelMultiplier": 100,
+            "labelDecimals": 0
           }
         ]
       },
