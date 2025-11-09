@@ -339,7 +339,7 @@
     "security",
     "video"
   ],
-  "version": "1.8.11",
+  "version": "1.8.12",
   "compatibility": ">=12.6.0",
   "author": {
     "name": "MonkeySoft",
@@ -4614,8 +4614,8 @@
           "nl": "Test sirene geluid"
         },
         "titleFormatted": {
-          "en": "Test siren sound",
-          "nl": "Test sirene geluid"
+          "en": "Test siren sound (at [[volume]] volume)",
+          "nl": "Test sirene geluid (op [[volume]] volume)"
         },
         "args": [
           {

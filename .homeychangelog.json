@@ -259,5 +259,8 @@
   },
   "1.8.11": {
     "en": "Add UniFi Siren support"
+  },
+  "1.8.12": {
+    "en": "Add Siren Volume to action card"
   }
 }
