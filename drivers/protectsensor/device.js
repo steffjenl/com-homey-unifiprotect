@@ -85,7 +85,7 @@ class Sensor extends Homey.Device {
             for (const sensor of bootstrapData.sensors) {
                 if (sensor.id === this.getData().id) {
 
-                    if (typeof sensor.stats.light !== 'undefined' || typeof sensor.stats.light.value !== 'undefined')
+                    if (typeof sensor.stats.light !== 'undefined' && typeof sensor.stats.light.value !== 'undefined' && sensor.stats.light.value !== null)
                     {
                         if (!this.hasCapability('measure_luminance')) {
                             await this.addCapability('measure_luminance');
@@ -98,7 +98,7 @@ class Sensor extends Homey.Device {
                         }
                     }
 
-                    if (typeof sensor.stats.humidity !== 'undefined' || typeof sensor.stats.humidity.value !== 'undefined')
+                    if (typeof sensor.stats.humidity !== 'undefined' && typeof sensor.stats.humidity.value !== 'undefined' && sensor.stats.humidity.value !== null)
                     {
                         if (!this.hasCapability('measure_humidity')) {
                             await this.addCapability('measure_humidity');
@@ -111,7 +111,7 @@ class Sensor extends Homey.Device {
                         }
                     }
 
-                    if (typeof sensor.stats.temperature !== 'undefined' || typeof sensor.stats.temperature.value !== 'undefined')
+                    if (typeof sensor.stats.temperature !== 'undefined' && typeof sensor.stats.temperature.value !== 'undefined' && sensor.stats.temperature.value !== null)
                     {
                         if (!this.hasCapability('measure_temperature')) {
                             await this.addCapability('measure_temperature');
