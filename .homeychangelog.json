@@ -265,5 +265,8 @@
   },
   "1.8.13": {
     "en": "Remove capability from sensor when not used on device"
+  },
+  "1.8.14": {
+    "en": "Fix in somecases the sensors will not removed"
   }
 }

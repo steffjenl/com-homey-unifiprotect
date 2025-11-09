@@ -339,7 +339,7 @@
     "security",
     "video"
   ],
-  "version": "1.8.13",
+  "version": "1.8.14",
   "compatibility": ">=12.6.0",
   "author": {
     "name": "MonkeySoft",
