@@ -23,7 +23,7 @@
           "step": 0.01,
           "label": "%",
           "labelMultiplier": 100,
-          "labelDecimals": 2
+          "labelDecimals": 0
         }
       ]
     }
