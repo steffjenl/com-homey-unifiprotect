@@ -256,5 +256,8 @@
   },
   "1.8.10": {
     "en": "Fixing App crash when devices are removed from Homey"
+  },
+  "1.8.11": {
+    "en": "Add UniFi Siren support"
   }
 }
