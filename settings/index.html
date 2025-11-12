@@ -2,127 +2,154 @@
 <html>
 
 <head>
+    <link rel="stylesheet" type="text/css" href="settings.css">
     <script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
     <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
 </head>
 
 <body>
-<!-- Instruction -->
-<p data-i18n="settings.instruction"></p>
-<p>Please read first the instructions and create a separate user for UniFi Network</p>
+<!-- Tab links -->
+<div class="tab">
+    <button class="tablinks" onclick="setPage(event, 'protect')" id="defaultOpen"><span
+            data-i18n="settings.tab.protect"></span></button>
+    <button class="tablinks" onclick="setPage(event, 'access')"><span data-i18n="settings.tab.access"></span></button>
+    <button class="tablinks" onclick="setPage(event, 'status')"><span data-i18n="settings.tab.status"></span>
+    </button>
+</div>
+<div id="protect" class="tabcontent">
+    <!-- Instruction -->
+    <p data-i18n="settings.instruction"></p>
+    <p>Please read first the instructions and create a separate user for UniFi Network</p>
 
-<!-- NVR -->
-<fieldset class="homey-form-fieldset">
-    <legend class="homey-form-legend" data-i18n="settings.nvr"></legend>
+    <!-- NVR -->
+    <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend" data-i18n="settings.nvr"></legend>
 
-    <!-- IP address -->
-    <div class="field row">
-        <label class="homey-form-label" for="txt_nvrip" data-i18n="settings.nvrip"></label>
-        <input class="homey-form-input" id="txt_nvrip" type="text" value=""/>
-    </div>
+        <!-- IP address -->
+        <div class="field row">
+            <label class="homey-form-label" for="txt_nvrip" data-i18n="settings.nvrip"></label>
+            <input class="homey-form-input" id="txt_nvrip" type="text" value=""/>
+        </div>
 
-    <!-- Port -->
-    <div class="field row">
-        <label class="homey-form-label" for="txt_nvrport" data-i18n="settings.nvrport"></label>
-        <input class="homey-form-input" id="txt_nvrport" type="text" value="443"/>
-    </div>
+        <!-- Port -->
+        <div class="field row">
+            <label class="homey-form-label" for="txt_nvrport" data-i18n="settings.nvrport"></label>
+            <input class="homey-form-input" id="txt_nvrport" type="text" value="443"/>
+        </div>
 
-</fieldset>
+    </fieldset>
 
-<!-- Credentials -->
-<fieldset class="homey-form-fieldset">
-    <legend class="homey-form-legend" data-i18n="settings.credentials"></legend>
+    <!-- Credentials -->
+    <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend" data-i18n="settings.credentials"></legend>
 
-    <!-- Username -->
-    <div class="field row">
-        <label class="homey-form-label" for="txt_username" data-i18n="settings.username"></label>
-        <input class="homey-form-input" id="txt_username" type="text" value=""/>
-    </div>
+        <!-- Username -->
+        <div class="field row">
+            <label class="homey-form-label" for="txt_username" data-i18n="settings.username"></label>
+            <input class="homey-form-input" id="txt_username" type="text" value=""/>
+        </div>
 
-    <!-- Password -->
-    <div class="field row">
-        <label class="homey-form-label" for="txt_password" data-i18n="settings.password"></label>
-        <input class="homey-form-input" id="txt_password" type="password" value=""/>
-    </div>
+        <!-- Password -->
+        <div class="field row">
+            <label class="homey-form-label" for="txt_password" data-i18n="settings.password"></label>
+            <input class="homey-form-input" id="txt_password" type="password" value=""/>
+        </div>
 
-    <!-- API-Key -->
-    <div class="field row">
-        <label class="homey-form-label" for="txt_protectV2ApiKey" data-i18n="settings.protectV2ApiKey"></label>
-        <input class="homey-form-input" id="txt_protectV2ApiKey" type="text" value=""/>
-    </div>
-    <p>
-        <em>Only required if you want to test the new V2 connection.</em>
-    </p>
-</fieldset>
-
-<!-- Access API Credentials -->
-<fieldset class="homey-form-fieldset">
-    <legend class="homey-form-legend" data-i18n="settings.accessCredentials"></legend>
         <!-- API-Key -->
+        <div class="field row">
+            <label class="homey-form-label" for="txt_protectV2ApiKey" data-i18n="settings.protectV2ApiKey"></label>
+            <input class="homey-form-input" id="txt_protectV2ApiKey" type="text" value=""/>
+        </div>
+        <p>
+            <em>Only required if you want to test the new V2 connection.</em>
+        </p>
+    </fieldset>
+
+    <!-- Settings -->
+    <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend" data-i18n="settings.settings"></legend>
+
+        <!-- useCameraSnapshot -->
+        <div class="field row">
+            <label class="homey-form-checkbox">
+                <input class="homey-form-checkbox-input" id="txt_useCameraSnapshot" type="checkbox" value="true">
+                <span class="homey-form-checkbox-checkmark"></span>
+                <span class="homey-form-checkbox-text"><span data-i18n="settings.useCameraSnapshot"></span></span>
+            </label>
+        </div>
+
+        <!-- ignoreEventsNfcFingerprint -->
+        <div class="field row">
+            <label class="homey-form-label" for="txt_ignoreEventsNfcFingerprint"
+                   data-i18n="settings.ignoreEventsNfcFingerprint"></label>
+            <input class="homey-form-input" id="txt_ignoreEventsNfcFingerprint" type="number" value="5"/>
+        </div>
+
+        <!-- ignoreEventsDoorbell -->
+        <div class="field row">
+            <label class="homey-form-label" for="txt_ignoreEventsDoorbell"
+                   data-i18n="settings.ignoreEventsDoorbell"></label>
+            <input class="homey-form-input" id="txt_ignoreEventsDoorbell" type="number" value="5"/>
+        </div>
+
+    </fieldset>
+
+    <!-- Apply button -->
     <div class="field row">
-        <label class="homey-form-label" for="txt_accessApiKey" data-i18n="settings.accessApiKey"></label>
-        <input class="homey-form-input" id="txt_accessApiKey" type="text" value=""/>
+        <button id="btn_test" class="homey-button-primary-full" data-i18n="settings.testConnection"></button>
+        <br/>
+        <button id="btn_apply" class="homey-button-primary-full" data-i18n="settings.apply"></button>
     </div>
-</fieldset>
 
-<!-- Settings -->
-<fieldset class="homey-form-fieldset">
-    <legend class="homey-form-legend" data-i18n="settings.settings"></legend>
+    <hr/>
+</div>
+<div id="access" class="tabcontent">
+    <!-- Access API Credentials -->
+    <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend" data-i18n="settings.accessCredentials"></legend>
+        <!-- API-Key -->
+        <div class="field row">
+            <label class="homey-form-label" for="txt_accessApiKey" data-i18n="settings.accessApiKey"></label>
+            <input class="homey-form-input" id="txt_accessApiKey" type="text" value=""/>
+        </div>
+    </fieldset>
 
-    <!-- useCameraSnapshot -->
+    <!-- Apply button -->
     <div class="field row">
-        <label class="homey-form-checkbox">
-            <input class="homey-form-checkbox-input" id="txt_useCameraSnapshot" type="checkbox" value="true">
-            <span class="homey-form-checkbox-checkmark"></span>
-            <span class="homey-form-checkbox-text"><span data-i18n="settings.useCameraSnapshot"></span></span>
-        </label>
+        <button id="btn_AccessApply" class="homey-button-primary-full" data-i18n="settings.apply"></button>
     </div>
 
-    <!-- ignoreEventsNfcFingerprint -->
-    <div class="field row">
-        <label class="homey-form-label" for="txt_ignoreEventsNfcFingerprint" data-i18n="settings.ignoreEventsNfcFingerprint"></label>
-        <input class="homey-form-input" id="txt_ignoreEventsNfcFingerprint" type="number" value="5"/>
-    </div>
-
-    <!-- ignoreEventsDoorbell -->
-    <div class="field row">
-        <label class="homey-form-label" for="txt_ignoreEventsDoorbell" data-i18n="settings.ignoreEventsDoorbell"></label>
-        <input class="homey-form-input" id="txt_ignoreEventsDoorbell" type="number" value="5"/>
-    </div>
-
-</fieldset>
-
-<!-- Apply button -->
-<div class="field row">
-    <button id="btn_test" class="homey-button-primary-full" data-i18n="settings.testConnection"></button>
-    <br/>
-    <button id="btn_apply" class="homey-button-primary-full" data-i18n="settings.apply"></button>
 </div>
 
-<hr/>
-<!-- Title -->
-<legend class="homey-form-legend" data-i18n="settings.status"></legend>
+<div id="status" class="tabcontent">
+    <!-- Title -->
+    <legend class="homey-form-legend" data-i18n="settings.status"></legend>
 
-<p><span data-i18n="settings.status">Status</span>: <span id="unifi_status" style="font-weight: bold;">Unknown</span>
-</p>
-<p><span data-i18n="settings.websocket.status">Protect V1 Realtime Status</span>: <span id="unifi_websocket_status"
-                                                                                     style="font-weight: bold;">Unknown</span>
-</p>
-<p><span data-i18n="settings.websocket.at">Protect V1 Last update at</span>: <span id="unifi_websocket_at"
-                                                                                style="font-weight: bold;">Unknown</span>
-</p>
-<p><span data-i18n="settings.protectV2Websocket.status">Protect V2 Realtime Status</span>: <span id="unifi_protectV2_websocket_status"
-                                                                                                 style="font-weight: bold;">Unknown</span>
-</p>
-<p><span data-i18n="settings.protectV2Websocket.at">Protect V2 Last update at</span>: <span id="unifi_protectV2_websocket_at"
+    <p><span data-i18n="settings.status">Status</span>: <span id="unifi_status"
+                                                              style="font-weight: bold;">Unknown</span>
+    </p>
+    <p><span data-i18n="settings.websocket.status">Protect V1 Realtime Status</span>: <span id="unifi_websocket_status"
                                                                                             style="font-weight: bold;">Unknown</span>
-</p>
-<p><span data-i18n="settings.accessWebsocket.status">Access Realtime Status</span>: <span id="unifi_access_websocket_status"
-                                                                                          style="font-weight: bold;">Unknown</span>
-</p>
-<p><span data-i18n="settings.accessWebsocket.at">Access Last update at</span>: <span id="unifi_access_websocket_at"
-                                                                                     style="font-weight: bold;">Unknown</span>
-</p>
+    </p>
+    <p><span data-i18n="settings.websocket.at">Protect V1 Last update at</span>: <span id="unifi_websocket_at"
+                                                                                       style="font-weight: bold;">Unknown</span>
+    </p>
+    <p><span data-i18n="settings.protectV2Websocket.status">Protect V2 Realtime Status</span>: <span
+            id="unifi_protectV2_websocket_status"
+            style="font-weight: bold;">Unknown</span>
+    </p>
+    <p><span data-i18n="settings.protectV2Websocket.at">Protect V2 Last update at</span>: <span
+            id="unifi_protectV2_websocket_at"
+            style="font-weight: bold;">Unknown</span>
+    </p>
+    <p><span data-i18n="settings.accessWebsocket.status">Access Realtime Status</span>: <span
+            id="unifi_access_websocket_status"
+            style="font-weight: bold;">Unknown</span>
+    </p>
+    <p><span data-i18n="settings.accessWebsocket.at">Access Last update at</span>: <span id="unifi_access_websocket_at"
+                                                                                         style="font-weight: bold;">Unknown</span>
+    </p>
+</div>
 
 <script type="text/javascript">
     const txtNvrIp = document.getElementById('txt_nvrip');
@@ -136,6 +163,7 @@
     const txtIgnoreEventsDoorbell = document.getElementById('txt_ignoreEventsDoorbell');
     const btnApply = document.getElementById('btn_apply');
     const btnTest = document.getElementById('btn_test');
+    const btnAccessApply = document.getElementById('btn_AccessApply');
 
     function onHomeyReady(Homey) {
         const readSettings = () => {
@@ -277,7 +305,22 @@
             }
         });
 
+        btnAccessApply.addEventListener('click', e => {
+            if (txtuseCameraSnapshot.checked) {
+                Homey.confirm(Homey.__('settings.useCameraSnapshotInstruction'), 'info', (err, confirmed) => {
+                    if (err) return Homey.alert(err);
+                    if (confirmed) {
+                        saveSettings();
+                    }
+                });
+            } else {
+                saveSettings();
+            }
+        });
+
         readSettings();
+
+        document.getElementById("defaultOpen").click();
 
         Homey.ready();
 
@@ -439,6 +482,32 @@
             updateProtectV2WebsocketAtField(null, result);
             if (err) return Homey.alert(err);
         });
+    }
+
+    function setPage(evt, tabPage) {
+        var i, tabcontent, tablinks;
+
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(tabPage).style.display = "block";
+        evt.currentTarget.className += " active";
+
+        if (tabPage == 'protect') {
+            // Nothing to do here for now
+        } else if (tabPage == 'status') {
+            // Nothing to do here for now
+        }
     }
 </script>
 </body>

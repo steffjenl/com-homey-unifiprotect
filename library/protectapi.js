@@ -158,14 +158,27 @@ class ProtectAPI extends BaseClass {
             };
 
             const req = https.request(options, res => {
+                if (res.statusCode === 401 || res.statusCode === 403) {
+                    this.loggedInStatus = 'Invalid credentials (401)';
+                    this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Invalid credentials (401)');
+                    return reject(new Error('Invalid credentials (401)'));
+                }
+
                 if (res.statusCode !== 200) {
+                    this.loggedInStatus = `Request failed: ${options.path} (status code: ${res.statusCode})`;
                     return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode}) (creds: ${credentials}`));
                 }
                 const body = [];
 
                 res.on('data', chunk => body.push(chunk));
                 res.on('end', () => {
+                    if (res.statusCode === 401 || res.statusCode === 403) {
+                        this.loggedInStatus = 'Invalid credentials (401)';
+                        return reject(new Error('Invalid credentials (401)'));
+                    }
+
                     if (res.statusCode !== 200) {
+                        this.loggedInStatus = `Request failed: ${options.path} (status code: ${res.statusCode})`;
                         return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode})`));
                     }
 
@@ -834,7 +847,7 @@ class ProtectAPI extends BaseClass {
 
     setPTZPreset(camera, presetId) {
         return new Promise((resolve, reject) => {
-            return this.webclient.post(`cameras/${camera.id}/ptz/goto/${(presetId -1)}`, {})
+            return this.webclient.post(`cameras/${camera.id}/ptz/goto/${(presetId - 1)}`, {})
                 .then(() => resolve('setPTZPreset successfully set.'))
                 .catch(error => reject(new Error(`Error setting setPTZPreset: ${error}`)));
         });

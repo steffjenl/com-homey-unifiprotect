@@ -460,7 +460,8 @@ class AppProtect extends BaseClass {
               && tokens.protectV2ApiKey !== ''
               && !this.homey.app.apiV2.websocket.isWebsocketConnected()
           ) {
-              this.loginToProtectV2().catch(this.error);
+              this.homey.appProtect.loginToProtectV2().catch(this.error);
+              this.homey.appAccess.loginToAccess().catch(this.error);
           }
       } catch (error) {
         this.homey.error(`${JSON.stringify(error)}`);

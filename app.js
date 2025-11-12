@@ -57,17 +57,6 @@ class UniFiProtect extends Homey.App {
                 this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
                 this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
             }
-        });
-
-        // set settings
-        const settings = this.homey.settings.get('ufp:settings');
-        if (settings) {
-            this.useCameraSnapshot = settings.useCameraSnapshot;
-            this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
-            this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
-        }
-
-        this.homey.settings.on('set', (key) => {
             if (key === 'ufp:tokens') {
                 const tokens = this.homey.settings.get('ufp:tokens');
                 if (tokens) {
@@ -84,6 +73,14 @@ class UniFiProtect extends Homey.App {
                 }
             }
         });
+
+        // set settings
+        const settings = this.homey.settings.get('ufp:settings');
+        if (settings) {
+            this.useCameraSnapshot = settings.useCameraSnapshot;
+            this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
+            this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
+        }
 
         const tokens = this.homey.settings.get('ufp:tokens');
         if (tokens) {

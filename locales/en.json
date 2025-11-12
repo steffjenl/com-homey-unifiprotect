@@ -34,7 +34,12 @@
     "ignoreEventsDoorbell": "Cooldown period between Doorbell events (in seconds)",
     "protectV2ApiKey": "UniFi Protect V2 API Key",
     "protectV2Credentials": "UniFi Protect V2 credentials",
-    "status": "Status"
+    "status": "Status",
+    "tab": {
+      "protect": "UniFi Protect",
+      "access": "UniFi Access",
+      "status": "Status"
+    }
   },
   "events": {
     "camera": {
