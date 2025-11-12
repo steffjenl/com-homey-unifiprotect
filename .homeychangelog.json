@@ -271,5 +271,8 @@
   },
   "1.8.15": {
     "en": "Add extra text on settings page"
+  },
+  "1.8.16": {
+    "en": "Settings page updated and beter invalid credentials handeling"
   }
 }
