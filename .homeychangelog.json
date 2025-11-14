@@ -274,5 +274,8 @@
   },
   "1.8.16": {
     "en": "Settings page updated and beter invalid credentials handeling"
+  },
+  "1.8.17": {
+    "en": "Fix multiple refreshTokens"
   }
 }
