@@ -39,7 +39,8 @@
       "protect": "UniFi Protect",
       "access": "UniFi Access",
       "status": "Status"
-    }
+    },
+    "saveLogToPersistentStorage": "Save log to persistent storage"
   },
   "events": {
     "camera": {

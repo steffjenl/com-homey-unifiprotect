@@ -9,6 +9,8 @@ const AppAccess = require('./library/app-access');
 const AppProtect = require('./library/app-protect');
 const AccessAPI = require('./library/access-api-v2/access-api');
 const ProtectAPIV2 = require('./library/protect-api-v2/protect-api');
+//
+const { createWriteFile, existsSync, mkdirSync, rmSync, unlinkSync, readdirSync, statSync, readFileSync, openSync, readSync, closeSync, writeFileSync, writeFile } = require("fs");
 
 class UniFiProtect extends Homey.App {
     /**
@@ -148,11 +150,28 @@ class UniFiProtect extends Homey.App {
         }
     }
 
-    debug() {
+    async debug() {
+        const logFile = '/userdata/application-log.log';
         if (Homey.env.DEBUG === 'true') {
             const args = Array.prototype.slice.call(arguments);
             args.unshift('[debug]');
             this.homey.log(args.join(' '));
+            if (existsSync(logFile)) {
+                unlinkSync(logFile);
+            }
+        }
+        const settings = this.homey.settings.get('ufp:settings');
+        if (settings && settings.saveLogToPersistentStorage) {
+            const args = Array.prototype.slice.call(arguments);
+            args.unshift('[debug]');
+            //
+            writeFile(logFile, args.join(' ') + '\n', { flag: 'a+' }, err => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    // file written successfully
+                }
+            });
         }
     }
 }

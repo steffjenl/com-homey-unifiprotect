@@ -92,6 +92,15 @@
             <input class="homey-form-input" id="txt_ignoreEventsDoorbell" type="number" value="5"/>
         </div>
 
+        <!-- saveLogToPersistentStorage -->
+        <div class="field row">
+            <label class="homey-form-checkbox">
+                <input class="homey-form-checkbox-input" id="txt_saveLogToPersistentStorage" type="checkbox" value="true">
+                <span class="homey-form-checkbox-checkmark"></span>
+                <span class="homey-form-checkbox-text"><span data-i18n="settings.saveLogToPersistentStorage"></span></span>
+            </label>
+        </div>
+
     </fieldset>
 
     <!-- Apply button -->
@@ -161,6 +170,7 @@
     const txtuseCameraSnapshot = document.getElementById('txt_useCameraSnapshot');
     const txtIgnoreEventsNfcFingerprint = document.getElementById('txt_ignoreEventsNfcFingerprint');
     const txtIgnoreEventsDoorbell = document.getElementById('txt_ignoreEventsDoorbell');
+    const txtsaveLogToPersistentStorage = document.getElementById('txt_saveLogToPersistentStorage');
     const btnApply = document.getElementById('btn_apply');
     const btnTest = document.getElementById('btn_test');
     const btnAccessApply = document.getElementById('btn_AccessApply');
@@ -215,6 +225,7 @@
                     txtuseCameraSnapshot.checked = settings.useCameraSnapshot;
                     txtIgnoreEventsNfcFingerprint.value = settings.ignoreEventsNfcFingerprint || 5;
                     txtIgnoreEventsDoorbell.value = settings.ignoreEventsDoorbell || 5;
+                    txtsaveLogToPersistentStorage.checked = settings.saveLogToPersistentStorage;
                 } else {
                     console.warn('[SETTINGS] Could not read settings.');
                 }
@@ -255,7 +266,8 @@
             const settings = {
                 'useCameraSnapshot': (!!txtuseCameraSnapshot.checked),
                 'ignoreEventsNfcFingerprint': parseInt(txtIgnoreEventsNfcFingerprint.value) || 5,
-                'ignoreEventsDoorbell': parseInt(txtIgnoreEventsDoorbell.value) || 5
+                'ignoreEventsDoorbell': parseInt(txtIgnoreEventsDoorbell.value) || 5,
+                'saveLogToPersistentStorage': (!!txtsaveLogToPersistentStorage.checked)
             };
 
             Homey.set('ufp:settings', settings, (error, result) => {
