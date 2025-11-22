@@ -14,13 +14,23 @@ module.exports = {
         return homey.app.api.ws.getLastWebsocketMessageTime();
     },
     async getAccessWebsocketStatus({homey, query}) {
-        return homey.app.accessApi.websocket.isWebsocketConnected() ? 'Connected' : 'Unknown';
+        const tokens = homey.settings.get('ufp:tokens');
+        if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
+            return homey.app.accessApi.websocket.isWebsocketConnected() ? 'Connected' : 'Unknown';
+        } else {
+            return 'No API Key found';
+        }
     },
     async getLastAccessWebsocketMessageTime({homey, query}) {
         return homey.app.accessApi.websocket.getLastWebsocketMessageTime();
     },
     async getProtectV2WebsocketStatus({homey, query}) {
-        return homey.app.apiV2.websocket.isWebsocketConnected() ? 'Connected' : 'Unknown';
+        const tokens = homey.settings.get('ufp:tokens');
+        if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
+            return homey.app.apiV2.websocket.isWebsocketConnected() ? 'Connected' : 'Unknown';
+        } else {
+            return 'No API Key found';
+        }
     },
     async getLastProtectV2WebsocketMessageTime({homey, query}) {
         return homey.app.apiV2.websocket.getLastWebsocketMessageTime();

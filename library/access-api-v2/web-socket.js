@@ -76,7 +76,7 @@ class AccessWebSocket extends BaseClass {
       });
 
       this._eventListener.on('pong', (event) => {
-        this.homey.log('Received pong from websocket');
+        this.homey.log('Received pong from access websocket');
       });
 
       this._eventListener.on('close', () => {
