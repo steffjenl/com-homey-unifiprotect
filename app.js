@@ -166,7 +166,7 @@ class UniFiProtect extends Homey.App {
                 if (err) {
                     // File does not exist
                 } else {
-                    // When file size exceeds 5MB, delete it
+                    // When file size exceeds 25MB, delete it
                     if (stats.size >= 25 * 1024 * 1024) {
                         unlinkSync(logFile);
                     }
@@ -174,10 +174,10 @@ class UniFiProtect extends Homey.App {
             })
             const args = Array.prototype.slice.call(arguments);
             args.unshift('[debug]');
-            //
+            // Append to log file
             writeFile(logFile, args.join(' ') + '\n', { flag: 'a+' }, err => {
                 if (err) {
-                    console.error(err);
+                    this.error(err);
                 } else {
                     // file written successfully
                 }
