@@ -10,7 +10,7 @@ const AppProtect = require('./library/app-protect');
 const AccessAPI = require('./library/access-api-v2/access-api');
 const ProtectAPIV2 = require('./library/protect-api-v2/protect-api');
 //
-const { createWriteFile, existsSync, mkdirSync, rmSync, unlinkSync, readdirSync, statSync, readFileSync, openSync, readSync, closeSync, writeFileSync, writeFile } = require("fs");
+const { stat, createWriteFile, existsSync, mkdirSync, rmSync, unlinkSync, readdirSync, statSync, readFileSync, openSync, readSync, closeSync, writeFileSync, writeFile } = require("fs");
 
 class UniFiProtect extends Homey.App {
     /**
@@ -162,6 +162,16 @@ class UniFiProtect extends Homey.App {
         }
         const settings = this.homey.settings.get('ufp:settings');
         if (settings && settings.saveLogToPersistentStorage) {
+            stat(logFile, (err, stats) => {
+                if (err) {
+                    // File does not exist
+                } else {
+                    // When file size exceeds 5MB, delete it
+                    if (stats.size >= 25 * 1024 * 1024) {
+                        unlinkSync(logFile);
+                    }
+                }
+            })
             const args = Array.prototype.slice.call(arguments);
             args.unshift('[debug]');
             //
