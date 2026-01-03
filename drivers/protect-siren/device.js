@@ -48,7 +48,7 @@ class Siren extends Homey.Device {
     }
 
     async initSiren() {
-        this.registerCapabilityListener("volume_set", (value) => {
+        this.registerCapabilityListener("siren_volume_set", (value) => {
             return this.homey.app.api.setSirenVolume(this.getData(), value);
         });
 
@@ -76,8 +76,8 @@ class Siren extends Homey.Device {
         if (bootstrapData) {
             bootstrapData.sirens.forEach((siren) => {
                 if (siren.id === this.getData().id) {
-                    if (this.hasCapability('volume_set')) {
-                        this.setCapabilityValue('volume_set', siren.volume / 100);
+                    if (this.hasCapability('siren_volume_set')) {
+                        this.setCapabilityValue('siren_volume_set', siren.volume / 100);
                     }
                 }
             });
@@ -85,8 +85,8 @@ class Siren extends Homey.Device {
     }
 
     onIsSirenOn(volume) {
-        if (this.hasCapability('volume_set')) {
-            this.setCapabilityValue('volume_set', volume / 100);
+        if (this.hasCapability('siren_volume_set')) {
+            this.setCapabilityValue('siren_volume_set', volume / 100);
         }
     }
 }
