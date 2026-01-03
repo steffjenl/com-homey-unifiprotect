@@ -49,7 +49,6 @@ class Siren extends Homey.Device {
 
     async initSiren() {
         this.registerCapabilityListener("siren_volume_set", (value) => {
-            console.log("###", "val", "SET", value);
             return this.homey.app.api.setSirenVolume(this.getData(), value);
         });
 
@@ -78,7 +77,6 @@ class Siren extends Homey.Device {
             bootstrapData.sirens.forEach((siren) => {
                 if (siren.id === this.getData().id) {
                     if (this.hasCapability('siren_volume_set')) {
-                        console.log("###", "val", siren.volume)
                         this.setCapabilityValue('siren_volume_set', siren.volume / 100);
                     }
                 }
