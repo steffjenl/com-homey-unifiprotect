@@ -222,7 +222,23 @@ class ProtectAPI extends BaseClass {
                     if (result) {
                         return resolve(result);
                     } else {
-                        return reject(new Error('Error obtaining chimes.'));
+                        return reject(new Error('Error obtaining NVR.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    async setNVR(nvrId, params) {
+        return new Promise((resolve, reject) => {
+            this.webclient.patch('nvrs/' + nvrId, params)
+                .then(response => {
+                    let result = JSON.parse(response);
+
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error setting NVR.'));
                     }
                 })
                 .catch(error => reject(error));

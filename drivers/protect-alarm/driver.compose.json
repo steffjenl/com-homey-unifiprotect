@@ -1,0 +1,45 @@
+{
+  "id": "protect-alarm",
+  "class": "homealarm",
+  "capabilities": [
+    "homealarm_state",
+    "alarm_generic"
+  ],
+  "name": {
+    "en": "Alarm Manager",
+    "nl": "Alarmmanager",
+    "de": "Alarmmanager",
+    "fr": "Gestionnaire d'alarmes",
+    "it": "Gestore allarmi",
+    "sv": "Larmhanterare",
+    "no": "Alarmbehandler",
+    "es": "Gestor de alarmas",
+    "da": "Alarmmanager",
+    "ru": "Менеджер сигнализации",
+    "pl": "Menedżer alarmów",
+    "ko": "알람 관리자"
+  },
+  "images": {
+    "large": "drivers/protect-alarm/assets/images/large.png",
+    "small": "drivers/protect-alarm/assets/images/small.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "platforms": ["local"],
+  "connectivity": ["cloud"]
+}
+

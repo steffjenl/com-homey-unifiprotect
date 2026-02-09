@@ -1,0 +1,37 @@
+{
+  "triggers": [
+    {
+      "id": "alarm_triggered",
+      "title": {
+        "en": "Alarm triggered",
+        "nl": "Alarm geactiveerd"
+      },
+      "tokens": [
+        {
+          "name": "timestamp",
+          "type": "string",
+          "title": {
+            "en": "Timestamp"
+          }
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "id": "arm_alarm",
+      "title": {
+        "en": "Arm alarm",
+        "nl": "Schakel alarm in"
+      }
+    },
+    {
+      "id": "disarm_alarm",
+      "title": {
+        "en": "Disarm alarm",
+        "nl": "Schakel alarm uit"
+      }
+    }
+  ]
+}
+

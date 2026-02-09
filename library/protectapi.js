@@ -164,6 +164,17 @@ class ProtectAPI extends BaseClass {
                     return reject(new Error('Invalid credentials (401)'));
                 }
 
+                if (res.statusCode === 429) {
+                    this.loggedInStatus = 'Too many login attempts (429)';
+                    this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Too many login attempts (429)');
+                    // sleep for 30 seconds to prevent further login attempts for a while
+                    this.homey.setTimeout(() => {
+                        this.loggedInStatus = 'Connecting';
+                        this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connecting');
+                        }, 30000);
+                        return reject(new Error('Too many login attempts (429)'));
+                }
+
                 if (res.statusCode !== 200) {
                     this.loggedInStatus = `Request failed: ${options.path} (status code: ${res.statusCode})`;
                     return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode}) (creds: ${credentials}`));
