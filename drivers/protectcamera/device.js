@@ -5,99 +5,174 @@ const fetch = require('node-fetch');
 const https = require('https');
 const SmartDetectionEvent = require('../../library/Models/SmartDetectionEvent');
 
+/**
+ * UniFi Protect Camera Device Driver
+ * 
+ * Manages UniFi Protect camera devices, handling initialization, capability management,
+ * event detection, snapshot capture, and real-time updates via websocket.
+ * 
+ * @class Camera
+ * @extends {Homey.Device}
+ */
 class Camera extends Homey.Device {
-  /**
-     * onInit is called when the device is initialized.
+    /**
+     * Initialize the camera device.
+     * 
+     * Called when the device is initialized. Sets up device references,
+     * loads settings, and waits for the bootstrap data to be available.
+     * 
+     * @async
+     * @returns {Promise<void>}
      */
-  async onInit() {
-    this.device = this;
-    this.cloudUrl = null;
-    this.settings = this.getSettings();
-    await this.waitForBootstrap();
-    this.log('UnifiCamera Device has been initialized');
-  }
-
-  /**
-     * onAdded is called when the user adds the device, called just after pairing.
-     */
-  async onAdded() {
-    this.homey.app.debug('UnifiCamera Device has been added');
-  }
-
-  /**
-     * onSettings is called when the user updates the device's settings.
-     * @param {object} event the onSettings event data
-     * @param {object} event.oldSettings The old settings object
-     * @param {object} event.newSettings The new settings object
-     * @param {string[]} event.changedKeys An array of keys changed since the previous version
-     * @returns {Promise<string|void>} return a custom message that will be displayed
-     */
-  async onSettings({ oldSettings, newSettings, changedKeys }) {
-    this.homey.app.debug('UnifiCamera Device settings where changed');
-  }
-
-  /**
-     * onRenamed is called when the user updates the device's name.
-     * This method can be used this to synchronise the name to the device.
-     * @param {string} name The new name
-     */
-  async onRenamed(name) {
-    this.homey.app.debug('UnifiCamera Device was renamed');
-  }
-
-  /**
-     * onDeleted is called when the user deleted the device.
-     */
-  async onDeleted() {
-    this.homey.app.debug('UnifiCamera Device has been deleted');
-  }
-
-  async initCamera() {
-    this.registerCapabilityListener('camera_microphone_volume', async (value) => {
-      this.homey.app.debug('camera_microphone_volume');
-      return this.homey.app.api.setMicVolume(this.getData(), value);
-    });
-
-    this.registerCapabilityListener('camera_nightvision_set', async (value) => {
-      this.homey.app.debug('camera_nightvision_set');
-      return this.homey.app.api.setNightVisionMode(this.getData(), value);
-    });
-
-    await this._createMissingCapabilities();
-    await this._initCameraData();
-    await this._createSnapshotImage();
-    await this._setVideoUrl();
-  }
-
-  async waitForBootstrap() {
-    if (typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null) {
-      await this.initCamera();
-    } else {
-      this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
-    }
-  }
-
-  async _createMissingCapabilities() {
-    if (this.getClass() !== 'camera') {
-      this.homey.app.debug(`changed class to camera for ${this.getName()}`);
-      await this.setClass('camera');
+    async onInit() {
+        this.device = this;
+        this.cloudUrl = null;
+        this.settings = this.getSettings();
+        await this.waitForBootstrap();
+        this.log('UnifiCamera Device has been initialized');
     }
 
-    // camera_nightvision_status
-    if (!this.hasCapability('camera_nightvision_status')) {
-      await this.addCapability('camera_nightvision_status');
-      this.homey.app.debug(`created capability camera_nightvision_status for ${this.getName()}`);
+    /**
+     * Handle device addition.
+     * 
+     * Called when the user adds the device, just after pairing completes.
+     * 
+     * @async
+     * @returns {Promise<void>}
+     */
+    async onAdded() {
+        this.homey.app.debug('UnifiCamera Device has been added');
     }
 
-    if (!this.hasCapability('camera_nightvision_set')) {
-      await this.addCapability('camera_nightvision_set');
-      this.homey.app.debug(`created capability camera_nightvision_set for ${this.getName()}`);
+    /**
+     * Handle device settings changes.
+     * 
+     * Called when the user updates the device's settings in the Homey app.
+     * 
+     * @async
+     * @param {Object} event - The onSettings event data
+     * @param {Object} event.oldSettings - The previous settings object
+     * @param {Object} event.newSettings - The updated settings object
+     * @param {string[]} event.changedKeys - Array of keys that changed
+     * @returns {Promise<string|void>} Optional custom message to display to user
+     */
+    async onSettings({ oldSettings, newSettings, changedKeys }) {
+        this.homey.app.debug('UnifiCamera Device settings where changed');
     }
 
-    if (!this.hasCapability('last_motion_score')) {
-      await this.addCapability('last_motion_score');
-      this.homey.app.debug(`created capability last_motion_score for ${this.getName()}`);
+    /**
+     * Handle device rename.
+     * 
+     * Called when the user updates the device's name.
+     * Can be used to synchronize the name with the physical device.
+     * 
+     * @async
+     * @param {string} name - The new device name
+     * @returns {Promise<void>}
+     */
+    async onRenamed(name) {
+        this.homey.app.debug('UnifiCamera Device was renamed');
     }
+
+    /**
+     * Handle device deletion.
+     * 
+     * Called when the user deletes the device from Homey.
+     * 
+     * @async
+     * @returns {Promise<void>}
+     */
+    async onDeleted() {
+        this.homey.app.debug('UnifiCamera Device has been deleted');
+    }
+
+    /**
+     * Initialize camera-specific functionality.
+     * 
+     * Sets up capability listeners, creates missing capabilities,
+     * initializes camera data, creates snapshot image, and sets video URL.
+     * 
+     * @async
+     * @returns {Promise<void>}
+     */
+    async initCamera() {
+        this._registerCapabilityListeners();
+        await this._createMissingCapabilities();
+        await this._initCameraData();
+        await this._createSnapshotImage();
+        await this._setVideoUrl();
+    }
+    
+    /**
+     * Register capability listeners for camera controls.
+     * @private
+     */
+    _registerCapabilityListeners() {
+        this.registerCapabilityListener('camera_microphone_volume', async (value) => {
+            this.homey.app.debug('camera_microphone_volume');
+            return this.homey.app.api.setMicVolume(this.getData(), value);
+        });
+
+        this.registerCapabilityListener('camera_nightvision_set', async (value) => {
+            this.homey.app.debug('camera_nightvision_set');
+            return this.homey.app.api.setNightVisionMode(this.getData(), value);
+        });
+    }
+
+    /**
+     * Wait for bootstrap data to become available.
+     * 
+     * Polls until the API has bootstrap data loaded, then initializes the camera.
+     * Uses recursive timeout to avoid blocking.
+     * 
+     * @async
+     * @returns {Promise<void>}
+     */
+    async waitForBootstrap() {
+        const lastUpdateId = this.homey.app.api.getLastUpdateId();
+        
+        if (typeof lastUpdateId !== 'undefined' && lastUpdateId !== null) {
+            await this.initCamera();
+        } else {
+            // Retry after 250ms
+            this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
+        }
+    }
+
+    /**
+     * Create missing capabilities for the device.
+     * 
+     * Ensures the device has all required capabilities, adding them if necessary.
+     * Updates device class if needed.
+     * 
+     * @async
+     * @private
+     * @returns {Promise<void>}
+     */
+    async _createMissingCapabilities() {
+        // Ensure device class is set to 'camera'
+        if (this.getClass() !== 'camera') {
+            this.homey.app.debug(`changed class to camera for ${this.getName()}`);
+            await this.setClass('camera');
+        }
+
+        // Add night vision status capability
+        if (!this.hasCapability('camera_nightvision_status')) {
+            await this.addCapability('camera_nightvision_status');
+            this.homey.app.debug(`created capability camera_nightvision_status for ${this.getName()}`);
+        }
+
+        // Add night vision control capability
+        if (!this.hasCapability('camera_nightvision_set')) {
+            await this.addCapability('camera_nightvision_set');
+            this.homey.app.debug(`created capability camera_nightvision_set for ${this.getName()}`);
+        }
+
+        // Add motion score capability
+        if (!this.hasCapability('last_motion_score')) {
+            await this.addCapability('last_motion_score');
+            this.homey.app.debug(`created capability last_motion_score for ${this.getName()}`);
+        }
 
     if (!this.hasCapability('last_motion_thumbnail')) {
       await this.addCapability('last_motion_thumbnail');

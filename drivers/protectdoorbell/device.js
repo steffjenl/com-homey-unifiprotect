@@ -5,16 +5,31 @@ const fetch = require('node-fetch');
 const https = require('https');
 const SmartDetectionEvent = require('../../library/Models/SmartDetectionEvent');
 
+// Constants
+const BOOTSTRAP_POLL_INTERVAL_MS = 250;
+
+/**
+ * UniFi Protect Doorbell Device Driver
+ * 
+ * Manages UniFi Protect doorbell devices, including ring detection, visitor detection,
+ * package camera functionality, snapshot capture, and real-time event handling.
+ * 
+ * @class Doorbell
+ * @extends {Homey.Device}
+ */
 class Doorbell extends Homey.Device {
     /**
-     * onInit is called when the device is initialized.
+     * Initialize the doorbell device.
+     * 
+     * Called when the device is initialized. Sets up device references,
+     * loads settings, waits for bootstrap data, and cleans up old events.
+     * 
+     * @async
+     * @returns {Promise<void>}
      */
     async onInit() {
         this.device = this;
-        this.cloudUrl = null;
-        this.cloudUrlPackage = null;
-        this.rtspUrl = null;
-        this.rtspPackageUrl = null;
+        this._initializeUrlProperties();
         this.settings = this.getSettings();
         await this.waitForBootstrap();
         this.cleanSmartDetectionEvents();
@@ -22,53 +37,130 @@ class Doorbell extends Homey.Device {
     }
 
     /**
-     * onAdded is called when the user adds the device, called just after pairing.
+     * Initialize URL properties for video streams.
+     * @private
+     */
+    _initializeUrlProperties() {
+        this.cloudUrl = null;
+        this.cloudUrlPackage = null;
+        this.rtspUrl = null;
+        this.rtspPackageUrl = null;
+    }
+
+    /**
+     * Handle device addition.
+     * 
+     * Called when the user adds the device, just after pairing completes.
+     * 
+     * @async
+     * @returns {Promise<void>}
      */
     async onAdded() {
         this.homey.app.debug('UnifiDoorbell Device has been added');
     }
 
     /**
-     * onSettings is called when the user updates the device's settings.
-     * @param {object} event the onSettings event data
-     * @param {object} event.oldSettings The old settings object
-     * @param {object} event.newSettings The new settings object
-     * @param {string[]} event.changedKeys An array of keys changed since the previous version
-     * @returns {Promise<string|void>} return a custom message that will be displayed
+     * Handle device settings changes.
+     * 
+     * Processes custom RTSP URL settings for main and package cameras.
+     * 
+     * @async
+     * @param {Object} event - The onSettings event data
+     * @param {Object} event.oldSettings - The previous settings object
+     * @param {Object} event.newSettings - The updated settings object
+     * @param {string[]} event.changedKeys - Array of keys that changed
+     * @returns {Promise<string|void>} Optional custom message to display to user
      */
     async onSettings({oldSettings, newSettings, changedKeys}) {
-        if (newSettings.rtspUrl && newSettings.rtspUrl !== '') {
-            this.rtspUrl = newSettings.rtspUrl;
-            this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspUrl}`);
-            this.setCameraVideo('video', `${this.getName()} Video`, this.video);
+        if (this._handleCustomRtspUrl(newSettings)) {
             return;
         }
-        if (newSettings.rtspPackageUrl && newSettings.rtspPackageUrl !== '') {
-            this.rtspPackageUrl = newSettings.rtspPackageUrl;
-            this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspPackageUrl}`);
-            this.setCameraVideo('package-video', `${this.getName()} Package Video`, this.packageVideo);
+        if (this._handleCustomPackageRtspUrl(newSettings)) {
             return;
         }
         this.homey.app.debug('UnifiDoorbell Device settings where changed');
     }
 
     /**
-     * onRenamed is called when the user updates the device's name.
-     * This method can be used this to synchronise the name to the device.
-     * @param {string} name The new name
+     * Handle custom RTSP URL setting change.
+     * @private
+     * @param {Object} newSettings - The new settings
+     * @returns {boolean} True if custom URL was applied
+     */
+    _handleCustomRtspUrl(newSettings) {
+        if (newSettings.rtspUrl && newSettings.rtspUrl !== '') {
+            this.rtspUrl = newSettings.rtspUrl;
+            this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspUrl}`);
+            this.setCameraVideo('video', `${this.getName()} Video`, this.video);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Handle custom package camera RTSP URL setting change.
+     * @private
+     * @param {Object} newSettings - The new settings
+     * @returns {boolean} True if custom URL was applied
+     */
+    _handleCustomPackageRtspUrl(newSettings) {
+        if (newSettings.rtspPackageUrl && newSettings.rtspPackageUrl !== '') {
+            this.rtspPackageUrl = newSettings.rtspPackageUrl;
+            this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspPackageUrl}`);
+            this.setCameraVideo('package-video', `${this.getName()} Package Video`, this.packageVideo);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Handle device rename.
+     * 
+     * Called when the user updates the device's name.
+     * Can be used to synchronize the name with the physical device.
+     * 
+     * @async
+     * @param {string} name - The new device name
+     * @returns {Promise<void>}
      */
     async onRenamed(name) {
         this.homey.app.debug('UnifiDoorbell Device was renamed');
     }
 
     /**
-     * onDeleted is called when the user deleted the device.
+     * Handle device deletion.
+     * 
+     * Called when the user deletes the device from Homey.
+     * 
+     * @async
+     * @returns {Promise<void>}
      */
     async onDeleted() {
         this.homey.app.debug('UnifiDoorbell Device has been deleted');
     }
 
+    /**
+     * Initialize doorbell-specific functionality.
+     * 
+     * Sets up capability listeners, creates missing capabilities,
+     * initializes snapshot images, video URLs, and doorbell data.
+     * 
+     * @async
+     * @returns {Promise<void>}
+     */
     async initDoorbell() {
+        this._registerCapabilityListeners();
+        await this._createMissingCapabilities();
+        await this._createSnapshotImage();
+        await this._setVideoUrl();
+        await this._initDoorbellData();
+    }
+
+    /**
+     * Register capability listeners for doorbell controls.
+     * @private
+     */
+    _registerCapabilityListeners() {
         this.registerCapabilityListener('camera_microphone_volume', async (value) => {
             this.homey.app.debug('camera_microphone_volume');
             return this.homey.app.api.setMicVolume(this.getData(), value);
@@ -78,46 +170,67 @@ class Doorbell extends Homey.Device {
             this.homey.app.debug('camera_nightvision_set');
             return this.homey.app.api.setNightVisionMode(this.getData(), value);
         });
-
-        await this._createMissingCapabilities();
-        await this._createSnapshotImage();
-        await this._setVideoUrl();
-        await this._initDoorbellData();
     }
 
+    /**
+     * Wait for bootstrap data to become available.
+     * 
+     * Polls until the API has bootstrap data loaded, then initializes the doorbell.
+     * Uses recursive timeout to avoid blocking.
+     * 
+     * @async
+     * @returns {Promise<void>}
+     */
     async waitForBootstrap() {
-        if (typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null) {
+        const lastUpdateId = this.homey.app.api.getLastUpdateId();
+        
+        if (typeof lastUpdateId !== 'undefined' && lastUpdateId !== null) {
             await this.initDoorbell();
         } else {
-            this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
+            this.homey.setTimeout(this.waitForBootstrap.bind(this), BOOTSTRAP_POLL_INTERVAL_MS);
         }
     }
 
+    /**
+     * Create missing capabilities for the doorbell device.
+     * 
+     * Ensures the device has all required capabilities, adding them if necessary.
+     * Updates device class if needed.
+     * 
+     * @async
+     * @private
+     * @returns {Promise<void>}
+     */
     async _createMissingCapabilities() {
+        // Ensure device class is set to 'doorbell'
         if (this.getClass() !== 'doorbell') {
             this.homey.app.debug(`changed class to doorbell for ${this.getName()}`);
             await this.setClass('doorbell');
         }
 
-        // Doorbell_nightvision_status
+        // Add night vision status capability
         if (!this.hasCapability('camera_nightvision_status')) {
             await this.addCapability('camera_nightvision_status');
             this.homey.app.debug(`created capability camera_nightvision_status for ${this.getName()}`);
         }
 
+        // Add night vision control capability
         if (!this.hasCapability('camera_nightvision_set')) {
             await this.addCapability('camera_nightvision_set');
             this.homey.app.debug(`created capability camera_nightvision_set for ${this.getName()}`);
         }
 
+        // Add motion score capability
         if (!this.hasCapability('last_motion_score')) {
             await this.addCapability('last_motion_score');
             this.homey.app.debug(`created capability last_motion_score for ${this.getName()}`);
         }
 
+        // Add motion thumbnail capability
         if (!this.hasCapability('last_motion_thumbnail')) {
             await this.addCapability('last_motion_thumbnail');
             this.homey.app.debug(`created capability last_motion_thumbnail for ${this.getName()}`);
+        }
         }
         if (!this.hasCapability('last_motion_heatmap')) {
             await this.addCapability('last_motion_heatmap');

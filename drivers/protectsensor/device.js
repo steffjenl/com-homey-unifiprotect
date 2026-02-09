@@ -3,12 +3,37 @@
 const Homey = require('homey');
 const UfvConstants = require('../../library/constants');
 
+// Constants
+const BOOTSTRAP_POLL_INTERVAL_MS = 250;
+const MOTION_TIMER_UNSET = -1;
+
+/**
+ * UniFi Protect Sensor Device Driver
+ * 
+ * Manages UniFi Protect sensor devices, including motion detection,
+ * door/window contact sensors, temperature/humidity monitoring,
+ * and integrated LED lighting control.
+ * 
+ * @class Sensor
+ * @extends {Homey.Device}
+ */
 class Sensor extends Homey.Device {
 
-    motion_timer_id = -1;
+    /**
+     * Motion timer ID for managing motion event duration.
+     * @type {number}
+     * @default -1
+     */
+    motion_timer_id = MOTION_TIMER_UNSET;
 
     /**
-     * onInit is called when the device is initialized.
+     * Initialize the sensor device.
+     * 
+     * Called when the device is initialized. Waits for bootstrap data
+     * before completing initialization.
+     * 
+     * @async
+     * @returns {Promise<void>}
      */
     async onInit() {
         await this.waitForBootstrap();
@@ -16,87 +41,196 @@ class Sensor extends Homey.Device {
     }
 
     /**
-     * onAdded is called when the user adds the device, called just after pairing.
+     * Handle device addition.
+     * 
+     * Called when the user adds the device, just after pairing completes.
+     * 
+     * @async
+     * @returns {Promise<void>}
      */
     async onAdded() {
         this.homey.app.debug('UnifiSensor Device has been added');
     }
 
     /**
-     * onSettings is called when the user updates the device's settings.
-     * @param {object} event the onSettings event data
-     * @param {object} event.oldSettings The old settings object
-     * @param {object} event.newSettings The new settings object
-     * @param {string[]} event.changedKeys An array of keys changed since the previous version
-     * @returns {Promise<string|void>} return a custom message that will be displayed
+     * Handle device settings changes.
+     * 
+     * Called when the user updates the device's settings in the Homey app.
+     * 
+     * @async
+     * @param {Object} event - The onSettings event data
+     * @param {Object} event.oldSettings - The previous settings object
+     * @param {Object} event.newSettings - The updated settings object
+     * @param {string[]} event.changedKeys - Array of keys that changed
+     * @returns {Promise<string|void>} Optional custom message to display to user
      */
     async onSettings({oldSettings, newSettings, changedKeys}) {
         this.homey.app.debug('UnifiSensor Device settings where changed');
     }
 
     /**
-     * onRenamed is called when the user updates the device's name.
-     * This method can be used this to synchronise the name to the device.
-     * @param {string} name The new name
+     * Handle device rename.
+     * 
+     * Called when the user updates the device's name.
+     * Can be used to synchronize the name with the physical device.
+     * 
+     * @async
+     * @param {string} name - The new device name
+     * @returns {Promise<void>}
      */
     async onRenamed(name) {
         this.homey.app.debug('UnifiSensor Device was renamed');
     }
 
     /**
-     * onDeleted is called when the user deleted the device.
+     * Handle device deletion.
+     * 
+     * Called when the user deletes the device from Homey.
+     * Cleans up any active motion timers.
+     * 
+     * @async
+     * @returns {Promise<void>}
      */
     async onDeleted() {
+        this._clearMotionTimer();
         this.homey.app.debug('UnifiSensor Device has been deleted');
     }
 
+    /**
+     * Initialize sensor-specific functionality.
+     * 
+     * Sets up capability listeners for LED control, creates missing capabilities,
+     * and initializes sensor data.
+     * 
+     * @async
+     * @returns {Promise<void>}
+     */
     async initSensor() {
-        this.registerCapabilityListener("onoff", (value) => {
-            return this.homey.app.api.setLightOn(this.getData(), value);
-        });
-
-        this.registerCapabilityListener("dim", (value) => {
-            return this.homey.app.api.setLightLevel(this.getData(), this.translateLedLevel(value, true));
-        });
-
-        this.registerCapabilityListener("light_mode", (value) => {
-            return this.homey.app.api.setLightMode(this.getData(), value);
-        });
-
+        this._registerCapabilityListeners();
         await this._createMissingCapabilities();
         await this._initSensorData();
     }
 
+    /**
+     * Register capability listeners for sensor controls.
+     * @private
+     */
+    _registerCapabilityListeners() {
+        // LED light on/off control
+        this.registerCapabilityListener("onoff", (value) => {
+            return this.homey.app.api.setLightOn(this.getData(), value);
+        });
+
+        // LED brightness control
+        this.registerCapabilityListener("dim", (value) => {
+            return this.homey.app.api.setLightLevel(this.getData(), this.translateLedLevel(value, true));
+        });
+
+        // LED mode control (auto, on, off)
+        this.registerCapabilityListener("light_mode", (value) => {
+            return this.homey.app.api.setLightMode(this.getData(), value);
+        });
+    }
+
+    /**
+     * Wait for bootstrap data to become available.
+     * 
+     * Polls until the API has bootstrap data loaded, then initializes the sensor.
+     * Uses recursive timeout to avoid blocking.
+     * 
+     * @async
+     * @returns {Promise<void>}
+     */
     async waitForBootstrap() {
-        if (typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null) {
+        const lastUpdateId = this.homey.app.api.getLastUpdateId();
+        
+        if (typeof lastUpdateId !== 'undefined' && lastUpdateId !== null) {
             await this.initSensor();
         } else {
-            this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
+            this.homey.setTimeout(this.waitForBootstrap.bind(this), BOOTSTRAP_POLL_INTERVAL_MS);
         }
     }
 
+    /**
+     * Clear active motion timer if set.
+     * @private
+     */
+    _clearMotionTimer() {
+        if (this.motion_timer_id !== MOTION_TIMER_UNSET) {
+            this.homey.clearTimeout(this.motion_timer_id);
+            this.motion_timer_id = MOTION_TIMER_UNSET;
+        }
+    }
+
+    /**
+     * Create missing capabilities for the sensor device.
+     * 
+     * Dynamically adds or removes capabilities based on the sensor's features
+     * as reported by the UniFi Protect bootstrap data.
+     * 
+     * @async
+     * @private
+     * @returns {Promise<void>}
+     */
     async _createMissingCapabilities() {
+        // Ensure device class is set to 'sensor'
         if (this.getClass() !== 'sensor') {
             this.homey.app.debug(`changed class to sensor for ${this.getName()}`);
             await this.setClass('sensor');
         }
+        
         const bootstrapData = this.homey.app.api.getBootstrap();
-        if (bootstrapData) {
-            for (const sensor of bootstrapData.sensors) {
-                if (sensor.id === this.getData().id) {
+        if (!bootstrapData) return;
+        
+        const sensor = this._findSensorInBootstrap(bootstrapData);
+        if (!sensor) return;
+        
+        await this._manageLuminanceCapability(sensor);
+    }
 
-                    if (typeof sensor.stats.light !== 'undefined' && typeof sensor.stats.light.value !== 'undefined' && sensor.stats.light.value !== null)
-                    {
-                        if (!this.hasCapability('measure_luminance')) {
-                            await this.addCapability('measure_luminance');
-                            this.homey.app.debug(`created capability measure_luminance for ${this.getName()}`);
-                        }
-                    } else {
-                        if (this.hasCapability('measure_luminance')) {
-                            await this.removeCapability('measure_luminance');
-                            this.homey.app.debug(`removed capability measure_luminance for ${this.getName()}`);
-                        }
-                    }
+    /**
+     * Find this sensor in the bootstrap data.
+     * @private
+     * @param {Object} bootstrapData - The bootstrap data
+     * @returns {Object|null} The sensor data or null if not found
+     */
+    _findSensorInBootstrap(bootstrapData) {
+        if (!bootstrapData.sensors) return null;
+        
+        return bootstrapData.sensors.find(sensor => 
+            sensor.id === this.getData().id
+        ) || null;
+    }
+
+    /**
+     * Manage luminance capability based on sensor features.
+     * @private
+     * @async
+     * @param {Object} sensor - The sensor data from bootstrap
+     * @returns {Promise<void>}
+     */
+    async _manageLuminanceCapability(sensor) {
+        const hasLightSensor = this._sensorHasLightMeasurement(sensor);
+        
+        if (hasLightSensor && !this.hasCapability('measure_luminance')) {
+            await this.addCapability('measure_luminance');
+            this.homey.app.debug(`created capability measure_luminance for ${this.getName()}`);
+        } else if (!hasLightSensor && this.hasCapability('measure_luminance')) {
+            await this.removeCapability('measure_luminance');
+            this.homey.app.debug(`removed capability measure_luminance for ${this.getName()}`);
+        }
+    }
+
+    /**
+     * Check if sensor has light measurement capability.
+     * @private
+     * @param {Object} sensor - The sensor data
+     * @returns {boolean} True if sensor has light measurement
+     */
+    _sensorHasLightMeasurement(sensor) {
+        return typeof sensor.stats?.light?.value !== 'undefined' && 
+               sensor.stats.light.value !== null;
+    }
 
                     if (typeof sensor.stats.humidity !== 'undefined' && typeof sensor.stats.humidity.value !== 'undefined' && sensor.stats.humidity.value !== null)
                     {

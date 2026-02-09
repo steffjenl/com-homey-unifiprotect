@@ -2,52 +2,95 @@
 
 const Homey = require('homey');
 
-module.exports = class Hub extends Homey.Device {
+/**
+ * UniFi Access Hub Device Driver
+ * 
+ * Manages UniFi Access Hub devices, which coordinate access control
+ * operations for doors, readers, and other access devices.
+ * 
+ * @class AccessHub
+ * @extends {Homey.Device}
+ */
+class AccessHub extends Homey.Device {
 
-  /**
-     * onInit is called when the device is initialized.
+    /**
+     * Initialize the access hub device.
+     * 
+     * Called when the device is initialized.
+     * 
+     * @async
+     * @returns {Promise<void>}
      */
-  async onInit() {
-    this.log('Access Hub has been initialized');
-  }
+    async onInit() {
+        this.log('Access Hub has been initialized');
+    }
 
-  /**
-     * onAdded is called when the user adds the device, called just after pairing.
+    /**
+     * Handle device addition.
+     * 
+     * Called when the user adds the device, just after pairing completes.
+     * 
+     * @async
+     * @returns {Promise<void>}
      */
-  async onAdded() {
-    this.log('Access Hub has been added');
-  }
+    async onAdded() {
+        this.log('Access Hub has been added');
+    }
 
-  /**
-     * onSettings is called when the user updates the device's settings.
-     * @param {object} event the onSettings event data
-     * @param {object} event.oldSettings The old settings object
-     * @param {object} event.newSettings The new settings object
-     * @param {string[]} event.changedKeys An array of keys changed since the previous version
-     * @returns {Promise<string|void>} return a custom message that will be displayed
+    /**
+     * Handle device settings changes.
+     * 
+     * Called when the user updates the device's settings in the Homey app.
+     * 
+     * @async
+     * @param {Object} event - The onSettings event data
+     * @param {Object} event.oldSettings - The previous settings object
+     * @param {Object} event.newSettings - The updated settings object
+     * @param {string[]} event.changedKeys - Array of keys that changed
+     * @returns {Promise<string|void>} Optional custom message to display to user
      */
-  async onSettings({ oldSettings, newSettings, changedKeys }) {
-    this.log('Access Hub settings where changed');
-  }
+    async onSettings({ oldSettings, newSettings, changedKeys }) {
+        this.log('Access Hub settings where changed');
+    }
 
-  /**
-     * onRenamed is called when the user updates the device's name.
-     * This method can be used this to synchronise the name to the device.
-     * @param {string} name The new name
+    /**
+     * Handle device rename.
+     * 
+     * Called when the user updates the device's name.
+     * Can be used to synchronize the name with the physical device.
+     * 
+     * @async
+     * @param {string} name - The new device name
+     * @returns {Promise<void>}
      */
-  async onRenamed(name) {
-    this.log('Access Hub was renamed');
-  }
+    async onRenamed(name) {
+        this.log('Access Hub was renamed');
+    }
 
-  /**
-     * onDeleted is called when the user deleted the device.
+    /**
+     * Handle device deletion.
+     * 
+     * Called when the user deletes the device from Homey.
+     * 
+     * @async
+     * @returns {Promise<void>}
      */
-  async onDeleted() {
-    this.log('Access Hub has been deleted');
-  }
+    async onDeleted() {
+        this.log('Access Hub has been deleted');
+    }
 
-  onLocationLockChange(value) {
-    // this.setCapabilityValue('locked', value);
-  }
+    /**
+     * Handle location lock state change from external event.
+     * 
+     * Note: Currently unused but kept for future functionality.
+     * Could be used to implement location-wide lock/unlock features.
+     * 
+     * @param {boolean} value - The new location lock state
+     */
+    onLocationLockChange(value) {
+        // Reserved for future use
+        // Possible implementation: this.setCapabilityValue('locked', value);
+    }
+}
 
-};
+module.exports = AccessHub;
