@@ -283,5 +283,8 @@
   },
   "1.9.1": {
     "en": "Add weather device to get the current weather"
+  },
+  "1.9.2": {
+    "en": "Add test sound flow action for Chimes"
   }
 }
