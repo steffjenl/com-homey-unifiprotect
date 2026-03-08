@@ -400,8 +400,18 @@ class ProtectWebSocket extends BaseClass {
           driver.onParseWebsocketMessage(device, payload);
         }
 
-        // Dispatch isAway changes to protect-nvr-alarm driver
-        if (typeof payload.isAway !== 'undefined') {
+        // Dispatch armMode / isAway changes to protect-nvr-alarm driver
+        if (typeof payload.armMode !== 'undefined' || typeof payload.isAway !== 'undefined') {
+          // Keep in-memory bootstrap in sync so getNvrArmState() stays current
+          if (this.homey.app.api._bootstrap && this.homey.app.api._bootstrap.nvr) {
+            if (typeof payload.armMode !== 'undefined') {
+              this.homey.app.api._bootstrap.nvr.armMode = payload.armMode;
+            }
+            if (typeof payload.isAway !== 'undefined') {
+              this.homey.app.api._bootstrap.nvr.isAway = payload.isAway;
+            }
+          }
+
           try {
             const alarmDriver = this.homey.drivers.getDriver('protect-nvr-alarm');
             const alarmDevice = alarmDriver.getNVRAlarmDevice();
