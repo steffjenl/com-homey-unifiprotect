@@ -92,9 +92,6 @@ module.exports.EVENT_DEVICE_NFC_CARD_SCANNED = 'ufp_device_nfc_card_scanned';
 module.exports.EVENT_NVR_ALARM_STATE_CHANGED = 'ufp_nvr_alarm_state_changed';
 module.exports.EVENT_NVR_ALARM_ARMED = 'ufp_nvr_alarm_armed';
 module.exports.EVENT_NVR_ALARM_DISARMED = 'ufp_nvr_alarm_disarmed';
-module.exports.ACTION_NVR_SET_ALARM_STATE = 'ufp_nvr_set_alarm_state';
-module.exports.ACTION_NVR_ARM_ALARM = 'ufp_nvr_arm_alarm';
-module.exports.ACTION_NVR_DISARM_ALARM = 'ufp_nvr_disarm_alarm';
 
 module.exports.EVENT_SETTINGS_DEBUG = 'com.ubnt.unifiprotect.debug';
 module.exports.EVENT_SETTINGS_STATUS = 'com.ubnt.unifiprotect.status';

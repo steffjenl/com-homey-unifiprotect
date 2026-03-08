@@ -20,6 +20,44 @@
     "alarm_generic"
   ],
   "capabilitiesOptions": {
+    "homealarm_state": {
+      "values": [
+        {
+          "id": "disarmed",
+          "title": {
+            "en": "Disarmed",
+            "nl": "Uitgeschakeld",
+            "de": "Entschärft",
+            "fr": "Désarmé",
+            "it": "Disarmato",
+            "sv": "Deaktiverat",
+            "no": "Dearmert",
+            "es": "Desarmado",
+            "da": "Deaktiveret",
+            "ru": "Снято",
+            "pl": "Rozbrojony",
+            "ko": "해제됨"
+          }
+        },
+        {
+          "id": "armed",
+          "title": {
+            "en": "Armed",
+            "nl": "Ingeschakeld",
+            "de": "Scharf",
+            "fr": "Armé",
+            "it": "Armato",
+            "sv": "Aktiverat",
+            "no": "Armert",
+            "es": "Armado",
+            "da": "Aktiveret",
+            "ru": "Активировано",
+            "pl": "Uzbrojony",
+            "ko": "무장됨"
+          }
+        }
+      ]
+    },
     "alarm_generic": {
       "title": {
         "en": "Alarm triggered",

@@ -44,8 +44,7 @@ class NVRAlarmDevice extends Homey.Device {
     // Register capability listener for homealarm_state (user sets via Homey UI)
     this.registerCapabilityListener('homealarm_state', async (value) => {
       this.homey.app.debug(`[NVRAlarmDevice] homealarm_state set to: ${value}`);
-      // 'armed_away' or 'armed_home' -> away=true, 'disarmed' -> away=false
-      const isAway = (value === 'armed_away' || value === 'armed_home');
+      const isAway = (value === 'armed');
       return this.setNvrAwayMode(isAway);
     });
 
@@ -114,7 +113,7 @@ class NVRAlarmDevice extends Homey.Device {
    */
   async _applyAlarmState(isAway, triggerFlows) {
     try {
-      const homeyAlarmState = isAway ? 'armed_away' : 'disarmed';
+      const homeyAlarmState = isAway ? 'armed' : 'disarmed';
       const currentState = this.getCapabilityValue('homealarm_state');
 
       if (currentState !== homeyAlarmState) {
