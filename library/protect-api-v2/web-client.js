@@ -125,7 +125,8 @@ class WebClient extends BaseClass {
                         return reject(new Error(`Homey user has no permission to perform this action. Please check the user's role.`));
                     }
 
-                    if (res.statusCode !== 200) {
+                    // 204 No Content is a valid success response (e.g. arm/disarm endpoints)
+                    if (res.statusCode !== 200 && res.statusCode !== 204) {
                         return reject(new Error(`Failed to PATCH to url: ${options.host}${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
                     }
 
@@ -135,6 +136,47 @@ class WebClient extends BaseClass {
 
             req.on('error', error => reject(error));
             req.write(body);
+            req.end();
+        });
+    }
+
+    async delete(resource) {
+        return new Promise((resolve, reject) => {
+            const options = {
+                method: 'DELETE',
+                hostname: this._serverHost,
+                port: this._serverPort,
+                path: `/proxy/protect/integration/v1/${resource}`,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    Accept: '*/*',
+                    'X-API-KEY': `${this._apiToken}`,
+                },
+                maxRedirects: 20,
+                rejectUnauthorized: false,
+                keepAlive: true,
+            };
+
+            const req = https.request(options, res => {
+                res.setEncoding('utf8');
+                const data = [];
+
+                res.on('data', chunk => data.push(chunk));
+                res.on('end', () => {
+                    if (res.statusCode === 403) {
+                        return reject(new Error(`Homey user has no permission to perform this action. Please check the user's role.`));
+                    }
+
+                    // 204 No Content is the expected success response for DELETE arm
+                    if (res.statusCode !== 200 && res.statusCode !== 204) {
+                        return reject(new Error(`Failed to DELETE url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+                    }
+
+                    return resolve(data.join(''));
+                });
+            });
+
+            req.on('error', error => reject(error));
             req.end();
         });
     }

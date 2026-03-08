@@ -929,14 +929,53 @@ class ProtectAPI extends BaseClass {
         });
     }
 
-    setNvrAwayMode(isAway) {
-        return new Promise((resolve, reject) => {
-            const params = { isAway: Boolean(isAway) };
-            return this.webclient.patch('nvr', params)
-                .then(() => resolve('NVR away mode successfully set.'))
-                .catch(error => reject(new Error(`Error setting NVR away mode: ${error}`)));
-        });
+  setNvrAwayMode(isAway) {
+    if (isAway) {
+      // Arm: POST /proxy/protect/api/arm/enable  { armProfileId: "<id>" }
+      // armProfileId comes from bootstrap nvr.armMode.armProfileId
+      const armProfileId = this._bootstrap
+        && this._bootstrap.nvr
+        && this._bootstrap.nvr.armMode
+        && this._bootstrap.nvr.armMode.armProfileId;
+
+      if (!armProfileId) {
+        return Promise.reject(new Error('No armProfileId found in bootstrap. Cannot arm the NVR.'));
+      }
+
+      return new Promise((resolve, reject) => {
+        return this.webclient.post('arm/enable', { armProfileId })
+          .then(() => resolve('NVR armed successfully.'))
+          .catch((error) => reject(new Error(`Error arming NVR: ${error}`)));
+      });
     }
+
+    // Disarm: POST /proxy/protect/api/arm/disable
+    return new Promise((resolve, reject) => {
+      return this.webclient.post('arm/disable', {})
+        .then(() => resolve('NVR disarmed successfully.'))
+        .catch((error) => reject(new Error(`Error disarming NVR: ${error}`)));
+    });
+  }
+
+  getNvrArmState() {
+    // Read the current arm state from the cached bootstrap nvr.armMode
+    // Shape: { status: 'armed'|'disarmed', armProfileId: '...', armedAt: ..., ... }
+    return new Promise((resolve, reject) => {
+      if (this._bootstrap && this._bootstrap.nvr && this._bootstrap.nvr.armMode) {
+        return resolve(this._bootstrap.nvr.armMode);
+      }
+      // Fallback: try live GET /proxy/protect/api/arm
+      return this.webclient.get('arm')
+        .then((response) => {
+          const result = JSON.parse(response);
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining NVR arm state.'));
+        })
+        .catch((error) => reject(error));
+    });
+  }
 }
 
 module.exports = ProtectAPI;

@@ -245,7 +245,8 @@ class ProtectWebClient extends BaseClass {
             return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
           }
 
-          if (res.statusCode !== 200) {
+          // 204 No Content is a valid success response (e.g. arm/disarm endpoints)
+          if (res.statusCode !== 200 && res.statusCode !== 204) {
             return reject(new Error(`Failed to PATCH url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
           }
 
@@ -308,7 +309,7 @@ class ProtectWebClient extends BaseClass {
             return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
           }
 
-          if (res.statusCode !== 200) {
+          if (res.statusCode !== 200 && res.statusCode !== 204) {
             return reject(new Error(`Failed to POST to url: ${options.host}${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
           }
 
@@ -318,6 +319,61 @@ class ProtectWebClient extends BaseClass {
 
       req.on('error', (error) => reject(error));
       req.write(body);
+      req.end();
+    });
+  }
+
+  delete(resource) {
+    return new Promise((resolve, reject) => {
+      if (!this._serverHost) reject(new Error('Invalid host.'));
+      if (!this._cookieToken) reject(new Error('Not logged in.'));
+
+      const options = {
+        host: this._serverHost,
+        port: this._serverPort,
+        path: `${UFV_API_ENDPOINT}/${resource}`,
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
+          Cookie: this._cookieToken,
+          'x-csrf-token': this._csrfToken,
+        },
+        maxRedirects: 20,
+        rejectUnauthorized: false,
+        keepAlive: true,
+      };
+
+      const req = https.request(options, (res) => {
+        res.setEncoding('utf8');
+        const data = [];
+
+        res.on('data', (chunk) => data.push(chunk));
+        res.on('end', () => {
+          res.rawHeaders.forEach((item, index) => {
+            if (item.toLowerCase() === 'set-cookie') {
+              this._cookieToken = res.rawHeaders[index + 1];
+            }
+          });
+
+          if (res.statusCode === 401) {
+            return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
+          }
+
+          if (res.statusCode === 403) {
+            return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
+          }
+
+          // DELETE may return 200 or 204
+          if (res.statusCode !== 200 && res.statusCode !== 204) {
+            return reject(new Error(`Failed to DELETE url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+          }
+
+          return resolve(data.join(''));
+        });
+      });
+
+      req.on('error', (error) => reject(error));
       req.end();
     });
   }

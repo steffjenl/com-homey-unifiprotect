@@ -161,13 +161,27 @@ All paths relative to `https://<NVR_IP>:443/proxy/protect/integration`.
 
 ## NVR Alarm / Away Mode
 
-The NVR `isAway` field is available in the **v1 API**:
+The NVR alarm (away mode) is controlled via dedicated **arm** endpoints in the **v1 API**:
 
-- **Read**: `GET /proxy/protect/api/bootstrap` → `nvr.isAway: boolean`
-- **Write**: `PATCH /proxy/protect/api/nvr` with `{ "isAway": true/false }`
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/proxy/protect/api/arm` | Read current arm/away state |
+| `POST` | `/proxy/protect/api/arm/enable` | Enable away mode (arm) |
+| `POST` | `/proxy/protect/api/arm/disable` | Disable away mode (disarm) |
 
-The `isAway` field controls whether the NVR is in "away" (armed) mode.  
-For the alarm driver, use the **v1 API** (`library/protectapi.js`) since the v2 API exposes NVR as read-only.
+> ⚠️ **Important**: Do NOT use `PATCH /proxy/protect/api/nvr` with `isAway` — this does not work.  
+> The correct method is `POST arm/enable` / `POST arm/disable`.
+
+**GET /arm response** (may include either shape — handle both):
+```json
+{ "isEnabled": true }
+```
+or (older firmware):
+```json
+{ "isAway": true }
+```
+
+The `isAway` field also appears in the v1 **WebSocket NVR update** payload after an arm/disarm action.
 
 ---
 

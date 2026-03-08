@@ -65,7 +65,7 @@ Last updated: March 2026
 - Do not break the v1 (cookie) API — legacy devices depend on it
 - New features target **v2** when possible
 - v2 API key is optional — app degrades gracefully
-- **NVR alarm control** uses v1 API (`PATCH /proxy/protect/api/nvr`) — the v2 API NVR endpoint is GET-only
+    - **NVR alarm control** uses dedicated v1 ARM endpoints (`POST /proxy/protect/api/arm/enable` and `POST /proxy/protect/api/arm/disable`) — do NOT use `PATCH nvr` with `isAway`
 
 ### New Driver Checklist
 - [ ] `driver.js` — `onInit`, `onPair`, `onParseWebsocketMessage`, `getUnifiDeviceById`
