@@ -90,9 +90,37 @@ Stub implementations for:
 - `homey.setTimeout / homey.setInterval / homey.clearTimeout / homey.clearInterval`
 - `homey.drivers.getDriver(id)`
 
+> **SDK test utilities:** The `homey` devDependency (`^3.9.4`, already installed) exports `Homey.SimpleClass` and base classes that can be used in unit tests without a real Homey device. Import with `const Homey = require('homey')`. The `homey-apps-sdk-v3-types` package (installed as `@types/homey`) provides TypeScript type definitions for mock type-checking.
+
 ---
 
-## CI Integration
+## Widget API Testing
+
+Widget `api.js` handlers are plain `async` functions — they can be unit-tested without any Homey runtime:
+
+```javascript
+// test/widgets/camera.test.js
+const api = require('../../widgets/camera/api');
+
+test('getSnapshotUrl returns cloudUrl', async () => {
+    const mockDevice = { cloudUrl: 'https://example.com/snap.jpg', getData: () => ({ id: '123' }) };
+    const mockDriver = { getUnifiDeviceById: () => mockDevice };
+    const mockHomey = { drivers: { getDriver: () => mockDriver } };
+
+    const result = await api.getSnapshotUrl({ homey: mockHomey, query: { deviceId: '123' } });
+    expect(result).toBe('https://example.com/snap.jpg');
+});
+
+test('getSnapshotUrl throws when device not found', async () => {
+    const mockDriver = { getUnifiDeviceById: () => null };
+    const mockHomey = { drivers: { getDriver: () => mockDriver } };
+
+    await expect(api.getSnapshotUrl({ homey: mockHomey, query: { deviceId: 'bad' } }))
+        .rejects.toThrow('not found');
+});
+```
+
+The same pattern applies to `api.js` root-level endpoints (status, testCredentials, etc.).
 
 Once tests are added, extend `.github/workflows/homey-validation.yml`:
 ```yaml

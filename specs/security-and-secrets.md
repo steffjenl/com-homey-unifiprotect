@@ -40,14 +40,24 @@ this.homey.app.debug('API key set: ' + (tokens.protectV2ApiKey ? 'yes' : 'no'));
 
 ---
 
-## `env.json`
+## `env.json` and `Homey.env`
 
 Listed in `.gitignore`. Only use for:
 ```json
 { "DEBUG": "true" }
 ```
 
-Never add credentials, API keys, or tokens.
+> **Important:** `env.json` values are accessed via **`Homey.env.DEBUG`**, not `process.env.DEBUG`. The Homey SDK injects `env.json` into the `Homey.env` object at runtime. Using `process.env` will return `undefined`.
+
+```javascript
+// CORRECT
+if (Homey.env.DEBUG === 'true') { ... }
+
+// WRONG — always undefined at runtime
+if (process.env.DEBUG === 'true') { ... }
+```
+
+Never add credentials, API keys, or tokens to `env.json`.
 
 ---
 

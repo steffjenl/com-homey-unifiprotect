@@ -1,15 +1,35 @@
 # Observability and Debugging
 
+Official reference: [Homey SDK v3 — Logging](https://apps-sdk-v3.developer.homey.app/tutorial-Logging.html)
+
 ---
 
 ## Log Levels
 
-| Method | Level | When |
-|--------|-------|------|
-| `this.homey.app.debug(...)` | DEBUG | Verbose trace; only when `DEBUG=true` or persistent log enabled |
-| `this.log(...)` | INFO | Normal operational events (from Device/Driver) |
-| `this.homey.app.log(...)` | INFO | Normal operational events (from library/app) |
-| `this.error(...)` | ERROR | Errors affecting functionality |
+| Method | Level | When | Where output goes |
+|--------|-------|------|-------------------|
+| `this.homey.app.debug(...)` | DEBUG | Verbose trace; only when `Homey.env.DEBUG === 'true'` or persistent log enabled | Homey app log + optionally `/userdata/application-log.log` |
+| `this.log(...)` | INFO | Normal operational events (from Device/Driver) | Homey app log (visible in Homey Developer Tools) |
+| `this.homey.app.log(...)` | INFO | Normal operational events (from library/app) | Homey app log |
+| `this.error(...)` | ERROR | Errors affecting functionality | Homey app log + automatic Sentry report via `homey-log` |
+
+> `this.log` and `this.error` are inherited from `Homey.SimpleClass` (the base of `Homey.App`, `Homey.Driver`, and `Homey.Device`). Output is visible in the **Homey Developer Tools** app log panel at [developer.homey.app](https://developer.homey.app) or via the CLI with `homey app logs`.
+
+---
+
+## Crash Reporting (`homey-log`)
+
+This app uses the [`homey-log`](https://www.npmjs.com/package/homey-log) package (v2) to ship crash and unhandled rejection reports to Athom's Sentry instance.
+
+```javascript
+// app.js — onInit()
+this.homeyLog = new Log({ homey: this.homey });
+```
+
+- `homeyLog` is **passive** — it automatically intercepts unhandled errors and `process.on('uncaughtException')`.
+- Do **not** call `this.homeyLog.captureException()` manually; use `this.error(...)` for handled errors.
+- Crash reports include the app version and Homey firmware version.
+- No credentials or user data should ever reach Sentry — see [security-and-secrets.md](security-and-secrets.md) for redaction rules.
 
 ---
 
@@ -21,6 +41,8 @@ Activate via `env.json`:
 ```
 
 When active: `debug()` writes to `homey.log` and optionally to `/userdata/application-log.log`.
+
+> **Note:** `env.json` values are accessed via `Homey.env.DEBUG` (not `process.env.DEBUG`). The Homey SDK injects `env.json` into `Homey.env` at runtime.
 
 ---
 
