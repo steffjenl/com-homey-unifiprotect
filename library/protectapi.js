@@ -907,6 +907,14 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    playChimeTone(chime) {
+        return new Promise((resolve, reject) => {
+            return this.webclient.post(`chimes/${chime.id}/play-speaker`, {})
+                .then(() => resolve('Chime test tone successfully played.'))
+                .catch(error => reject(new Error(`Error playing chime test tone: ${error}`)));
+        });
+    }
+
     getSirens() {
         return new Promise((resolve, reject) => {
             this.webclient.get('sirens')

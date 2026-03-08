@@ -5220,6 +5220,30 @@
         ]
       },
       {
+        "id": "ufv_set_device_chime_test_tone",
+        "title": {
+          "en": "Play test tone",
+          "nl": "Speel testtoon af",
+          "de": "Testton abspielen",
+          "fr": "Jouer un son test",
+          "it": "Riproduci tono di test",
+          "sv": "Spela testton",
+          "no": "Spill av testtone",
+          "es": "Reproducir tono de prueba",
+          "da": "Afspil testtone",
+          "ru": "Воспроизвести тестовый сигнал",
+          "pl": "Odtwórz dźwięk testowy",
+          "ko": "테스트 음 재생"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectchime"
+          }
+        ]
+      },
+      {
         "id": "ufv_set_device_doorbell_status_led",
         "title": {
           "en": "Set doorbell status LED",

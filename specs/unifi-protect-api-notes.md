@@ -94,6 +94,11 @@ All paths relative to `https://<NVR_IP>:443/proxy/protect/integration`.
 | `GET` | `/v1/chimes/{id}` | Get chime details |
 | `PATCH` | `/v1/chimes/{id}` | Patch chime settings |
 
+### Chime test tone (v1 API)
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `chimes/{id}/play-speaker` | Play test tone on chime speaker |
+
 ### Viewers
 | Method | Path | Description |
 |--------|------|-------------|
