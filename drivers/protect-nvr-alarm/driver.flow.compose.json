@@ -1,0 +1,213 @@
+{
+  "triggers": [
+    {
+      "id": "ufp_nvr_alarm_state_changed",
+      "title": {
+        "en": "Alarm state changed",
+        "nl": "Alarmstatus gewijzigd",
+        "de": "Alarmstatus geändert",
+        "fr": "État de l'alarme modifié",
+        "it": "Stato allarme cambiato",
+        "sv": "Larmstatus ändrad",
+        "no": "Alarmstatus endret",
+        "es": "Estado de alarma cambiado",
+        "da": "Alarmstatus ændret",
+        "ru": "Статус тревоги изменён",
+        "pl": "Stan alarmu zmieniony",
+        "ko": "알람 상태 변경됨"
+      },
+      "titleFormatted": {
+        "en": "Alarm state changed to [[state]]",
+        "nl": "Alarmstatus gewijzigd naar [[state]]",
+        "de": "Alarmstatus geändert zu [[state]]",
+        "fr": "État de l'alarme changé en [[state]]",
+        "it": "Stato allarme cambiato in [[state]]",
+        "sv": "Larmstatus ändrad till [[state]]",
+        "no": "Alarmstatus endret til [[state]]",
+        "es": "Estado de alarma cambiado a [[state]]",
+        "da": "Alarmstatus ændret til [[state]]",
+        "ru": "Статус тревоги изменён на [[state]]",
+        "pl": "Stan alarmu zmieniony na [[state]]",
+        "ko": "알람 상태가 [[state]]로 변경됨"
+      },
+      "tokens": [
+        {
+          "name": "state",
+          "type": "string",
+          "title": {
+            "en": "State",
+            "nl": "Status",
+            "de": "Status",
+            "fr": "État",
+            "it": "Stato",
+            "sv": "Status",
+            "no": "Status",
+            "es": "Estado",
+            "da": "Status",
+            "ru": "Статус",
+            "pl": "Stan",
+            "ko": "상태"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufp_nvr_alarm_armed",
+      "title": {
+        "en": "Alarm armed (away mode enabled)",
+        "nl": "Alarm ingeschakeld (thuiswezmodus ingeschakeld)",
+        "de": "Alarm scharf (Abwesenheitsmodus aktiviert)",
+        "fr": "Alarme armée (mode absent activé)",
+        "it": "Allarme armato (modalità assenza attivata)",
+        "sv": "Larm aktiverat (bortaläge aktiverat)",
+        "no": "Alarm armert (borte-modus aktivert)",
+        "es": "Alarma armada (modo ausente activado)",
+        "da": "Alarm aktiveret (væk-tilstand aktiveret)",
+        "ru": "Тревога активирована (режим отсутствия включён)",
+        "pl": "Alarm uzbrojony (tryb nieobecności włączony)",
+        "ko": "알람 무장됨 (외출 모드 활성화)"
+      }
+    },
+    {
+      "id": "ufp_nvr_alarm_disarmed",
+      "title": {
+        "en": "Alarm disarmed (away mode disabled)",
+        "nl": "Alarm uitgeschakeld (thuiswezmodus uitgeschakeld)",
+        "de": "Alarm entschärft (Abwesenheitsmodus deaktiviert)",
+        "fr": "Alarme désarmée (mode absent désactivé)",
+        "it": "Allarme disarmato (modalità assenza disattivata)",
+        "sv": "Larm deaktiverat (bortaläge deaktiverat)",
+        "no": "Alarm dearmert (borte-modus deaktivert)",
+        "es": "Alarma desarmada (modo ausente desactivado)",
+        "da": "Alarm deaktiveret (væk-tilstand deaktiveret)",
+        "ru": "Тревога деактивирована (режим отсутствия выключен)",
+        "pl": "Alarm rozbrojony (tryb nieobecności wyłączony)",
+        "ko": "알람 해제됨 (외출 모드 비활성화)"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "ufp_nvr_set_alarm_state",
+      "title": {
+        "en": "Set NVR alarm state",
+        "nl": "NVR alarmstatus instellen",
+        "de": "NVR-Alarmstatus setzen",
+        "fr": "Définir l'état de l'alarme NVR",
+        "it": "Imposta stato allarme NVR",
+        "sv": "Ange NVR larmstatus",
+        "no": "Sett NVR alarmstatus",
+        "es": "Establecer estado de alarma NVR",
+        "da": "Indstil NVR alarmstatus",
+        "ru": "Установить статус тревоги NVR",
+        "pl": "Ustaw stan alarmu NVR",
+        "ko": "NVR 알람 상태 설정"
+      },
+      "titleFormatted": {
+        "en": "Set NVR alarm state to [[state]]",
+        "nl": "NVR alarmstatus instellen op [[state]]",
+        "de": "NVR-Alarmstatus auf [[state]] setzen",
+        "fr": "Définir l'état de l'alarme NVR sur [[state]]",
+        "it": "Imposta stato allarme NVR su [[state]]",
+        "sv": "Ange NVR larmstatus till [[state]]",
+        "no": "Sett NVR alarmstatus til [[state]]",
+        "es": "Establecer estado de alarma NVR a [[state]]",
+        "da": "Indstil NVR alarmstatus til [[state]]",
+        "ru": "Установить статус тревоги NVR: [[state]]",
+        "pl": "Ustaw stan alarmu NVR na [[state]]",
+        "ko": "NVR 알람 상태를 [[state]]로 설정"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "state",
+          "title": {
+            "en": "Alarm State",
+            "nl": "Alarmstatus",
+            "de": "Alarmstatus",
+            "fr": "État de l'alarme",
+            "it": "Stato allarme",
+            "sv": "Larmstatus",
+            "no": "Alarmstatus",
+            "es": "Estado de alarma",
+            "da": "Alarmstatus",
+            "ru": "Статус тревоги",
+            "pl": "Stan alarmu",
+            "ko": "알람 상태"
+          },
+          "values": [
+            {
+              "id": "disarmed",
+              "label": {
+                "en": "Disarmed",
+                "nl": "Uitgeschakeld",
+                "de": "Entschärft",
+                "fr": "Désarmé",
+                "it": "Disarmato",
+                "sv": "Deaktiverat",
+                "no": "Dearmert",
+                "es": "Desarmado",
+                "da": "Deaktiveret",
+                "ru": "Снято",
+                "pl": "Rozbrojony",
+                "ko": "해제됨"
+              }
+            },
+            {
+              "id": "armed",
+              "label": {
+                "en": "Armed (Away)",
+                "nl": "Ingeschakeld (Weg)",
+                "de": "Scharf (Abwesend)",
+                "fr": "Armé (Absent)",
+                "it": "Armato (Assente)",
+                "sv": "Aktiverat (Borta)",
+                "no": "Armert (Borte)",
+                "es": "Armado (Ausente)",
+                "da": "Aktiveret (Væk)",
+                "ru": "Активировано (Отсутствие)",
+                "pl": "Uzbrojony (Nieobecny)",
+                "ko": "무장됨 (외출)"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ufp_nvr_arm_alarm",
+      "title": {
+        "en": "Arm NVR alarm (enable away mode)",
+        "nl": "NVR alarm inschakelen (activeer wezmodus)",
+        "de": "NVR-Alarm scharf schalten (Abwesenheitsmodus aktivieren)",
+        "fr": "Armer l'alarme NVR (activer le mode absent)",
+        "it": "Arma l'allarme NVR (attiva modalità assenza)",
+        "sv": "Aktivera NVR larm (aktivera bortaläge)",
+        "no": "Armer NVR alarm (aktiver borte-modus)",
+        "es": "Armar alarma NVR (activar modo ausente)",
+        "da": "Armer NVR alarm (aktiver væk-tilstand)",
+        "ru": "Включить тревогу NVR (включить режим отсутствия)",
+        "pl": "Uzbrój alarm NVR (włącz tryb nieobecności)",
+        "ko": "NVR 알람 무장 (외출 모드 활성화)"
+      }
+    },
+    {
+      "id": "ufp_nvr_disarm_alarm",
+      "title": {
+        "en": "Disarm NVR alarm (disable away mode)",
+        "nl": "NVR alarm uitschakelen (deactiveer wezmodus)",
+        "de": "NVR-Alarm entschärfen (Abwesenheitsmodus deaktivieren)",
+        "fr": "Désarmer l'alarme NVR (désactiver le mode absent)",
+        "it": "Disarma l'allarme NVR (disattiva modalità assenza)",
+        "sv": "Deaktivera NVR larm (deaktivera bortaläge)",
+        "no": "Dearmer NVR alarm (deaktiver borte-modus)",
+        "es": "Desarmar alarma NVR (desactivar modo ausente)",
+        "da": "Dearmer NVR alarm (deaktiver væk-tilstand)",
+        "ru": "Выключить тревогу NVR (выключить режим отсутствия)",
+        "pl": "Rozbrój alarm NVR (wyłącz tryb nieobecności)",
+        "ko": "NVR 알람 해제 (외출 모드 비활성화)"
+      }
+    }
+  ]
+}
+

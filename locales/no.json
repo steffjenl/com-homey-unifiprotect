@@ -51,5 +51,10 @@
       "detections": "Deteksjoner"
     },
     "health": {}
+  },
+  "nvr_alarm": {
+    "armed": "Armert (Borte)",
+    "disarmed": "Dearmert",
+    "state_changed": "Alarmstatus endret"
   }
 }

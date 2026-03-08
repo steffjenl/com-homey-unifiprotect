@@ -65,5 +65,10 @@
       "Initialized": "Bezig met starten"
     }
   },
-  "package_camera": "__name__ (Pakket camera)"
+  "package_camera": "__name__ (Pakketcamera)",
+  "nvr_alarm": {
+    "armed": "Ingeschakeld (Weg)",
+    "disarmed": "Uitgeschakeld",
+    "state_changed": "Alarmstatus gewijzigd"
+  }
 }

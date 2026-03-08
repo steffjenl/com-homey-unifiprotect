@@ -51,6 +51,11 @@
       "detections": "Detektioner"
     },
     "health": {}
+  },
+  "nvr_alarm": {
+    "armed": "Aktiveret (Væk)",
+    "disarmed": "Deaktiveret",
+    "state_changed": "Alarmstatus ændret"
   }
 }
 

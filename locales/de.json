@@ -57,5 +57,10 @@
       "red": "Kritisch"
     }
   },
-  "package_camera": "__name__ (Paket Kamera)"
+  "package_camera": "__name__ (Paket Kamera)",
+  "nvr_alarm": {
+    "armed": "Scharf (Abwesend)",
+    "disarmed": "Entschärft",
+    "state_changed": "Alarmstatus geändert"
+  }
 }

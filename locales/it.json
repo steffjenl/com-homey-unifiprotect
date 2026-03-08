@@ -51,6 +51,11 @@
       "detections": "Rilevamenti"
     },
     "health": {}
+  },
+  "nvr_alarm": {
+    "armed": "Armato (Assente)",
+    "disarmed": "Disarmato",
+    "state_changed": "Stato allarme cambiato"
   }
 }
 

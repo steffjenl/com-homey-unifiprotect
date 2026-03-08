@@ -57,5 +57,10 @@
       "red": "Crítico"
     }
   },
-  "package_camera": "__name__ (Paquete cámara)"
+  "package_camera": "__name__ (Paquete cámara)",
+  "nvr_alarm": {
+    "armed": "Armado (Ausente)",
+    "disarmed": "Desarmado",
+    "state_changed": "Estado de alarma cambiado"
+  }
 }

@@ -51,6 +51,11 @@
       "detections": "Detekteringar"
     },
     "health": {}
+  },
+  "nvr_alarm": {
+    "armed": "Aktiverat (Borta)",
+    "disarmed": "Deaktiverat",
+    "state_changed": "Larmstatus ändrad"
   }
 }
 

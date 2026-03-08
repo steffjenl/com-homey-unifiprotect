@@ -51,6 +51,11 @@
       "detections": "Détections"
     },
     "health": {}
+  },
+  "nvr_alarm": {
+    "armed": "Armé (Absent)",
+    "disarmed": "Désarmé",
+    "state_changed": "État de l'alarme modifié"
   }
 }
 

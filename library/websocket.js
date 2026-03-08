@@ -393,13 +393,24 @@ class ProtectWebSocket extends BaseClass {
         typeof updatePacket.action.modelKey !== 'undefined'
                 && updatePacket.action.modelKey === 'nvr'
       ) {
-        // get doorbell driver
+        // get unifi-os driver
         const driver = this.homey.drivers.getDriver('unifi-os');
-        // Get device from camera id
         const device = driver.getUnifiDeviceById('unifi-os-controller');
         if (device) {
-          // Parse Websocket payload message
           driver.onParseWebsocketMessage(device, payload);
+        }
+
+        // Dispatch isAway changes to protect-nvr-alarm driver
+        if (typeof payload.isAway !== 'undefined') {
+          try {
+            const alarmDriver = this.homey.drivers.getDriver('protect-nvr-alarm');
+            const alarmDevice = alarmDriver.getNVRAlarmDevice();
+            if (alarmDevice) {
+              alarmDriver.onParseWebsocketMessage(alarmDevice, payload);
+            }
+          } catch (e) {
+            // driver may not be installed — ignore gracefully
+          }
         }
       } else if (updatePacket.action.modelKey === 'light') {
         // get protectlight driver

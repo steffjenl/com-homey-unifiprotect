@@ -277,5 +277,8 @@
   },
   "1.8.17": {
     "en": "Fix multiple refreshTokens"
+  },
+  "1.9.0": {
+    "en": "Add NVR Alarm Manager driver: arm/disarm away mode via flow cards, real-time alarm state sync via WebSocket. Add engineering specs and AGENTS.md."
   }
 }

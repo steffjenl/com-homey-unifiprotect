@@ -63,5 +63,10 @@
       "red": "Critical"
     }
   },
-  "package_camera": "__name__ (Package camera)"
+  "package_camera": "__name__ (Package camera)",
+  "nvr_alarm": {
+    "armed": "Armed (Away)",
+    "disarmed": "Disarmed",
+    "state_changed": "Alarm state changed"
+  }
 }

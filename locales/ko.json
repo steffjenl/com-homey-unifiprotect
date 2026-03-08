@@ -51,5 +51,10 @@
       "detections": "감지"
     },
     "health": {}
+  },
+  "nvr_alarm": {
+    "armed": "무장됨 (외출)",
+    "disarmed": "해제됨",
+    "state_changed": "알람 상태 변경됨"
   }
 }

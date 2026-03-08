@@ -928,6 +928,15 @@ class ProtectAPI extends BaseClass {
                 .catch(error => reject(new Error(`Error send test siren: ${error}`)));
         });
     }
+
+    setNvrAwayMode(isAway) {
+        return new Promise((resolve, reject) => {
+            const params = { isAway: Boolean(isAway) };
+            return this.webclient.patch('nvr', params)
+                .then(() => resolve('NVR away mode successfully set.'))
+                .catch(error => reject(new Error(`Error setting NVR away mode: ${error}`)));
+        });
+    }
 }
 
 module.exports = ProtectAPI;
