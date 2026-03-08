@@ -7,5 +7,4 @@ yarn.lock
 /.homeybuild/
 /history.txt
 /.ai/
-/.homeycompose/
 /.DS_Store
