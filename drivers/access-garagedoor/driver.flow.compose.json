@@ -1,0 +1,274 @@
+{
+  "triggers": [
+    {
+      "id": "ufv_reader_garagedoor_opened",
+      "title": {
+        "en": "Garage door opened",
+        "nl": "Garage deur geopend",
+        "de": "Garagentor geöffnet",
+        "fr": "Porte de garage ouverte",
+        "it": "Porta garage aperta",
+        "sv": "Garageport öppnad",
+        "no": "Garasjeport åpnet",
+        "es": "Puerta de garaje abierta",
+        "da": "Garageport åbnet",
+        "ru": "Гаражные ворота открыты",
+        "pl": "Brama garażowa otwarta",
+        "ko": "차고문 열림"
+      },
+      "hint": {
+        "en": "Triggers when the garage door is opened",
+        "nl": "Wordt geactiveerd wanneer de garage deur wordt geopend",
+        "de": "Löst aus, wenn das Garagentor geöffnet wird",
+        "fr": "Déclenche lorsque la porte de garage est ouverte",
+        "it": "Si attiva quando la porta del garage è aperta",
+        "sv": "Utlöses när garageporten öppnas",
+        "no": "Utløses når garasjeporten åpnes",
+        "es": "Se activa cuando la puerta de garaje está abierta",
+        "da": "Udløses når garageporten åbnes",
+        "ru": "Срабатывает при открытии гаражных ворот",
+        "pl": "Wyzwala się, gdy brama garażowa jest otwarta",
+        "ko": "차고문이 열릴 때 트리거됨"
+      }
+    },
+    {
+      "id": "ufv_reader_garagedoor_closed",
+      "title": {
+        "en": "Garage door closed",
+        "nl": "Garage deur gesloten",
+        "de": "Garagentor geschlossen",
+        "fr": "Porte de garage fermée",
+        "it": "Porta garage chiusa",
+        "sv": "Garageport stängd",
+        "no": "Garasjeport lukket",
+        "es": "Puerta de garaje cerrada",
+        "da": "Garageport lukket",
+        "ru": "Гаражные ворота закрыты",
+        "pl": "Brama garażowa zamknięta",
+        "ko": "차고문 닫힘"
+      },
+      "hint": {
+        "en": "Triggers when the garage door is closed",
+        "nl": "Wordt geactiveerd wanneer de garage deur wordt gesloten",
+        "de": "Löst aus, wenn das Garagentor geschlossen wird",
+        "fr": "Déclenche lorsque la porte de garage est fermée",
+        "it": "Si attiva quando la porta del garage è chiusa",
+        "sv": "Utlöses när garageporten stängs",
+        "no": "Utløses når garasjeporten lukkes",
+        "es": "Se activa cuando la puerta de garaje está cerrada",
+        "da": "Udløses når garageporten lukkes",
+        "ru": "Срабатывает при закрытии гаражных ворот",
+        "pl": "Wyzwala się, gdy brama garażowa jest zamknięta",
+        "ko": "차고문이 닫힐 때 트리거됨"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "ufv_set_reader_garagedoor_locking_rule",
+      "title": {
+        "en": "Set Door Temporary Locking Rule",
+        "nl": "Deur tijdelijke vergrendelingsregel instellen",
+        "de": "Temporäre Türverriegelungsregel festlegen",
+        "fr": "Définir la règle de verrouillage temporaire de la porte",
+        "it": "Imposta regola di blocco temporaneo della porta",
+        "sv": "Ställ in tillfällig dörrlåsningsregel",
+        "no": "Angi midlertidig dørlåsningsregel",
+        "es": "Establecer regla de bloqueo temporal de puerta",
+        "da": "Indstil midlertidig dørlåsningsregel",
+        "ru": "Установить временное правило блокировки двери",
+        "pl": "Ustaw tymczasową zasadę blokowania drzwi",
+        "ko": "임시 문 잠금 규칙 설정"
+      },
+      "titleFormatted": {
+        "en": "Set Door Temporary Locking Rule [[type]] for [[interval]] minutes",
+        "nl": "Deur tijdelijke vergrendelingsregel [[type]] voor [[interval]] minuten instellen",
+        "de": "Temporäre Türverriegelungsregel [[type]] für [[interval]] Minuten festlegen",
+        "fr": "Définir la règle de verrouillage temporaire de la porte [[type]] pour [[interval]] minutes",
+        "it": "Imposta regola di blocco temporaneo della porta [[type]] per [[interval]] minuti",
+        "sv": "Ställ in tillfällig dörrlåsningsregel [[type]] för [[interval]] minuter",
+        "no": "Angi midlertidig dørlåsningsregel [[type]] for [[interval]] minutter",
+        "es": "Establecer regla de bloqueo temporal de puerta [[type]] por [[interval]] minutos",
+        "da": "Indstil midlertidig dørlåsningsregel [[type]] for [[interval]] minutter",
+        "ru": "Установить временное правило блокировки двери [[type]] на [[interval]] минут",
+        "pl": "Ustaw tymczasową zasadę blokowania drzwi [[type]] na [[interval]] minut",
+        "ko": "임시 문 잠금 규칙 [[type]]을 [[interval]]분 동안 설정"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "type",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld",
+            "de": "Aktiviert",
+            "fr": "Activé",
+            "it": "Abilitato",
+            "sv": "Aktiverad",
+            "no": "Aktivert",
+            "es": "Habilitado",
+            "da": "Aktiveret",
+            "ru": "Включено",
+            "pl": "Włączone",
+            "ko": "활성화됨"
+          },
+          "values": [
+            {
+              "id": "keep_lock",
+              "title": {
+                "en": "Keep locked",
+                "nl": "Vergrendeld houden",
+                "de": "Verriegelt lassen",
+                "fr": "Garder verrouillé",
+                "it": "Mantieni bloccato",
+                "sv": "Behåll låst",
+                "no": "Hold låst",
+                "es": "Mantener bloqueado",
+                "da": "Behold låst",
+                "ru": "Оставить заблокированным",
+                "pl": "Pozostaw zablokowane",
+                "ko": "잠금 상태 유지"
+              }
+            },
+            {
+              "id": "keep_unlock",
+              "title": {
+                "en": "Keep unlocked",
+                "nl": "Ontgrendeld houden",
+                "de": "Entriegelt lassen",
+                "fr": "Garder déverrouillé",
+                "it": "Mantieni sbloccato",
+                "sv": "Behåll olåst",
+                "no": "Hold ulåst",
+                "es": "Mantener desbloqueado",
+                "da": "Behold ulåst",
+                "ru": "Оставить разблокированным",
+                "pl": "Pozostaw odblokowane",
+                "ko": "잠금 해제 상태 유지"
+              }
+            },
+            {
+              "id": "reset",
+              "title": {
+                "en": "Reset",
+                "nl": "Reset",
+                "de": "Zurücksetzen",
+                "fr": "Réinitialiser",
+                "it": "Ripristina",
+                "sv": "Återställ",
+                "no": "Tilbakestill",
+                "es": "Restablecer",
+                "da": "Nulstil",
+                "ru": "Сбросить",
+                "pl": "Resetuj",
+                "ko": "재설정"
+              }
+            },
+            {
+              "id": "lock_early",
+              "title": {
+                "en": "Lock early",
+                "nl": "Vroeg vergrendelen",
+                "de": "Früh verriegeln",
+                "fr": "Verrouiller tôt",
+                "it": "Blocca presto",
+                "sv": "Lås tidigt",
+                "no": "Lås tidlig",
+                "es": "Bloquear temprano",
+                "da": "Lås tidligt",
+                "ru": "Заблокировать рано",
+                "pl": "Zablokuj wcześnie",
+                "ko": "일찍 잠금"
+              }
+            },
+            {
+              "id": "lock_now",
+              "title": {
+                "en": "Lock now",
+                "nl": "Nu vergrendelen",
+                "de": "Jetzt verriegeln",
+                "fr": "Verrouiller maintenant",
+                "it": "Blocca ora",
+                "sv": "Lås nu",
+                "no": "Lås nå",
+                "es": "Bloquear ahora",
+                "da": "Lås nu",
+                "ru": "Заблокировать сейчас",
+                "pl": "Zablokuj teraz",
+                "ko": "지금 잠금"
+              }
+            }
+          ]
+        },
+        {
+          "type": "number",
+          "name": "interval",
+          "title": {
+            "en": "Interval (minutes)",
+            "nl": "Interval (minuten)",
+            "de": "Intervall (Minuten)",
+            "fr": "Intervalle (minutes)",
+            "it": "Intervallo (minuti)",
+            "sv": "Intervall (minuter)",
+            "no": "Intervall (minutter)",
+            "es": "Intervalo (minutos)",
+            "da": "Interval (minutter)",
+            "ru": "Интервал (минуты)",
+            "pl": "Interwał (minuty)",
+            "ko": "간격(분)"
+          },
+          "hint": {
+            "en": "Set to 0 for immediate effect",
+            "nl": "Stel in op 0 voor onmiddellijke werking",
+            "de": "Auf 0 setzen für sofortige Wirkung",
+            "fr": "Réglez sur 0 pour un effet immédiat",
+            "it": "Impostare su 0 per effetto immediato",
+            "sv": "Ställ in på 0 för omedelbar effekt",
+            "no": "Sett til 0 for umiddelbar effekt",
+            "es": "Establecer en 0 para efecto inmediato",
+            "da": "Indstil til 0 for øjeblikkelig effekt",
+            "ru": "Установите значение 0 для немедленного эффекта",
+            "pl": "Ustaw na 0, aby uzyskać natychmiastowy efekt",
+            "ko": "즉각적인 효과를 위해 0으로 설정"
+          },
+          "defaultValue": 0,
+          "required": true,
+          "minValue": 0,
+          "maxValue": 1440,
+          "stepValue": 1
+        }
+      ]
+    },
+    {
+      "id": "ufv_set_reader_garagedoor_unlock",
+      "title": {
+        "en": "Unlock garage door",
+        "nl": "Garage deur ontgrendelen",
+        "de": "Garagentor entriegeln",
+        "fr": "Déverrouiller la porte de garage",
+        "it": "Sblocca porta garage",
+        "sv": "Lås upp garageport",
+        "no": "Lås opp garasjeport",
+        "es": "Desbloquear puerta de garaje",
+        "da": "Lås garageport op",
+        "ru": "Разблокировать гаражные ворота",
+        "pl": "Odblokuj bramę garażową",
+        "ko": "차고문 잠금 해제"
+      },
+      "titleFormatted": {
+        "en": "Unlock garage door",
+        "nl": "Garage deur ontgrendelen",
+        "de": "Garagentor entriegeln",
+        "fr": "Déverrouiller la porte de garage",
+        "it": "Sblocca porta garage",
+        "sv": "Lås upp garageport",
+        "no": "Lås opp garasjeport",
+        "es": "Desbloquear puerta de garaje",
+        "da": "Lås garageport op",
+        "ru": "Разблокировать гаражные ворота",
+        "pl": "Odblokuj bramę garażową",
+        "ko": "차고문 잠금 해제"
+      }
+    }
+  ]
+}

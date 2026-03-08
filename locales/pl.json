@@ -1,0 +1,104 @@
+{
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Weryfikacja UniFi Cloud Key",
+      "instruction": "Najpierw ustaw Cloud Key w Ustawieniach."
+    },
+    "login": {
+      "title": "Zaloguj się"
+    }
+  },
+  "settings": {
+    "title": "Ustawienia UniFi Protect",
+    "instruction": "Zaloguj się danymi użytkownika UniFi Protect.",
+    "nvr": "Szczegóły serwera",
+    "nvrip": "Adres IP",
+    "nvrport": "Port",
+    "credentials": "Dane użytkownika",
+    "username": "Nazwa użytkownika",
+    "password": "Hasło",
+    "apply": "Zastosuj",
+    "saved": "Ustawienia zapisane.",
+    "settings": "Ustawienia",
+    "useCameraSnapshot": "Użyj zdjęcia z kamery",
+    "useCameraSnapshotInstruction": "Używaj 'Użyj zdjęcia z kamery' tylko gdy 'Włącz anonimowe zdjęcie' jest aktywne w lokalnych ustawieniach kamery. Czy na pewno chcesz to włączyć?",
+    "testConnection": "Testuj połączenie",
+    "test_status": {
+      "success": "Dane są prawidłowe.",
+      "failure": "Dane są nieprawidłowe."
+    },
+    "accessApiKey": "Klucz API",
+    "accessCredentials": "Dane UniFi Access",
+    "ignoreEventsNfcFingerprint": "Okres pomiędzy zdarzeniami NFC/odcisk palca (w sekundach)",
+    "ignoreEventsDoorbell": "Okres pomiędzy zdarzeniami dzwonka (w sekundach)",
+    "protectV2ApiKey": "Klucz API UniFi Protect V2",
+    "protectV2Credentials": "Dane UniFi Protect V2",
+    "status": "Status"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Ruch rozpoczęty",
+      "motion_ended": "Ruch zakończony",
+      "motion_inprogress": "Ruch",
+      "ftr_inprogress": "Pełny czas",
+      "disabled": "Wyłączony",
+      "failed": "Nieudane",
+      "done": "Gotowe",
+      "always": "Zawsze",
+      "motion": "Ruch",
+      "never": "Nigdy",
+      "detections": "Detekcje"
+    },
+    "health": {}
+  },
+  "nvr_alarm": {
+    "armed": "Uzbrojony (Nieobecny)",
+    "disarmed": "Rozbrojony",
+    "state_changed": "Stan alarmu zmieniony"
+  },
+  "weather": {
+    "conditions": {
+      "tornado": "Tornado",
+      "tropical_storm": "Burza tropikalna",
+      "hurricane": "Huragan",
+      "thunderstorms": "Burze z piorunami",
+      "rain_snow_mix": "Deszcz ze śniegiem",
+      "rain_sleet_mix": "Deszcz z marznącym deszczem",
+      "snow_sleet_mix": "Śnieg z marznącym deszczem",
+      "freezing_drizzle": "Marznąca mżawka",
+      "drizzle": "Mżawka",
+      "freezing_rain": "Marznący deszcz",
+      "showers": "Przelotne opady",
+      "snow_flurries": "Przelotne opady śniegu",
+      "light_snow": "Lekki śnieg",
+      "blowing_snow": "Zamiecie śnieżne",
+      "snow": "Śnieg",
+      "hail": "Grad",
+      "sleet": "Deszcz ze śniegiem",
+      "dust": "Kurz",
+      "fog": "Mgła",
+      "haze": "Zamglenie",
+      "smoke": "Dym",
+      "windy": "Wietrznie",
+      "frigid": "Mróz",
+      "cloudy": "Pochmurno",
+      "mostly_cloudy": "Przeważnie pochmurno",
+      "partly_cloudy": "Częściowo pochmurno",
+      "clear": "Bezchmurnie",
+      "sunny": "Słonecznie",
+      "fair": "Lekkie zachmurzenie",
+      "rain_hail_mix": "Deszcz z gradem",
+      "hot": "Upalnie",
+      "isolated_thunderstorms": "Lokalne burze",
+      "scattered_thunderstorms": "Rozproszone burze",
+      "scattered_showers": "Rozproszone opady",
+      "heavy_rain": "Intensywny deszcz",
+      "scattered_snow": "Rozproszony śnieg",
+      "heavy_snow": "Intensywne opady śniegu",
+      "blizzard": "Zamieć",
+      "not_available": "Brak danych"
+    }
+  }
+}
+

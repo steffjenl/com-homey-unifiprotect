@@ -1,0 +1,30 @@
+{
+  "id": "ufv_set_doorbell_status_sound",
+  "title": {
+    "en": "Set doorbell status sound",
+    "nl": "Zet deurbel status geluid"
+  },
+  "titleFormatted": {
+    "en": "Set doorbell status sound [[device]] [[enabled]]",
+    "nl": "Zet deurbel status geluid [[device]] [[enabled]]"
+  },
+  "args": [
+    {
+      "title": {
+        "en": "Doorbell",
+        "nl": "Deurbel"
+      },
+      "name": "device",
+      "type": "device",
+      "$filter": "driver_id=protectdoorbell"
+    },
+    {
+      "type": "checkbox",
+      "name": "enabled",
+      "title": {
+        "en": "Enabled",
+        "nl": "Ingeschakeld"
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": {
+    "en": "Camera",
+    "nl": "Camera"
+  },
+  "height": 270,
+  "settings": [
+    {
+      "id": "device",
+      "type": "autocomplete",
+      "title": {
+        "en": "Camera",
+        "nl": "Camera"
+      }
+    },
+    {
+      "id": "refreshInterval",
+      "type": "number",
+      "value": 10,
+      "min": 5,
+      "title": {
+        "en": "Refresh interval (seconds)",
+        "nl": "Verversingsinterval (seconden)"
+      }
+    }
+  ],
+  "api": {
+    "getSnapshotUrl": {
+      "method": "GET",
+      "path": "/"
+    }
+  }
+}

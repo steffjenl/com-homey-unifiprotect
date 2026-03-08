@@ -3,7 +3,7 @@
 const Homey = require('homey');
 const fetch = require('node-fetch');
 const https = require('https');
-const UfvConstants = require('../../library/constants');
+const SmartDetectionMixin = require('../../library/SmartDetectionMixin');
 
 class Doorbell extends Homey.Device {
     /**
@@ -11,7 +11,13 @@ class Doorbell extends Homey.Device {
      */
     async onInit() {
         this.device = this;
+        this.cloudUrl = null;
+        this.cloudUrlPackage = null;
+        this.rtspUrl = null;
+        this.rtspPackageUrl = null;
+        this.settings = this.getSettings();
         await this.waitForBootstrap();
+        this.cleanSmartDetectionEvents();
         this.homey.app.debug('UnifiDoorbell Device has been initialized');
     }
 
@@ -31,6 +37,18 @@ class Doorbell extends Homey.Device {
      * @returns {Promise<string|void>} return a custom message that will be displayed
      */
     async onSettings({oldSettings, newSettings, changedKeys}) {
+        if (newSettings.rtspUrl && newSettings.rtspUrl !== '') {
+            this.rtspUrl = newSettings.rtspUrl;
+            this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspUrl}`);
+            this.setCameraVideo('video', `${this.getName()} Video`, this.video);
+            return;
+        }
+        if (newSettings.rtspPackageUrl && newSettings.rtspPackageUrl !== '') {
+            this.rtspPackageUrl = newSettings.rtspPackageUrl;
+            this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspPackageUrl}`);
+            this.setCameraVideo('package-video', `${this.getName()} Package Video`, this.packageVideo);
+            return;
+        }
         this.homey.app.debug('UnifiDoorbell Device settings where changed');
     }
 
@@ -53,19 +71,18 @@ class Doorbell extends Homey.Device {
     async initDoorbell() {
         this.registerCapabilityListener('camera_microphone_volume', async (value) => {
             this.homey.app.debug('camera_microphone_volume');
-            this.homey.app.api.setMicVolume(this.getData(), value)
-                .catch(this.error);
+            return this.homey.app.api.setMicVolume(this.getData(), value);
         });
 
         this.registerCapabilityListener('camera_nightvision_set', async (value) => {
             this.homey.app.debug('camera_nightvision_set');
-            this.homey.app.api.setNightVisionMode(this.getData(), value)
-                .catch(this.error);
+            return this.homey.app.api.setNightVisionMode(this.getData(), value);
         });
 
         await this._createMissingCapabilities();
-        await this._initDoorbellData();
         await this._createSnapshotImage();
+        await this._setVideoUrl();
+        await this._initDoorbellData();
     }
 
     async waitForBootstrap() {
@@ -159,71 +176,84 @@ class Doorbell extends Homey.Device {
             await this.addCapability('ip_address');
             this.homey.app.debug(`created capability ip_address for ${this.getName()}`);
         }
-
+        if (!this.hasCapability('last_fingerprint_identified_at')) {
+            await this.addCapability('last_fingerprint_identified_at');
+            this.homey.app.debug(`created capability last_fingerprint_identified_at for ${this.getName()}`);
+        }
+        if (!this.hasCapability('last_nfc_card_scanned_at')) {
+            await this.addCapability('last_nfc_card_scanned_at');
+            this.homey.app.debug(`created capability last_nfc_card_scanned_at for ${this.getName()}`);
+        }
     }
 
     async _initDoorbellData() {
         const DoorbellData = this.homey.app.api.getBootstrap();
 
         if (DoorbellData) {
-            DoorbellData.cameras.forEach((Doorbell) => {
+            for (const Doorbell of DoorbellData.cameras) {
                 if (Doorbell.id === this.getData().id) {
                     if (this.hasCapability('ip_address')) {
-                        this.setCapabilityValue('ip_address', Doorbell.host);
+                        this.setCapabilityValue('ip_address', Doorbell.host).catch(this.error);
                     }
                     if (this.hasCapability('camera_recording_status')) {
-                        this.setCapabilityValue('camera_recording_status', Doorbell.isRecording);
+                        this.setCapabilityValue('camera_recording_status', Doorbell.isRecording).catch(this.error);
                     }
                     if (this.hasCapability('camera_recording_mode')) {
                         this.setCapabilityValue('camera_recording_mode',
                             this.homey.__(`events.doorbell.${String(Doorbell.recordingSettings.mode)
-                                .toLowerCase()}`));
+                                .toLowerCase()}`)).catch(this.error);
                     }
                     if (this.hasCapability('camera_microphone_status')) {
-                        this.setCapabilityValue('camera_microphone_status', Doorbell.isMicEnabled);
+                        this.setCapabilityValue('camera_microphone_status', Doorbell.isMicEnabled).catch(this.error);
                     }
                     if (this.hasCapability('camera_nightvision_status')) {
-                        this.setCapabilityValue('camera_nightvision_status', Doorbell.isDark);
+                        this.setCapabilityValue('camera_nightvision_status', Doorbell.isDark).catch(this.error);
                     }
                     if (this.hasCapability('camera_microphone_volume')) {
-                        this.setCapabilityValue('camera_microphone_volume', Doorbell.micVolume);
+                        this.setCapabilityValue('camera_microphone_volume', Doorbell.micVolume).catch(this.error);
                     }
                     if (this.hasCapability('camera_connection_status')) {
                         if (this.getCapabilityValue('camera_connection_status') !== Doorbell.isConnected) {
                             this.onConnectionChanged(Doorbell.isConnected);
                         }
-                        this.setCapabilityValue('camera_connection_status', Doorbell.isConnected);
+                        this.setCapabilityValue('camera_connection_status', Doorbell.isConnected).catch(this.error);
                     }
                     if (this.hasCapability('camera_nightvision_set')) {
-                        this.setCapabilityValue('camera_nightvision_set', Doorbell.ispSettings.irLedMode);
+                        this.setCapabilityValue('camera_nightvision_set', Doorbell.ispSettings.irLedMode).catch(this.error);
+                    }
+
+                    // Package camera
+                    if (Doorbell.featureFlags.hasPackageCamera) {
+                        //
+                        await this._createSnapshotPackageImage();
                     }
 
                 }
-            });
+            }
         }
     }
 
     onMotionStart() {
         this.homey.app.debug('onMotionStart');
-        this.setCapabilityValue('alarm_motion', true);
+        this.setCapabilityValue('alarm_motion', true).catch(this.error);
     }
 
     onMotionEnd() {
         this.homey.app.debug('onMotionEnd');
-        this.setCapabilityValue('alarm_motion', false);
+        this.setCapabilityValue('alarm_motion', false).catch(this.error);
     }
 
     onIsDark(isDark) {
         // Debug information about playload
         if (this.hasCapability('camera_nightvision_status')) {
-            this.setCapabilityValue('camera_nightvision_status', isDark);
+            this.setCapabilityValue('camera_nightvision_status', isDark).catch(this.error);
         }
     }
 
     onNightVisionMode(mode) {
         // Debug information about playload
         if (this.hasCapability('camera_nightvision_set')) {
-            this.setCapabilityValue('camera_nightvision_set', mode);
+            this.setCapabilityValue('camera_nightvision_set', mode).catch(this.error);
         }
     }
 
@@ -231,7 +261,8 @@ class Doorbell extends Homey.Device {
         const lastRingAt = this.getCapabilityValue('last_ring_at');
 
         // Check if the event date is newer
-        if (!lastRingAt || lastRing > lastRingAt) {
+        if (!lastRingAt || lastRing > (lastRingAt + this.homey.app.ignoreEventsDoorbell)) {
+            this.homey.api.realtime('com.ubnt.unifiprotect.updateWidgetDoorbell', {deviceId: this.getData().id});
             this.homey.app._doorbellRingingTrigger.trigger({
                 ufp_ringing_camera: this.getName(),
             });
@@ -245,7 +276,7 @@ class Doorbell extends Homey.Device {
             if (this.homey.env.DEBUG) this.homey.app.debug(`set last_ring_at to last datetime: ${this.getData().id}`);
             this.setCapabilityValue('last_ring_at', lastRing)
                 .catch(this.error);
-            return;
+
         }
     }
 
@@ -280,70 +311,180 @@ class Doorbell extends Homey.Device {
         }
     }
 
-    onSmartDetection(payload) {
+    onFingerprintIdentified(payload, actionType = null, eventId = null) {
+        this.homey.app.debug(`[Object] onFingerprintIdentified ${JSON.stringify(payload)}`);
+        const lastFingerprintIdentifiedAt = this.getCapabilityValue('last_fingerprint_identified_at');
 
-        let lastDetectionAt = null;
-        let score = null;
-        let smartDetectTypes = null;
-
-        if (
-            payload
-            && typeof payload.smartDetectTypes !== 'undefined'
-            && typeof payload.score !== 'undefined'
-            && typeof payload.start !== 'undefined'
-        ) {
-            // old implementation
-            // Get the last detection, score and type
-            lastDetectionAt = payload.start;
-            score = payload.score;
-            smartDetectTypes = payload.smartDetectTypes;
-        } else if (
-            payload
-            && typeof payload.smartDetectTypes !== 'undefined'
+        if (typeof payload !== 'undefined'
             && typeof payload.metadata !== 'undefined'
-            && typeof payload.metadata.detectedThumbnails !== 'undefined'
-            && payload.smartDetectTypes.length !== 0
-            && payload.metadata.detectedThumbnails.length !== 0
-        ) {
-            // new implementation
-            // Get the last detection, score and type
-            lastDetectionAt = payload.metadata.detectedThumbnails[0].clockBestWall
-            score = payload.metadata.detectedThumbnails[0].confidence;
-            smartDetectTypes = payload.smartDetectTypes;
-        } else {
-            // missing data
-            return;
-        }
+            && typeof payload.metadata.fingerprint !== 'undefined'
+            && typeof payload.metadata.fingerprint.ulpId !== 'undefined'
+            && payload.metadata.fingerprint.ulpId !== null) {
+            if (payload.start > (lastFingerprintIdentifiedAt + this.homey.app.ignoreEventsNfcFingerprint)) {
+                this.setCapabilityValue('last_fingerprint_identified_at', payload.start).catch(this.error);
+                this.homey.app.api.getCloudUserById(payload.metadata.fingerprint.ulpId).then((user) => {
+                    this.homey.app.debug(`Fingerprint identified for user: ${JSON.stringify(user)}`);
+                    // Generic trigger
+                    this.homey.app._fingerPrintIdentifiedTrigger.trigger({
+                        ufp_fingerprint_identified_camera: this.getName(),
+                        ufp_fingerprint_identified_person: (user.email !== '' ? user.email : user.username),
+                        ufp_fingerprint_identified_first_name: user.first_name,
+                        ufp_fingerprint_identified_last_name: user.last_name,
+                        ufp_fingerprint_identified_user_unique_id: user.unique_id,
+                    }).catch(this.error);
 
-        const lastDetection = this.homey.app.toLocalTime(new Date(lastDetectionAt));
-        // Set last smart detection to current datetime
-        this.setCapabilityValue('last_smart_detection_at', lastDetectionAt)
-            .catch(this.error);
-        this.setCapabilityValue('last_smart_detection_date', lastDetection.toLocaleDateString())
-            .catch(this.error);
-        this.setCapabilityValue('last_smart_detection_time', lastDetection.toLocaleTimeString())
-            .catch(this.error);
-        this.setCapabilityValue('last_smart_detection_score', score)
-            .catch(this.error);
-
-        // const smartDetectionType = smartDetectTypes.join(',');
-
-        // fire trigger (per detection type)
-        if (smartDetectTypes.length > 0) {
-            for (let smartDetectionType of smartDetectTypes) {
-                this.homey.app.debug(`smart detection event on Doorbell ${this.getData().id}, with type ${smartDetectionType}`);
-                // fire trigger
-                if (smartDetectionType === 'person') {
-                    this.triggerSmartDetectionTriggerPerson(score);
-                } else if (smartDetectionType === 'vehicle') {
-                    this.triggerSmartDetectionTriggerVehicle(score);
-                } else if (smartDetectionType === 'animal') {
-                    this.triggerSmartDetectionTriggerAnimal(score);
-                } else if (smartDetectionType === 'package') {
-                    this.triggerSmartDetectionTriggerPackage(score);
-                }
+                    // Device trigger
+                    this.driver._deviceFingerprintIdentifiedTrigger.trigger(this, {
+                        ufp_device_fingerprint_identified_person: (user.email !== '' ? user.email : user.username),
+                        ufp_device_fingerprint_identified_first_name: user.first_name,
+                        ufp_device_fingerprint_identified_last_name: user.last_name,
+                        ufp_device_fingerprint_identified_user_unique_id: user.unique_id,
+                    }).catch(this.error);
+                }).catch(this.error);
+                return true;
             }
+            this.homey.app.debug('Event is not newer then last event');
+            return false;
         }
+        // Fingerprint is not valid
+        this.homey.app.debug('Fingerprint is not valid!');
+        return false;
+    }
+
+    onNFCCardScanned(payload, actionType = null, eventId = null) {
+        this.homey.app.debug(`[Object] onNFCCardScanned ${JSON.stringify(payload)}`);
+        const lastNFCCardScannedAt = this.getCapabilityValue('last_nfc_card_scanned_at');
+        if (typeof payload !== 'undefined'
+            && typeof payload.metadata !== 'undefined'
+            && typeof payload.metadata.nfc !== 'undefined'
+            && typeof payload.metadata.nfc.ulpId !== 'undefined'
+            && payload.metadata.nfc.ulpId !== null) {
+            if (payload.start > (lastNFCCardScannedAt + this.homey.app.ignoreEventsNfcFingerprint)) {
+                this.setCapabilityValue('last_nfc_card_scanned_at', payload.start).catch(this.error);
+                this.homey.app.api.getCloudUserById(payload.metadata.nfc.ulpId).then((user) => {
+                    // Generic trigger
+                    this.homey.app._nfcCardScannedTrigger.trigger({
+                        ufp_nfc_card_scanned_camera: this.getName(),
+                        ufp_nfc_card_scanned_person: (user.email !== '' ? user.email : user.username),
+                        ufp_nfc_card_scanned_first_name: user.first_name,
+                        ufp_nfc_card_scanned_last_name: user.last_name,
+                        ufp_nfc_card_scanned_user_unique_id: user.unique_id,
+                        ufp_nfc_card_scanned_card_id: payload.metadata.nfc.nfcId,
+                    }).catch(this.error);
+
+                    // Device trigger
+                    this.driver._deviceNFCCardScannedTrigger.trigger(this, {
+                        ufp_device_nfc_card_scanned_person: (user.email !== '' ? user.email : user.username),
+                        ufp_device_nfc_card_scanned_first_name: user.first_name,
+                        ufp_device_nfc_card_scanned_last_name: user.last_name,
+                        ufp_device_nfc_card_scanned_user_unique_id: user.unique_id,
+                        ufp_device_nfc_card_scanned_card_id: payload.metadata.nfc.nfcId,
+                    }).catch(this.error);
+                }).catch(this.error);
+                return true;
+            }
+            this.homey.app.debug('Event is not newer then last event');
+            return false;
+        }
+
+        this.homey.app.debug('NFC Card Event is not valid!');
+        return false;
+    }
+
+    onDoorAccess(payload, actionType = null, eventId = null) {
+        this.homey.app.debug(`[Object] onDoorAccess ${JSON.stringify(payload)}`);
+
+        if (typeof payload !== 'undefined'
+            && typeof payload.type !== 'undefined'
+            && payload.type === 'doorAccess'
+            && typeof payload.metadata !== 'undefined'
+            && typeof payload.metadata.unique_id === 'undefined'
+            && payload.metadata.unique_id === null) {
+
+            this.homey.app.api.getCloudUserById(payload.metadata.unique_id).then((user) => {
+                // Generic trigger
+                this.homey.app._doorAccessTrigger.trigger({
+                    ufp_door_access_camera: this.getName(),
+                    ufp_door_access_person: (user.email !== '' ? user.email : user.username),
+                    ufp_door_access_first_name: user.first_name,
+                    ufp_door_access_last_name: user.last_name,
+                    ufp_door_access_user_unique_id: user.unique_id,
+                }).catch(this.error);
+
+                // Device trigger
+                this.driver._deviceDoorAccessTrigger.trigger(this, {
+                    ufp_device_door_access_person: (user.email !== '' ? user.email : user.username),
+                    ufp_device_door_access_first_name: user.first_name,
+                    ufp_device_door_access_last_name: user.last_name,
+                    ufp_device_door_access_user_unique_id: user.unique_id,
+                }).catch(this.error);
+            }).catch(this.error);
+
+            return true;
+        }
+
+        this.homey.app.debug('DoorAccess event is not valid!');
+        return false;
+    }
+
+    onSmartDetection(payload, actionType = null, eventId = null) {
+        return SmartDetectionMixin.onSmartDetection.call(this, payload, actionType, eventId);
+    }
+
+    onAudioDetection(payload, actionType = null, eventId = null) {
+        return SmartDetectionMixin.onAudioDetection.call(this, payload, actionType, eventId);
+    }
+
+    mapAudioDetectionType(apiType) {
+        return SmartDetectionMixin.mapAudioDetectionType.call(this, apiType);
+    }
+
+    triggerSmartDetectionTriggerUnknown(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerUnknown.call(this, score, zones);
+    }
+
+    triggerSmartDetectionTriggerPerson(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerPerson.call(this, score, zones);
+    }
+
+    triggerSmartDetectionTriggerVehicle(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerVehicle.call(this, score, zones);
+    }
+
+    triggerSmartDetectionTriggerAnimal(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerAnimal.call(this, score, zones);
+    }
+
+    triggerSmartDetectionTriggerPackage(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerPackage.call(this, score, zones);
+    }
+
+    triggerSmartDetectionTriggerLicensePlate(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerLicensePlate.call(this, score, zones);
+    }
+
+    triggerSmartDetectionTriggerFace(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerFace.call(this, score, zones);
+    }
+
+    triggerAudioDetectionTrigger(audioType, readableType, score) {
+        return SmartDetectionMixin.triggerAudioDetectionTrigger.call(this, audioType, readableType, score);
+    }
+
+    _getEventStore() {
+        return SmartDetectionMixin._getEventStore.call(this);
+    }
+
+    getSmartDetectionEvent(eventId) {
+        return SmartDetectionMixin.getSmartDetectionEvent.call(this, eventId);
+    }
+
+    setSmartDetectionEvent(eventId, detectionTime, detectionTypes, detectionScore) {
+        return SmartDetectionMixin.setSmartDetectionEvent.call(this, eventId, detectionTime, detectionTypes, detectionScore);
+    }
+
+    cleanSmartDetectionEvents() {
+        return SmartDetectionMixin.cleanSmartDetectionEvents.call(this);
     }
 
     onConnectionChanged(connectionStatus) {
@@ -391,36 +532,90 @@ class Doorbell extends Homey.Device {
         }
     }
 
-    async getSnapshot() {
-        this._snapshotImage = await this.homey.images.createImage();
-        this._snapshotImage.setStream(async stream => {
-            let snapshotUrl = `https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg`;
-            // Fetch image
-            const res = await fetch(snapshotUrl);
-            if (!res.ok) throw new Error('Could not fetch snapshot image.');
+    async _setVideoUrl() {
+        this.homey.app.debug(`Getting rtsp Url for camera ${this.getName()}.`);
+        try {
+            // Create the video object
+            this.video = await this.homey.videos.createVideoRTSP({
+                allowInvalidCertificates: true,
+                demuxer: 'h264',
+            });
 
-            return res.body.pipe(stream);
-        });
-        this.setCameraImage('snapshot', this.getName(), this._snapshotImage);
+            // Register the video url listener
+            this.video.registerVideoUrlListener(async () => {
+                return {
+                    url: this.rtspUrl,
+                };
+            });
+
+            // Get rtsp url from device settings
+            if (this.settings.rtspUrl && this.settings.rtspUrl !== '') {
+                this.rtspUrl = this.settings.rtspUrl;
+                this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspUrl}`);
+                this.setCameraVideo('video', `${this.getName()} Video`, this.video);
+                return;
+            }
+
+            // get rtsp url from api
+            this.homey.app.api.getStreamUrl(this.getData()).then(((rtspUrl) => {
+                this.log(`RTSP URL for doorbell ${this.getName()}: ${rtspUrl}`);
+                this.rtspUrl = rtspUrl;
+
+                // Set the video
+                this.setCameraVideo('video', `${this.getName()} Video`, this.video);
+            })).catch(this.error);
+
+            // Package camera
+            // Create the video object
+            this.packageVideo = await this.homey.videos.createVideoRTSP({
+                allowInvalidCertificates: true,
+                demuxer: 'h264',
+            });
+
+            // Register the video url listener
+            this.packageVideo.registerVideoUrlListener(async () => {
+                return {
+                    url: this.rtspPackageUrl,
+                };
+            });
+
+            // Get rtsp url from device settings
+            if (this.settings.rtspPackageUrl && this.settings.rtspPackageUrl !== '') {
+                this.rtspPackageUrl = this.settings.rtspPackageUrl;
+                this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspPackageUrl}`);
+                this.setCameraVideo('package-video', `${this.getName()} Package Video`, this.packageVideo);
+                return;
+            }
+
+            // get rtsp url from api
+            this.homey.app.api.getPackageStreamUrl(this.getData()).then(((rtspPackageUrl) => {
+                this.log(`RTSP URL for doorbell ${this.getName()}: ${rtspPackageUrl}`);
+                this.rtspPackageUrl = rtspPackageUrl;
+
+                // Set the video
+                this.setCameraVideo('package-video', `${this.getName()} Package Video`, this.packageVideo);
+            })).catch(this.error);
+        } catch (err) {
+            this.error('Error creating camera:', err);
+        }
     }
 
     async _createSnapshotImage(triggerFlow = false) {
-        this.homey.app.debug('Creating snapshot image for doorbell ' + this.getName() + '.');
+        this.homey.app.debug(`Creating snapshot image for doorbell ${this.getName()}.`);
 
         this._snapshotImage = await this.homey.images.createImage();
 
         const ipAddress = this.getCapabilityValue('ip_address');
 
-        this._snapshotImage.setStream(async stream => {
+        this._snapshotImage.setStream(async (stream) => {
             // Obtain snapshot URL
             let snapshotUrl = null;
 
             if (this.homey.app.useCameraSnapshot) {
                 snapshotUrl = `https://${ipAddress}/snap.jpeg`;
-            }
-            else {
+            } else {
                 await this.homey.app.api.createSnapshotUrl(this.getData())
-                    .then(url => {
+                    .then((url) => {
                         snapshotUrl = url;
                     })
                     .catch(this.error.bind(this, 'Could not create snapshot URL.'));
@@ -441,7 +636,7 @@ class Doorbell extends Homey.Device {
             // Fetch image
             const res = await fetch(snapshotUrl, {
                 agent,
-                headers
+                headers,
             });
             if (!res.ok) throw new Error('Could not fetch snapshot image.');
 
@@ -449,137 +644,87 @@ class Doorbell extends Homey.Device {
         });
 
         if (triggerFlow) {
-            this.homey.app.api.getStreamUrl(this.getData()).then((rtspUrl => {
+            this.homey.app.api.getStreamUrl(this.getData()).then(((rtspUrl) => {
                 this.homey.app.triggerSnapshotTrigger({
                     ufv_snapshot_token: this._snapshotImage,
                     ufv_snapshot_camera: this.getName(),
-                    ufv_snapshot_snapshot_url: this._snapshotImage.cloudUrl,
-                    ufv_snapshot_stream_url: rtspUrl
+                    ufv_snapshot_snapshot_url: '',
+                    ufv_snapshot_stream_url: rtspUrl,
                 });
-            })).catch(this.homey.app.debug);
+            })).catch(this.log);
         }
 
-        this.setCameraImage('snapshot', this.getName(), this._snapshotImage);
+        this.setCameraImage('snapshot', this.getName(), this._snapshotImage).catch(this.error);
 
-        this.homey.app.debug('Created snapshot image for doorbell ' + this.getName() + '.');
+        this.cloudUrl = this._snapshotImage.cloudUrl;
+
+        this.homey.app.debug(`Created snapshot image for doorbell ${this.getName()}.`);
     }
 
-    triggerSmartDetectionTriggerUnknown(score) {
-        // Generic trigger
-        this.homey.app._smartDetectionTrigger.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            smart_detection_type: 'unknown',
-            score: score
-        }).catch(this.error);
-        // device
-        this.driver._smartDetectionTrigger.trigger(this,{
-            smart_detection_type: 'unknown',
-            score: score
-        }).catch(this.error);
+    async _createSnapshotPackageImage(triggerFlow = false) {
+        return new Promise(async (resolve, reject) => {
+            this._snapshotPackageImage = await this.homey.images.createImage();
+            this.homey.app.debug(`Creating snapshot packages image for doorbell ${this.getName()}.`);
+
+            const ipAddress = this.getCapabilityValue('ip_address');
+
+            this._snapshotPackageImage.setStream(async (stream) => {
+                // Obtain snapshot URL
+                let snapshotUrl = null;
+
+                if (this.homey.app.useCameraSnapshot) {
+                    snapshotUrl = `https://${ipAddress}/snap_2.jpeg`;
+                } else {
+                    await this.homey.app.api.createPackageSnapshotUrl(this.getData())
+                        .then((url) => {
+                            snapshotUrl = url;
+                        });
+                }
+                reject('Invalid snapshot url.');
+                if (!snapshotUrl) {
+                    reject('Invalid snapshot url.');
+                }
+
+                const headers = {};
+                headers['Cookie'] = this.homey.app.api.getProxyCookieToken();
+
+                const agent = new https.Agent({
+                    rejectUnauthorized: false,
+                    keepAlive: false,
+                });
+
+                // Fetch image
+                const res = await fetch(snapshotUrl, {
+                    agent,
+                    headers,
+                });
+                if (!res.ok) {
+                    reject('Could not fetch snapshot image.');
+                }
+
+                return res.body.pipe(stream);
+            });
+
+            if (triggerFlow) {
+                this.homey.app.api.getPackageStreamUrl(this.getData()).then(((rtspUrl) => {
+                    this.homey.app._packageSnapshotTrigger.trigger({
+                        ufv_snapshot_token: this._snapshotPackageImage,
+                        ufv_snapshot_camera: this.getName(),
+                        ufv_snapshot_snapshot_url: '',
+                        ufv_snapshot_stream_url: rtspUrl,
+                    });
+                }));
+            }
+
+            this.setCameraImage('package-snapshot', this.homey.__('package_camera', {name: this.getName()}), this._snapshotPackageImage).catch(this.error);
+
+            this.cloudUrlPackage = this._snapshotPackageImage.cloudUrl;
+
+            this.homey.app.debug(`Created package snapshot image for doorbell ${this.getName()}.`);
+            resolve();
+        });
     }
 
-    triggerSmartDetectionTriggerPerson(score) {
-        this.homey.app.debug('this.homey.app._smartDetectionTrigger.trigger');
-        // Generic trigger
-        this.homey.app._smartDetectionTrigger.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            smart_detection_type: 'person',
-            score: score
-        }).catch(this.error);
-
-        this.homey.app.debug('this.driver._smartDetectionTrigger.trigger');
-        // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
-            smart_detection_type: 'person',
-            score: score
-        }).catch(this.error);
-
-        this.homey.app.debug('this.homey.app._smartDetectionTriggerPerson.trigger');
-        // Detection Type trigger
-        // App trigger
-        this.homey.app._smartDetectionTriggerPerson.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            score: score
-        }).catch(this.error);
-
-        this.homey.app.debug('this.driver._deviceSmartDetectionTriggerPerson.trigger');
-        // Device trigger
-        this.driver._deviceSmartDetectionTriggerPerson.trigger(this,{
-            score: score
-        }).catch(this.error).catch(this.error);
-    }
-
-    triggerSmartDetectionTriggerVehicle(score) {
-        // Generic trigger
-        this.homey.app._smartDetectionTrigger.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            smart_detection_type: 'vehicle',
-            score: score
-        }).catch(this.error);
-        // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
-            smart_detection_type: 'vehicle',
-            score: score
-        }).catch(this.error);
-        // Detection Type trigger
-        // App trigger
-        this.homey.app._smartDetectionTriggerVehicle.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            score: score
-        }).catch(this.error);
-        // Device trigger
-        this.driver._deviceSmartDetectionTriggerVehicle.trigger(this,{
-            score: score
-        }).catch(this.error);
-    }
-
-    triggerSmartDetectionTriggerAnimal(score) {
-        // Generic trigger
-        this.homey.app._smartDetectionTrigger.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            smart_detection_type: 'animal',
-            score: score
-        }).catch(this.error);
-        // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
-            smart_detection_type: 'animal',
-            score: score
-        }).catch(this.error);
-        // Detection Type trigger
-        // App trigger
-        this.homey.app._smartDetectionTriggerAnimal.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            score: score
-        }).catch(this.error);
-        // Device trigger
-        this.driver._deviceSmartDetectionTriggerAnimal.trigger(this,{
-            score: score
-        }).catch(this.error);
-    }
-
-    triggerSmartDetectionTriggerPackage(score) {
-        // Generic trigger
-        this.homey.app._smartDetectionTrigger.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            smart_detection_type: 'package',
-            score: score
-        }).catch(this.error);
-        // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this,{
-            smart_detection_type: 'package',
-            score: score
-        }).catch(this.error);
-        // Detection Type trigger
-        // App trigger
-        this.homey.app._smartDetectionTriggerPackage.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            score: score
-        }).catch(this.error);
-        // Device trigger
-        this.driver._deviceSmartDetectionTriggerPackage.trigger(this,{
-            score: score
-        }).catch(this.error);
-    }
 
 }
 

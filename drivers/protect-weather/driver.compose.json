@@ -1,0 +1,97 @@
+{
+  "id": "protect-weather",
+  "name": {
+    "en": "UniFi Protect Weather",
+    "nl": "UniFi Protect Weer",
+    "de": "UniFi Protect Wetter",
+    "fr": "UniFi Protect Météo",
+    "it": "UniFi Protect Meteo",
+    "sv": "UniFi Protect Väder",
+    "no": "UniFi Protect Vær",
+    "es": "UniFi Protect Tiempo",
+    "da": "UniFi Protect Vejr",
+    "ru": "UniFi Protect Погода",
+    "pl": "UniFi Protect Pogoda",
+    "ko": "UniFi Protect 날씨"
+  },
+  "class": "sensor",
+  "capabilities": [
+    "measure_temperature",
+    "weather_condition",
+    "weather_location"
+  ],
+  "capabilitiesOptions": {
+    "measure_temperature": {
+      "title": {
+        "en": "Temperature",
+        "nl": "Temperatuur",
+        "de": "Temperatur",
+        "fr": "Température",
+        "it": "Temperatura",
+        "sv": "Temperatur",
+        "no": "Temperatur",
+        "es": "Temperatura",
+        "da": "Temperatur",
+        "ru": "Температура",
+        "pl": "Temperatura",
+        "ko": "온도"
+      }
+    },
+    "weather_condition": {
+      "title": {
+        "en": "Weather condition",
+        "nl": "Weersgesteldheid",
+        "de": "Wetterlage",
+        "fr": "Conditions météo",
+        "it": "Condizioni meteo",
+        "sv": "Väderförhållanden",
+        "no": "Værforhold",
+        "es": "Condición meteorológica",
+        "da": "Vejrforhold",
+        "ru": "Погодные условия",
+        "pl": "Warunki pogodowe",
+        "ko": "날씨 상태"
+      }
+    },
+    "weather_location": {
+      "title": {
+        "en": "Location",
+        "nl": "Locatie",
+        "de": "Standort",
+        "fr": "Emplacement",
+        "it": "Posizione",
+        "sv": "Plats",
+        "no": "Sted",
+        "es": "Ubicación",
+        "da": "Placering",
+        "ru": "Местоположение",
+        "pl": "Lokalizacja",
+        "ko": "위치"
+      }
+    }
+  },
+  "platforms": ["local"],
+  "connectivity": [],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}
+

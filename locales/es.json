@@ -1,0 +1,109 @@
+{
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Validando UniFi Cloud Key",
+      "instruction": "Por favor, configure la Cloud Key en Configuración primero."
+    },
+    "login": {
+      "title": "Iniciar sesión"
+    }
+  },
+  "settings": {
+    "title": "Configuración de UniFi Protect",
+    "instruction": "Inicie sesión con las credenciales del usuario de UniFi Protect.",
+    "nvr": "Detalles del servidor",
+    "nvrip": "Dirección IP",
+    "nvrport": "Puerto",
+    "credentials": "Credenciales de usuario",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "apply": "Aplicar",
+    "saved": "Configuración guardada.",
+    "settings": "Configuración",
+    "useCameraSnapshot": "Usar instantánea de la cámara",
+    "useCameraSnapshotInstruction": "Utilice 'Usar instantánea de la cámara' solo cuando 'Habilitar instantánea anónima' esté activado en la configuración local de la cámara. ¿Está seguro de que desea habilitar esto?",
+    "testConnection": "Probar conexión",
+    "test_status": {
+      "success": "Las credenciales son válidas.",
+      "failure": "Las credenciales no son válidas."
+    },
+    "accessApiKey": "Clave API",
+    "accessCredentials": "Credenciales UniFi Access",
+    "ignoreEventsNfcFingerprint": "Periodo de enfriamiento entre eventos NFC/huella digital (en segundos)",
+    "ignoreEventsDoorbell": "Periodo de enfriamiento entre eventos de timbre (en segundos)",
+    "protectV2ApiKey": "Clave API de UniFi Protect V2",
+    "protectV2Credentials": "Credenciales de UniFi Protect V2",
+    "status": "Estado"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Movimiento iniciado",
+      "motion_ended": "Movimiento finalizado",
+      "motion_inprogress": "Movimiento",
+      "ftr_inprogress": "Tiempo completo",
+      "disabled": "Desactivado",
+      "failed": "Fallido",
+      "done": "Hecho",
+      "always": "Siempre",
+      "motion": "Movimiento",
+      "never": "Nunca",
+      "detections": "Detecciones"
+    },
+    "health": {
+      "unknown": "Desconocido",
+      "green": "Saludable",
+      "orange": "Advertencia",
+      "red": "Crítico"
+    }
+  },
+  "package_camera": "__name__ (Paquete cámara)",
+  "nvr_alarm": {
+    "armed": "Armado (Ausente)",
+    "disarmed": "Desarmado",
+    "state_changed": "Estado de alarma cambiado"
+  },
+  "weather": {
+    "conditions": {
+      "tornado": "Tornado",
+      "tropical_storm": "Tormenta tropical",
+      "hurricane": "Huracán",
+      "thunderstorms": "Tormentas eléctricas",
+      "rain_snow_mix": "Mezcla lluvia/nieve",
+      "rain_sleet_mix": "Mezcla lluvia/aguanieve",
+      "snow_sleet_mix": "Mezcla nieve/aguanieve",
+      "freezing_drizzle": "Llovizna helada",
+      "drizzle": "Llovizna",
+      "freezing_rain": "Lluvia helada",
+      "showers": "Chubascos",
+      "snow_flurries": "Ráfagas de nieve",
+      "light_snow": "Nieve ligera",
+      "blowing_snow": "Nieve con viento",
+      "snow": "Nieve",
+      "hail": "Granizo",
+      "sleet": "Aguanieve",
+      "dust": "Polvo",
+      "fog": "Niebla",
+      "haze": "Neblina",
+      "smoke": "Humo",
+      "windy": "Ventoso",
+      "frigid": "Gélido",
+      "cloudy": "Nublado",
+      "mostly_cloudy": "Mayormente nublado",
+      "partly_cloudy": "Parcialmente nublado",
+      "clear": "Despejado",
+      "sunny": "Soleado",
+      "fair": "Poco nublado",
+      "rain_hail_mix": "Mezcla lluvia/granizo",
+      "hot": "Caluroso",
+      "isolated_thunderstorms": "Tormentas aisladas",
+      "scattered_thunderstorms": "Tormentas dispersas",
+      "scattered_showers": "Chubascos dispersos",
+      "heavy_rain": "Lluvia intensa",
+      "scattered_snow": "Nieve dispersa",
+      "heavy_snow": "Nevada intensa",
+      "blizzard": "Ventisca",
+      "not_available": "No disponible"
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "name": {
+    "en": "UniFi OS",
+    "de": "UniFi OS",
+    "fr": "UniFi OS",
+    "it": "UniFi OS",
+    "sv": "UniFi OS",
+    "no": "UniFi OS",
+    "es": "UniFi OS",
+    "da": "UniFi OS",
+    "ru": "UniFi OS",
+    "pl": "UniFi OS",
+    "ko": "UniFi OS"
+  },
+  "class": "other",
+  "capabilities": [
+    "measure_data_size.free",
+    "measure_data_size.used",
+    "measure_data_size.total",
+    "measure_temperature"
+  ],
+  "capabilitiesOptions": {
+    "measure_data_size.free": {
+      "title": {
+        "en": "Free Space",
+        "nl": "Vrije ruimte"
+      },
+      "units": "GB"
+    },
+    "measure_data_size.used": {
+      "title": {
+        "en": "Used Space",
+        "nl": "Gebruikte ruimte"
+      },
+      "units": "GB"
+    },
+    "measure_data_size.total": {
+      "title": {
+        "en": "Total Space",
+        "nl": "Totale ruimte"
+      },
+      "units": "GB"
+    }
+  },
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

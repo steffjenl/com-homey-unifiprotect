@@ -1,0 +1,26 @@
+[
+  {
+    "id": "pollInterval",
+    "type": "number",
+    "label": {
+      "en": "Polling interval (minutes)",
+      "nl": "Verversingsinterval (minuten)",
+      "de": "Abfrageintervall (Minuten)",
+      "fr": "Intervalle d'actualisation (minutes)",
+      "it": "Intervallo di aggiornamento (minuti)",
+      "sv": "Uppdateringsintervall (minuter)",
+      "no": "Oppdateringsintervall (minutter)",
+      "es": "Intervalo de actualización (minutos)",
+      "da": "Opdateringsinterval (minutter)",
+      "ru": "Интервал обновления (минуты)",
+      "pl": "Interwał odświeżania (minuty)",
+      "ko": "폴링 간격 (분)"
+    },
+    "value": 15,
+    "attr": {
+      "min": 5,
+      "max": 1440
+    }
+  }
+]
+

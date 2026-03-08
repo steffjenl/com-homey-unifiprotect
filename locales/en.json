@@ -1,53 +1,115 @@
 {
-    "title": "UniFi Protect",
-    "pair": {
-        "validate": {
-            "title": "Validating UniFi Cloud Key",
-            "instruction": "Please set the Cloud Key in Settings first."
-        },
-        "login": {
-            "title": "Log in"
-        }
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Validating UniFi Cloud Key",
+      "instruction": "Please set the Cloud Key in Settings first."
     },
-    "settings": {
-        "title": "UniFi Protect Settings",
-        "instruction": "Log in with the credentials of the UniFi Protect user.",
-        "nvr": "Server details",
-        "nvrip": "IP address",
-        "nvrport": "Port",
-        "credentials": "User credentials",
-        "username": "Username",
-        "password": "Password",
-        "apply": "Apply",
-        "saved": "Settings saved.",
-        "settings": "Settings",
-        "useCameraSnapshot": "Use camera snapshot",
-        "useCameraSnapshotInstruction": "Use 'Use camera snapshot' only when 'Enable Anonymous Snapshot' is enabled in the local camera settings. Are you sure you want to enable this?",
-        "testConnection": "Test connection",
-        "test_status": {
-            "success": "Credentials are valid.",
-            "failure": "Credentials are invalid."
-        }
-    },
-    "events": {
-        "camera": {
-            "motion_started": "Motion started",
-            "motion_ended": "Motion ended",
-            "motion_inprogress": "Motion",
-            "ftr_inprogress": "Full time",
-            "disabled": "Disabled",
-            "failed": "Failed",
-            "done": "Done",
-            "always": "Always",
-            "motion": "Motion",
-            "never": "Never",
-            "detections": "Detections"
-        },
-        "health": {
-            "unknown": "Unknown",
-            "green": "Healthy",
-            "orange": "Warning",
-            "red": "Critical"
-        }
+    "login": {
+      "title": "Log in"
     }
+  },
+  "settings": {
+    "title": "UniFi Protect Settings",
+    "instruction": "Log in with the credentials of the UniFi Protect user.",
+    "nvr": "Server details",
+    "nvrip": "IP address",
+    "nvrport": "Port",
+    "credentials": "User credentials",
+    "username": "Username",
+    "password": "Password",
+    "apply": "Apply",
+    "saved": "Settings saved.",
+    "settings": "Settings",
+    "useCameraSnapshot": "Use camera snapshot",
+    "useCameraSnapshotInstruction": "Use 'Use camera snapshot' only when 'Enable Anonymous Snapshot' is enabled in the local camera settings. Are you sure you want to enable this?",
+    "testConnection": "Test connection",
+    "test_status": {
+      "success": "Credentials are valid.",
+      "failure": "Credentials are invalid."
+    },
+    "accessApiKey": "API Key",
+    "accessCredentials": "UniFi Access credentials",
+    "ignoreEventsNfcFingerprint": "Cooldown period between NFC/Fingerprint events (in seconds)",
+    "ignoreEventsDoorbell": "Cooldown period between Doorbell events (in seconds)",
+    "protectV2ApiKey": "UniFi Protect V2 API Key",
+    "protectV2Credentials": "UniFi Protect V2 credentials",
+    "status": "Status",
+    "tab": {
+      "protect": "UniFi Protect",
+      "access": "UniFi Access",
+      "status": "Status"
+    },
+    "saveLogToPersistentStorage": "Save log to persistent storage"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Motion started",
+      "motion_ended": "Motion ended",
+      "motion_inprogress": "Motion",
+      "ftr_inprogress": "Full time",
+      "disabled": "Disabled",
+      "failed": "Failed",
+      "done": "Done",
+      "always": "Always",
+      "motion": "Motion",
+      "never": "Never",
+      "detections": "Detections"
+    },
+    "health": {
+      "unknown": "Unknown",
+      "green": "Healthy",
+      "orange": "Warning",
+      "red": "Critical"
+    }
+  },
+  "package_camera": "__name__ (Package camera)",
+  "nvr_alarm": {
+    "armed": "Armed (Away)",
+    "disarmed": "Disarmed",
+    "state_changed": "Alarm state changed"
+  },
+  "weather": {
+    "conditions": {
+      "tornado": "Tornado",
+      "tropical_storm": "Tropical Storm",
+      "hurricane": "Hurricane",
+      "thunderstorms": "Thunderstorms",
+      "rain_snow_mix": "Rain/Snow Mix",
+      "rain_sleet_mix": "Rain/Sleet Mix",
+      "snow_sleet_mix": "Snow/Sleet Mix",
+      "freezing_drizzle": "Freezing Drizzle",
+      "drizzle": "Drizzle",
+      "freezing_rain": "Freezing Rain",
+      "showers": "Showers",
+      "snow_flurries": "Snow Flurries",
+      "light_snow": "Light Snow",
+      "blowing_snow": "Blowing Snow",
+      "snow": "Snow",
+      "hail": "Hail",
+      "sleet": "Sleet",
+      "dust": "Dust",
+      "fog": "Fog",
+      "haze": "Haze",
+      "smoke": "Smoke",
+      "windy": "Windy",
+      "frigid": "Frigid",
+      "cloudy": "Cloudy",
+      "mostly_cloudy": "Mostly Cloudy",
+      "partly_cloudy": "Partly Cloudy",
+      "clear": "Clear",
+      "sunny": "Sunny",
+      "fair": "Fair",
+      "rain_hail_mix": "Rain/Hail Mix",
+      "hot": "Hot",
+      "isolated_thunderstorms": "Isolated Thunderstorms",
+      "scattered_thunderstorms": "Scattered Thunderstorms",
+      "scattered_showers": "Scattered Showers",
+      "heavy_rain": "Heavy Rain",
+      "scattered_snow": "Scattered Snow",
+      "heavy_snow": "Heavy Snow",
+      "blizzard": "Blizzard",
+      "not_available": "N/A"
+    }
+  }
 }

@@ -1,0 +1,101 @@
+{
+  "id": "protect-nvr-alarm",
+  "name": {
+    "en": "NVR Alarm Manager",
+    "nl": "NVR Alarmbeheer",
+    "de": "NVR Alarm-Manager",
+    "fr": "Gestionnaire d'alarme NVR",
+    "it": "Gestore allarme NVR",
+    "sv": "NVR Larmhanterare",
+    "no": "NVR Alarmbehandling",
+    "es": "Gestor de alarmas NVR",
+    "da": "NVR Alarmhåndtering",
+    "ru": "Менеджер тревог NVR",
+    "pl": "Menedżer alarmów NVR",
+    "ko": "NVR 알람 관리자"
+  },
+  "class": "homealarm",
+  "capabilities": [
+    "homealarm_state",
+    "alarm_generic"
+  ],
+  "capabilitiesOptions": {
+    "homealarm_state": {
+      "values": [
+        {
+          "id": "disarmed",
+          "title": {
+            "en": "Disarmed",
+            "nl": "Uitgeschakeld",
+            "de": "Entschärft",
+            "fr": "Désarmé",
+            "it": "Disarmato",
+            "sv": "Deaktiverat",
+            "no": "Dearmert",
+            "es": "Desarmado",
+            "da": "Deaktiveret",
+            "ru": "Снято",
+            "pl": "Rozbrojony",
+            "ko": "해제됨"
+          }
+        },
+        {
+          "id": "armed",
+          "title": {
+            "en": "Armed",
+            "nl": "Ingeschakeld",
+            "de": "Scharf",
+            "fr": "Armé",
+            "it": "Armato",
+            "sv": "Aktiverat",
+            "no": "Armert",
+            "es": "Armado",
+            "da": "Aktiveret",
+            "ru": "Активировано",
+            "pl": "Uzbrojony",
+            "ko": "무장됨"
+          }
+        }
+      ]
+    },
+    "alarm_generic": {
+      "title": {
+        "en": "Alarm triggered",
+        "nl": "Alarm geactiveerd",
+        "de": "Alarm ausgelöst",
+        "fr": "Alarme déclenchée",
+        "it": "Allarme attivato",
+        "sv": "Larm utlöst",
+        "no": "Alarm utløst",
+        "es": "Alarma activada",
+        "da": "Alarm udløst",
+        "ru": "Тревога сработала",
+        "pl": "Alarm wyzwolony",
+        "ko": "알람 발생"
+      }
+    }
+  },
+  "platforms": ["local"],
+  "connectivity": [],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}
+

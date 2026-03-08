@@ -1,0 +1,10 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Last fingerprint identified at",
+    "nl": "Laatste vingerafdruk herkend op"
+  },
+  "uiComponent": null,
+  "getable": true,
+  "setable": false
+}

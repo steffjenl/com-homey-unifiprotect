@@ -5,3 +5,8 @@ yarn.lock
 
 # Added by Homey CLI
 /.homeybuild/
+/history.txt
+/.ai/
+/.DS_Store
+
+

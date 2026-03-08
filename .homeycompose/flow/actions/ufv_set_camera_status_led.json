@@ -1,0 +1,30 @@
+{
+  "id": "ufv_set_camera_status_led",
+  "title": {
+    "en": "Set camera status LED",
+    "nl": "Zet camera status LED"
+  },
+  "titleFormatted": {
+    "en": "Set camera status LED [[device]] [[enabled]]",
+    "nl": "Zet camera status LED [[device]] [[enabled]]"
+  },
+  "args": [
+    {
+      "title": {
+        "en": "Camera",
+        "nl": "Camera"
+      },
+      "name": "device",
+      "type": "device",
+      "$filter": "driver_id=protectcamera"
+    },
+    {
+      "type": "checkbox",
+      "name": "enabled",
+      "title": {
+        "en": "Enabled",
+        "nl": "Ingeschakeld"
+      }
+    }
+  ]
+}

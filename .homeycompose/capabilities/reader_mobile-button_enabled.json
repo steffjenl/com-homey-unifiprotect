@@ -1,0 +1,10 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Mobile Buton",
+    "nl": "Mobiele Knop"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "toggle"
+}

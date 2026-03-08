@@ -1,7 +1,7 @@
 'use strict';
 
-const BaseClass = require('./baseclass');
 const https = require('https');
+const BaseClass = require('./baseclass');
 const ProtectWebClient = require('./webclient');
 const ProtectWebSocket = require('./websocket');
 const UfvConstants = require('./constants');
@@ -130,95 +130,114 @@ class ProtectAPI extends BaseClass {
 
             //this.getCSRFToken(host, port).then(response => {
 
-                this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connecting');
-                this.loggedInStatus = 'Connecting';
+            this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connecting');
+            this.loggedInStatus = 'Connecting';
 
-                if (!host) reject(new Error('Invalid host.'));
-                if (!username) reject(new Error('Invalid username.'));
-                if (!password) reject(new Error('Invalid password.'));
+            if (!host) reject(new Error('Invalid host.'));
+            if (!username) reject(new Error('Invalid username.'));
+            if (!password) reject(new Error('Invalid password.'));
 
-                const credentials = JSON.stringify({
-                    username,
-                    password,
-                });
+            const credentials = JSON.stringify({
+                username,
+                password,
+            });
 
-                const options = {
-                    method: 'POST',
-                    hostname: host,
-                    port: port,
-                    path: '/api/auth/login',
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8',
-                        Accept: 'application/json',
-                    },
-                    maxRedirects: 20,
-                    rejectUnauthorized: false,
-                    timeout: 2000,
-                    keepAlive: true,
-                };
+            const options = {
+                method: 'POST',
+                hostname: host,
+                port: port,
+                path: '/api/auth/login',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    Accept: 'application/json',
+                },
+                maxRedirects: 20,
+                rejectUnauthorized: false,
+                timeout: 2000,
+                keepAlive: true,
+            };
 
-                const req = https.request(options, res => {
-                    if (res.statusCode !== 200) {
-                        return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode}) (creds: ${credentials}`));
+            const req = https.request(options, res => {
+                if (res.statusCode === 401 || res.statusCode === 403) {
+                    this.loggedInStatus = 'Invalid credentials (401)';
+                    this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Invalid credentials (401)');
+                    return reject(new Error('Invalid credentials (401)'));
+                }
+
+                if (res.statusCode !== 200) {
+                    this.loggedInStatus = `Request failed: ${options.path} (status code: ${res.statusCode})`;
+                    return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode}) (creds: ${credentials}`));
+                }
+                const body = [];
+
+                res.on('data', chunk => body.push(chunk));
+                res.on('end', () => {
+                    if (res.statusCode === 401 || res.statusCode === 403) {
+                        this.loggedInStatus = 'Invalid credentials (401)';
+                        return reject(new Error('Invalid credentials (401)'));
                     }
-                    const body = [];
 
-                    res.on('data', chunk => body.push(chunk));
-                    res.on('end', () => {
-                        const json = JSON.parse(body);
+                    if (res.statusCode !== 200) {
+                        this.loggedInStatus = `Request failed: ${options.path} (status code: ${res.statusCode})`;
+                        return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode})`));
+                    }
 
-                        // Obtain authorization header
-                        res.rawHeaders.forEach((item, index) => {
-                            if (item.toLowerCase() === 'set-cookie') {
-                                this.webclient.setCookieToken(res.rawHeaders[index + 1]);
-                            }
-
-                            // X-CSRF-Token
-                            if (item.toLowerCase() === 'x-csrf-token') {
-                                this.webclient.setCSRFToken(res.rawHeaders[index + 1]);
-                            }
-                        });
-
-                        if (this.webclient.getCookieToken() === null) {
-                            reject(new Error('Invalid set-cookie header.'));
-                            return;
+                    // Obtain authorization header
+                    res.rawHeaders.forEach((item, index) => {
+                        if (item.toLowerCase() === 'set-cookie') {
+                            this.webclient.setCookieToken(res.rawHeaders[index + 1]);
                         }
 
-                        // Connected
-                        this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connected');
-                        this.loggedInStatus = 'Connected';
-                        //
-                        return resolve('Logged in...');
+                        // X-CSRF-Token
+                        if (item.toLowerCase() === 'x-csrf-token') {
+                            this.webclient.setCSRFToken(res.rawHeaders[index + 1]);
+                        }
                     });
+
+                    if (this.webclient.getCookieToken() === null) {
+                        reject(new Error('Invalid set-cookie header.'));
+                        return;
+                    }
+
+                    // Connected
+                    this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connected');
+                    this.loggedInStatus = 'Connected';
+                    //
+                    return resolve('Logged in...');
                 });
+            });
 
-                req.on('error', error => {
-                    this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
-                    this.loggedInStatus = 'Disconnected';
-                    return reject(error);
-                });
+            req.on('error', error => {
+                this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
+                this.loggedInStatus = 'Disconnected';
+                return reject(error);
+            });
 
-                req.write(credentials);
-                req.end();
+            req.write(credentials);
+            req.end();
 
-            }).catch(error => this.homey.error(error));
+        }).catch(error => this.homey.error(error));
     }
 
     getBootstrapInfo() {
         return new Promise((resolve, reject) => {
+            this.homey.log('Getting bootstrap info...');
             this.webclient.get('bootstrap')
                 .then(response => {
                     const result = JSON.parse(response);
+                    this.homey.log('Bootstrap info obtained.');
 
                     if (result) {
+                        this.homey.log('Setting bootstrap info...');
                         this._bootstrap = result;
 
-                        if (result.accessKey) {
-                            this.webclient.setApiKey(result.accessKey);
+                        if (result.cameras) {
+                            this.homey.log('Setting API key...');
                             this._rtspPort = result.nvr.ports.rtsp;
                             this._lastUpdateId = result.lastUpdateId;
 
                             if (this.ws.isWebsocketConnected() === false) {
+                                this.homey.log('Connecting to websocket...');
                                 // lastUpdateId is changed, please reconnect to websocket when websocket is disconnected.
                                 this.ws.reconnectUpdatesListener();
                             }
@@ -367,24 +386,35 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    createPackageSnapshotUrl(camera, widthInPixels = 1920, useCameraSnapshotUrl = false) {
+        return new Promise((resolve, reject) => {
+            if (!this.webclient.getServerHost()) reject(new Error('Invalid host.'));
+            if (!camera) reject(new Error('Invalid camera'));
+
+            const params = {
+                accessKey: this.webclient.getApiKey(),
+                w: widthInPixels,
+                force: true,
+                ts: Date.now(),
+                ext: '.jpg'
+            };
+
+            return resolve(`https://${this.webclient.getServerHost()}:${this.webclient.getServerPort()}${UFV_API_ENDPOINT}/cameras/${camera.id}/package-snapshot${this.webclient.toQueryString(params)}`);
+        });
+    }
+
     setRecordingMode(camera, mode = 'never') {
         return new Promise((resolve, reject) => {
             this.findCameraById(camera.id)
                 .then(cameraInfo => {
                     const recordingSettings = cameraInfo.recordingSettings;
                     const channels = cameraInfo.channels;
-                    const smartDetectSettings = cameraInfo.smartDetectSettings;
                     recordingSettings.mode = mode;
 
                     const params = {
                         channels,
                         recordingSettings
                     };
-
-                    // Only add smartDetectSettings when the camera supports it
-                    if (cameraInfo.featureFlags.hasSmartDetect) {
-                        params['smartDetectSettings'] = smartDetectSettings;
-                    }
 
                     return this.webclient.patch(`cameras/${camera.id}`, params)
                         .then(() => resolve('Recording mode successfully set.'))
@@ -398,22 +428,11 @@ class ProtectAPI extends BaseClass {
         return new Promise((resolve, reject) => {
             this.findCameraById(camera.id)
                 .then(cameraInfo => {
-                    const homekitSettings = cameraInfo.homekitSettings;
-                    const ispSettings = cameraInfo.ispSettings;
-                    const ledSettings = cameraInfo.ledSettings;
-                    const micVolume = cameraInfo.micVolume;
-                    const name = cameraInfo.name;
-                    const speakerSettings = cameraInfo.speakerSettings;
-                    ispSettings.irLedMode = mode;
-
                     const params = {
-                        homekitSettings,
-                        ispSettings,
-                        ledSettings,
-                        micVolume,
-                        name,
-                        speakerSettings
-                    };
+                        ispSettings: {
+                            irLedMode: mode
+                        }
+                    }
 
                     return this.webclient.patch(`cameras/${camera.id}`, params)
                         .then(() => resolve('Night Vision mode successfully set.'))
@@ -424,13 +443,75 @@ class ProtectAPI extends BaseClass {
     }
 
     setMicVolume(camera, volume = 100) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const params = {
                 micVolume: volume,
             };
-            return this.webclient.patch(`cameras/${camera.id}`, params)
-                .then(() => resolve('Mic volume successfully set.'))
-                .catch(error => reject(new Error(`Error setting mic volume: ${error}`)));
+            try {
+                await this.webclient.patch(`cameras/${camera.id}`, params);
+                return resolve('Mic volume successfully set.');
+            } catch (error) {
+                return reject(new Error(`Error setting mic volume: ${error}`));
+            }
+        });
+    }
+
+    setCameraBlackout(camera, enabled) {
+        /*
+        {"privacyZones":[{"id":1,"name":"New Zone","color":"#5a6cea","points":[[0.002336448598130841,0.004155124653739612],[0.49221184989002265,0],[0.48831772135796947,0.03670364337614699],[0,0.22506933661378983]],"update":false,"uniqueId":"privacyZones-1"},{"id":2,"name":"New Privacy Blackout 001","color":"#586CED","points":[[0,0],[1,0],[1,1],[0,1]],"isTriggerLightEnabled":false,"direction":null,"uniqueId":"privacyZones-2","mergeId":null,"objectTypes":[],"sensitivity":null,"loiterTriggers":[],"quality":null,"isTargetCounting":null,"plan":null,"originalType":null,"zoneIds":null}]}
+         */
+        return new Promise((resolve, reject) => {
+            this.findCameraById(camera.id)
+                .then(cameraInfo => {
+                    this.homey.app.debug('Current privacy zones: ' + JSON.stringify(cameraInfo.privacyZones));
+                    const privacyZones = cameraInfo.privacyZones;
+                    if (enabled) {
+                        // Add blackout zone
+                        if (privacyZones.filter(zone => zone.name === 'Homey Blackout Zone').length === 0) {
+                            const newZone = {
+                                id: privacyZones.length + 1,
+                                name: 'Homey Blackout Zone',
+                                color: '#586CED',
+                                points: [
+                                    [0, 0],
+                                    [1, 0],
+                                    [1, 1],
+                                    [0, 1]
+                                ],
+                                isTriggerLightEnabled: false,
+                                direction: null,
+                                uniqueId: `privacyZones-${privacyZones.length + 1}`,
+                                mergeId: null,
+                                objectTypes: [],
+                                sensitivity: null,
+                                loiterTriggers: [],
+                                quality: null,
+                                isTargetCounting: null,
+                                plan: null,
+                                originalType: null,
+                                zoneIds: null
+                            };
+                            privacyZones.push(newZone);
+                        }
+                    } else {
+                        // Remove blackout zone
+                        const index = privacyZones.findIndex(zone => zone.name === 'Homey Blackout Zone');
+                        if (index !== -1) {
+                            privacyZones.splice(index, 1);
+                        }
+                    }
+
+                    const params = {
+                        privacyZones
+                    };
+
+                    this.homey.app.debug('Updated privacy zones: ' + JSON.stringify(privacyZones));
+
+                    return this.webclient.patch(`cameras/${camera.id}`, params)
+                        .then(() => resolve('Blackout mode successfully set.'))
+                        .catch(error => reject(new Error(`Error setting Blackout mode: ${error}`)));
+                })
+                .catch(error => reject(new Error(`Error setting Blackout mode: ${error}`)));
         });
     }
 
@@ -486,23 +567,37 @@ class ProtectAPI extends BaseClass {
         });
     }
 
-    getStreamUrl(camera) {
+    getStreamUrl(camera, packageCamera = false) {
         return new Promise((resolve, reject) => {
             let rtspAlias = null;
 
             this.findCameraById(camera.id)
                 .then(cameraInfo => {
                     cameraInfo.channels.forEach(channel => {
-                        if (channel.isRtspEnabled) {
-                            rtspAlias = channel.rtspAlias;
+                        if (channel.isRtspEnabled && channel.name !== 'Package Camera') {
+                            resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${channel.rtspAlias}`);
                         }
                     });
 
-                    if (!rtspAlias) {
-                        resolve('');
-                    }
+                    resolve('');
+                })
+                .catch(error => reject(new Error(`Error getting steam url: ${error}`)));
+        });
+    }
 
-                    resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${rtspAlias}`);
+    getPackageStreamUrl(camera) {
+        return new Promise((resolve, reject) => {
+            let rtspAlias = null;
+
+            this.findCameraById(camera.id)
+                .then(cameraInfo => {
+                    cameraInfo.channels.forEach(channel => {
+                        if (channel.isRtspEnabled && channel.name === 'Package Camera') {
+                            resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${channel.rtspAlias}`);
+                        }
+                    });
+
+                    resolve('');
                 })
                 .catch(error => reject(new Error(`Error getting steam url: ${error}`)));
         });
@@ -641,6 +736,261 @@ class ProtectAPI extends BaseClass {
                 .catch(error => reject(error));
         });
     }
+
+    getWeather() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('weather')
+                .then(response => {
+                    const result = JSON.parse(response);
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining weather data.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    getUsers() {
+        return new Promise((resolve, reject) => {
+            this.getBootstrapInfo()
+                .then((result) => {
+                    return resolve(result.users);
+                })
+                .catch(error => this.error(error));
+        });
+    }
+
+    getCloudUsers() {
+        return new Promise((resolve, reject) => {
+            const params = {
+                page_num: 1,
+                page_size: 200
+            }
+            this.webclient.get('users/api/v2/users/search', params, false, true)
+                .then(response => {
+                    const result = JSON.parse(response);
+                    return resolve(result.data);
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    getUsernameById(id) {
+        return new Promise((resolve, reject) => {
+            this.getUsers()
+                .then(users => {
+                    const user = users.find(user => user.id === id);
+                    return resolve(user.localUsername);
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    getCloudUsernameById(id) {
+        return new Promise((resolve, reject) => {
+            this.getCloudUsers()
+                .then(users => {
+                    const user = users.find(user => user.unique_id === id);
+                    return resolve(user.email !== "" ? user.email : user.username);
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    getCloudUserById(id) {
+        return new Promise((resolve, reject) => {
+            this.getCloudUsers()
+                .then(users => {
+                    const user = users.find(user => user.unique_id === id);
+                    return resolve(user);
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    setStatusLed(camera, enabled) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                ledSettings: {
+                    isEnabled: enabled
+                }
+            };
+            return this.webclient.patch(`cameras/${camera.id}`, params)
+                .then(() => resolve('Status Led successfully set.'))
+                .catch(error => reject(new Error(`Error setting status led: ${error}`)));
+        });
+    }
+
+    setStatusSound(camera, enabled) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                speakerSettings: {
+                    areSystemSoundsEnabled: enabled
+                }
+            };
+            return this.webclient.patch(`cameras/${camera.id}`, params)
+                .then(() => resolve('Status Sound successfully set.'))
+                .catch(error => reject(new Error(`Error setting status sound: ${error}`)));
+        });
+    }
+
+    setPatrolStop(camera) {
+        return new Promise((resolve, reject) => {
+            return this.webclient.post(`cameras/${camera.id}/ptz/patrol/stop`, {})
+                .then(() => resolve('setPatrolStop successfully set.'))
+                .catch(error => reject(new Error(`Error setting setPatrolStop: ${error}`)));
+        });
+    }
+
+    setPatrolStart(camera, presetId) {
+        return new Promise((resolve, reject) => {
+            return this.webclient.post(`cameras/${camera.id}/ptz/patrol/start/${presetId}`, {})
+                .then(() => resolve('setPatrolStart successfully set.'))
+                .catch(error => reject(new Error(`Error setting setPatrolStart: ${error}`)));
+        });
+    }
+
+    setPTZHome(camera) {
+        return new Promise((resolve, reject) => {
+            return this.webclient.post(`cameras/${camera.id}/ptz/goto/-1`, {})
+                .then(() => resolve('setPTZHome successfully set.'))
+                .catch(error => reject(new Error(`Error setting setPTZHome: ${error}`)));
+        });
+    }
+
+    setPTZPreset(camera, presetId) {
+        return new Promise((resolve, reject) => {
+            return this.webclient.post(`cameras/${camera.id}/ptz/goto/${(presetId - 1)}`, {})
+                .then(() => resolve('setPTZPreset successfully set.'))
+                .catch(error => reject(new Error(`Error setting setPTZPreset: ${error}`)));
+        });
+    }
+
+    setColorNightVision(camera, enabled) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                ispSettings: {
+                    isColorNightVisionEnabled: enabled
+                }
+            };
+            return this.webclient.patch(`cameras/${camera.id}`, params)
+                .then(() => resolve('Color Night Vision successfully set.'))
+                .catch(error => reject(new Error(`Error setting Color Night Vision: ${error}`)));
+        });
+    }
+
+    setAutoTracking(camera, person, smart_zoom) {
+        return new Promise((resolve, reject) => {
+            let autoTrackingObjectTypes = [];
+            if (person) {
+                autoTrackingObjectTypes.push("person");
+            }
+            const params = {
+                smartDetectSettings: {
+                    autoTrackingWithZoom: smart_zoom,
+                    autoTrackingObjectTypes
+                }
+            };
+            return this.webclient.patch(`cameras/${camera.id}`, params)
+                .then(() => resolve('Auto Tracking successfully set.'))
+                .catch(error => reject(new Error(`Error setting Auto Tracking: ${error}`)));
+        });
+    }
+
+    testRingtone(camera) {
+        return new Promise((resolve, reject) => {
+            return this.webclient.post(`cameras/${camera.id}/test-ringtone`, {})
+                .then(() => resolve('Ringtone successfully played.'))
+                .catch(error => reject(new Error(`Error playing ringtone: ${error}`)));
+        });
+    }
+
+    getSirens() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('sirens')
+                .then(response => {
+                    const result = JSON.parse(response);
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining sirens.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    setSirenVolume(siren, volumeLevel) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                volume: volumeLevel * 100
+            };
+            return this.webclient.patch(`sirens/${siren.id}`, params)
+                .then(() => resolve('volume successfully set.'))
+                .catch(error => reject(new Error(`Error setting volume: ${error}`)));
+        });
+    }
+
+    testSiren(siren, volumeLevel) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                volume: volumeLevel * 100
+            };
+            return this.webclient.post(`sirens/${siren.id}/test-sound`, {})
+                .then(() => resolve('Siren Test successfully send.'))
+                .catch(error => reject(new Error(`Error send test siren: ${error}`)));
+        });
+    }
+
+  setNvrAwayMode(isAway) {
+    if (isAway) {
+      // Arm: POST /proxy/protect/api/arm/enable  { armProfileId: "<id>" }
+      // armProfileId comes from bootstrap nvr.armMode.armProfileId
+      const armProfileId = this._bootstrap
+        && this._bootstrap.nvr
+        && this._bootstrap.nvr.armMode
+        && this._bootstrap.nvr.armMode.armProfileId;
+
+      if (!armProfileId) {
+        return Promise.reject(new Error('No armProfileId found in bootstrap. Cannot arm the NVR.'));
+      }
+
+      return new Promise((resolve, reject) => {
+        return this.webclient.post('arm/enable', { armProfileId })
+          .then(() => resolve('NVR armed successfully.'))
+          .catch((error) => reject(new Error(`Error arming NVR: ${error}`)));
+      });
+    }
+
+    // Disarm: POST /proxy/protect/api/arm/disable
+    return new Promise((resolve, reject) => {
+      return this.webclient.post('arm/disable', {})
+        .then(() => resolve('NVR disarmed successfully.'))
+        .catch((error) => reject(new Error(`Error disarming NVR: ${error}`)));
+    });
+  }
+
+  getNvrArmState() {
+    // Read the current arm state from the cached bootstrap nvr.armMode
+    // Shape: { status: 'armed'|'disarmed', armProfileId: '...', armedAt: ..., ... }
+    return new Promise((resolve, reject) => {
+      if (this._bootstrap && this._bootstrap.nvr && this._bootstrap.nvr.armMode) {
+        return resolve(this._bootstrap.nvr.armMode);
+      }
+      // Fallback: try live GET /proxy/protect/api/arm
+      return this.webclient.get('arm')
+        .then((response) => {
+          const result = JSON.parse(response);
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining NVR arm state.'));
+        })
+        .catch((error) => reject(error));
+    });
+  }
 }
 
 module.exports = ProtectAPI;

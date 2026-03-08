@@ -1,0 +1,89 @@
+{
+  "triggers": [
+    {
+      "id": "ufp_nvr_alarm_state_changed",
+      "title": {
+        "en": "Alarm state changed",
+        "nl": "Alarmstatus gewijzigd",
+        "de": "Alarmstatus geändert",
+        "fr": "État de l'alarme modifié",
+        "it": "Stato allarme cambiato",
+        "sv": "Larmstatus ändrad",
+        "no": "Alarmstatus endret",
+        "es": "Estado de alarma cambiado",
+        "da": "Alarmstatus ændret",
+        "ru": "Статус тревоги изменён",
+        "pl": "Stan alarmu zmieniony",
+        "ko": "알람 상태 변경됨"
+      },
+      "titleFormatted": {
+        "en": "Alarm state changed to [[state]]",
+        "nl": "Alarmstatus gewijzigd naar [[state]]",
+        "de": "Alarmstatus geändert zu [[state]]",
+        "fr": "État de l'alarme changé en [[state]]",
+        "it": "Stato allarme cambiato in [[state]]",
+        "sv": "Larmstatus ändrad till [[state]]",
+        "no": "Alarmstatus endret til [[state]]",
+        "es": "Estado de alarma cambiado a [[state]]",
+        "da": "Alarmstatus ændret til [[state]]",
+        "ru": "Статус тревоги изменён на [[state]]",
+        "pl": "Stan alarmu zmieniony na [[state]]",
+        "ko": "알람 상태가 [[state]]로 변경됨"
+      },
+      "tokens": [
+        {
+          "name": "state",
+          "type": "string",
+          "title": {
+            "en": "State",
+            "nl": "Status",
+            "de": "Status",
+            "fr": "État",
+            "it": "Stato",
+            "sv": "Status",
+            "no": "Status",
+            "es": "Estado",
+            "da": "Status",
+            "ru": "Статус",
+            "pl": "Stan",
+            "ko": "상태"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufp_nvr_alarm_armed",
+      "title": {
+        "en": "Alarm armed (away mode enabled)",
+        "nl": "Alarm ingeschakeld (thuiswezmodus ingeschakeld)",
+        "de": "Alarm scharf (Abwesenheitsmodus aktiviert)",
+        "fr": "Alarme armée (mode absent activé)",
+        "it": "Allarme armato (modalità assenza attivata)",
+        "sv": "Larm aktiverat (bortaläge aktiverat)",
+        "no": "Alarm armert (borte-modus aktivert)",
+        "es": "Alarma armada (modo ausente activado)",
+        "da": "Alarm aktiveret (væk-tilstand aktiveret)",
+        "ru": "Тревога активирована (режим отсутствия включён)",
+        "pl": "Alarm uzbrojony (tryb nieobecności włączony)",
+        "ko": "알람 무장됨 (외출 모드 활성화)"
+      }
+    },
+    {
+      "id": "ufp_nvr_alarm_disarmed",
+      "title": {
+        "en": "Alarm disarmed (away mode disabled)",
+        "nl": "Alarm uitgeschakeld (thuiswezmodus uitgeschakeld)",
+        "de": "Alarm entschärft (Abwesenheitsmodus deaktiviert)",
+        "fr": "Alarme désarmée (mode absent désactivé)",
+        "it": "Allarme disarmato (modalità assenza disattivata)",
+        "sv": "Larm deaktiverat (bortaläge deaktiverat)",
+        "no": "Alarm dearmert (borte-modus deaktivert)",
+        "es": "Alarma desarmada (modo ausente desactivado)",
+        "da": "Alarm deaktiveret (væk-tilstand deaktiveret)",
+        "ru": "Тревога деактивирована (режим отсутствия выключен)",
+        "pl": "Alarm rozbrojony (tryb nieobecności wyłączony)",
+        "ko": "알람 해제됨 (외출 모드 비활성화)"
+      }
+    }
+  ]
+}

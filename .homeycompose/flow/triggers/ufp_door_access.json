@@ -1,0 +1,85 @@
+{
+  "id": "ufp_door_access",
+  "title": {
+    "en": "A door acces event is detected",
+    "nl": "Een deur toegangsevenement is gedetecteerd"
+  },
+  "hint": {
+    "en": "Triggered when a door is openend by UniFi Access",
+    "nl": "Geschakeld wanneer een deur wordt geopend door UniFi Access"
+  },
+  "tokens": [
+    {
+      "name": "ufp_door_access_person",
+      "type": "string",
+      "title": {
+        "en": "Username",
+        "nl": "Gebruikersnaam"
+      },
+      "example": {
+        "en": "John Doe",
+        "nl": "Jan Jansen"
+      }
+    },
+    {
+      "name": "ufp_door_access_first_name",
+      "type": "string",
+      "title": {
+        "en": "First name",
+        "nl": "Voornaam"
+      },
+      "example": {
+        "en": "John",
+        "nl": "Jan"
+      }
+    },
+    {
+      "name": "ufp_door_access_last_name",
+      "type": "string",
+      "title": {
+        "en": "Last name",
+        "nl": "Achternaam"
+      },
+      "example": {
+        "en": "Doe",
+        "nl": "Jansen"
+      }
+    },
+    {
+      "name": "ufp_door_access_user_unique_id",
+      "type": "string",
+      "title": {
+        "en": "User Unique ID",
+        "nl": "Gebruiker Unieke ID"
+      },
+      "example": {
+        "en": "xxx-xxx-xxx",
+        "nl": "xxx-xxx-xxx"
+      }
+    },
+    {
+      "name": "ufp_door_access_direction",
+      "type": "string",
+      "title": {
+        "en": "Direction",
+        "nl": "Richting"
+      },
+      "example": {
+        "en": "entry",
+        "nl": "entry"
+      }
+    },
+    {
+      "name": "ufp_door_access_door_name",
+      "type": "string",
+      "title": {
+        "en": "Door name",
+        "nl": "Deur naam"
+      },
+      "example": {
+        "en": "Front door",
+        "nl": "Voordeur"
+      }
+    }
+  ]
+}

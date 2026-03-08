@@ -12,7 +12,7 @@
       "title": "Camera",
       "name": "device",
       "type": "device",
-      "$filter": "class=camera|doorbell"
+      "$filter": "driver_id=protectdoorbell|protectcamera"
     },
     {
       "title": "Night Vision",

@@ -1,0 +1,21 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Location",
+    "nl": "Locatie",
+    "de": "Standort",
+    "fr": "Emplacement",
+    "it": "Posizione",
+    "sv": "Plats",
+    "no": "Sted",
+    "es": "Ubicación",
+    "da": "Placering",
+    "ru": "Местоположение",
+    "pl": "Lokalizacja",
+    "ko": "위치"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor"
+}
+

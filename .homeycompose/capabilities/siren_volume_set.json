@@ -1,0 +1,127 @@
+{
+  "title": {
+    "en": "Set volume",
+    "nl": "Volume instellen",
+    "de": "Lautstärke setzen",
+    "fr": "Définir le volume",
+    "it": "Imposta il volume",
+    "sv": "Ställ in volym",
+    "no": "Innstill volum",
+    "es": "Configurar volumen",
+    "da": "Indstil lydstyrken",
+    "ru": "Установить громкость",
+    "pl": "Ustaw głośność",
+    "ko": "볼륨 설정",
+    "ar": "ضبط مستوى الصوت"
+  },
+  "type": "number",
+  "desc": {
+    "en": "Volume",
+    "nl": "Volume",
+    "de": "Lautstärke",
+    "fr": "Volume",
+    "it": "Volume",
+    "sv": "Volym",
+    "no": "Volum",
+    "es": "Volumen",
+    "da": "Lydstyrke",
+    "ru": "Громкость",
+    "pl": "Poziom głośności",
+    "ko": "볼륨",
+    "ar": "مستوى الصوت"
+  },
+  "chartType": "stepLine",
+  "min": 0.1,
+  "max": 1,
+  "step": 0.1,
+  "decimals": 2,
+  "units": {
+    "en": "%",
+    "ko": "%",
+    "no": "%",
+    "ru": "%",
+    "ar": "%"
+  },
+  "color": "#9033FC",
+  "setable": true,
+  "getable": true,
+  "uiComponent": "slider",
+  "$flow": {
+    "triggers": [
+      {
+        "id": "volume_set_changed",
+        "title": {
+          "en": "The volume changed",
+          "nl": "Het volume is veranderd",
+          "de": "Lautstärke hat sich geändert",
+          "fr": "Volume modifié",
+          "it": "Il volume è cambiato",
+          "sv": "Volymen ändrades",
+          "no": "Volumet ble endret",
+          "es": "El volumen ha cambiado",
+          "da": "Lydstyrke ændrede sig",
+          "ru": "Объем изменился",
+          "pl": "Zmienił się poziom głośności",
+          "ko": "볼륨이 변경되면",
+          "ar": "تم تغيير مستوى الصوت"
+        },
+        "tokens": [
+          {
+            "name": "volume_set",
+            "type": "number",
+            "title": {
+              "en": "Volume",
+              "nl": "Volume",
+              "de": "Lautstärke",
+              "fr": "Volume",
+              "it": "Volume",
+              "sv": "Volym",
+              "no": "Volum",
+              "es": "Volumen",
+              "da": "Lydstyrke",
+              "ru": "Громкость",
+              "pl": "Poziom głośności",
+              "ko": "볼륨이 다음이면",
+              "ar": "مستوى الصوت"
+            },
+            "example": 0.5
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "volume_set",
+        "highlight": true,
+        "title": {
+          "en": "Set the volume to",
+          "nl": "Zet het volume naar",
+          "de": "Lautstärke setzen auf",
+          "fr": "Définir le volume sur",
+          "it": "Imposta il volume a",
+          "sv": "Ställ in volymen på",
+          "no": "Sett volumet til",
+          "es": "Configurar el volumen a",
+          "da": "Indstil lydstyrke til",
+          "ru": "Установить громкость на",
+          "pl": "Ustaw poziom głośności na",
+          "ko": "볼륨을 다음으로 설정",
+          "ar": "ضبط مستوى الصوت إلى"
+        },
+        "args": [
+          {
+            "name": "volume_set",
+            "type": "range",
+            "min": 0.1,
+            "max": 1,
+            "step": 0.1,
+            "value": 0.5,
+            "label": "%",
+            "labelMultiplier": 100,
+            "labelDecimals": 0
+          }
+        ]
+      }
+    ]
+  }
+}

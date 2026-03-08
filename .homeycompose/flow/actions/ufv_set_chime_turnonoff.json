@@ -1,5 +1,5 @@
 {
-  "id": "ufv_chime_turnonoff",
+  "id": "ufv_set_chime_turnonoff",
   "title": {
     "en": "Set chime on/off",
     "nl": "Zet deurbell aan of uit"
@@ -14,7 +14,7 @@
       },
       "name": "device",
       "type": "device",
-      "$filter": "class=sensor&capabilities=onoff|volume_set"
+      "$filter": "driver_id=protectchime&capabilities=onoff|volume_set"
     },
     {
       "type": "checkbox",

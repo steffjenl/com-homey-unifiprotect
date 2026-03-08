@@ -14,7 +14,7 @@
       },
       "name": "device",
       "type": "device",
-      "$filter": "class=camera|doorbell"
+      "$filter": "driver_id=protectdoorbell|protectcamera"
     },
     {
       "title": {
@@ -24,7 +24,7 @@
       "name": "width",
       "type": "number",
       "min": 0,
-      "max": 1920,
+      "max": 3840,
       "placeholder": {
         "en": "Width in pixels",
         "nl": "Breedte in pixels"

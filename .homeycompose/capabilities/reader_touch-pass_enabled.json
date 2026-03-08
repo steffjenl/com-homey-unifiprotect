@@ -1,0 +1,10 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Touch-pass",
+    "nl": "Touch-pass"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "toggle"
+}

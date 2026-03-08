@@ -153,6 +153,135 @@
     "en": "Fix reject not found"
   },
   "1.6.12": {
-    "en": "Add timer on motion sensor (Unifi Sensor)"
+    "en": "Add Unknown SmartMotion trigger and more debug information"
+  },
+  "1.6.13": {
+    "en": "Add more debug information and Unknown Smartmotion trigger"
+  },
+  "1.6.14": {
+    "en": "Second fix for smartdetections"
+  },
+  "1.6.15": {
+    "en": "Second fix for smartdetections"
+  },
+  "1.6.16": {
+    "en": "Fixing crash on smart detection for camera's"
+  },
+  "1.6.17": {
+    "en": "Add fingerprint identified event"
+  },
+  "1.6.18": {
+    "en": "Add support for NFC Card Reader and UniFi Access integration with the Doorbell G4 Pro"
+  },
+  "1.6.19": {
+    "en": "Feature: Add support for enable status led and sound for camera and doorbell"
+  },
+  "1.7.0": {
+    "en": "Add support for new functionality and fixed some bugs. In the next release we will remove the 'Snapshot url' token from the snapshot trigger."
+  },
+  "1.7.1": {
+    "en": "Change order for Package Camera"
+  },
+  "1.7.2": {
+    "en": "Fixed Smart Detections for normal camera's"
+  },
+  "1.7.3": {
+    "en": "Add support for UniFi OS driver and extra flow tags for fingerprint and nfc"
+  },
+  "1.7.4": {
+    "en": "Add support for UniFi Access open events"
+  },
+  "1.7.5": {
+    "en": "Fixed doorAccess event for UniFi Access"
+  },
+  "1.7.6": {
+    "en": "Fixed Websocket problem because an change in latest Protect version."
+  },
+  "1.7.7": {
+    "en": "Add support for AI and new support url"
+  },
+  "1.7.8": {
+    "en": "Add action card to set camera screen to black for privancy reasons."
+  },
+  "1.7.9": {
+    "en": "Add new app images"
+  },
+  "1.7.10": {
+    "en": "Fixing setRecordingState"
+  },
+  "1.7.11": {
+    "en": "Fixing setRecording and setNightvision"
+  },
+  "1.7.12": {
+    "en": "Bugfix mulitple bugs and make app more stable, Validate login now checks on 429 status code"
+  },
+  "1.7.13": {
+    "en": "Fix fingerprint scanner"
+  },
+  "1.7.14": {
+    "en": "Add unifi-access devices, and make cooldown method for events configurable."
+  },
+  "1.7.15": {
+    "en": "Add camera and doorbell widgets"
+  },
+  "1.8.0": {
+    "en": "Prepare Video support for Homey 12.7 and bugfixes"
+  },
+  "1.8.1": {
+    "en": "Add new driver icons, widget previews and new langaues"
+  },
+  "1.8.2": {
+    "en": "Fixed Video Streaming URL"
+  },
+  "1.8.3": {
+    "en": "Fixing UniFi OS Device converting bytes to GB and crash when no temp is found"
+  },
+  "1.8.4": {
+    "en": "Add first steps for new API Integration, Only Doorbell press is added for now"
+  },
+  "1.8.5": {
+    "en": "Add patrol action cards"
+  },
+  "1.8.6": {
+    "en": "Add Quick UI for Access Door"
+  },
+  "1.8.7": {
+    "en": "Add action cards to set color night vision"
+  },
+  "1.8.8": {
+    "en": "Add Smart Zoom and Auto Face Tracking Action card"
+  },
+  "1.8.9": {
+    "en": "Add Test Ringtone action card"
+  },
+  "1.8.10": {
+    "en": "Fixing App crash when devices are removed from Homey"
+  },
+  "1.8.11": {
+    "en": "Add UniFi Siren support"
+  },
+  "1.8.12": {
+    "en": "Add Siren Volume to action card"
+  },
+  "1.8.13": {
+    "en": "Remove capability from sensor when not used on device"
+  },
+  "1.8.14": {
+    "en": "Fix in somecases the sensors will not removed"
+  },
+  "1.8.15": {
+    "en": "Add extra text on settings page"
+  },
+  "1.8.16": {
+    "en": "Settings page updated and beter invalid credentials handeling"
+  },
+  "1.8.17": {
+    "en": "Fix multiple refreshTokens"
+  },
+  "1.9.0": {
+    "en": "Add NVR Alarm Manager driver: arm/disarm away mode via flow cards, real-time alarm state sync via WebSocket. Add engineering specs and AGENTS.md."
+  },
+  "1.9.1": {
+    "en": "Add weather device to get the current weather"
   }
 }

@@ -1,0 +1,43 @@
+{
+  "id": "protect-siren",
+  "class": "siren",
+  "capabilities": [
+    "siren_volume_set"
+  ],
+  "name": {
+    "en": "Siren",
+    "nl": "Sirene",
+    "de": "Sirene",
+    "fr": "Sirène",
+    "it": "Sirena",
+    "sv": "Siren",
+    "no": "Siren",
+    "es": "Sirena",
+    "da": "Siren",
+    "ru": "Сирена",
+    "pl": "Syrena",
+    "ko": "사이렌"
+  },
+  "images": {
+    "large": "drivers/protect-siren/assets/images/large.png",
+    "small": "drivers/protect-siren/assets/images/small.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "platforms": ["local"],
+  "connectivity": ["cloud"]
+}

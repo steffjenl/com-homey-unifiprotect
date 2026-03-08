@@ -1,0 +1,81 @@
+{
+  "id": "ufp_nfc_card_scanned",
+  "title": {
+    "en": "A NFC card was scanned",
+    "nl": "Een NFC kaart is gescand"
+  },
+  "tokens": [
+    {
+      "name": "ufp_nfc_card_scanned_camera",
+      "type": "string",
+      "title": {
+        "en": "Camera",
+        "nl": "Camera"
+      },
+      "example": {
+        "en": "Doorbell",
+        "nl": "Deurbel"
+      }
+    },
+    {
+      "name": "ufp_nfc_card_scanned_person",
+      "type": "string",
+      "title": {
+        "en": "Username",
+        "nl": "Gebruikersnaam"
+      },
+      "example": {
+        "en": "John Doe",
+        "nl": "Jan Jansen"
+      }
+    },
+    {
+      "name": "ufp_nfc_card_scanned_first_name",
+      "type": "string",
+      "title": {
+        "en": "First name",
+        "nl": "Voornaam"
+      },
+      "example": {
+        "en": "John",
+        "nl": "Jan"
+      }
+    },
+    {
+      "name": "ufp_nfc_card_scanned_last_name",
+      "type": "string",
+      "title": {
+        "en": "Last name",
+        "nl": "Achternaam"
+      },
+      "example": {
+        "en": "Doe",
+        "nl": "Jansen"
+      }
+    },
+    {
+      "name": "ufp_nfc_card_scanned_user_unique_id",
+      "type": "string",
+      "title": {
+        "en": "User Unique ID",
+        "nl": "Gebruiker Unieke ID"
+      },
+      "example": {
+        "en": "xxx-xxx-xxx",
+        "nl": "xxx-xxx-xxx"
+      }
+    },
+    {
+      "name": "ufp_nfc_card_scanned_card_id",
+      "type": "string",
+      "title": {
+        "en": "Card ID",
+        "nl": "Kaart ID"
+      },
+      "example": {
+        "en": "xxxxxx",
+        "nl": "xxxxxx"
+      }
+    }
+  ]
+}

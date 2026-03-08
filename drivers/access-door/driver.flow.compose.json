@@ -1,0 +1,208 @@
+{
+  "actions": [
+    {
+      "id": "ufv_set_reader_door_locking_rule",
+      "title": {
+        "en": "Set Door Temporary Locking Rule",
+        "nl": "Deur tijdelijke vergrendelingsregel instellen",
+        "de": "Temporäre Türverriegelungsregel festlegen",
+        "fr": "Définir la règle de verrouillage temporaire de la porte",
+        "it": "Imposta regola di blocco temporaneo della porta",
+        "sv": "Ställ in tillfällig dörrlåsningsregel",
+        "no": "Angi midlertidig dørlåsningsregel",
+        "es": "Establecer regla de bloqueo temporal de puerta",
+        "da": "Indstil midlertidig dørlåsningsregel",
+        "ru": "Установить временное правило блокировки двери",
+        "pl": "Ustaw tymczasową zasadę blokowania drzwi",
+        "ko": "임시 문 잠금 규칙 설정"
+      },
+      "titleFormatted": {
+        "en": "Set Door Temporary Locking Rule [[type]] for [[interval]] minutes",
+        "nl": "Deur tijdelijke vergrendelingsregel [[type]] voor [[interval]] minuten instellen",
+        "de": "Temporäre Türverriegelungsregel [[type]] für [[interval]] Minuten festlegen",
+        "fr": "Définir la règle de verrouillage temporaire de la porte [[type]] pour [[interval]] minutes",
+        "it": "Imposta regola di blocco temporaneo della porta [[type]] per [[interval]] minuti",
+        "sv": "Ställ in tillfällig dörrlåsningsregel [[type]] för [[interval]] minuter",
+        "no": "Angi midlertidig dørlåsningsregel [[type]] for [[interval]] minutter",
+        "es": "Establecer regla de bloqueo temporal de puerta [[type]] por [[interval]] minutos",
+        "da": "Indstil midlertidig dørlåsningsregel [[type]] for [[interval]] minutter",
+        "ru": "Установить временное правило блокировки двери [[type]] на [[interval]] минут",
+        "pl": "Ustaw tymczasową zasadę blokowania drzwi [[type]] na [[interval]] minut",
+        "ko": "임시 문 잠금 규칙 [[type]]을 [[interval]]분 동안 설정"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "type",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld",
+            "de": "Aktiviert",
+            "fr": "Activé",
+            "it": "Abilitato",
+            "sv": "Aktiverad",
+            "no": "Aktivert",
+            "es": "Habilitado",
+            "da": "Aktiveret",
+            "ru": "Включено",
+            "pl": "Włączone",
+            "ko": "활성화됨"
+          },
+          "values": [
+            {
+              "id": "keep_lock",
+              "title": {
+                "en": "Keep locked",
+                "nl": "Vergrendeld houden",
+                "de": "Verriegelt lassen",
+                "fr": "Garder verrouillé",
+                "it": "Mantieni bloccato",
+                "sv": "Behåll låst",
+                "no": "Hold låst",
+                "es": "Mantener bloqueado",
+                "da": "Behold låst",
+                "ru": "Оставить заблокированным",
+                "pl": "Pozostaw zablokowane",
+                "ko": "잠금 상태 유지"
+              }
+            },
+            {
+              "id": "keep_unlock",
+              "title": {
+                "en": "Keep unlocked",
+                "nl": "Ontgrendeld houden",
+                "de": "Entriegelt lassen",
+                "fr": "Garder déverrouillé",
+                "it": "Mantieni sbloccato",
+                "sv": "Behåll olåst",
+                "no": "Hold ulåst",
+                "es": "Mantener desbloqueado",
+                "da": "Behold ulåst",
+                "ru": "Оставить разблокированным",
+                "pl": "Pozostaw odblokowane",
+                "ko": "잠금 해제 상태 유지"
+              }
+            },
+            {
+              "id": "reset",
+              "title": {
+                "en": "Reset",
+                "nl": "Reset",
+                "de": "Zurücksetzen",
+                "fr": "Réinitialiser",
+                "it": "Ripristina",
+                "sv": "Återställ",
+                "no": "Tilbakestill",
+                "es": "Restablecer",
+                "da": "Nulstil",
+                "ru": "Сбросить",
+                "pl": "Resetuj",
+                "ko": "재설정"
+              }
+            },
+            {
+              "id": "lock_early",
+              "title": {
+                "en": "Lock early",
+                "nl": "Vroeg vergrendelen",
+                "de": "Früh verriegeln",
+                "fr": "Verrouiller tôt",
+                "it": "Blocca presto",
+                "sv": "Lås tidigt",
+                "no": "Lås tidlig",
+                "es": "Bloquear temprano",
+                "da": "Lås tidligt",
+                "ru": "Заблокировать рано",
+                "pl": "Zablokuj wcześnie",
+                "ko": "일찍 잠금"
+              }
+            },
+            {
+              "id": "lock_now",
+              "title": {
+                "en": "Lock now",
+                "nl": "Nu vergrendelen",
+                "de": "Jetzt verriegeln",
+                "fr": "Verrouiller maintenant",
+                "it": "Blocca ora",
+                "sv": "Lås nu",
+                "no": "Lås nå",
+                "es": "Bloquear ahora",
+                "da": "Lås nu",
+                "ru": "Заблокировать сейчас",
+                "pl": "Zablokuj teraz",
+                "ko": "지금 잠금"
+              }
+            }
+          ]
+        },
+        {
+          "type": "number",
+          "name": "interval",
+          "title": {
+            "en": "Interval (minutes)",
+            "nl": "Interval (minuten)",
+            "de": "Intervall (Minuten)",
+            "fr": "Intervalle (minutes)",
+            "it": "Intervallo (minuti)",
+            "sv": "Intervall (minuter)",
+            "no": "Intervall (minutter)",
+            "es": "Intervalo (minutos)",
+            "da": "Interval (minutter)",
+            "ru": "Интервал (минуты)",
+            "pl": "Przedział czasowy (minuty)",
+            "ko": "간격(분)"
+          },
+          "placeholder": {
+            "en": "E.g. 5",
+            "nl": "Bijv. 5",
+            "de": "z.B. 5",
+            "fr": "Par ex. 5",
+            "it": "Es. 5",
+            "sv": "T.ex. 5",
+            "no": "F.eks. 5",
+            "es": "Por ejemplo 5",
+            "da": "F.eks. 5",
+            "ru": "Напр. 5",
+            "pl": "Np. 5",
+            "ko": "예: 5"
+          },
+          "defaultValue": 5,
+          "minValue": 1,
+          "maxValue": 1440
+        }
+      ]
+    },
+    {
+      "id": "ufv_set_reader_door_unlock",
+      "title": {
+        "en": "Set Door Temporary Locking Rule",
+        "nl": "Deur tijdelijke vergrendelingsregel instellen",
+        "de": "Temporäre Türverriegelungsregel festlegen",
+        "fr": "Définir la règle de verrouillage temporaire de la porte",
+        "it": "Imposta regola di blocco temporaneo della porta",
+        "sv": "Ställ in tillfällig dörrlåsningsregel",
+        "no": "Angi midlertidig dørlåsningsregel",
+        "es": "Establecer regla de bloqueo temporal de puerta",
+        "da": "Indstil midlertidig dørlåsningsregel",
+        "ru": "Установить временное правило блокировки двери",
+        "pl": "Ustaw tymczasową zasadę blokowania drzwi",
+        "ko": "임시 문 잠금 규칙 설정"
+      },
+      "titleFormatted": {
+        "en": "Unlock door",
+        "nl": "Deur ontgrendelen",
+        "de": "Tür entriegeln",
+        "fr": "Déverrouiller la porte",
+        "it": "Sblocca porta",
+        "sv": "Lås upp dörr",
+        "no": "Lås opp døren",
+        "es": "Desbloquear puerta",
+        "da": "Lås døren op",
+        "ru": "Открыть дверь",
+        "pl": "Otwórz drzwi",
+        "ko": "문 잠금 해제"
+      }
+    }
+  ]
+}

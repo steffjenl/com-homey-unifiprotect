@@ -12,7 +12,7 @@
       "title": "Doorbell",
       "name": "device",
       "type": "device",
-      "$filter": "class=doorbell"
+      "$filter": "driver_id=protectdoorbell"
     },
     {
       "title": "Message",

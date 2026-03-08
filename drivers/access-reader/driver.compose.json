@@ -1,0 +1,48 @@
+{
+  "name": {
+    "en": "Access Reader",
+    "de": "Access Leser",
+    "fr": "Lecteur d'accès",
+    "it": "Lettore di accesso",
+    "sv": "Passerläsare",
+    "no": "Tilgangsleser",
+    "es": "Lector de acceso",
+    "da": "Adgangslæser",
+    "ru": "Считыватель доступа",
+    "pl": "Czytnik dostępu",
+    "ko": "액세스 리더기"
+  },
+  "class": "doorbell",
+  "capabilities": [
+    "reader_nfc_enabled",
+    "reader_wave_enabled",
+    "reader_touch-pass_enabled",
+    "reader_mobile-tap_enabled",
+    "reader_mobile-button_enabled"
+  ],
+  "platforms": [
+    "local"
+  ],
+  "connectivity": ["cloud"],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

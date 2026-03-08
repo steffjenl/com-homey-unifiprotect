@@ -1,0 +1,104 @@
+{
+  "title": "UniFi Protect",
+  "pair": {
+    "validate": {
+      "title": "Validera UniFi Cloud Key",
+      "instruction": "Ställ först in Cloud Key i Inställningar."
+    },
+    "login": {
+      "title": "Logga in"
+    }
+  },
+  "settings": {
+    "title": "UniFi Protect-inställningar",
+    "instruction": "Logga in med UniFi Protect-användarens uppgifter.",
+    "nvr": "Serverdetaljer",
+    "nvrip": "IP-adress",
+    "nvrport": "Port",
+    "credentials": "Användaruppgifter",
+    "username": "Användarnamn",
+    "password": "Lösenord",
+    "apply": "Verkställ",
+    "saved": "Inställningar sparade.",
+    "settings": "Inställningar",
+    "useCameraSnapshot": "Använd kamerabild",
+    "useCameraSnapshotInstruction": "Använd 'Använd kamerabild' endast när 'Aktivera anonym bild' är aktiverat i kamerans lokala inställningar. Är du säker på att du vill aktivera detta?",
+    "testConnection": "Testa anslutning",
+    "test_status": {
+      "success": "Uppgifterna är giltiga.",
+      "failure": "Uppgifterna är ogiltiga."
+    },
+    "accessApiKey": "API-nyckel",
+    "accessCredentials": "UniFi Access-uppgifter",
+    "ignoreEventsNfcFingerprint": "Nedkylningsperiod mellan NFC/fingeravtryckshändelser (i sekunder)",
+    "ignoreEventsDoorbell": "Nedkylningsperiod mellan dörrklockshändelser (i sekunder)",
+    "protectV2ApiKey": "UniFi Protect V2 API-nyckel",
+    "protectV2Credentials": "UniFi Protect V2-uppgifter",
+    "status": "Status"
+  },
+  "events": {
+    "camera": {
+      "motion_started": "Rörelse startad",
+      "motion_ended": "Rörelse avslutad",
+      "motion_inprogress": "Rörelse",
+      "ftr_inprogress": "Full tid",
+      "disabled": "Inaktiverad",
+      "failed": "Misslyckades",
+      "done": "Klar",
+      "always": "Alltid",
+      "motion": "Rörelse",
+      "never": "Aldrig",
+      "detections": "Detekteringar"
+    },
+    "health": {}
+  },
+  "nvr_alarm": {
+    "armed": "Aktiverat (Borta)",
+    "disarmed": "Deaktiverat",
+    "state_changed": "Larmstatus ändrad"
+  },
+  "weather": {
+    "conditions": {
+      "tornado": "Tornado",
+      "tropical_storm": "Tropisk storm",
+      "hurricane": "Orkan",
+      "thunderstorms": "Åskväder",
+      "rain_snow_mix": "Regn/snöblandning",
+      "rain_sleet_mix": "Regn/slaskblandning",
+      "snow_sleet_mix": "Snö/slaskblandning",
+      "freezing_drizzle": "Underkylt duggregn",
+      "drizzle": "Duggregn",
+      "freezing_rain": "Underkylt regn",
+      "showers": "Regnskurar",
+      "snow_flurries": "Snöbyar",
+      "light_snow": "Lätt snö",
+      "blowing_snow": "Drivsnö",
+      "snow": "Snö",
+      "hail": "Hagel",
+      "sleet": "Snöslask",
+      "dust": "Damm",
+      "fog": "Dimma",
+      "haze": "Dis",
+      "smoke": "Rök",
+      "windy": "Blåsigt",
+      "frigid": "Iskallt",
+      "cloudy": "Molnigt",
+      "mostly_cloudy": "Mestadels molnigt",
+      "partly_cloudy": "Delvis molnigt",
+      "clear": "Klart",
+      "sunny": "Soligt",
+      "fair": "Lätt molnigt",
+      "rain_hail_mix": "Regn/hagelblandning",
+      "hot": "Hett",
+      "isolated_thunderstorms": "Isolerade åskväder",
+      "scattered_thunderstorms": "Spridda åskväder",
+      "scattered_showers": "Spridda skurar",
+      "heavy_rain": "Kraftigt regn",
+      "scattered_snow": "Spridd snö",
+      "heavy_snow": "Kraftigt snöfall",
+      "blizzard": "Snöstorm",
+      "not_available": "Ej tillgängligt"
+    }
+  }
+}
+

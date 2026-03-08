@@ -1,0 +1,45 @@
+{
+  "name": {
+    "en": "Access Garage door",
+    "nl": "Access Garage deur",
+    "de": "Zugangsgaragentor",
+    "fr": "Porte de garage d'accès",
+    "it": "Porta garage di accesso",
+    "sv": "Passergarageport",
+    "no": "Tilgangsgarasjeport",
+    "es": "Puerta de garaje de acceso",
+    "da": "Adgangsgarageport",
+    "ru": "Доступ к гаражным воротам",
+    "pl": "Brama garażowa dostępu",
+    "ko": "액세스 차고문"
+  },
+  "class": "garagedoor",
+  "capabilities": [
+    "garagedoor_closed"
+  ],
+  "platforms": [
+    "local"
+  ],
+  "connectivity": ["cloud"],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

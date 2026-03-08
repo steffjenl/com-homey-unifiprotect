@@ -53,12 +53,11 @@ class UniFiSensorDriver extends Homey.Driver {
         }
     }
 
-    getUnifiDeviceById(camera) {
+    getUnifiDeviceById(deviceId) {
         try {
-            const device = this.getDevice({
-                id: camera,
-            });
-
+            const devices = this.getDevices();
+            const device = devices.find(device => String(device.getData().id) === String(deviceId));
+            if (!device) return false;
             return device;
         } catch (Error) {
             return false;
