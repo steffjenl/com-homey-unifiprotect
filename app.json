@@ -1211,6 +1211,280 @@
         ]
       },
       {
+        "id": "ufp_weather_updated",
+        "title": {
+          "en": "Weather updated",
+          "nl": "Weerdata bijgewerkt",
+          "de": "Wetter aktualisiert",
+          "fr": "Météo mise à jour",
+          "it": "Meteo aggiornato",
+          "sv": "Väder uppdaterat",
+          "no": "Vær oppdatert",
+          "es": "Tiempo actualizado",
+          "da": "Vejr opdateret",
+          "ru": "Погода обновлена",
+          "pl": "Pogoda zaktualizowana",
+          "ko": "날씨 업데이트됨"
+        },
+        "titleFormatted": {
+          "en": "Weather updated at [[location]]",
+          "nl": "Weerdata bijgewerkt voor [[location]]",
+          "de": "Wetter aktualisiert für [[location]]",
+          "fr": "Météo mise à jour pour [[location]]",
+          "it": "Meteo aggiornato per [[location]]",
+          "sv": "Väder uppdaterat för [[location]]",
+          "no": "Vær oppdatert for [[location]]",
+          "es": "Tiempo actualizado para [[location]]",
+          "da": "Vejr opdateret for [[location]]",
+          "ru": "Погода обновлена для [[location]]",
+          "pl": "Pogoda zaktualizowana dla [[location]]",
+          "ko": "[[location]] 날씨 업데이트됨"
+        },
+        "tokens": [
+          {
+            "name": "temperature",
+            "type": "number",
+            "title": {
+              "en": "Temperature (°C)",
+              "nl": "Temperatuur (°C)",
+              "de": "Temperatur (°C)",
+              "fr": "Température (°C)",
+              "it": "Temperatura (°C)",
+              "sv": "Temperatur (°C)",
+              "no": "Temperatur (°C)",
+              "es": "Temperatura (°C)",
+              "da": "Temperatur (°C)",
+              "ru": "Температура (°C)",
+              "pl": "Temperatura (°C)",
+              "ko": "온도 (°C)"
+            }
+          },
+          {
+            "name": "condition",
+            "type": "string",
+            "title": {
+              "en": "Condition",
+              "nl": "Weersgesteldheid",
+              "de": "Wetterlage",
+              "fr": "Conditions météo",
+              "it": "Condizioni meteo",
+              "sv": "Väderförhållanden",
+              "no": "Værforhold",
+              "es": "Condición",
+              "da": "Vejrforhold",
+              "ru": "Погодные условия",
+              "pl": "Warunki pogodowe",
+              "ko": "날씨 상태"
+            }
+          },
+          {
+            "name": "location",
+            "type": "string",
+            "title": {
+              "en": "Location",
+              "nl": "Locatie",
+              "de": "Standort",
+              "fr": "Emplacement",
+              "it": "Posizione",
+              "sv": "Plats",
+              "no": "Sted",
+              "es": "Ubicación",
+              "da": "Placering",
+              "ru": "Местоположение",
+              "pl": "Lokalizacja",
+              "ko": "위치"
+            }
+          },
+          {
+            "name": "forecast_1_temperature",
+            "type": "number",
+            "title": {
+              "en": "Forecast hour 1 temperature (°C)",
+              "nl": "Verwachting uur 1 temperatuur (°C)",
+              "de": "Vorhersage Stunde 1 Temperatur (°C)",
+              "fr": "Prévision heure 1 température (°C)",
+              "it": "Previsione ora 1 temperatura (°C)",
+              "sv": "Prognos timme 1 temperatur (°C)",
+              "no": "Prognose time 1 temperatur (°C)",
+              "es": "Pronóstico hora 1 temperatura (°C)",
+              "da": "Prognose time 1 temperatur (°C)",
+              "ru": "Прогноз час 1 температура (°C)",
+              "pl": "Prognoza godzina 1 temperatura (°C)",
+              "ko": "예보 1시간 온도 (°C)"
+            }
+          },
+          {
+            "name": "forecast_1_condition",
+            "type": "string",
+            "title": {
+              "en": "Forecast hour 1 condition",
+              "nl": "Verwachting uur 1 weersgesteldheid",
+              "de": "Vorhersage Stunde 1 Wetterlage",
+              "fr": "Prévision heure 1 conditions",
+              "it": "Previsione ora 1 condizioni",
+              "sv": "Prognos timme 1 väder",
+              "no": "Prognose time 1 vær",
+              "es": "Pronóstico hora 1 condición",
+              "da": "Prognose time 1 vejr",
+              "ru": "Прогноз час 1 условия",
+              "pl": "Prognoza godzina 1 warunki",
+              "ko": "예보 1시간 날씨 상태"
+            }
+          },
+          {
+            "name": "forecast_2_temperature",
+            "type": "number",
+            "title": {
+              "en": "Forecast hour 2 temperature (°C)",
+              "nl": "Verwachting uur 2 temperatuur (°C)",
+              "de": "Vorhersage Stunde 2 Temperatur (°C)",
+              "fr": "Prévision heure 2 température (°C)",
+              "it": "Previsione ora 2 temperatura (°C)",
+              "sv": "Prognos timme 2 temperatur (°C)",
+              "no": "Prognose time 2 temperatur (°C)",
+              "es": "Pronóstico hora 2 temperatura (°C)",
+              "da": "Prognose time 2 temperatur (°C)",
+              "ru": "Прогноз час 2 температура (°C)",
+              "pl": "Prognoza godzina 2 temperatura (°C)",
+              "ko": "예보 2시간 온도 (°C)"
+            }
+          },
+          {
+            "name": "forecast_2_condition",
+            "type": "string",
+            "title": {
+              "en": "Forecast hour 2 condition",
+              "nl": "Verwachting uur 2 weersgesteldheid",
+              "de": "Vorhersage Stunde 2 Wetterlage",
+              "fr": "Prévision heure 2 conditions",
+              "it": "Previsione ora 2 condizioni",
+              "sv": "Prognos timme 2 väder",
+              "no": "Prognose time 2 vær",
+              "es": "Pronóstico hora 2 condición",
+              "da": "Prognose time 2 vejr",
+              "ru": "Прогноз час 2 условия",
+              "pl": "Prognoza godzina 2 warunki",
+              "ko": "예보 2시간 날씨 상태"
+            }
+          },
+          {
+            "name": "forecast_3_temperature",
+            "type": "number",
+            "title": {
+              "en": "Forecast hour 3 temperature (°C)",
+              "nl": "Verwachting uur 3 temperatuur (°C)",
+              "de": "Vorhersage Stunde 3 Temperatur (°C)",
+              "fr": "Prévision heure 3 température (°C)",
+              "it": "Previsione ora 3 temperatura (°C)",
+              "sv": "Prognos timme 3 temperatur (°C)",
+              "no": "Prognose time 3 temperatur (°C)",
+              "es": "Pronóstico hora 3 temperatura (°C)",
+              "da": "Prognose time 3 temperatur (°C)",
+              "ru": "Прогноз час 3 температура (°C)",
+              "pl": "Prognoza godzina 3 temperatura (°C)",
+              "ko": "예보 3시간 온도 (°C)"
+            }
+          },
+          {
+            "name": "forecast_3_condition",
+            "type": "string",
+            "title": {
+              "en": "Forecast hour 3 condition",
+              "nl": "Verwachting uur 3 weersgesteldheid",
+              "de": "Vorhersage Stunde 3 Wetterlage",
+              "fr": "Prévision heure 3 conditions",
+              "it": "Previsione ora 3 condizioni",
+              "sv": "Prognos timme 3 väder",
+              "no": "Prognose time 3 vær",
+              "es": "Pronóstico hora 3 condición",
+              "da": "Prognose time 3 vejr",
+              "ru": "Прогноз час 3 условия",
+              "pl": "Prognoza godzina 3 warunki",
+              "ko": "예보 3시간 날씨 상태"
+            }
+          },
+          {
+            "name": "forecast_4_temperature",
+            "type": "number",
+            "title": {
+              "en": "Forecast hour 4 temperature (°C)",
+              "nl": "Verwachting uur 4 temperatuur (°C)",
+              "de": "Vorhersage Stunde 4 Temperatur (°C)",
+              "fr": "Prévision heure 4 température (°C)",
+              "it": "Previsione ora 4 temperatura (°C)",
+              "sv": "Prognos timme 4 temperatur (°C)",
+              "no": "Prognose time 4 temperatur (°C)",
+              "es": "Pronóstico hora 4 temperatura (°C)",
+              "da": "Prognose time 4 temperatur (°C)",
+              "ru": "Прогноз час 4 температура (°C)",
+              "pl": "Prognoza godzina 4 temperatura (°C)",
+              "ko": "예보 4시간 온도 (°C)"
+            }
+          },
+          {
+            "name": "forecast_4_condition",
+            "type": "string",
+            "title": {
+              "en": "Forecast hour 4 condition",
+              "nl": "Verwachting uur 4 weersgesteldheid",
+              "de": "Vorhersage Stunde 4 Wetterlage",
+              "fr": "Prévision heure 4 conditions",
+              "it": "Previsione ora 4 condizioni",
+              "sv": "Prognos timme 4 väder",
+              "no": "Prognose time 4 vær",
+              "es": "Pronóstico hora 4 condición",
+              "da": "Prognose time 4 vejr",
+              "ru": "Прогноз час 4 условия",
+              "pl": "Prognoza godzina 4 warunki",
+              "ko": "예보 4시간 날씨 상태"
+            }
+          },
+          {
+            "name": "forecast_5_temperature",
+            "type": "number",
+            "title": {
+              "en": "Forecast hour 5 temperature (°C)",
+              "nl": "Verwachting uur 5 temperatuur (°C)",
+              "de": "Vorhersage Stunde 5 Temperatur (°C)",
+              "fr": "Prévision heure 5 température (°C)",
+              "it": "Previsione ora 5 temperatura (°C)",
+              "sv": "Prognos timme 5 temperatur (°C)",
+              "no": "Prognose time 5 temperatur (°C)",
+              "es": "Pronóstico hora 5 temperatura (°C)",
+              "da": "Prognose time 5 temperatur (°C)",
+              "ru": "Прогноз час 5 температура (°C)",
+              "pl": "Prognoza godzina 5 temperatura (°C)",
+              "ko": "예보 5시간 온도 (°C)"
+            }
+          },
+          {
+            "name": "forecast_5_condition",
+            "type": "string",
+            "title": {
+              "en": "Forecast hour 5 condition",
+              "nl": "Verwachting uur 5 weersgesteldheid",
+              "de": "Vorhersage Stunde 5 Wetterlage",
+              "fr": "Prévision heure 5 conditions",
+              "it": "Previsione ora 5 condizioni",
+              "sv": "Prognos timme 5 väder",
+              "no": "Prognose time 5 vær",
+              "es": "Pronóstico hora 5 condición",
+              "da": "Prognose time 5 vejr",
+              "ru": "Прогноз час 5 условия",
+              "pl": "Prognoza godzina 5 warunki",
+              "ko": "예보 5시간 날씨 상태"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-weather"
+          }
+        ]
+      },
+      {
         "id": "ufp_device_camera_smart_detection",
         "title": {
           "en": "A object was detected",
@@ -5420,6 +5694,129 @@
       ]
     },
     {
+      "id": "protect-weather",
+      "name": {
+        "en": "UniFi Protect Weather",
+        "nl": "UniFi Protect Weer",
+        "de": "UniFi Protect Wetter",
+        "fr": "UniFi Protect Météo",
+        "it": "UniFi Protect Meteo",
+        "sv": "UniFi Protect Väder",
+        "no": "UniFi Protect Vær",
+        "es": "UniFi Protect Tiempo",
+        "da": "UniFi Protect Vejr",
+        "ru": "UniFi Protect Погода",
+        "pl": "UniFi Protect Pogoda",
+        "ko": "UniFi Protect 날씨"
+      },
+      "class": "sensor",
+      "capabilities": [
+        "measure_temperature",
+        "weather_condition",
+        "weather_location"
+      ],
+      "capabilitiesOptions": {
+        "measure_temperature": {
+          "title": {
+            "en": "Temperature",
+            "nl": "Temperatuur",
+            "de": "Temperatur",
+            "fr": "Température",
+            "it": "Temperatura",
+            "sv": "Temperatur",
+            "no": "Temperatur",
+            "es": "Temperatura",
+            "da": "Temperatur",
+            "ru": "Температура",
+            "pl": "Temperatura",
+            "ko": "온도"
+          }
+        },
+        "weather_condition": {
+          "title": {
+            "en": "Weather condition",
+            "nl": "Weersgesteldheid",
+            "de": "Wetterlage",
+            "fr": "Conditions météo",
+            "it": "Condizioni meteo",
+            "sv": "Väderförhållanden",
+            "no": "Værforhold",
+            "es": "Condición meteorológica",
+            "da": "Vejrforhold",
+            "ru": "Погодные условия",
+            "pl": "Warunki pogodowe",
+            "ko": "날씨 상태"
+          }
+        },
+        "weather_location": {
+          "title": {
+            "en": "Location",
+            "nl": "Locatie",
+            "de": "Standort",
+            "fr": "Emplacement",
+            "it": "Posizione",
+            "sv": "Plats",
+            "no": "Sted",
+            "es": "Ubicación",
+            "da": "Placering",
+            "ru": "Местоположение",
+            "pl": "Lokalizacja",
+            "ko": "위치"
+          }
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/protect-weather/assets/images/small.png",
+        "large": "/drivers/protect-weather/assets/images/large.png",
+        "xlarge": "/drivers/protect-weather/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "settings": [
+        {
+          "id": "pollInterval",
+          "type": "number",
+          "label": {
+            "en": "Polling interval (minutes)",
+            "nl": "Verversingsinterval (minuten)",
+            "de": "Abfrageintervall (Minuten)",
+            "fr": "Intervalle d'actualisation (minutes)",
+            "it": "Intervallo di aggiornamento (minuti)",
+            "sv": "Uppdateringsintervall (minuter)",
+            "no": "Oppdateringsintervall (minutter)",
+            "es": "Intervalo de actualización (minutos)",
+            "da": "Opdateringsinterval (minutter)",
+            "ru": "Интервал обновления (минуты)",
+            "pl": "Interwał odświeżania (minuty)",
+            "ko": "폴링 간격 (분)"
+          },
+          "value": 15,
+          "attr": {
+            "min": 5,
+            "max": 1440
+          }
+        }
+      ]
+    },
+    {
       "id": "protectcamera",
       "class": "camera",
       "capabilities": [
@@ -6395,6 +6792,46 @@
       "setable": true,
       "getable": true,
       "uiComponent": "slider"
+    },
+    "weather_condition": {
+      "type": "string",
+      "title": {
+        "en": "Weather condition",
+        "nl": "Weersgesteldheid",
+        "de": "Wetterlage",
+        "fr": "Conditions météo",
+        "it": "Condizioni meteo",
+        "sv": "Väderförhållanden",
+        "no": "Værforhold",
+        "es": "Condición meteorológica",
+        "da": "Vejrforhold",
+        "ru": "Погодные условия",
+        "pl": "Warunki pogodowe",
+        "ko": "날씨 상태"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    },
+    "weather_location": {
+      "type": "string",
+      "title": {
+        "en": "Location",
+        "nl": "Locatie",
+        "de": "Standort",
+        "fr": "Emplacement",
+        "it": "Posizione",
+        "sv": "Plats",
+        "no": "Sted",
+        "es": "Ubicación",
+        "da": "Placering",
+        "ru": "Местоположение",
+        "pl": "Lokalizacja",
+        "ko": "위치"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
     }
   }
 }

@@ -30,6 +30,9 @@ class AppProtect extends BaseClass {
         this.homey.app._doorAccessTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOOR_ACCESS);
         this.homey.app._nfcCardScannedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_NFC_CARD_SCANNED);
 
+        // Weather
+        this.homey.app._weatherUpdatedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_WEATHER_UPDATED);
+
         const _actionTakeSnapshot = this.homey.flow.getActionCard(UfvConstants.ACTION_TAKE_SNAPSHOT);
         _actionTakeSnapshot.registerRunListener(async (args, state) => {
             if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {

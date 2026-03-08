@@ -32,12 +32,12 @@ module.exports.ACTION_SET_DEVICE_CAMERA_BLACKOUT = 'ufv_set_device_camera_blacko
 module.exports.ACTION_SET_DEVICE_DOORBELL_BLACKOUT = 'ufv_set_device_doorbell_blackout';
 module.exports.ACTION_SET_DEVICE_PATROL_STOP = 'ufv_set_device_camera_patrol_stop';
 module.exports.ACTION_SET_DEVICE_PATROL_START = 'ufv_set_device_camera_patrol_start';
-module.exports.ACTION_SET_DEVICE_PTZ_HOME= 'ufv_set_device_camera_ptz_home';
-module.exports.ACTION_SET_DEVICE_PTZ_PRESET= 'ufv_set_device_camera_ptz_preset';
-module.exports.ACTION_SET_DEVICE_SET_COLOR_NIGHT_VISION= 'ufv_set_device_camera_set_color_night_vision';
-module.exports.ACTION_SET_DEVICE_SET_AUTO_TRACKING= 'ufv_set_device_camera_set_auto_tracking';
-module.exports.ACTION_SET_DEVICE_TEST_RINGTONE= 'ufv_set_device_doorbell_test_ringtone';
-module.exports.ACTION_SET_DEVICE_TEST_SIREN= 'ufv_set_device_doorbell_test_siren';
+module.exports.ACTION_SET_DEVICE_PTZ_HOME = 'ufv_set_device_camera_ptz_home';
+module.exports.ACTION_SET_DEVICE_PTZ_PRESET = 'ufv_set_device_camera_ptz_preset';
+module.exports.ACTION_SET_DEVICE_SET_COLOR_NIGHT_VISION = 'ufv_set_device_camera_set_color_night_vision';
+module.exports.ACTION_SET_DEVICE_SET_AUTO_TRACKING = 'ufv_set_device_camera_set_auto_tracking';
+module.exports.ACTION_SET_DEVICE_TEST_RINGTONE = 'ufv_set_device_doorbell_test_ringtone';
+module.exports.ACTION_SET_DEVICE_TEST_SIREN = 'ufv_set_device_doorbell_test_siren';
 
 module.exports.EVENT_CONNECTION_KEEPALIVE = 'ufv_event_connection_keepalive';
 module.exports.EVENT_CONNECTION_ERROR = 'ufv_event_connection_error';
@@ -92,6 +92,61 @@ module.exports.EVENT_DEVICE_NFC_CARD_SCANNED = 'ufp_device_nfc_card_scanned';
 module.exports.EVENT_NVR_ALARM_STATE_CHANGED = 'ufp_nvr_alarm_state_changed';
 module.exports.EVENT_NVR_ALARM_ARMED = 'ufp_nvr_alarm_armed';
 module.exports.EVENT_NVR_ALARM_DISARMED = 'ufp_nvr_alarm_disarmed';
+
+// Weather
+module.exports.EVENT_WEATHER_UPDATED = 'ufp_weather_updated';
+module.exports.WEATHER_POLL_INTERVAL_DEFAULT = 15;
+
+// Weather Channel icon code → locale key (used as weather.conditions.<key>)
+module.exports.WEATHER_ICON_CODES = {
+  1: 'tornado',
+  2: 'tropical_storm',
+  3: 'hurricane',
+  4: 'thunderstorms',
+  5: 'rain_snow_mix',
+  6: 'rain_sleet_mix',
+  7: 'snow_sleet_mix',
+  8: 'freezing_drizzle',
+  9: 'drizzle',
+  10: 'freezing_rain',
+  11: 'showers',
+  12: 'showers',
+  13: 'snow_flurries',
+  14: 'light_snow',
+  15: 'blowing_snow',
+  16: 'snow',
+  17: 'hail',
+  18: 'sleet',
+  19: 'dust',
+  20: 'fog',
+  21: 'haze',
+  22: 'smoke',
+  23: 'windy',
+  24: 'windy',
+  25: 'frigid',
+  26: 'cloudy',
+  27: 'mostly_cloudy',
+  28: 'mostly_cloudy',
+  29: 'partly_cloudy',
+  30: 'partly_cloudy',
+  31: 'clear',
+  32: 'sunny',
+  33: 'fair',
+  34: 'fair',
+  35: 'rain_hail_mix',
+  36: 'hot',
+  37: 'isolated_thunderstorms',
+  38: 'scattered_thunderstorms',
+  39: 'scattered_showers',
+  40: 'heavy_rain',
+  41: 'scattered_snow',
+  42: 'heavy_snow',
+  43: 'blizzard',
+  44: 'not_available',
+  45: 'scattered_showers',
+  46: 'scattered_snow',
+  47: 'scattered_thunderstorms',
+};
 
 module.exports.EVENT_SETTINGS_DEBUG = 'com.ubnt.unifiprotect.debug';
 module.exports.EVENT_SETTINGS_STATUS = 'com.ubnt.unifiprotect.status';

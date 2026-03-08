@@ -737,6 +737,21 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    getWeather() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('weather')
+                .then(response => {
+                    const result = JSON.parse(response);
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining weather data.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
     getUsers() {
         return new Promise((resolve, reject) => {
             this.getBootstrapInfo()

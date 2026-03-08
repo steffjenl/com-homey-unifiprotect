@@ -471,6 +471,10 @@ class Doorbell extends Homey.Device {
         return SmartDetectionMixin.triggerAudioDetectionTrigger.call(this, audioType, readableType, score);
     }
 
+    _getEventStore() {
+        return SmartDetectionMixin._getEventStore.call(this);
+    }
+
     getSmartDetectionEvent(eventId) {
         return SmartDetectionMixin.getSmartDetectionEvent.call(this, eventId);
     }

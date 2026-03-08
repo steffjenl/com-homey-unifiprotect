@@ -1,0 +1,21 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Weather condition",
+    "nl": "Weersgesteldheid",
+    "de": "Wetterlage",
+    "fr": "Conditions météo",
+    "it": "Condizioni meteo",
+    "sv": "Väderförhållanden",
+    "no": "Værforhold",
+    "es": "Condición meteorológica",
+    "da": "Vejrforhold",
+    "ru": "Погодные условия",
+    "pl": "Warunki pogodowe",
+    "ko": "날씨 상태"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor"
+}
+
