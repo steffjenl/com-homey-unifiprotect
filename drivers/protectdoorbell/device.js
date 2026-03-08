@@ -3,7 +3,7 @@
 const Homey = require('homey');
 const fetch = require('node-fetch');
 const https = require('https');
-const SmartDetectionEvent = require('../../library/Models/SmartDetectionEvent');
+const SmartDetectionMixin = require('../../library/SmartDetectionMixin');
 
 class Doorbell extends Homey.Device {
     /**
@@ -428,129 +428,59 @@ class Doorbell extends Homey.Device {
     }
 
     onSmartDetection(payload, actionType = null, eventId = null) {
-        let lastDetectionAt = null;
-        let score = null;
-        let smartDetectTypes = null;
-        let event = null;
-        let zones = '';
-
-        if (actionType === 'add') {
-            event = this.setSmartDetectionEvent(eventId, payload.start, payload.smartDetectTypes, payload.score);
-        } else if (actionType === 'update') {
-            event = this.getSmartDetectionEvent(eventId);
-            if (event !== null) {
-                event.detectionTypes = payload.smartDetectTypes;
-            }
-        }
-
-        this.homey.app.debug(`[Object] onSmartDetection ${JSON.stringify(event)}`);
-
-        if (event !== null) {
-            lastDetectionAt = event.detectionTime;
-            score = event.detectionScore;
-            smartDetectTypes = event.detectionTypes;
-
-            if (payload?.metadata?.zonesStatus && typeof payload.metadata.zonesStatus === 'object') {
-                zones = Object.entries(payload.metadata.zonesStatus)
-                    .filter(([_, zone]) => zone.status !== 'none')
-                    .map(([key, _]) => key)
-                    .join(', ');
-            }
-        } else {
-            this.homey.app.debug(`[404] Event not found [${eventId}] ${JSON.stringify(payload)}`);
-            return;
-        }
-
-        const lastDetection = this.homey.app.toLocalTime(new Date(lastDetectionAt));
-        // Set last smart detection to current datetime
-        this.setCapabilityValue('last_smart_detection_at', lastDetectionAt)
-            .catch(this.error);
-        this.setCapabilityValue('last_smart_detection_date', lastDetection.toLocaleDateString())
-            .catch(this.error);
-        this.setCapabilityValue('last_smart_detection_time', lastDetection.toLocaleTimeString())
-            .catch(this.error);
-        this.setCapabilityValue('last_smart_detection_score', score)
-            .catch(this.error);
-
-        // const smartDetectionType = smartDetectTypes.join(',');
-
-        // fire trigger (per detection type)
-        if (smartDetectTypes.length > 0) {
-            for (const smartDetectionType of smartDetectTypes) {
-                this.homey.app.debug(`[C] smart detection event on Doorbell ${this.getData().id}, with type ${smartDetectionType}`);
-                // fire trigger
-                if (smartDetectionType === 'person') {
-                    this.triggerSmartDetectionTriggerPerson(score, zones);
-                } else if (smartDetectionType === 'vehicle') {
-                    this.triggerSmartDetectionTriggerVehicle(score, zones);
-                } else if (smartDetectionType === 'animal') {
-                    this.triggerSmartDetectionTriggerAnimal(score, zones);
-                } else if (smartDetectionType === 'package') {
-                    this.triggerSmartDetectionTriggerPackage(score, zones);
-                } else if (smartDetectionType === 'licensePlate') {
-                    this.triggerSmartDetectionTriggerLicensePlate(score, zones);
-                } else if (smartDetectionType === 'face') {
-                    this.triggerSmartDetectionTriggerFace(score, zones);
-                }
-            }
-        } else {
-            this.triggerSmartDetectionTriggerUnknown(score, zones);
-        }
+        return SmartDetectionMixin.onSmartDetection.call(this, payload, actionType, eventId);
     }
 
     onAudioDetection(payload, actionType = null, eventId = null) {
-        let score = null;
-        let audioDetectTypes = null;
-        let event = null;
-
-        if (actionType === 'add') {
-            event = this.setSmartDetectionEvent(eventId, payload.start, payload.smartDetectTypes, payload.score);
-        } else if (actionType === 'update') {
-            event = this.getSmartDetectionEvent(eventId);
-            if (event !== null) {
-                event.detectionTypes = payload.smartDetectTypes;
-            }
-        }
-
-        this.homey.app.debug(`[Audio Doorbell] onAudioDetection ${JSON.stringify(event)}`);
-
-        if (event !== null) {
-            score = event.detectionScore;
-            audioDetectTypes = event.detectionTypes;
-        }
-
-        // Fire triggers for audio detection
-        if (audioDetectTypes && audioDetectTypes.length > 0) {
-            // Fire triggers for each specific audio type detected
-            for (const audioDetectionType of audioDetectTypes) {
-                this.homey.app.debug(`audio detection event on Doorbell ${this.getData().id}, with type ${audioDetectionType}`);
-
-                // Map the internal API names to readable names
-                const readableType = this.mapAudioDetectionType(audioDetectionType);
-
-                // Fire audio detection trigger with the mapped type
-                this.triggerAudioDetectionTrigger(audioDetectionType, readableType, score);
-            }
-        } else {
-            // No specific types detected (or empty array), but still fire "any" trigger
-            this.homey.app.debug(`audio detection event on Doorbell ${this.getData().id}, with unspecified type (any)`);
-            this.triggerAudioDetectionTrigger('any', 'any', score || 0);
-        }
+        return SmartDetectionMixin.onAudioDetection.call(this, payload, actionType, eventId);
     }
 
     mapAudioDetectionType(apiType) {
-        const typeMap = {
-            alrmSmoke: 'smoke',
-            alrmCmonx: 'cmonx',
-            alrmSiren: 'siren',
-            alrmBabyCry: 'baby_cry',
-            alrmSpeak: 'speak',
-            alrmBark: 'bark',
-            alrmBurglar: 'burglar',
-            alrmCarHorn: 'car_horn',
-            alrmGlassBreak: 'glass_break',
-        };
-        return typeMap[apiType] || apiType;
+        return SmartDetectionMixin.mapAudioDetectionType.call(this, apiType);
+    }
+
+    triggerSmartDetectionTriggerUnknown(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerUnknown.call(this, score, zones);
+    }
+
+    triggerSmartDetectionTriggerPerson(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerPerson.call(this, score, zones);
+    }
+
+    triggerSmartDetectionTriggerVehicle(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerVehicle.call(this, score, zones);
+    }
+
+    triggerSmartDetectionTriggerAnimal(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerAnimal.call(this, score, zones);
+    }
+
+    triggerSmartDetectionTriggerPackage(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerPackage.call(this, score, zones);
+    }
+
+    triggerSmartDetectionTriggerLicensePlate(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerLicensePlate.call(this, score, zones);
+    }
+
+    triggerSmartDetectionTriggerFace(score, zones) {
+        return SmartDetectionMixin.triggerSmartDetectionTriggerFace.call(this, score, zones);
+    }
+
+    triggerAudioDetectionTrigger(audioType, readableType, score) {
+        return SmartDetectionMixin.triggerAudioDetectionTrigger.call(this, audioType, readableType, score);
+    }
+
+    getSmartDetectionEvent(eventId) {
+        return SmartDetectionMixin.getSmartDetectionEvent.call(this, eventId);
+    }
+
+    setSmartDetectionEvent(eventId, detectionTime, detectionTypes, detectionScore) {
+        return SmartDetectionMixin.setSmartDetectionEvent.call(this, eventId, detectionTime, detectionTypes, detectionScore);
+    }
+
+    cleanSmartDetectionEvents() {
+        return SmartDetectionMixin.cleanSmartDetectionEvents.call(this);
     }
 
     onConnectionChanged(connectionStatus) {
@@ -791,241 +721,6 @@ class Doorbell extends Homey.Device {
         });
     }
 
-    triggerSmartDetectionTriggerUnknown(score, zones) {
-        // Generic trigger
-        this.homey.app._smartDetectionTrigger.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            smart_detection_type: 'unknown',
-            score,
-            zones,
-        }).catch(this.error);
-        // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this, {
-            smart_detection_type: 'unknown',
-            score,
-            zones,
-        }).catch(this.error);
-    }
-
-    triggerSmartDetectionTriggerPerson(score, zones) {
-        this.homey.app.debug('this.homey.app._smartDetectionTrigger.trigger');
-        // Generic trigger
-        this.homey.app._smartDetectionTrigger.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            smart_detection_type: 'person',
-            score,
-            zones,
-        }).catch(this.error);
-
-        this.homey.app.debug('this.driver._smartDetectionTrigger.trigger');
-        // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this, {
-            smart_detection_type: 'person',
-            score,
-            zones,
-        }).catch(this.error);
-
-        this.homey.app.debug('this.homey.app._smartDetectionTriggerPerson.trigger');
-        // Detection Type trigger
-        // App trigger
-        this.homey.app._smartDetectionTriggerPerson.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            score,
-            zones,
-        }).catch(this.error);
-
-        this.homey.app.debug('this.driver._deviceSmartDetectionTriggerPerson.trigger');
-        // Device trigger
-        this.driver._deviceSmartDetectionTriggerPerson.trigger(this, {
-            score,
-            zones,
-        }).catch(this.error).catch(this.error);
-    }
-
-    triggerSmartDetectionTriggerVehicle(score, zones) {
-        // Generic trigger
-        this.homey.app._smartDetectionTrigger.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            smart_detection_type: 'vehicle',
-            score,
-            zones,
-        }).catch(this.error);
-        // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this, {
-            smart_detection_type: 'vehicle',
-            score,
-            zones,
-        }).catch(this.error);
-        // Detection Type trigger
-        // App trigger
-        this.homey.app._smartDetectionTriggerVehicle.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            score,
-            zones,
-        }).catch(this.error);
-        // Device trigger
-        this.driver._deviceSmartDetectionTriggerVehicle.trigger(this, {
-            score,
-            zones,
-        }).catch(this.error);
-    }
-
-    triggerSmartDetectionTriggerAnimal(score, zones) {
-        // Generic trigger
-        this.homey.app._smartDetectionTrigger.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            smart_detection_type: 'animal',
-            score,
-            zones,
-        }).catch(this.error);
-        // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this, {
-            smart_detection_type: 'animal',
-            score,
-            zones,
-        }).catch(this.error);
-        // Detection Type trigger
-        // App trigger
-        this.homey.app._smartDetectionTriggerAnimal.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            score,
-            zones,
-        }).catch(this.error);
-        // Device trigger
-        this.driver._deviceSmartDetectionTriggerAnimal.trigger(this, {
-            score,
-            zones,
-        }).catch(this.error);
-    }
-
-    triggerSmartDetectionTriggerPackage(score, zones) {
-        // Generic trigger
-        this.homey.app._smartDetectionTrigger.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            smart_detection_type: 'package',
-            score,
-            zones,
-        }).catch(this.error);
-        // device
-        this.driver._deviceSmartDetectionTrigger.trigger(this, {
-            smart_detection_type: 'package',
-            score,
-            zones,
-        }).catch(this.error);
-        // Detection Type trigger
-        // App trigger
-        this.homey.app._smartDetectionTriggerPackage.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            score,
-            zones,
-        }).catch(this.error);
-        // Device trigger
-        this.driver._deviceSmartDetectionTriggerPackage.trigger(this, {
-            score,
-            zones,
-        }).catch(this.error);
-    }
-
-    triggerSmartDetectionTriggerLicensePlate(score, zones) {
-        // Generic trigger
-        this.homey.app._smartDetectionTrigger.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            smart_detection_type: 'licensePlate',
-            score,
-            zones,
-        }).catch(this.error);
-        // Dedicated trigger
-        this.homey.app._smartDetectionTriggerLicensePlate.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            score,
-            zones,
-        }).catch(this.error);
-        // Device trigger
-        this.driver._deviceSmartDetectionTrigger.trigger(this, {
-            smart_detection_type: 'licensePlate',
-            score,
-            zones,
-        }).catch(this.error);
-        // Device trigger
-        this.driver._deviceSmartDetectionTriggerLicensePlate.trigger(this, {
-            score,
-            zones,
-        }).catch(this.error);
-    }
-
-    triggerSmartDetectionTriggerFace(score, zones) {
-        // Generic trigger
-        this.homey.app._smartDetectionTrigger.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            smart_detection_type: 'face',
-            score,
-            zones,
-        }).catch(this.error);
-        // Dedicated trigger
-        this.homey.app._smartDetectionTriggerFace.trigger({
-            ufp_smart_detection_camera: this.getName(),
-            score,
-            zones,
-        }).catch(this.error);
-        // Device trigger
-        this.driver._deviceSmartDetectionTrigger.trigger(this, {
-            smart_detection_type: 'face',
-            score,
-            zones,
-        }).catch(this.error);
-        // Device trigger
-        this.driver._deviceSmartDetectionTriggerFace.trigger(this, {
-            score,
-            zones,
-        }).catch(this.error);
-    }
-
-    triggerAudioDetectionTrigger(audioType, readableType, score) {
-        // Map internal audio type to dropdown value
-        const audioTypeMap = {
-            alrmSmoke: 'smoke',
-            alrmCmonx: 'cmonx',
-            alrmSiren: 'siren',
-            alrmBabyCry: 'baby_cry',
-            alrmSpeak: 'speak',
-            alrmBark: 'bark',
-            alrmBurglar: 'burglar',
-            alrmCarHorn: 'car_horn',
-            alrmGlassBreak: 'glass_break',
-        };
-
-        const mappedType = audioTypeMap[audioType] || audioType;
-
-        // Device-specific audio detection trigger with state for dropdown filter
-        this.driver._deviceAudioDetectionTrigger.trigger(this, {
-            audio_detection_type: mappedType,
-            score,
-        }, {
-            audio_detection_type: mappedType,
-        }).catch(this.error);
-    }
-
-    getSmartDetectionEvent(event_id) {
-        return this.getStoreValue(event_id);
-    }
-
-    setSmartDetectionEvent(event_id, smartDetectionTime, smartDetectionType, smartDetectionScore) {
-        const event = new SmartDetectionEvent(smartDetectionTime, smartDetectionType, smartDetectionScore, event_id);
-        this.setStoreValue(event_id, event).catch(this.error);
-        return event;
-    }
-
-    cleanSmartDetectionEvents() {
-        const events = this.getStoreKeys();
-
-        events.forEach((eventId) => {
-            const event = this.getStoreValue(eventId);
-            const currentTime = this.homey.app.getUnixTimestamp();
-            if ((currentTime - event.detectionTime) > 86400) {
-                this.unsetStoreValue(eventId).catch(this.error);
-            }
-        });
-    }
 
 }
 

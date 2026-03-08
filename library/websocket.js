@@ -189,6 +189,9 @@ class ProtectWebSocket extends BaseClass {
     } if (updatePacket.action.action === 'add' && updatePacket.payload.type === 'smartAudioDetect') {
       // Smart audio detections
       return true;
+    } if (updatePacket.action.action === 'update' && updatePacket.payload.type === 'smartAudioDetect') {
+      // Smart audio detection updates (types filled in after initial add)
+      return true;
     } if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'light') {
       // Updates lastMotion or the lastRing
       return true;
