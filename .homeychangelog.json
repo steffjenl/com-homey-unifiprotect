@@ -286,5 +286,8 @@
   },
   "1.9.2": {
     "en": "Add test sound flow action for Chimes"
+  },
+  "1.9.3": {
+    "en": "Fix: Alarm action card not working"
   }
 }
