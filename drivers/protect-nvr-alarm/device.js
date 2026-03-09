@@ -92,18 +92,23 @@ class NVRAlarmDevice extends Homey.Device {
 
   /**
    * Called when the NVR arm state changes (from websocket NVR update).
-   * Accepts either a boolean (legacy isAway) or an armMode object { status: 'armed'|'disarmed' }.
+   * Accepts either a boolean (legacy isAway) or an armMode object { status: 'armed'|'disarmed'|'breach' }.
    * @param {boolean|object} armStateOrIsAway
    */
   async onAlarmStateChanged(armStateOrIsAway) {
     this.homey.app.debug(`[NVRAlarmDevice] onAlarmStateChanged: ${JSON.stringify(armStateOrIsAway)}`);
-    let isAway;
+
     if (typeof armStateOrIsAway === 'object' && armStateOrIsAway !== null) {
-      isAway = armStateOrIsAway.status === 'armed';
+      if (armStateOrIsAway.status === 'breach') {
+        await this._applyBreachState(true);
+        return;
+      }
+      const isAway = armStateOrIsAway.status === 'armed';
+      await this._applyAlarmState(isAway, true);
     } else {
-      isAway = armStateOrIsAway === true;
+      const isAway = armStateOrIsAway === true;
+      await this._applyAlarmState(isAway, true);
     }
-    await this._applyAlarmState(isAway, true);
   }
 
   /**
@@ -118,7 +123,11 @@ class NVRAlarmDevice extends Homey.Device {
 
       if (currentState !== homeyAlarmState) {
         await this.setCapabilityValue('homealarm_state', homeyAlarmState);
-        await this.setCapabilityValue('alarm_generic', isAway);
+
+        // Reset alarm_generic when disarmed (clears any active breach)
+        if (!isAway) {
+          await this.setCapabilityValue('alarm_generic', false);
+        }
 
         if (triggerFlows) {
           const stateLabel = isAway ? 'armed' : 'disarmed';
@@ -145,6 +154,40 @@ class NVRAlarmDevice extends Homey.Device {
       }
     } catch (error) {
       this.error(`[NVRAlarmDevice] _applyAlarmState error: ${error.message}`);
+    }
+  }
+
+  /**
+   * Apply a breach state: homealarm_state stays 'armed', alarm_generic is set to true,
+   * and the breach flow trigger fires.
+   * @param {boolean} triggerFlows
+   */
+  async _applyBreachState(triggerFlows) {
+    try {
+      this.homey.app.debug('[NVRAlarmDevice] _applyBreachState');
+
+      // Ensure homealarm_state reflects armed (NVR is still armed during breach)
+      if (this.getCapabilityValue('homealarm_state') !== 'armed') {
+        await this.setCapabilityValue('homealarm_state', 'armed');
+      }
+
+      await this.setCapabilityValue('alarm_generic', true);
+
+      if (triggerFlows) {
+        // Trigger: state changed (with 'breach' as state token)
+        this.driver.homey.flow
+          .getDeviceTriggerCard(UfvConstants.EVENT_NVR_ALARM_STATE_CHANGED)
+          .trigger(this, { state: 'breach' })
+          .catch((err) => this.error(err));
+
+        // Trigger: breach
+        this.driver.homey.flow
+          .getDeviceTriggerCard(UfvConstants.EVENT_NVR_ALARM_BREACH)
+          .trigger(this)
+          .catch((err) => this.error(err));
+      }
+    } catch (error) {
+      this.error(`[NVRAlarmDevice] _applyBreachState error: ${error.message}`);
     }
   }
 

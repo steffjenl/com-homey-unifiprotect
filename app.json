@@ -1211,6 +1211,30 @@
         ]
       },
       {
+        "id": "ufp_nvr_alarm_breach",
+        "title": {
+          "en": "Alarm breached (intrusion detected)",
+          "nl": "Alarm geschonden (inbraak gedetecteerd)",
+          "de": "Alarm ausgelöst (Eindringen erkannt)",
+          "fr": "Alarme déclenchée (intrusion détectée)",
+          "it": "Allarme violato (intrusione rilevata)",
+          "sv": "Larm utlöst (intrång upptäckt)",
+          "no": "Alarm brutt (innbrudd oppdaget)",
+          "es": "Alarma activada (intrusión detectada)",
+          "da": "Alarm brudt (indbrud registreret)",
+          "ru": "Тревога сработала (обнаружено вторжение)",
+          "pl": "Alarm naruszony (wykryto włamanie)",
+          "ko": "알람 침해됨 (침입 감지됨)"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-nvr-alarm"
+          }
+        ]
+      },
+      {
         "id": "ufp_weather_updated",
         "title": {
           "en": "Weather updated",

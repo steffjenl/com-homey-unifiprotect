@@ -93,6 +93,7 @@ module.exports.EVENT_DEVICE_NFC_CARD_SCANNED = 'ufp_device_nfc_card_scanned';
 module.exports.EVENT_NVR_ALARM_STATE_CHANGED = 'ufp_nvr_alarm_state_changed';
 module.exports.EVENT_NVR_ALARM_ARMED = 'ufp_nvr_alarm_armed';
 module.exports.EVENT_NVR_ALARM_DISARMED = 'ufp_nvr_alarm_disarmed';
+module.exports.EVENT_NVR_ALARM_BREACH = 'ufp_nvr_alarm_breach';
 
 // Weather
 module.exports.EVENT_WEATHER_UPDATED = 'ufp_weather_updated';
