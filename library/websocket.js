@@ -10,6 +10,9 @@ class ProtectWebSocket extends BaseClass {
     super(...props);
     this.loggedInStatus = 'Unknown';
     this.lastWebsocketMessage = null;
+    // Maps eventId -> cameraId for firmware that omits recordId in the action frame
+    this._eventCameraMap = new Map();
+    this._eventCameraMapTimestamps = new Map();
   }
 
   heartbeat() {
@@ -225,7 +228,7 @@ class ProtectWebSocket extends BaseClass {
       const updatePacket = this.decodeUpdatePacket(event);
 
       if (!updatePacket) {
-        return true;
+        return;
       }
 
       // if (
@@ -259,7 +262,7 @@ class ProtectWebSocket extends BaseClass {
 
       // Filter on what actions we're interested in only.
       if (!this.shouldProcessEvent(updatePacket)) {
-        return true;
+        return;
       }
 
       //
@@ -268,118 +271,133 @@ class ProtectWebSocket extends BaseClass {
       // get payload from updatePacket
       const { payload } = updatePacket;
 
+      // Phase 2: Populate event-to-camera map on every add event so that
+      // subsequent update events (which don't carry payload.camera) can still
+      // be routed to the correct device. Also covers firmware that never sets
+      // action.recordId.
+      if (
+        updatePacket.action.action === 'add'
+        && updatePacket.action.modelKey === 'event'
+        && updatePacket.payload.camera
+      ) {
+        const ts = Date.now();
+        this._eventCameraMap.set(updatePacket.action.id, updatePacket.payload.camera);
+        this._eventCameraMapTimestamps.set(updatePacket.action.id, ts);
+        // Prune entries older than 24 h to prevent unbounded growth
+        if (this._eventCameraMap.size > 1000) {
+          const cutoff = ts - 86400000;
+          for (const [eid, ets] of this._eventCameraMapTimestamps) {
+            if (ets < cutoff) {
+              this._eventCameraMap.delete(eid);
+              this._eventCameraMapTimestamps.delete(eid);
+            }
+          }
+        }
+      }
+
       if (
         updatePacket.action.modelKey === 'event'
-                && typeof updatePacket.action.recordId !== 'undefined'
+                && !!this._resolveCameraId(updatePacket)
                 && typeof updatePacket.payload.smartDetectTypes !== 'undefined'
                 && updatePacket.payload.smartDetectTypes.length > 0
       ) {
         this.homey.app.debug('smartDetectZone event filled smartDetectTypes array');
+        const resolvedId = this._resolveCameraId(updatePacket);
         // get protectcamera driver
         const driverCamera = this.homey.drivers.getDriver('protectcamera');
-        // Get device from camera id
-        const deviceId = updatePacket.action.recordId;
-        const deviceCamera = driverCamera.getUnifiDeviceById(deviceId);
+        const deviceCamera = driverCamera.getUnifiDeviceById(resolvedId);
         if (deviceCamera) {
           // Parse Websocket payload message
           driverCamera.onParseWebsocketMessage(deviceCamera, payload, updatePacket.action.action, updatePacket.action.id);
         }
         // get doorbell driver
         const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-        // Get device from camera id
-        const deviceDoorbellId = updatePacket.action.recordId;
-        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(deviceDoorbellId);
+        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(resolvedId);
         if (deviceDoorbell) {
           // Parse Websocket payload message
           driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
         }
       } else if (
         updatePacket.action.modelKey === 'event'
-                && typeof updatePacket.action.recordId !== 'undefined'
+                && !!this._resolveCameraId(updatePacket)
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'smartDetectZone'
       ) {
         this.homey.app.debug('smartDetectZone event without filled smartDetectTypes array');
+        const resolvedId = this._resolveCameraId(updatePacket);
         // get protectcamera driver
         const driverCamera = this.homey.drivers.getDriver('protectcamera');
-        // Get device from camera id
-        const deviceCamera = driverCamera.getUnifiDeviceById(updatePacket.action.recordId);
+        const deviceCamera = driverCamera.getUnifiDeviceById(resolvedId);
         if (deviceCamera) {
           // Parse Websocket payload message
           driverCamera.onParseWebsocketMessage(deviceCamera, payload, updatePacket.action.action, updatePacket.action.id);
         }
         // get doorbell driver
         const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-        // Get device from camera id
-        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
+        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(resolvedId);
         if (deviceDoorbell) {
           // Parse Websocket payload message
           driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
         }
       } else if (
         updatePacket.action.modelKey === 'event'
-                && typeof updatePacket.action.recordId !== 'undefined'
+                && !!this._resolveCameraId(updatePacket)
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'fingerprintIdentified'
       ) {
         // get doorbell driver
         const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-        // Get device from camera id
-        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
+        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(this._resolveCameraId(updatePacket));
         if (deviceDoorbell) {
           // Parse Websocket payload message
           driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
         }
       } else if (
         updatePacket.action.modelKey === 'event'
-                && typeof updatePacket.action.recordId !== 'undefined'
+                && !!this._resolveCameraId(updatePacket)
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'nfcCardScanned'
       ) {
         // get doorbell driver
         const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-        // Get device from camera id
-        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
+        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(this._resolveCameraId(updatePacket));
         if (deviceDoorbell) {
           // Parse Websocket payload message
           driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
         }
       } else if (
         updatePacket.action.modelKey === 'event'
-                && typeof updatePacket.action.recordId !== 'undefined'
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'doorAccess'
       ) {
-        // application event
+        // application event (no camera lookup needed)
         this.homey.app.onParseWebsocketMessage(payload);
       } else if (
         updatePacket.action.modelKey === 'event'
-                && typeof updatePacket.action.recordId !== 'undefined'
+                && !!this._resolveCameraId(updatePacket)
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'smartAudioDetect'
       ) {
         // Audio detection event - smartDetectTypes may be empty initially
         this.homey.app.debug(`smartAudioDetect event: ${JSON.stringify(updatePacket.payload)}`);
-
+        const resolvedId = this._resolveCameraId(updatePacket);
         // get protectcamera driver
         const driverCamera = this.homey.drivers.getDriver('protectcamera');
-        // Get device from camera id
-        const deviceCamera = driverCamera.getUnifiDeviceById(updatePacket.action.recordId);
+        const deviceCamera = driverCamera.getUnifiDeviceById(resolvedId);
         if (deviceCamera) {
           // Parse Websocket payload message for audio detection
           deviceCamera.onAudioDetection(updatePacket.payload, updatePacket.action.action, updatePacket.action.id);
         }
         // get doorbell driver
         const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-        // Get device from camera id
-        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
+        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(resolvedId);
         if (deviceDoorbell) {
           // Parse Websocket payload message for audio detection
           deviceDoorbell.onAudioDetection(updatePacket.payload, updatePacket.action.action, updatePacket.action.id);
         }
       } else if (
         updatePacket.action.modelKey === 'event'
-                && typeof updatePacket.action.recordId !== 'undefined'
+                && !!this._resolveCameraId(updatePacket)
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'ring'
       ) {
@@ -456,16 +474,16 @@ class ProtectWebSocket extends BaseClass {
           driver.onParseWebsocketMessage(device, payload);
         }
       } else if (updatePacket.action.modelKey === 'siren') {
-          // get protect-siren driver
-          const driver = this.homey.drivers.getDriver('protect-siren');
-          // Get device from siren id
-          const deviceId = updatePacket.action.id;
-          const device = driver.getUnifiDeviceById(deviceId);
-          if (device) {
-              // Parse Websocket payload message
-              driver.onParseWebsocketMessage(device, payload);
-          }
-      }  else {
+        // get protect-siren driver
+        const driver = this.homey.drivers.getDriver('protect-siren');
+        // Get device from siren id
+        const deviceId = updatePacket.action.id;
+        const device = driver.getUnifiDeviceById(deviceId);
+        if (device) {
+          // Parse Websocket payload message
+          driver.onParseWebsocketMessage(device, payload);
+        }
+      } else {
         // get protectcamera driver
         const driverCamera = this.homey.drivers.getDriver('protectcamera');
         // Get device from camera id
@@ -489,6 +507,22 @@ class ProtectWebSocket extends BaseClass {
     });
     this._eventListenerConfigured = true;
     return true;
+  }
+
+  // Resolve the camera/device ID from a WebSocket update packet.
+  // Priority:
+  //   1. action.recordId  — present on newer firmware
+  //   2. payload.camera   — present on add-events, older firmware
+  //   3. _eventCameraMap  — populated from step 2; used for update-events that
+  //                         carry no camera reference at all
+  _resolveCameraId(updatePacket) {
+    if (typeof updatePacket.action.recordId !== 'undefined') {
+      return updatePacket.action.recordId;
+    }
+    if (updatePacket.payload && updatePacket.payload.camera) {
+      return updatePacket.payload.camera;
+    }
+    return this._eventCameraMap.get(updatePacket.action.id) || undefined;
   }
 
   // Process an update data packet and return the action and payload.
