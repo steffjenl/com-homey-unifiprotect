@@ -289,5 +289,8 @@
   },
   "1.9.3": {
     "en": "Fix: Alarm action card not working"
+  },
+  "1.9.4": {
+    "en": "Fix smartDetectons"
   }
 }
