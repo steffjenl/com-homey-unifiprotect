@@ -42,14 +42,18 @@ class AppAccess extends BaseClass {
     const _setDoorTempLockingRule = this.homey.flow.getActionCard('ufv_set_reader_door_locking_rule');
     _setDoorTempLockingRule.registerRunListener(async (args, state) => {
       if (typeof args.device.getData().id !== 'undefined') {
-        return this.homey.app.accessApi.setTempDoorLockingRule(args.device.getData().id, args.type, args.interval);
+        const intervalSeconds = args.interval * 60;
+        this.homey.app.debug(`[AppAccess] setTempDoorLockingRule door type=${args.type} interval=${args.interval}min (${intervalSeconds}s)`);
+        return this.homey.app.accessApi.setTempDoorLockingRule(args.device.getData().id, args.type, intervalSeconds);
       }
       return Promise.resolve(true);
     });
     const _setGarageDoorTempLockingRule = this.homey.flow.getActionCard('ufv_set_reader_garagedoor_locking_rule');
     _setGarageDoorTempLockingRule.registerRunListener(async (args, state) => {
       if (typeof args.device.getData().id !== 'undefined') {
-        return this.homey.app.accessApi.setTempDoorLockingRule(args.device.getData().id, args.type, args.interval);
+        const intervalSeconds = args.interval * 60;
+        this.homey.app.debug(`[AppAccess] setTempDoorLockingRule garagedoor type=${args.type} interval=${args.interval}min (${intervalSeconds}s)`);
+        return this.homey.app.accessApi.setTempDoorLockingRule(args.device.getData().id, args.type, intervalSeconds);
       }
       return Promise.resolve(true);
     });

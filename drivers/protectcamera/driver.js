@@ -34,12 +34,16 @@ class UniFiCameraDriver extends Homey.Driver {
         });
 
         session.setHandler('list_devices', async (data) => {
-            return Object.values(await homey.app.api.getCameras()).map((camera) => {
-                return {
-                    data: {id: String(camera.id)},
+            try {
+                const cameras = await homey.app.api.getCameras();
+                return Object.values(cameras).map((camera) => ({
+                    data: { id: String(camera.id) },
                     name: camera.name,
-                };
-            });
+                }));
+            } catch (error) {
+                homey.app.debug('[protectcamera] list_devices error: ' + error);
+                return [];
+            }
         });
     }
 

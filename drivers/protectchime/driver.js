@@ -1,12 +1,17 @@
 'use strict';
 
 const Homey = require('homey');
+const UfvConstants = require('../../library/constants');
 
 class UniFiChimeDriver extends Homey.Driver {
     /**
      * onInit is called when the driver is initialized.
      */
     async onInit() {
+        this._deviceActionPlayTestTone = this.homey.flow.getDeviceActionCard(UfvConstants.ACTION_SET_DEVICE_TEST_CHIME_TONE);
+        this._deviceActionPlayTestTone.registerRunListener(async (args) => {
+            return this.homey.app.api.playChimeTone(args.device.getData()).catch(this.error);
+        });
         this.homey.app.debug('UniFiChime Driver has been initialized');
     }
 
