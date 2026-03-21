@@ -292,5 +292,8 @@
   },
   "1.9.4": {
     "en": "Fix smartDetectons"
+  },
+  "1.9.5": {
+    "en": "Fix endless loop driver search and broken sendTestTone to chime."
   }
 }
