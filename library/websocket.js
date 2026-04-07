@@ -345,12 +345,17 @@ class ProtectWebSocket extends BaseClass {
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'fingerprintIdentified'
       ) {
-        // get doorbell driver
+        const resolvedId = this._resolveCameraId(updatePacket);
+        // Try doorbell driver first, then camera driver (G4 Entry may pair as either)
         const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(this._resolveCameraId(updatePacket));
+        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(resolvedId);
         if (deviceDoorbell) {
-          // Parse Websocket payload message
           driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
+        }
+        const driverCamera = this.homey.drivers.getDriver('protectcamera');
+        const deviceCamera = driverCamera.getUnifiDeviceById(resolvedId);
+        if (deviceCamera) {
+          driverCamera.onParseWebsocketMessage(deviceCamera, payload, updatePacket.action.action, updatePacket.action.id);
         }
       } else if (
         updatePacket.action.modelKey === 'event'
@@ -358,12 +363,17 @@ class ProtectWebSocket extends BaseClass {
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'nfcCardScanned'
       ) {
-        // get doorbell driver
+        const resolvedId = this._resolveCameraId(updatePacket);
+        // Try doorbell driver first, then camera driver (G4 Entry may pair as either)
         const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(this._resolveCameraId(updatePacket));
+        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(resolvedId);
         if (deviceDoorbell) {
-          // Parse Websocket payload message
           driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
+        }
+        const driverCamera = this.homey.drivers.getDriver('protectcamera');
+        const deviceCamera = driverCamera.getUnifiDeviceById(resolvedId);
+        if (deviceCamera) {
+          driverCamera.onParseWebsocketMessage(deviceCamera, payload, updatePacket.action.action, updatePacket.action.id);
         }
       } else if (
         updatePacket.action.modelKey === 'event'
