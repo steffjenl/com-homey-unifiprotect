@@ -295,5 +295,8 @@
   },
   "1.9.5": {
     "en": "Fix endless loop driver search and broken sendTestTone to chime."
+  },
+  "1.9.6": {
+    "en": "Add G4 Entry debug information"
   }
 }
