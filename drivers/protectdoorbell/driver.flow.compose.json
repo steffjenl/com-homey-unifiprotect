@@ -1612,6 +1612,140 @@
         "en": "Test doorbell ringtone",
         "nl": "Test deurbel ringtone"
       }
+    },
+    {
+      "id": "ufp_set_device_doorbell_ring_volume",
+      "title": {
+        "en": "Set doorbell ring volume",
+        "nl": "Stel deurbel belvolume in",
+        "de": "Klingelvolumen der Türklingel einstellen",
+        "fr": "Définir le volume de sonnerie de la sonnette",
+        "it": "Imposta volume suoneria campanello",
+        "sv": "Ställ in dörrklockornas ringvolym",
+        "no": "Angi ringeklokke ringevolum",
+        "es": "Establecer volumen de timbre del timbre",
+        "da": "Indstil dørklokke ringelydstyrke",
+        "ru": "Установить громкость звонка домофона",
+        "pl": "Ustaw głośność dzwonka przy drzwiach",
+        "ko": "도어벨 벨소리 볼륨 설정"
+      },
+      "titleFormatted": {
+        "en": "Set doorbell ring volume to [[volume]]",
+        "nl": "Stel deurbel belvolume in op [[volume]]",
+        "de": "Klingelvolumen der Türklingel auf [[volume]] einstellen",
+        "fr": "Définir le volume de sonnerie de la sonnette sur [[volume]]",
+        "it": "Imposta volume suoneria campanello su [[volume]]",
+        "sv": "Ställ in dörrklockornas ringvolym till [[volume]]",
+        "no": "Angi ringeklokke ringevolum til [[volume]]",
+        "es": "Establecer volumen de timbre del timbre en [[volume]]",
+        "da": "Indstil dørklokke ringelydstyrke til [[volume]]",
+        "ru": "Установить громкость звонка домофона на [[volume]]",
+        "pl": "Ustaw głośność dzwonka przy drzwiach na [[volume]]",
+        "ko": "도어벨 벨소리 볼륨을 [[volume]]으로 설정"
+      },
+      "args": [
+        {
+          "name": "volume",
+          "type": "number",
+          "min": 0,
+          "max": 100,
+          "title": {
+            "en": "Volume (0-100)",
+            "nl": "Volume (0-100)",
+            "de": "Lautstärke (0-100)",
+            "fr": "Volume (0-100)",
+            "it": "Volume (0-100)",
+            "sv": "Volym (0-100)",
+            "no": "Volum (0-100)",
+            "es": "Volumen (0-100)",
+            "da": "Lydstyrke (0-100)",
+            "ru": "Громкость (0-100)",
+            "pl": "Głośność (0-100)",
+            "ko": "볼륨 (0-100)"
+          },
+          "placeholder": {
+            "en": "50",
+            "nl": "50",
+            "de": "50",
+            "fr": "50",
+            "it": "50",
+            "sv": "50",
+            "no": "50",
+            "es": "50",
+            "da": "50",
+            "ru": "50",
+            "pl": "50",
+            "ko": "50"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufp_set_device_doorbell_chime_volume",
+      "title": {
+        "en": "Set paired chime volume",
+        "nl": "Stel gekoppeld belvolume in",
+        "de": "Lautstärke der gekoppelten Türglocke einstellen",
+        "fr": "Définir le volume du carillon associé",
+        "it": "Imposta volume campanello abbinato",
+        "sv": "Ställ in parkopplad klockas volym",
+        "no": "Angi volum for koblet ringeklokke",
+        "es": "Establecer volumen del timbre emparejado",
+        "da": "Indstil parret klokkelydstyrke",
+        "ru": "Установить громкость сопряжённого звонка",
+        "pl": "Ustaw głośność sparowanego dzwonka",
+        "ko": "연결된 차임벨 볼륨 설정"
+      },
+      "titleFormatted": {
+        "en": "Set paired chime volume to [[volume]]",
+        "nl": "Stel gekoppeld belvolume in op [[volume]]",
+        "de": "Lautstärke der gekoppelten Türglocke auf [[volume]] einstellen",
+        "fr": "Définir le volume du carillon associé sur [[volume]]",
+        "it": "Imposta volume campanello abbinato su [[volume]]",
+        "sv": "Ställ in parkopplad klockas volym till [[volume]]",
+        "no": "Angi volum for koblet ringeklokke til [[volume]]",
+        "es": "Establecer volumen del timbre emparejado en [[volume]]",
+        "da": "Indstil parret klokkelydstyrke til [[volume]]",
+        "ru": "Установить громкость сопряжённого звонка на [[volume]]",
+        "pl": "Ustaw głośność sparowanego dzwonka na [[volume]]",
+        "ko": "연결된 차임벨 볼륨을 [[volume]]으로 설정"
+      },
+      "args": [
+        {
+          "name": "volume",
+          "type": "number",
+          "min": 0,
+          "max": 100,
+          "title": {
+            "en": "Volume (0-100)",
+            "nl": "Volume (0-100)",
+            "de": "Lautstärke (0-100)",
+            "fr": "Volume (0-100)",
+            "it": "Volume (0-100)",
+            "sv": "Volym (0-100)",
+            "no": "Volum (0-100)",
+            "es": "Volumen (0-100)",
+            "da": "Lydstyrke (0-100)",
+            "ru": "Громкость (0-100)",
+            "pl": "Głośność (0-100)",
+            "ko": "볼륨 (0-100)"
+          },
+          "placeholder": {
+            "en": "50",
+            "nl": "50",
+            "de": "50",
+            "fr": "50",
+            "it": "50",
+            "sv": "50",
+            "no": "50",
+            "es": "50",
+            "da": "50",
+            "ru": "50",
+            "pl": "50",
+            "ko": "50"
+          }
+        }
+      ]
     }
 
   ]

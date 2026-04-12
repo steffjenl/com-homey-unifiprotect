@@ -1074,73 +1074,177 @@
         ]
       },
       {
-        "id": "ufv_reader_garagedoor_opened",
+        "id": "ufv_device_access_keypad_used",
         "title": {
-          "en": "Garage door opened",
-          "nl": "Garage deur geopend",
-          "de": "Garagentor geöffnet",
-          "fr": "Porte de garage ouverte",
-          "it": "Porta garage aperta",
-          "sv": "Garageport öppnad",
-          "no": "Garasjeport åpnet",
-          "es": "Puerta de garaje abierta",
-          "da": "Garageport åbnet",
-          "ru": "Гаражные ворота открыты",
-          "pl": "Brama garażowa otwarta",
-          "ko": "차고문 열림"
+          "en": "Keypad / PIN used on door",
+          "nl": "Keypad / PIN gebruikt op deur",
+          "de": "Keypad / PIN an Tür verwendet",
+          "fr": "Clavier / PIN utilisé sur la porte",
+          "it": "Tastiera / PIN utilizzato sulla porta",
+          "sv": "Knappsats / PIN använd på dörr",
+          "no": "Tastatur / PIN brukt på dør",
+          "es": "Teclado / PIN usado en la puerta",
+          "da": "Tastatur / PIN brugt på dør",
+          "ru": "Клавиатура / PIN использован на двери",
+          "pl": "Klawiatura / PIN użyta przy drzwiach",
+          "ko": "문에서 키패드 / PIN 사용됨"
         },
-        "hint": {
-          "en": "Triggers when the garage door is opened",
-          "nl": "Wordt geactiveerd wanneer de garage deur wordt geopend",
-          "de": "Löst aus, wenn das Garagentor geöffnet wird",
-          "fr": "Déclenche lorsque la porte de garage est ouverte",
-          "it": "Si attiva quando la porta del garage è aperta",
-          "sv": "Utlöses när garageporten öppnas",
-          "no": "Utløses når garasjeporten åpnes",
-          "es": "Se activa cuando la puerta de garaje está abierta",
-          "da": "Udløses når garageporten åbnes",
-          "ru": "Срабатывает при открытии гаражных ворот",
-          "pl": "Wyzwala się, gdy brama garażowa jest otwarta",
-          "ko": "차고문이 열릴 때 트리거됨"
-        },
+        "tokens": [
+          {
+            "name": "ufv_actor",
+            "type": "string",
+            "title": {
+              "en": "User name",
+              "nl": "Gebruikersnaam",
+              "de": "Benutzername",
+              "fr": "Nom d'utilisateur",
+              "it": "Nome utente",
+              "sv": "Användarnamn",
+              "no": "Brukernavn",
+              "es": "Nombre de usuario",
+              "da": "Brugernavn",
+              "ru": "Имя пользователя",
+              "pl": "Nazwa użytkownika",
+              "ko": "사용자 이름"
+            },
+            "example": {
+              "en": "John Doe",
+              "nl": "Jan de Vries",
+              "de": "Max Mustermann",
+              "fr": "Jean Dupont",
+              "it": "Mario Rossi",
+              "sv": "Anna Svensson",
+              "no": "Ola Nordmann",
+              "es": "Juan García",
+              "da": "Peter Jensen",
+              "ru": "Иван Иванов",
+              "pl": "Jan Kowalski",
+              "ko": "홍길동"
+            }
+          },
+          {
+            "name": "ufv_auth_method",
+            "type": "string",
+            "title": {
+              "en": "Auth method",
+              "nl": "Authenticatiemethode",
+              "de": "Authentifizierungsmethode",
+              "fr": "Méthode d'authentification",
+              "it": "Metodo di autenticazione",
+              "sv": "Autentiseringsmetod",
+              "no": "Autentiseringsmetode",
+              "es": "Método de autenticación",
+              "da": "Godkendelsesmetode",
+              "ru": "Метод аутентификации",
+              "pl": "Metoda uwierzytelniania",
+              "ko": "인증 방법"
+            },
+            "example": {
+              "en": "pin_code",
+              "nl": "pin_code",
+              "de": "pin_code",
+              "fr": "pin_code",
+              "it": "pin_code",
+              "sv": "pin_code",
+              "no": "pin_code",
+              "es": "pin_code",
+              "da": "pin_code",
+              "ru": "pin_code",
+              "pl": "pin_code",
+              "ko": "pin_code"
+            }
+          }
+        ],
         "args": [
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=access-garagedoor"
+            "filter": "driver_id=access-door"
           }
         ]
       },
       {
-        "id": "ufv_reader_garagedoor_closed",
+        "id": "ufv_device_access_garagedoor_keypad_used",
         "title": {
-          "en": "Garage door closed",
-          "nl": "Garage deur gesloten",
-          "de": "Garagentor geschlossen",
-          "fr": "Porte de garage fermée",
-          "it": "Porta garage chiusa",
-          "sv": "Garageport stängd",
-          "no": "Garasjeport lukket",
-          "es": "Puerta de garaje cerrada",
-          "da": "Garageport lukket",
-          "ru": "Гаражные ворота закрыты",
-          "pl": "Brama garażowa zamknięta",
-          "ko": "차고문 닫힘"
+          "en": "Keypad / PIN used on garage door",
+          "nl": "Keypad / PIN gebruikt op garagedeur",
+          "de": "Keypad / PIN an Garagentor verwendet",
+          "fr": "Clavier / PIN utilisé sur la porte de garage",
+          "it": "Tastiera / PIN utilizzato sul portone del garage",
+          "sv": "Knappsats / PIN använd på garageport",
+          "no": "Tastatur / PIN brukt på garasjeport",
+          "es": "Teclado / PIN usado en la puerta del garaje",
+          "da": "Tastatur / PIN brugt på garageport",
+          "ru": "Клавиатура / PIN использован на воротах гаража",
+          "pl": "Klawiatura / PIN użyta przy bramie garażowej",
+          "ko": "차고문에서 키패드 / PIN 사용됨"
         },
-        "hint": {
-          "en": "Triggers when the garage door is closed",
-          "nl": "Wordt geactiveerd wanneer de garage deur wordt gesloten",
-          "de": "Löst aus, wenn das Garagentor geschlossen wird",
-          "fr": "Déclenche lorsque la porte de garage est fermée",
-          "it": "Si attiva quando la porta del garage è chiusa",
-          "sv": "Utlöses när garageporten stängs",
-          "no": "Utløses når garasjeporten lukkes",
-          "es": "Se activa cuando la puerta de garaje está cerrada",
-          "da": "Udløses når garageporten lukkes",
-          "ru": "Срабатывает при закрытии гаражных ворот",
-          "pl": "Wyzwala się, gdy brama garażowa jest zamknięta",
-          "ko": "차고문이 닫힐 때 트리거됨"
-        },
+        "tokens": [
+          {
+            "name": "ufv_actor",
+            "type": "string",
+            "title": {
+              "en": "User name",
+              "nl": "Gebruikersnaam",
+              "de": "Benutzername",
+              "fr": "Nom d'utilisateur",
+              "it": "Nome utente",
+              "sv": "Användarnamn",
+              "no": "Brukernavn",
+              "es": "Nombre de usuario",
+              "da": "Brugernavn",
+              "ru": "Имя пользователя",
+              "pl": "Nazwa użytkownika",
+              "ko": "사용자 이름"
+            },
+            "example": {
+              "en": "John Doe",
+              "nl": "Jan de Vries",
+              "de": "Max Mustermann",
+              "fr": "Jean Dupont",
+              "it": "Mario Rossi",
+              "sv": "Anna Svensson",
+              "no": "Ola Nordmann",
+              "es": "Juan García",
+              "da": "Peter Jensen",
+              "ru": "Иван Иванов",
+              "pl": "Jan Kowalski",
+              "ko": "홍길동"
+            }
+          },
+          {
+            "name": "ufv_auth_method",
+            "type": "string",
+            "title": {
+              "en": "Auth method",
+              "nl": "Authenticatiemethode",
+              "de": "Authentifizierungsmethode",
+              "fr": "Méthode d'authentification",
+              "it": "Metodo di autenticazione",
+              "sv": "Autentiseringsmetod",
+              "no": "Autentiseringsmetode",
+              "es": "Método de autenticación",
+              "da": "Godkendelsesmetode",
+              "ru": "Метод аутентификации",
+              "pl": "Metoda uwierzytelniania",
+              "ko": "인증 방법"
+            },
+            "example": {
+              "en": "pin_code",
+              "nl": "pin_code",
+              "de": "pin_code",
+              "fr": "pin_code",
+              "it": "pin_code",
+              "sv": "pin_code",
+              "no": "pin_code",
+              "es": "pin_code",
+              "da": "pin_code",
+              "ru": "pin_code",
+              "pl": "pin_code",
+              "ko": "pin_code"
+            }
+          }
+        ],
         "args": [
           {
             "type": "device",
@@ -5527,6 +5631,150 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_set_device_doorbell_ring_volume",
+        "title": {
+          "en": "Set doorbell ring volume",
+          "nl": "Stel deurbel belvolume in",
+          "de": "Klingelvolumen der Türklingel einstellen",
+          "fr": "Définir le volume de sonnerie de la sonnette",
+          "it": "Imposta volume suoneria campanello",
+          "sv": "Ställ in dörrklockornas ringvolym",
+          "no": "Angi ringeklokke ringevolum",
+          "es": "Establecer volumen de timbre del timbre",
+          "da": "Indstil dørklokke ringelydstyrke",
+          "ru": "Установить громкость звонка домофона",
+          "pl": "Ustaw głośność dzwonka przy drzwiach",
+          "ko": "도어벨 벨소리 볼륨 설정"
+        },
+        "titleFormatted": {
+          "en": "Set doorbell ring volume to [[volume]]",
+          "nl": "Stel deurbel belvolume in op [[volume]]",
+          "de": "Klingelvolumen der Türklingel auf [[volume]] einstellen",
+          "fr": "Définir le volume de sonnerie de la sonnette sur [[volume]]",
+          "it": "Imposta volume suoneria campanello su [[volume]]",
+          "sv": "Ställ in dörrklockornas ringvolym till [[volume]]",
+          "no": "Angi ringeklokke ringevolum til [[volume]]",
+          "es": "Establecer volumen de timbre del timbre en [[volume]]",
+          "da": "Indstil dørklokke ringelydstyrke til [[volume]]",
+          "ru": "Установить громкость звонка домофона на [[volume]]",
+          "pl": "Ustaw głośność dzwonka przy drzwiach na [[volume]]",
+          "ko": "도어벨 벨소리 볼륨을 [[volume]]으로 설정"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "name": "volume",
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "title": {
+              "en": "Volume (0-100)",
+              "nl": "Volume (0-100)",
+              "de": "Lautstärke (0-100)",
+              "fr": "Volume (0-100)",
+              "it": "Volume (0-100)",
+              "sv": "Volym (0-100)",
+              "no": "Volum (0-100)",
+              "es": "Volumen (0-100)",
+              "da": "Lydstyrke (0-100)",
+              "ru": "Громкость (0-100)",
+              "pl": "Głośność (0-100)",
+              "ko": "볼륨 (0-100)"
+            },
+            "placeholder": {
+              "en": "50",
+              "nl": "50",
+              "de": "50",
+              "fr": "50",
+              "it": "50",
+              "sv": "50",
+              "no": "50",
+              "es": "50",
+              "da": "50",
+              "ru": "50",
+              "pl": "50",
+              "ko": "50"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_set_device_doorbell_chime_volume",
+        "title": {
+          "en": "Set paired chime volume",
+          "nl": "Stel gekoppeld belvolume in",
+          "de": "Lautstärke der gekoppelten Türglocke einstellen",
+          "fr": "Définir le volume du carillon associé",
+          "it": "Imposta volume campanello abbinato",
+          "sv": "Ställ in parkopplad klockas volym",
+          "no": "Angi volum for koblet ringeklokke",
+          "es": "Establecer volumen del timbre emparejado",
+          "da": "Indstil parret klokkelydstyrke",
+          "ru": "Установить громкость сопряжённого звонка",
+          "pl": "Ustaw głośność sparowanego dzwonka",
+          "ko": "연결된 차임벨 볼륨 설정"
+        },
+        "titleFormatted": {
+          "en": "Set paired chime volume to [[volume]]",
+          "nl": "Stel gekoppeld belvolume in op [[volume]]",
+          "de": "Lautstärke der gekoppelten Türglocke auf [[volume]] einstellen",
+          "fr": "Définir le volume du carillon associé sur [[volume]]",
+          "it": "Imposta volume campanello abbinato su [[volume]]",
+          "sv": "Ställ in parkopplad klockas volym till [[volume]]",
+          "no": "Angi volum for koblet ringeklokke til [[volume]]",
+          "es": "Establecer volumen del timbre emparejado en [[volume]]",
+          "da": "Indstil parret klokkelydstyrke til [[volume]]",
+          "ru": "Установить громкость сопряжённого звонка на [[volume]]",
+          "pl": "Ustaw głośność sparowanego dzwonka na [[volume]]",
+          "ko": "연결된 차임벨 볼륨을 [[volume]]으로 설정"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "name": "volume",
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "title": {
+              "en": "Volume (0-100)",
+              "nl": "Volume (0-100)",
+              "de": "Lautstärke (0-100)",
+              "fr": "Volume (0-100)",
+              "it": "Volume (0-100)",
+              "sv": "Volym (0-100)",
+              "no": "Volum (0-100)",
+              "es": "Volumen (0-100)",
+              "da": "Lydstyrke (0-100)",
+              "ru": "Громкость (0-100)",
+              "pl": "Głośność (0-100)",
+              "ko": "볼륨 (0-100)"
+            },
+            "placeholder": {
+              "en": "50",
+              "nl": "50",
+              "de": "50",
+              "fr": "50",
+              "it": "50",
+              "sv": "50",
+              "no": "50",
+              "es": "50",
+              "da": "50",
+              "ru": "50",
+              "pl": "50",
+              "ko": "50"
+            }
           }
         ]
       }

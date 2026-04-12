@@ -39,6 +39,8 @@ module.exports.ACTION_SET_DEVICE_SET_AUTO_TRACKING = 'ufv_set_device_camera_set_
 module.exports.ACTION_SET_DEVICE_TEST_RINGTONE = 'ufv_set_device_doorbell_test_ringtone';
 module.exports.ACTION_SET_DEVICE_TEST_SIREN = 'ufv_set_device_doorbell_test_siren';
 module.exports.ACTION_SET_DEVICE_TEST_CHIME_TONE = 'ufv_set_device_chime_test_tone';
+module.exports.ACTION_SET_DEVICE_DOORBELL_RING_VOLUME = 'ufp_set_device_doorbell_ring_volume';
+module.exports.ACTION_SET_DEVICE_DOORBELL_CHIME_VOLUME = 'ufp_set_device_doorbell_chime_volume';
 
 module.exports.EVENT_CONNECTION_KEEPALIVE = 'ufv_event_connection_keepalive';
 module.exports.EVENT_CONNECTION_ERROR = 'ufv_event_connection_error';
@@ -94,6 +96,7 @@ module.exports.EVENT_DEVICE_NFC_UNKNOWN_CARD_SCANNED = 'ufp_device_nfc_unknown_c
 // UniFi Access — keypad / PIN access
 module.exports.EVENT_ACCESS_KEYPAD_USED = 'ufv_access_keypad_used';
 module.exports.EVENT_DEVICE_ACCESS_KEYPAD_USED = 'ufv_device_access_keypad_used';
+module.exports.EVENT_DEVICE_ACCESS_GARAGEDOOR_KEYPAD_USED = 'ufv_device_access_garagedoor_keypad_used';
 // Known credential_provider values that indicate keypad/PIN usage (discovered via live hardware logging)
 module.exports.ACCESS_KEYPAD_CREDENTIAL_PROVIDERS = ['pin_code', 'keypad', 'pin'];
 

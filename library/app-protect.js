@@ -303,6 +303,32 @@ class AppProtect extends BaseClass {
             return Promise.reject(new Error('No device found'));
         });
 
+        const _actionSetDoorbellRingVolume = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_RING_VOLUME);
+        _actionSetDoorbellRingVolume.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+                this.homey.app.debug(`[AppProtect] Set doorbell ring volume ${args.device.getData().id} to ${args.volume}`);
+                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+                if (device) {
+                    return this.homey.app.api.setDoorbellSpeakerVolume(device.getData(), args.volume / 100).catch(this.error);
+                }
+            }
+            return Promise.reject(new Error('No device found'));
+        });
+
+        const _actionSetDoorbellChimeVolume = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_CHIME_VOLUME);
+        _actionSetDoorbellChimeVolume.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+                const doorbellId = String(args.device.getData().id);
+                this.homey.app.debug(`[AppProtect] Set paired chime volume for doorbell ${doorbellId} to ${args.volume}`);
+                const chimes = await this.homey.app.api.getChimes().catch(this.error);
+                if (!chimes) return Promise.reject(new Error('Could not retrieve chimes'));
+                const paired = chimes.filter((chime) => Array.isArray(chime.cameraIds) && chime.cameraIds.map(String).includes(doorbellId));
+                if (paired.length === 0) return Promise.reject(new Error('No paired chime found for this doorbell'));
+                await Promise.all(paired.map((chime) => this.homey.app.api.setChimeVolume(chime, args.volume / 100)));
+                return Promise.resolve(true);
+            }
+            return Promise.reject(new Error('No device found'));
+        });
 
     }
 

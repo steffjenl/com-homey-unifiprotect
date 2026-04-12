@@ -74,6 +74,11 @@ class Doorbell extends Homey.Device {
       return this.homey.app.api.setMicVolume(this.getData(), value);
     });
 
+    this.registerCapabilityListener('volume_set', async (value) => {
+      this.homey.app.debug(`[DoorbellDevice] volume_set: ${value}`);
+      return this.homey.app.api.setDoorbellSpeakerVolume(this.getData(), value);
+    });
+
     this.registerCapabilityListener('camera_nightvision_set', async (value) => {
       this.homey.app.debug('camera_nightvision_set');
       return this.homey.app.api.setNightVisionMode(this.getData(), value);
@@ -184,6 +189,10 @@ class Doorbell extends Homey.Device {
       await this.addCapability('last_nfc_card_scanned_at');
       this.homey.app.debug(`created capability last_nfc_card_scanned_at for ${this.getName()}`);
     }
+    if (!this.hasCapability('volume_set')) {
+      await this.addCapability('volume_set');
+      this.homey.app.debug(`created capability volume_set for ${this.getName()}`);
+    }
   }
 
   async _initDoorbellData() {
@@ -211,6 +220,9 @@ class Doorbell extends Homey.Device {
           }
           if (this.hasCapability('camera_microphone_volume')) {
             this.setCapabilityValue('camera_microphone_volume', Doorbell.micVolume).catch(this.error);
+          }
+          if (this.hasCapability('volume_set') && Doorbell.speakerSettings) {
+            this.setCapabilityValue('volume_set', Doorbell.speakerSettings.volume / 100).catch(this.error);
           }
           if (this.hasCapability('camera_connection_status')) {
             if (this.getCapabilityValue('camera_connection_status') !== Doorbell.isConnected) {
@@ -559,6 +571,12 @@ class Doorbell extends Homey.Device {
     // Debug information about playload
     if (this.hasCapability('camera_microphone_volume')) {
       this.setCapabilityValue('camera_microphone_volume', micVolume);
+    }
+  }
+
+  onSpeakerVolume(volume) {
+    if (this.hasCapability('volume_set')) {
+      this.setCapabilityValue('volume_set', volume / 100).catch(this.error);
     }
   }
 

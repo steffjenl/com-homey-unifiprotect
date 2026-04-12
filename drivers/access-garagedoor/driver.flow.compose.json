@@ -273,7 +273,7 @@
   ],
   "triggers": [
     {
-      "id": "ufv_device_access_keypad_used",
+      "id": "ufv_device_access_garagedoor_keypad_used",
       "title": {
         "en": "Keypad / PIN used on garage door",
         "nl": "Keypad / PIN gebruikt op garagedeur",
