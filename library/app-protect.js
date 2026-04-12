@@ -309,7 +309,19 @@ class AppProtect extends BaseClass {
                 this.homey.app.debug(`[AppProtect] Set doorbell ring volume ${args.device.getData().id} to ${args.volume}`);
                 const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
                 if (device) {
-                    return this.homey.app.api.setDoorbellSpeakerVolume(device.getData(), args.volume / 100).catch(this.error);
+                    return this.homey.app.api.setDoorbellRingVolume(device.getData(), args.volume).catch(this.error);
+                }
+            }
+            return Promise.reject(new Error('No device found'));
+        });
+
+        const _actionSetDoorbellSpeakerVolume = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_SPEAKER_VOLUME);
+        _actionSetDoorbellSpeakerVolume.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+                this.homey.app.debug(`[AppProtect] Set doorbell speaker volume ${args.device.getData().id} to ${args.volume}`);
+                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+                if (device) {
+                    return this.homey.app.api.setDoorbellTalkbackVolume(device.getData(), args.volume).catch(this.error);
                 }
             }
             return Promise.reject(new Error('No device found'));

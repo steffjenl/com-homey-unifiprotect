@@ -836,11 +836,24 @@ class ProtectAPI extends BaseClass {
         });
     }
 
-    setDoorbellSpeakerVolume(camera, volumeLevel) {
+    setDoorbellRingVolume(camera, volumeLevel) {
         return new Promise((resolve, reject) => {
             const params = {
                 speakerSettings: {
-                    volume: Math.round(volumeLevel * 100)
+                    ringVolume: Math.round(volumeLevel)
+                }
+            };
+            return this.webclient.patch(`cameras/${camera.id}`, params)
+                .then(() => resolve('Doorbell ring volume successfully set.'))
+                .catch(error => reject(new Error(`Error setting doorbell ring volume: ${error}`)));
+        });
+    }
+
+    setDoorbellTalkbackVolume(camera, volumeLevel) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                speakerSettings: {
+                    speakerVolume: Math.round(volumeLevel)
                 }
             };
             return this.webclient.patch(`cameras/${camera.id}`, params)

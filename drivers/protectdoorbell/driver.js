@@ -65,8 +65,13 @@ class UniFiDoorbellDriver extends Homey.Driver {
                 camera.onMicVolume(payload.micVolume);
             }
 
-            if (payload.hasOwnProperty('speakerSettings') && payload.speakerSettings.hasOwnProperty('volume')) {
-                camera.onSpeakerVolume(payload.speakerSettings.volume);
+            if (payload.hasOwnProperty('speakerSettings')) {
+                if (payload.speakerSettings.hasOwnProperty('ringVolume')) {
+                    camera.onRingVolume(payload.speakerSettings.ringVolume);
+                }
+                if (payload.speakerSettings.hasOwnProperty('speakerVolume')) {
+                    camera.onSpeakerVolume(payload.speakerSettings.speakerVolume);
+                }
             }
 
             if (payload.hasOwnProperty('isConnected')) {

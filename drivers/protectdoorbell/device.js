@@ -74,9 +74,14 @@ class Doorbell extends Homey.Device {
       return this.homey.app.api.setMicVolume(this.getData(), value);
     });
 
-    this.registerCapabilityListener('volume_set', async (value) => {
-      this.homey.app.debug(`[DoorbellDevice] volume_set: ${value}`);
-      return this.homey.app.api.setDoorbellSpeakerVolume(this.getData(), value);
+    this.registerCapabilityListener('doorbell_ring_volume', async (value) => {
+      this.homey.app.debug(`[DoorbellDevice] doorbell_ring_volume: ${value}`);
+      return this.homey.app.api.setDoorbellRingVolume(this.getData(), value);
+    });
+
+    this.registerCapabilityListener('doorbell_speaker_volume', async (value) => {
+      this.homey.app.debug(`[DoorbellDevice] doorbell_speaker_volume: ${value}`);
+      return this.homey.app.api.setDoorbellTalkbackVolume(this.getData(), value);
     });
 
     this.registerCapabilityListener('camera_nightvision_set', async (value) => {
@@ -189,9 +194,17 @@ class Doorbell extends Homey.Device {
       await this.addCapability('last_nfc_card_scanned_at');
       this.homey.app.debug(`created capability last_nfc_card_scanned_at for ${this.getName()}`);
     }
-    if (!this.hasCapability('volume_set')) {
-      await this.addCapability('volume_set');
-      this.homey.app.debug(`created capability volume_set for ${this.getName()}`);
+    if (!this.hasCapability('doorbell_ring_volume')) {
+      await this.addCapability('doorbell_ring_volume');
+      this.homey.app.debug(`created capability doorbell_ring_volume for ${this.getName()}`);
+    }
+    if (this.hasCapability('volume_set')) {
+      await this.removeCapability('volume_set');
+      this.homey.app.debug(`removed legacy capability volume_set for ${this.getName()}`);
+    }
+    if (!this.hasCapability('doorbell_speaker_volume')) {
+      await this.addCapability('doorbell_speaker_volume');
+      this.homey.app.debug(`created capability doorbell_speaker_volume for ${this.getName()}`);
     }
   }
 
@@ -221,8 +234,11 @@ class Doorbell extends Homey.Device {
           if (this.hasCapability('camera_microphone_volume')) {
             this.setCapabilityValue('camera_microphone_volume', Doorbell.micVolume).catch(this.error);
           }
-          if (this.hasCapability('volume_set') && Doorbell.speakerSettings) {
-            this.setCapabilityValue('volume_set', Doorbell.speakerSettings.volume / 100).catch(this.error);
+          if (this.hasCapability('doorbell_ring_volume') && Doorbell.speakerSettings) {
+            this.setCapabilityValue('doorbell_ring_volume', Doorbell.speakerSettings.ringVolume).catch(this.error);
+          }
+          if (this.hasCapability('doorbell_speaker_volume') && Doorbell.speakerSettings) {
+            this.setCapabilityValue('doorbell_speaker_volume', Doorbell.speakerSettings.speakerVolume).catch(this.error);
           }
           if (this.hasCapability('camera_connection_status')) {
             if (this.getCapabilityValue('camera_connection_status') !== Doorbell.isConnected) {
@@ -574,9 +590,15 @@ class Doorbell extends Homey.Device {
     }
   }
 
+  onRingVolume(volume) {
+    if (this.hasCapability('doorbell_ring_volume')) {
+      this.setCapabilityValue('doorbell_ring_volume', volume).catch(this.error);
+    }
+  }
+
   onSpeakerVolume(volume) {
-    if (this.hasCapability('volume_set')) {
-      this.setCapabilityValue('volume_set', volume / 100).catch(this.error);
+    if (this.hasCapability('doorbell_speaker_volume')) {
+      this.setCapabilityValue('doorbell_speaker_volume', volume).catch(this.error);
     }
   }
 

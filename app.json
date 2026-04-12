@@ -1164,6 +1164,82 @@
         ]
       },
       {
+        "id": "ufv_reader_garagedoor_opened",
+        "title": {
+          "en": "Garage door opened",
+          "nl": "Garage deur geopend",
+          "de": "Garagentor geöffnet",
+          "fr": "Porte de garage ouverte",
+          "it": "Porta garage aperta",
+          "sv": "Garageport öppnad",
+          "no": "Garasjeport åpnet",
+          "es": "Puerta de garaje abierta",
+          "da": "Garageport åbnet",
+          "ru": "Гаражные ворота открыты",
+          "pl": "Brama garażowa otwarta",
+          "ko": "차고문 열림"
+        },
+        "hint": {
+          "en": "Triggers when the garage door is opened",
+          "nl": "Wordt geactiveerd wanneer de garage deur wordt geopend",
+          "de": "Löst aus, wenn das Garagentor geöffnet wird",
+          "fr": "Déclenche lorsque la porte de garage est ouverte",
+          "it": "Si attiva quando la porta del garage è aperta",
+          "sv": "Utlöses när garageporten öppnas",
+          "no": "Utløses når garasjeporten åpnes",
+          "es": "Se activa cuando la puerta de garaje está abierta",
+          "da": "Udløses når garageporten åbnes",
+          "ru": "Срабатывает при открытии гаражных ворот",
+          "pl": "Wyzwala się, gdy brama garażowa jest otwarta",
+          "ko": "차고문이 열릴 때 트리거됨"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
+        "id": "ufv_reader_garagedoor_closed",
+        "title": {
+          "en": "Garage door closed",
+          "nl": "Garage deur gesloten",
+          "de": "Garagentor geschlossen",
+          "fr": "Porte de garage fermée",
+          "it": "Porta garage chiusa",
+          "sv": "Garageport stängd",
+          "no": "Garasjeport lukket",
+          "es": "Puerta de garaje cerrada",
+          "da": "Garageport lukket",
+          "ru": "Гаражные ворота закрыты",
+          "pl": "Brama garażowa zamknięta",
+          "ko": "차고문 닫힘"
+        },
+        "hint": {
+          "en": "Triggers when the garage door is closed",
+          "nl": "Wordt geactiveerd wanneer de garage deur wordt gesloten",
+          "de": "Löst aus, wenn das Garagentor geschlossen wird",
+          "fr": "Déclenche lorsque la porte de garage est fermée",
+          "it": "Si attiva quando la porta del garage è chiusa",
+          "sv": "Utlöses när garageporten stängs",
+          "no": "Utløses når garasjeporten lukkes",
+          "es": "Se activa cuando la puerta de garaje está cerrada",
+          "da": "Udløses når garageporten lukkes",
+          "ru": "Срабатывает при закрытии гаражных ворот",
+          "pl": "Wyzwala się, gdy brama garażowa jest zamknięta",
+          "ko": "차고문이 닫힐 때 트리거됨"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
         "id": "ufv_device_access_garagedoor_keypad_used",
         "title": {
           "en": "Keypad / PIN used on garage door",
@@ -5707,6 +5783,78 @@
         ]
       },
       {
+        "id": "ufp_set_device_doorbell_speaker_volume",
+        "title": {
+          "en": "Set doorbell speaker volume",
+          "nl": "Stel deurbel luidspreker volume in",
+          "de": "Lautsprecherlautstärke der Türklingel einstellen",
+          "fr": "Définir le volume du haut-parleur de la sonnette",
+          "it": "Imposta volume altoparlante campanello",
+          "sv": "Ställ in dörrklockornas högtalarvolym",
+          "no": "Angi ringeklokke høyttaler volum",
+          "es": "Establecer volumen del altavoz del timbre",
+          "da": "Indstil dørklokke højttalerlydstyrke",
+          "ru": "Установить громкость динамика домофона",
+          "pl": "Ustaw głośność głośnika dzwonka przy drzwiach",
+          "ko": "도어벨 스피커 볼륨 설정"
+        },
+        "titleFormatted": {
+          "en": "Set doorbell speaker volume to [[volume]]",
+          "nl": "Stel deurbel luidspreker volume in op [[volume]]",
+          "de": "Lautsprecherlautstärke der Türklingel auf [[volume]] einstellen",
+          "fr": "Définir le volume du haut-parleur de la sonnette sur [[volume]]",
+          "it": "Imposta volume altoparlante campanello su [[volume]]",
+          "sv": "Ställ in dörrklockornas högtalarvolym till [[volume]]",
+          "no": "Angi ringeklokke høyttaler volum til [[volume]]",
+          "es": "Establecer volumen del altavoz del timbre en [[volume]]",
+          "da": "Indstil dørklokke højttalerlydstyrke til [[volume]]",
+          "ru": "Установить громкость динамика домофона на [[volume]]",
+          "pl": "Ustaw głośność głośnika dzwonka przy drzwiach na [[volume]]",
+          "ko": "도어벨 스피커 볼륨을 [[volume]]으로 설정"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "name": "volume",
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "title": {
+              "en": "Volume (0-100)",
+              "nl": "Volume (0-100)",
+              "de": "Lautstärke (0-100)",
+              "fr": "Volume (0-100)",
+              "it": "Volume (0-100)",
+              "sv": "Volym (0-100)",
+              "no": "Volum (0-100)",
+              "es": "Volumen (0-100)",
+              "da": "Lydstyrke (0-100)",
+              "ru": "Громкость (0-100)",
+              "pl": "Głośność (0-100)",
+              "ko": "볼륨 (0-100)"
+            },
+            "placeholder": {
+              "en": "50",
+              "nl": "50",
+              "de": "50",
+              "fr": "50",
+              "it": "50",
+              "sv": "50",
+              "no": "50",
+              "es": "50",
+              "da": "50",
+              "ru": "50",
+              "pl": "50",
+              "ko": "50"
+            }
+          }
+        ]
+      },
+      {
         "id": "ufp_set_device_doorbell_chime_volume",
         "title": {
           "en": "Set paired chime volume",
@@ -6752,6 +6900,7 @@
       "uiComponent": "slider",
       "min": 0,
       "max": 100,
+      "step": 1,
       "icon": "/assets/microphone.svg"
     },
     "camera_nightvision_set": {
@@ -6845,6 +6994,54 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/assets/recording.svg"
+    },
+    "doorbell_ring_volume": {
+      "type": "number",
+      "title": {
+        "en": "Ring volume",
+        "nl": "Belvolume",
+        "de": "Klingelvolumen",
+        "fr": "Volume sonnerie",
+        "it": "Volume suoneria",
+        "sv": "Ringvolym",
+        "no": "Ringevolum",
+        "es": "Volumen de timbre",
+        "da": "Ringelydstyrke",
+        "ru": "Громкость звонка",
+        "pl": "Głośność dzwonka",
+        "ko": "벨소리 볼륨"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "icon": "/assets/microphone.svg"
+    },
+    "doorbell_speaker_volume": {
+      "type": "number",
+      "title": {
+        "en": "Speaker volume",
+        "nl": "Luidsprekersvolume",
+        "de": "Lautsprecherlautstärke",
+        "fr": "Volume haut-parleur",
+        "it": "Volume altoparlante",
+        "sv": "Högtalarvolym",
+        "no": "Høyttaler volum",
+        "es": "Volumen del altavoz",
+        "da": "Højttalerlydstyrke",
+        "ru": "Громкость динамика",
+        "pl": "Głośność głośnika",
+        "ko": "스피커 볼륨"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "icon": "/assets/microphone.svg"
     },
     "garagedoor_closed": {
       "type": "boolean",
