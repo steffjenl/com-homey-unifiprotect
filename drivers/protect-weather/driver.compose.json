@@ -1,5 +1,6 @@
 {
   "id": "protect-weather",
+  "deprecated": true,
   "name": {
     "en": "UniFi Protect Weather",
     "nl": "UniFi Protect Weer",
