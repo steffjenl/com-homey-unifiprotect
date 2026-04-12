@@ -88,6 +88,8 @@ module.exports.EVENT_DOOR_ACCESS = 'ufp_door_access';
 module.exports.EVENT_DEVICE_DOOR_ACCESS = 'ufp_device_door_access';
 module.exports.EVENT_NFC_CARD_SCANNED = 'ufp_nfc_card_scanned';
 module.exports.EVENT_DEVICE_NFC_CARD_SCANNED = 'ufp_device_nfc_card_scanned';
+module.exports.EVENT_NFC_UNKNOWN_CARD_SCANNED = 'ufp_nfc_unknown_card_scanned';
+module.exports.EVENT_DEVICE_NFC_UNKNOWN_CARD_SCANNED = 'ufp_device_nfc_unknown_card_scanned';
 
 // NVR Alarm Manager
 module.exports.EVENT_NVR_ALARM_STATE_CHANGED = 'ufp_nvr_alarm_state_changed';

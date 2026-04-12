@@ -297,16 +297,13 @@ class Camera extends Homey.Device {
           ufp_nfc_card_scanned_last_name: lastName,
           ufp_nfc_card_scanned_user_unique_id: uniqueId,
           ufp_nfc_card_scanned_card_id: nfcId,
+          ufp_nfc_card_scanned_nfc_id: nfcId,
         }).catch(this.error);
       }).catch(this.error);
     } else {
-      this.homey.app._nfcCardScannedTrigger.trigger({
-        ufp_nfc_card_scanned_camera: this.getName(),
-        ufp_nfc_card_scanned_person: '',
-        ufp_nfc_card_scanned_first_name: '',
-        ufp_nfc_card_scanned_last_name: '',
-        ufp_nfc_card_scanned_user_unique_id: '',
-        ufp_nfc_card_scanned_card_id: nfcId,
+      this.homey.app._nfcUnknownCardScannedTrigger.trigger({
+        ufp_nfc_unknown_card_scanned_camera: this.getName(),
+        ufp_nfc_unknown_card_scanned_nfc_id: nfcId,
       }).catch(this.error);
     }
     return true;

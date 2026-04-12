@@ -403,6 +403,7 @@ class Doorbell extends Homey.Device {
           ufp_nfc_card_scanned_last_name: lastName,
           ufp_nfc_card_scanned_user_unique_id: uniqueId,
           ufp_nfc_card_scanned_card_id: nfcId,
+          ufp_nfc_card_scanned_nfc_id: nfcId,
         }).catch(this.error);
 
         // Device trigger
@@ -412,25 +413,18 @@ class Doorbell extends Homey.Device {
           ufp_device_nfc_card_scanned_last_name: lastName,
           ufp_device_nfc_card_scanned_user_unique_id: uniqueId,
           ufp_device_nfc_card_scanned_card_id: nfcId,
+          ufp_device_nfc_card_scanned_nfc_id: nfcId,
         }).catch(this.error);
       }).catch(this.error);
     } else {
-      // Unknown NFC card (ulpId is null) — fire trigger with card ID only
-      this.homey.app._nfcCardScannedTrigger.trigger({
-        ufp_nfc_card_scanned_camera: this.getName(),
-        ufp_nfc_card_scanned_person: '',
-        ufp_nfc_card_scanned_first_name: '',
-        ufp_nfc_card_scanned_last_name: '',
-        ufp_nfc_card_scanned_user_unique_id: '',
-        ufp_nfc_card_scanned_card_id: nfcId,
+      // Unknown NFC card (ulpId is null) — fire unknown card triggers only
+      this.homey.app._nfcUnknownCardScannedTrigger.trigger({
+        ufp_nfc_unknown_card_scanned_camera: this.getName(),
+        ufp_nfc_unknown_card_scanned_nfc_id: nfcId,
       }).catch(this.error);
 
-      this.driver._deviceNFCCardScannedTrigger.trigger(this, {
-        ufp_device_nfc_card_scanned_person: '',
-        ufp_device_nfc_card_scanned_first_name: '',
-        ufp_device_nfc_card_scanned_last_name: '',
-        ufp_device_nfc_card_scanned_user_unique_id: '',
-        ufp_device_nfc_card_scanned_card_id: nfcId,
+      this.driver._deviceNFCUnknownCardScannedTrigger.trigger(this, {
+        ufp_device_nfc_unknown_card_scanned_nfc_id: nfcId,
       }).catch(this.error);
     }
     return true;
@@ -443,8 +437,8 @@ class Doorbell extends Homey.Device {
             && typeof payload.type !== 'undefined'
             && payload.type === 'doorAccess'
             && typeof payload.metadata !== 'undefined'
-            && typeof payload.metadata.unique_id === 'undefined'
-            && payload.metadata.unique_id === null) {
+            && typeof payload.metadata.unique_id !== 'undefined'
+            && payload.metadata.unique_id !== null) {
 
       this.homey.app.api.getCloudUserById(payload.metadata.unique_id).then((user) => {
         // Generic trigger

@@ -522,6 +522,89 @@
             "pl": "xxxxxx",
             "ko": "xxxxxx"
           }
+        },
+        {
+          "name": "ufp_device_nfc_card_scanned_nfc_id",
+          "type": "string",
+          "title": {
+            "en": "NFC ID",
+            "nl": "NFC ID",
+            "de": "NFC-ID",
+            "fr": "ID NFC",
+            "it": "ID NFC",
+            "sv": "NFC-ID",
+            "no": "NFC-ID",
+            "es": "ID NFC",
+            "da": "NFC-ID",
+            "ru": "NFC ID",
+            "pl": "ID NFC",
+            "ko": "NFC ID"
+          },
+          "example": {
+            "en": "01234AA2A12345",
+            "nl": "01234AA2A12345",
+            "de": "01234AA2A12345",
+            "fr": "01234AA2A12345",
+            "it": "01234AA2A12345",
+            "sv": "01234AA2A12345",
+            "no": "01234AA2A12345",
+            "es": "01234AA2A12345",
+            "da": "01234AA2A12345",
+            "ru": "01234AA2A12345",
+            "pl": "01234AA2A12345",
+            "ko": "01234AA2A12345"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufp_device_nfc_unknown_card_scanned",
+      "title": {
+        "en": "An unknown NFC card was scanned",
+        "nl": "Een onbekende NFC kaart is gescand",
+        "de": "Eine unbekannte NFC-Karte wurde gescannt",
+        "fr": "Une carte NFC inconnue a été scannée",
+        "it": "È stata scansionata una scheda NFC sconosciuta",
+        "sv": "Ett okänt NFC-kort har skannats",
+        "no": "Et ukjent NFC-kort ble skannet",
+        "es": "Se ha escaneado una tarjeta NFC desconocida",
+        "da": "Et ukendt NFC-kort blev scannet",
+        "ru": "Сканирована неизвестная NFC-карта",
+        "pl": "Zeskanowano nieznaną kartę NFC",
+        "ko": "알 수 없는 NFC 카드가 스캔되었습니다"
+      },
+      "tokens": [
+        {
+          "name": "ufp_device_nfc_unknown_card_scanned_nfc_id",
+          "type": "string",
+          "title": {
+            "en": "NFC ID",
+            "nl": "NFC ID",
+            "de": "NFC-ID",
+            "fr": "ID NFC",
+            "it": "ID NFC",
+            "sv": "NFC-ID",
+            "no": "NFC-ID",
+            "es": "ID NFC",
+            "da": "NFC-ID",
+            "ru": "NFC ID",
+            "pl": "ID NFC",
+            "ko": "NFC ID"
+          },
+          "example": {
+            "en": "01234AA2A12345",
+            "nl": "01234AA2A12345",
+            "de": "01234AA2A12345",
+            "fr": "01234AA2A12345",
+            "it": "01234AA2A12345",
+            "sv": "01234AA2A12345",
+            "no": "01234AA2A12345",
+            "es": "01234AA2A12345",
+            "da": "01234AA2A12345",
+            "ru": "01234AA2A12345",
+            "pl": "01234AA2A12345",
+            "ko": "01234AA2A12345"
+          }
         }
       ]
     },
