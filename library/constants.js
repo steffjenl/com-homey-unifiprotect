@@ -91,6 +91,12 @@ module.exports.EVENT_DEVICE_NFC_CARD_SCANNED = 'ufp_device_nfc_card_scanned';
 module.exports.EVENT_NFC_UNKNOWN_CARD_SCANNED = 'ufp_nfc_unknown_card_scanned';
 module.exports.EVENT_DEVICE_NFC_UNKNOWN_CARD_SCANNED = 'ufp_device_nfc_unknown_card_scanned';
 
+// UniFi Access — keypad / PIN access
+module.exports.EVENT_ACCESS_KEYPAD_USED = 'ufv_access_keypad_used';
+module.exports.EVENT_DEVICE_ACCESS_KEYPAD_USED = 'ufv_device_access_keypad_used';
+// Known credential_provider values that indicate keypad/PIN usage (discovered via live hardware logging)
+module.exports.ACCESS_KEYPAD_CREDENTIAL_PROVIDERS = ['pin_code', 'keypad', 'pin'];
+
 // NVR Alarm Manager
 module.exports.EVENT_NVR_ALARM_STATE_CHANGED = 'ufp_nvr_alarm_state_changed';
 module.exports.EVENT_NVR_ALARM_ARMED = 'ufp_nvr_alarm_armed';

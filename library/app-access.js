@@ -72,6 +72,9 @@ class AppAccess extends BaseClass {
       return Promise.resolve(true);
     });
 
+    // Device trigger: keypad / PIN used
+    this._deviceAccessKeypaddUsedTrigger = this.homey.flow.getDeviceTriggerCard('ufv_device_access_keypad_used');
+
   }
 
   async loginToAccess() {

@@ -204,5 +204,90 @@
         "ko": "문 잠금 해제"
       }
     }
+  ],
+  "triggers": [
+    {
+      "id": "ufv_device_access_keypad_used",
+      "title": {
+        "en": "Keypad / PIN used on door",
+        "nl": "Keypad / PIN gebruikt op deur",
+        "de": "Keypad / PIN an Tür verwendet",
+        "fr": "Clavier / PIN utilisé sur la porte",
+        "it": "Tastiera / PIN utilizzato sulla porta",
+        "sv": "Knappsats / PIN använd på dörr",
+        "no": "Tastatur / PIN brukt på dør",
+        "es": "Teclado / PIN usado en la puerta",
+        "da": "Tastatur / PIN brugt på dør",
+        "ru": "Клавиатура / PIN использован на двери",
+        "pl": "Klawiatura / PIN użyta przy drzwiach",
+        "ko": "문에서 키패드 / PIN 사용됨"
+      },
+      "tokens": [
+        {
+          "name": "ufv_actor",
+          "type": "string",
+          "title": {
+            "en": "User name",
+            "nl": "Gebruikersnaam",
+            "de": "Benutzername",
+            "fr": "Nom d'utilisateur",
+            "it": "Nome utente",
+            "sv": "Användarnamn",
+            "no": "Brukernavn",
+            "es": "Nombre de usuario",
+            "da": "Brugernavn",
+            "ru": "Имя пользователя",
+            "pl": "Nazwa użytkownika",
+            "ko": "사용자 이름"
+          },
+          "example": {
+            "en": "John Doe",
+            "nl": "Jan de Vries",
+            "de": "Max Mustermann",
+            "fr": "Jean Dupont",
+            "it": "Mario Rossi",
+            "sv": "Anna Svensson",
+            "no": "Ola Nordmann",
+            "es": "Juan García",
+            "da": "Peter Jensen",
+            "ru": "Иван Иванов",
+            "pl": "Jan Kowalski",
+            "ko": "홍길동"
+          }
+        },
+        {
+          "name": "ufv_auth_method",
+          "type": "string",
+          "title": {
+            "en": "Auth method",
+            "nl": "Authenticatiemethode",
+            "de": "Authentifizierungsmethode",
+            "fr": "Méthode d'authentification",
+            "it": "Metodo di autenticazione",
+            "sv": "Autentiseringsmetod",
+            "no": "Autentiseringsmetode",
+            "es": "Método de autenticación",
+            "da": "Godkendelsesmetode",
+            "ru": "Метод аутентификации",
+            "pl": "Metoda uwierzytelniania",
+            "ko": "인증 방법"
+          },
+          "example": {
+            "en": "pin_code",
+            "nl": "pin_code",
+            "de": "pin_code",
+            "fr": "pin_code",
+            "it": "pin_code",
+            "sv": "pin_code",
+            "no": "pin_code",
+            "es": "pin_code",
+            "da": "pin_code",
+            "ru": "pin_code",
+            "pl": "pin_code",
+            "ko": "pin_code"
+          }
+        }
+      ]
+    }
   ]
 }

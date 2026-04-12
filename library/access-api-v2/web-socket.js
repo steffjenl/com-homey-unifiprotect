@@ -2,6 +2,7 @@
 
 const WebSocket = require('ws');
 const BaseClass = require('./base-class');
+const { ACCESS_KEYPAD_CREDENTIAL_PROVIDERS } = require('../constants');
 
 class AccessWebSocket extends BaseClass {
   constructor(...props) {
@@ -142,10 +143,6 @@ class AccessWebSocket extends BaseClass {
       return false;
     }
 
-    if (jsonData.event === 'access.logs.add') {
-      return false;
-    }
-
     if (jsonData.event === 'access.data.device.update') {
       return false;
     }
@@ -222,12 +219,45 @@ class AccessWebSocket extends BaseClass {
         if (deviceGarageDoor) {
           driverGarageDoor.onParseWebsocketMessage(deviceGarageDoor, eventData.data);
         }
+      } else if (eventData.event === 'access.logs.add') {
+        this.homey.app.debug(`[AccessWS] access.logs.add received: ${JSON.stringify(eventData)}`);
+        this._dispatchAccessLogEvent(eventData);
       } else {
         // this.homey.app.log('Websocket unhandled event received: ' + JSON.stringify(eventData));
       }
     });
     this._eventListenerConfigured = true;
     return true;
+  }
+
+  _dispatchAccessLogEvent(eventData) {
+    const source = eventData.data && eventData.data.source;
+    if (!source) return;
+
+    const deviceId = source.device_config && source.device_config.id;
+    const credentialProvider = source.authentication && source.authentication.credential_provider;
+    const actor = source.actor && source.actor.display_name;
+    const result = source.event && source.event.result;
+
+    if (!deviceId || !credentialProvider) return;
+
+    this.homey.app.debug(`[AccessWS] access.logs.add deviceId=${deviceId} credential=${credentialProvider} actor=${actor} result=${result}`);
+
+    if (!ACCESS_KEYPAD_CREDENTIAL_PROVIDERS.includes(credentialProvider)) return;
+
+    const driverDoor = this.homey.drivers.getDriver('access-door');
+    const deviceDoor = driverDoor.getUnifiDeviceById(deviceId);
+    if (deviceDoor) {
+      driverDoor.onAccessLogKeypaddEvent(deviceDoor, { credentialProvider, actor: actor || '', result: result || '' });
+      return;
+    }
+
+    // Also check garage doors
+    const driverGarageDoor = this.homey.drivers.getDriver('access-garagedoor');
+    const deviceGarageDoor = driverGarageDoor.getUnifiDeviceById(deviceId);
+    if (deviceGarageDoor) {
+      driverGarageDoor.onAccessLogKeypaddEvent(deviceGarageDoor, { credentialProvider, actor: actor || '', result: result || '' });
+    }
   }
 
 }
