@@ -416,6 +416,74 @@
           }
         }
       ]
+    },
+    {
+      "id": "ufv_device_access_garagedoor_keypad_granted",
+      "title": {
+        "en": "Correct PIN entered on garage door",
+        "nl": "Juiste PIN ingevoerd op garagedeur",
+        "de": "Richtiger PIN an Garagentor eingegeben",
+        "fr": "PIN correct saisi sur la porte de garage",
+        "it": "PIN corretto inserito sul portone del garage",
+        "sv": "Rätt PIN angett på garageport",
+        "no": "Riktig PIN tastet inn på garasjeport",
+        "es": "PIN correcto introducido en la puerta del garaje",
+        "da": "Korrekt PIN indtastet på garageport",
+        "ru": "Правильный PIN введён на воротах гаража",
+        "pl": "Prawidłowy PIN wprowadzony przy bramie garażowej",
+        "ko": "차고문에서 올바른 PIN 입력됨"
+      },
+      "tokens": [
+        {
+          "name": "ufv_actor",
+          "type": "string",
+          "title": {
+            "en": "User name",
+            "nl": "Gebruikersnaam",
+            "de": "Benutzername",
+            "fr": "Nom d'utilisateur",
+            "it": "Nome utente",
+            "sv": "Användarnamn",
+            "no": "Brukernavn",
+            "es": "Nombre de usuario",
+            "da": "Brugernavn",
+            "ru": "Имя пользователя",
+            "pl": "Nazwa użytkownika",
+            "ko": "사용자 이름"
+          },
+          "example": {
+            "en": "John Doe",
+            "nl": "Jan de Vries",
+            "de": "Max Mustermann",
+            "fr": "Jean Dupont",
+            "it": "Mario Rossi",
+            "sv": "Anna Svensson",
+            "no": "Ola Nordmann",
+            "es": "Juan García",
+            "da": "Peter Jensen",
+            "ru": "Иван Иванов",
+            "pl": "Jan Kowalski",
+            "ko": "홍길동"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufv_device_access_garagedoor_keypad_denied",
+      "title": {
+        "en": "Wrong PIN entered on garage door",
+        "nl": "Verkeerde PIN ingevoerd op garagedeur",
+        "de": "Falscher PIN an Garagentor eingegeben",
+        "fr": "PIN incorrect saisi sur la porte de garage",
+        "it": "PIN errato inserito sul portone del garage",
+        "sv": "Fel PIN angett på garageport",
+        "no": "Feil PIN tastet inn på garasjeport",
+        "es": "PIN incorrecto introducido en la puerta del garaje",
+        "da": "Forkert PIN indtastet på garageport",
+        "ru": "Неверный PIN введён на воротах гаража",
+        "pl": "Nieprawidłowy PIN wprowadzony przy bramie garażowej",
+        "ko": "차고문에서 잘못된 PIN 입력됨"
+      }
     }
   ]
 }

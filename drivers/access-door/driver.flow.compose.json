@@ -288,6 +288,74 @@
           }
         }
       ]
+    },
+    {
+      "id": "ufv_device_access_keypad_granted",
+      "title": {
+        "en": "Correct PIN entered on door",
+        "nl": "Juiste PIN ingevoerd op deur",
+        "de": "Richtiger PIN an Tür eingegeben",
+        "fr": "PIN correct saisi sur la porte",
+        "it": "PIN corretto inserito sulla porta",
+        "sv": "Rätt PIN angett på dörr",
+        "no": "Riktig PIN tastet inn på dør",
+        "es": "PIN correcto introducido en la puerta",
+        "da": "Korrekt PIN indtastet på dør",
+        "ru": "Правильный PIN введён на двери",
+        "pl": "Prawidłowy PIN wprowadzony przy drzwiach",
+        "ko": "문에서 올바른 PIN 입력됨"
+      },
+      "tokens": [
+        {
+          "name": "ufv_actor",
+          "type": "string",
+          "title": {
+            "en": "User name",
+            "nl": "Gebruikersnaam",
+            "de": "Benutzername",
+            "fr": "Nom d'utilisateur",
+            "it": "Nome utente",
+            "sv": "Användarnamn",
+            "no": "Brukernavn",
+            "es": "Nombre de usuario",
+            "da": "Brugernavn",
+            "ru": "Имя пользователя",
+            "pl": "Nazwa użytkownika",
+            "ko": "사용자 이름"
+          },
+          "example": {
+            "en": "John Doe",
+            "nl": "Jan de Vries",
+            "de": "Max Mustermann",
+            "fr": "Jean Dupont",
+            "it": "Mario Rossi",
+            "sv": "Anna Svensson",
+            "no": "Ola Nordmann",
+            "es": "Juan García",
+            "da": "Peter Jensen",
+            "ru": "Иван Иванов",
+            "pl": "Jan Kowalski",
+            "ko": "홍길동"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufv_device_access_keypad_denied",
+      "title": {
+        "en": "Wrong PIN entered on door",
+        "nl": "Verkeerde PIN ingevoerd op deur",
+        "de": "Falscher PIN an Tür eingegeben",
+        "fr": "PIN incorrect saisi sur la porte",
+        "it": "PIN errato inserito sulla porta",
+        "sv": "Fel PIN angett på dörr",
+        "no": "Feil PIN tastet inn på dør",
+        "es": "PIN incorrecto introducido en la puerta",
+        "da": "Forkert PIN indtastet på dør",
+        "ru": "Неверный PIN введён на двери",
+        "pl": "Nieprawidłowy PIN wprowadzony przy drzwiach",
+        "ko": "문에서 잘못된 PIN 입력됨"
+      }
     }
   ]
 }

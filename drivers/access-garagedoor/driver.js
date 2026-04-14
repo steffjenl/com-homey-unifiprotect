@@ -53,16 +53,24 @@ module.exports = class MyDriver extends Homey.Driver {
 
     onAccessLogKeypaddEvent(device, { credentialProvider, actor, result }) {
         this.log(`[AccessGarageDoorDriver] onAccessLogKeypaddEvent device=${device.getName()} credential=${credentialProvider} actor=${actor} result=${result}`);
+        // Backwards-compatible: fires for every keypad attempt
         this.homey.app._deviceAccessGarageDoorKeypaddUsedTrigger.trigger(device, {
             ufv_actor: actor,
             ufv_auth_method: credentialProvider,
         }).catch(this.error);
+        // Specific granted / denied triggers
+        if (result === 'ACCESS') {
+            this.homey.app._deviceAccessGarageDoorKeypaddGrantedTrigger.trigger(device, {
+                ufv_actor: actor,
+            }).catch(this.error);
+        } else if (result === 'BLOCKED') {
+            this.homey.app._deviceAccessGarageDoorKeypaddDeniedTrigger.trigger(device, { }).catch(this.error);
+        }
     }
 
     getUnifiDeviceById(deviceId) {
         try {
-            const driver = this.driver;
-            const devices = driver.getDevices();
+            const devices = this.getDevices();
             const device = devices.find(device => String(device.getData().id) === String(deviceId));
             if (!device) return false;
             return device;

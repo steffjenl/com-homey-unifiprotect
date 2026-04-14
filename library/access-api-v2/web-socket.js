@@ -221,7 +221,7 @@ class AccessWebSocket extends BaseClass {
         }
       } else if (eventData.event === 'access.logs.add') {
         this.homey.app.debug(`[AccessWS] access.logs.add received: ${JSON.stringify(eventData)}`);
-        this._dispatchAccessLogEvent(eventData);
+        this._dispatchAccessLogEvent(eventData).catch((err) => this.homey.app.debug(`[AccessWS] _dispatchAccessLogEvent error: ${err}`));
       } else {
         // this.homey.app.log('Websocket unhandled event received: ' + JSON.stringify(eventData));
       }
@@ -230,31 +230,49 @@ class AccessWebSocket extends BaseClass {
     return true;
   }
 
-  _dispatchAccessLogEvent(eventData) {
-    const source = eventData.data && eventData.data.source;
+  async _dispatchAccessLogEvent(eventData) {
+    // Bug fixes vs original: use _source (not source), use event_object_id for MAC, compare case-insensitively
+    const source = eventData.data && eventData.data._source;
     if (!source) return;
 
-    const deviceId = source.device_config && source.device_config.id;
+    const hubMac = eventData.event_object_id;
     const credentialProvider = source.authentication && source.authentication.credential_provider;
     const actor = source.actor && source.actor.display_name;
     const result = source.event && source.event.result;
 
-    if (!deviceId || !credentialProvider) return;
+    if (!hubMac || !credentialProvider) return;
+    if (!ACCESS_KEYPAD_CREDENTIAL_PROVIDERS.includes(credentialProvider.toLowerCase())) return;
 
-    this.homey.app.debug(`[AccessWS] access.logs.add deviceId=${deviceId} credential=${credentialProvider} actor=${actor} result=${result}`);
+    this.homey.app.debug(`[AccessWS] access.logs.add hubMac=${hubMac} credential=${credentialProvider} actor=${actor} result=${result}`);
 
-    if (!ACCESS_KEYPAD_CREDENTIAL_PROVIDERS.includes(credentialProvider)) return;
+    // Resolve hub MAC → door UUID via the Access REST API
+    // (access.logs.add events identify doors by hub MAC, but Homey devices are keyed by door UUID)
+    let doorId;
+    try {
+      const doors = await this.homey.app.accessApi.getDoors();
+      const door = doors.find(
+        (d) => Array.isArray(d.device_ids)
+          && d.device_ids.some((mac) => String(mac).toLowerCase() === String(hubMac).toLowerCase()),
+      );
+      if (!door) {
+        this.homey.app.debug(`[AccessWS] access.logs.add: no door found for hubMac=${hubMac}`);
+        return;
+      }
+      doorId = String(door.id);
+    } catch (err) {
+      this.homey.app.debug(`[AccessWS] access.logs.add getDoors failed: ${err}`);
+      return;
+    }
 
     const driverDoor = this.homey.drivers.getDriver('access-door');
-    const deviceDoor = driverDoor.getUnifiDeviceById(deviceId);
+    const deviceDoor = driverDoor.getUnifiDeviceById(doorId);
     if (deviceDoor) {
       driverDoor.onAccessLogKeypaddEvent(deviceDoor, { credentialProvider, actor: actor || '', result: result || '' });
       return;
     }
 
-    // Also check garage doors
     const driverGarageDoor = this.homey.drivers.getDriver('access-garagedoor');
-    const deviceGarageDoor = driverGarageDoor.getUnifiDeviceById(deviceId);
+    const deviceGarageDoor = driverGarageDoor.getUnifiDeviceById(doorId);
     if (deviceGarageDoor) {
       driverGarageDoor.onAccessLogKeypaddEvent(deviceGarageDoor, { credentialProvider, actor: actor || '', result: result || '' });
     }

@@ -98,7 +98,12 @@ module.exports.EVENT_DEVICE_NFC_UNKNOWN_CARD_SCANNED = 'ufp_device_nfc_unknown_c
 module.exports.EVENT_ACCESS_KEYPAD_USED = 'ufv_access_keypad_used';
 module.exports.EVENT_DEVICE_ACCESS_KEYPAD_USED = 'ufv_device_access_keypad_used';
 module.exports.EVENT_DEVICE_ACCESS_GARAGEDOOR_KEYPAD_USED = 'ufv_device_access_garagedoor_keypad_used';
+module.exports.EVENT_DEVICE_ACCESS_KEYPAD_GRANTED = 'ufv_device_access_keypad_granted';
+module.exports.EVENT_DEVICE_ACCESS_KEYPAD_DENIED = 'ufv_device_access_keypad_denied';
+module.exports.EVENT_DEVICE_ACCESS_GARAGEDOOR_KEYPAD_GRANTED = 'ufv_device_access_garagedoor_keypad_granted';
+module.exports.EVENT_DEVICE_ACCESS_GARAGEDOOR_KEYPAD_DENIED = 'ufv_device_access_garagedoor_keypad_denied';
 // Known credential_provider values that indicate keypad/PIN usage (discovered via live hardware logging)
+// Comparison is done case-insensitively (events emit 'PIN_CODE' uppercase)
 module.exports.ACCESS_KEYPAD_CREDENTIAL_PROVIDERS = ['pin_code', 'keypad', 'pin'];
 
 // NVR Alarm Manager

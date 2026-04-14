@@ -75,6 +75,10 @@ class AppAccess extends BaseClass {
     // Device trigger: keypad / PIN used
     this._deviceAccessKeypaddUsedTrigger = this.homey.flow.getDeviceTriggerCard('ufv_device_access_keypad_used');
     this._deviceAccessGarageDoorKeypaddUsedTrigger = this.homey.flow.getDeviceTriggerCard('ufv_device_access_garagedoor_keypad_used');
+    this._deviceAccessKeypaddGrantedTrigger = this.homey.flow.getDeviceTriggerCard('ufv_device_access_keypad_granted');
+    this._deviceAccessKeypaddDeniedTrigger = this.homey.flow.getDeviceTriggerCard('ufv_device_access_keypad_denied');
+    this._deviceAccessGarageDoorKeypaddGrantedTrigger = this.homey.flow.getDeviceTriggerCard('ufv_device_access_garagedoor_keypad_granted');
+    this._deviceAccessGarageDoorKeypaddDeniedTrigger = this.homey.flow.getDeviceTriggerCard('ufv_device_access_garagedoor_keypad_denied');
 
   }
 
