@@ -298,5 +298,8 @@
   },
   "1.9.6": {
     "en": "Add G4 Entry debug information"
+  },
+  "1.9.7": {
+    "en": "Fix UniFi Chime Volume and Doorbell"
   }
 }
