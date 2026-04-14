@@ -636,9 +636,21 @@ class ProtectAPI extends BaseClass {
 
     setChimeVolume(chime, volumeLevel) {
         return new Promise((resolve, reject) => {
+            const volumeInt = Math.round(volumeLevel * 100);
             const params = {
-                volume: volumeLevel * 100
+                volume: volumeInt
             };
+
+            // Newer UniFi Protect firmware requires volume to be set per-camera
+            // via ringSettings[].volume (top-level volume alone returns HTTP 500).
+            const bootstrap = this._bootstrap;
+            if (bootstrap && Array.isArray(bootstrap.chimes)) {
+                const bootstrapChime = bootstrap.chimes.find(c => c.id === chime.id);
+                if (bootstrapChime && Array.isArray(bootstrapChime.ringSettings) && bootstrapChime.ringSettings.length > 0) {
+                    params.ringSettings = bootstrapChime.ringSettings.map(rs => Object.assign({}, rs, { volume: volumeInt }));
+                }
+            }
+
             return this.webclient.patch(`chimes/${chime.id}`, params)
                 .then(() => resolve('volume successfully set.'))
                 .catch(error => reject(new Error(`Error setting volume: ${error}`)));
