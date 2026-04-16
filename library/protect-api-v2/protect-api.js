@@ -56,6 +56,36 @@ class ProtectAPI extends BaseClass {
                 .catch(error => reject(error));
         });
     }
+    async getDoorbells() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('cameras')
+                .then(response => {
+                    let result = JSON.parse(response);
+                    result = result.filter(obj => obj.featureFlags && obj.featureFlags.isDoorbell === true);
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining doorbells.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+    async getCamerasNonDoorbell() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('cameras')
+                .then(response => {
+                    let result = JSON.parse(response);
+                    result = result.filter(obj => !obj.featureFlags || obj.featureFlags.isDoorbell !== true);
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining cameras.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
     async setCamera(cameraId, params) {
         return new Promise((resolve, reject) => {
             this.webclient.patch('cameras/' + cameraId, params)
@@ -206,6 +236,59 @@ class ProtectAPI extends BaseClass {
                         return resolve(result);
                     } else {
                         return reject(new Error('Error setting chime.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    // Snapshot
+    getSnapshotUrl(cameraId, highQuality = false) {
+        const host = this.webclient._serverHost;
+        const port = this.webclient._serverPort;
+        const quality = highQuality ? 'true' : 'false';
+        return `https://${host}:${port}/proxy/protect/integration/v1/cameras/${cameraId}/snapshot?highQuality=${quality}`;
+    }
+
+    getSnapshotHeaders() {
+        return {
+            'X-API-KEY': this.webclient._apiToken,
+        };
+    }
+
+    async getSnapshot(cameraId) {
+        return new Promise((resolve, reject) => {
+            this.webclient.get(`cameras/${cameraId}/snapshot`)
+                .then(buffer => resolve(buffer))
+                .catch(error => reject(error));
+        });
+    }
+
+    // RTSPS Streams
+    async getRtspsStream(cameraId, qualities = ['high']) {
+        return new Promise((resolve, reject) => {
+            this.webclient.post(`cameras/${cameraId}/rtsps-stream`, { qualities })
+                .then(response => {
+                    let result = JSON.parse(response);
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error creating RTSPS stream.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    async getExistingRtspsStream(cameraId) {
+        return new Promise((resolve, reject) => {
+            this.webclient.get(`cameras/${cameraId}/rtsps-stream`)
+                .then(response => {
+                    let result = JSON.parse(response);
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining RTSPS stream.'));
                     }
                 })
                 .catch(error => reject(error));

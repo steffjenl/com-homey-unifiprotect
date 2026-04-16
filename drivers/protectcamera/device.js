@@ -55,12 +55,19 @@ class Camera extends Homey.Device {
   async initCamera() {
     this.registerCapabilityListener('camera_microphone_volume', async (value) => {
       this.homey.app.debug('camera_microphone_volume');
-      return this.homey.app.api.setMicVolume(this.getData(), value);
+      if (this.homey.app.isV1Available()) {
+        return this.homey.app.api.setMicVolume(this.getData(), value);
+      } else if (this.homey.app.isV2Available()) {
+        return this.homey.app.apiV2.setCamera(this.getData().id, { micVolume: value });
+      }
     });
 
     this.registerCapabilityListener('camera_nightvision_set', async (value) => {
       this.homey.app.debug('camera_nightvision_set');
-      return this.homey.app.api.setNightVisionMode(this.getData(), value);
+      if (this.homey.app.isV1Available()) {
+        return this.homey.app.api.setNightVisionMode(this.getData(), value);
+      }
+      // V2 does not expose irLedMode directly
     });
 
     await this._createMissingCapabilities();
@@ -70,7 +77,10 @@ class Camera extends Homey.Device {
   }
 
   async waitForBootstrap() {
-    if (typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null) {
+    const v1Ready = typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null;
+    const v2Ready = this.homey.app.isV2Available();
+
+    if (v1Ready || v2Ready) {
       await this.initCamera();
     } else {
       this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
@@ -171,45 +181,56 @@ class Camera extends Homey.Device {
   }
 
   async _initCameraData() {
-    const cameraData = this.homey.app.api.getBootstrap();
+    let camera = null;
 
-    if (cameraData) {
-      cameraData.cameras.forEach((camera) => {
+    // Try V1 bootstrap first
+    if (this.homey.app.isV1Available()) {
+      const cameraData = this.homey.app.api.getBootstrap();
+      if (cameraData && cameraData.cameras) {
+        camera = cameraData.cameras.find(c => c.id === this.getData().id);
+      }
+    }
 
-        if (camera.id === this.getData().id) {
+    // Fall back to V2 API
+    if (!camera && this.homey.app.isV2Available()) {
+      try {
+        camera = await this.homey.app.apiV2.getCamera(this.getData().id);
+      } catch (e) {
+        this.homey.app.debug(`V2 getCamera failed for ${this.getData().id}: ${e}`);
+      }
+    }
 
-          if (this.hasCapability('ip_address')) {
-            this.setCapabilityValue('ip_address', camera.host).catch(this.error);
-          }
-          if (this.hasCapability('camera_recording_status')) {
-            this.setCapabilityValue('camera_recording_status', camera.isRecording).catch(this.error);
-          }
-          if (this.hasCapability('camera_recording_mode')) {
-            this.setCapabilityValue('camera_recording_mode',
-              this.homey.__(`events.camera.${String(camera.recordingSettings.mode)
-                .toLowerCase()}`)).catch(this.error);
-          }
-          if (this.hasCapability('camera_microphone_status')) {
-            this.setCapabilityValue('camera_microphone_status', camera.isMicEnabled).catch(this.error);
-          }
-          if (this.hasCapability('camera_nightvision_status')) {
-            this.setCapabilityValue('camera_nightvision_status', camera.isDark).catch(this.error);
-          }
-          if (this.hasCapability('camera_microphone_volume')) {
-            this.setCapabilityValue('camera_microphone_volume', camera.micVolume).catch(this.error);
-          }
-          if (this.hasCapability('camera_connection_status')) {
-            if (this.getCapabilityValue('camera_connection_status') !== camera.isConnected) {
-              this.onConnectionChanged(camera.isConnected);
-            }
-            this.setCapabilityValue('camera_connection_status', camera.isConnected).catch(this.error);
-          }
-          if (this.hasCapability('camera_nightvision_set')) {
-            this.setCapabilityValue('camera_nightvision_set', camera.ispSettings.irLedMode).catch(this.error);
-          }
-
+    if (camera) {
+      if (this.hasCapability('ip_address') && camera.host) {
+        this.setCapabilityValue('ip_address', camera.host).catch(this.error);
+      }
+      if (this.hasCapability('camera_recording_status') && typeof camera.isRecording !== 'undefined') {
+        this.setCapabilityValue('camera_recording_status', camera.isRecording).catch(this.error);
+      }
+      if (this.hasCapability('camera_recording_mode') && camera.recordingSettings && camera.recordingSettings.mode) {
+        this.setCapabilityValue('camera_recording_mode',
+          this.homey.__(`events.camera.${String(camera.recordingSettings.mode)
+            .toLowerCase()}`)).catch(this.error);
+      }
+      if (this.hasCapability('camera_microphone_status') && typeof camera.isMicEnabled !== 'undefined') {
+        this.setCapabilityValue('camera_microphone_status', camera.isMicEnabled).catch(this.error);
+      }
+      if (this.hasCapability('camera_nightvision_status') && typeof camera.isDark !== 'undefined') {
+        this.setCapabilityValue('camera_nightvision_status', camera.isDark).catch(this.error);
+      }
+      if (this.hasCapability('camera_microphone_volume') && typeof camera.micVolume !== 'undefined') {
+        this.setCapabilityValue('camera_microphone_volume', camera.micVolume).catch(this.error);
+      }
+      if (this.hasCapability('camera_connection_status')) {
+        const isConnected = camera.state === 'CONNECTED' || camera.isConnected === true;
+        if (this.getCapabilityValue('camera_connection_status') !== isConnected) {
+          this.onConnectionChanged(isConnected);
         }
-      });
+        this.setCapabilityValue('camera_connection_status', isConnected).catch(this.error);
+      }
+      if (this.hasCapability('camera_nightvision_set') && camera.ispSettings && camera.ispSettings.irLedMode) {
+        this.setCapabilityValue('camera_nightvision_set', camera.ispSettings.irLedMode).catch(this.error);
+      }
     }
   }
 
@@ -476,10 +497,22 @@ class Camera extends Homey.Device {
         return;
       }
 
-      await this.homey.app.api.getStreamUrl(this.getData()).then(((rtspUrl) => {
-        this.log(`RTSP URL for camera ${this.getName()}: ${rtspUrl}`);
-        this.rtspUrl = rtspUrl;
-      })).catch(this.error);
+      if (this.homey.app.isV1Available()) {
+        await this.homey.app.api.getStreamUrl(this.getData()).then(((rtspUrl) => {
+          this.log(`RTSP URL for camera ${this.getName()}: ${rtspUrl}`);
+          this.rtspUrl = rtspUrl;
+        })).catch(this.error);
+      } else if (this.homey.app.isV2Available()) {
+        try {
+          const streams = await this.homey.app.apiV2.getRtspsStream(this.getData().id, ['high']);
+          if (streams && streams.high) {
+            this.rtspUrl = streams.high;
+            this.log(`RTSPS URL (V2) for camera ${this.getName()}: ${this.rtspUrl}`);
+          }
+        } catch (e) {
+          this.homey.app.debug(`V2 getRtspsStream failed for ${this.getName()}: ${e}`);
+        }
+      }
 
       this.setCameraVideo('snapshot', `${this.getName()} Video`, this.video);
     } catch (err) {
@@ -494,25 +527,27 @@ class Camera extends Homey.Device {
     const ipAddress = this.getCapabilityValue('ip_address');
 
     this._snapshotImage.setStream(async (stream) => {
-      // Obtain snapshot URL
       let snapshotUrl = null;
+      const headers = {};
 
       if (this.homey.app.useCameraSnapshot) {
         snapshotUrl = `https://${ipAddress}/snap.jpeg`;
-      } else {
+      } else if (this.homey.app.isV1Available()) {
         await this.homey.app.api.createSnapshotUrl(this.getData())
           .then((url) => {
             snapshotUrl = url;
           })
           .catch(this.error.bind(this, 'Could not create snapshot URL.'));
+        headers['Cookie'] = this.homey.app.api.getProxyCookieToken();
+      } else if (this.homey.app.isV2Available()) {
+        snapshotUrl = this.homey.app.apiV2.getSnapshotUrl(this.getData().id);
+        const v2Headers = this.homey.app.apiV2.getSnapshotHeaders();
+        Object.assign(headers, v2Headers);
       }
 
       if (!snapshotUrl) {
         throw new Error('Invalid snapshot url.');
       }
-
-      const headers = {};
-      headers['Cookie'] = this.homey.app.api.getProxyCookieToken();
 
       const agent = new https.Agent({
         rejectUnauthorized: false,
@@ -530,14 +565,21 @@ class Camera extends Homey.Device {
     });
 
     if (triggerFlow) {
-      this.homey.app.api.getStreamUrl(this.getData()).then(((rtspUrl) => {
+      const getStreamUrl = async () => {
+        if (this.homey.app.isV1Available()) {
+          return this.homey.app.api.getStreamUrl(this.getData());
+        }
+        return this.rtspUrl || '';
+      };
+
+      getStreamUrl().then((rtspUrl) => {
         this.homey.app.triggerSnapshotTrigger({
           ufv_snapshot_token: this._snapshotImage,
           ufv_snapshot_camera: this.getName(),
           ufv_snapshot_snapshot_url: '',
           ufv_snapshot_stream_url: rtspUrl,
         });
-      })).catch(this.log);
+      }).catch(this.log);
     }
 
     this.cloudUrl = this._snapshotImage.cloudUrl;

@@ -35,7 +35,15 @@ class UniFiCameraDriver extends Homey.Driver {
 
     session.setHandler('list_devices', async (data) => {
       try {
-        const cameras = await homey.app.api.getCameras();
+        let cameras;
+        if (homey.app.isV1Available()) {
+          cameras = await homey.app.api.getCameras();
+        } else if (homey.app.isV2Available()) {
+          cameras = await homey.app.apiV2.getCamerasNonDoorbell();
+        } else {
+          homey.app.debug('[protectcamera] No API available for listing cameras');
+          return [];
+        }
         return Object.values(cameras).map((camera) => ({
           data: { id: String(camera.id) },
           name: camera.name,

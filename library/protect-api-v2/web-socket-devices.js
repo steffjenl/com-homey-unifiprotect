@@ -147,7 +147,63 @@ class ProtectWebSocket extends BaseClass {
 
       this.lastWebsocketMessage = this.homey.app.toLocalTime(new Date()).toISOString().slice(0, 16);
 
-      this.homey.app.log('Websocket Devices event received: ' + JSON.stringify(eventData));
+      this.homey.app.debug('Websocket V2 Devices event received: ' + JSON.stringify(eventData));
+
+      if (!eventData || !eventData.item || !eventData.item.modelKey) {
+        return;
+      }
+
+      const payload = eventData.item;
+      const modelKey = payload.modelKey;
+      const deviceId = payload.id;
+
+      this.homey.app.debug('[V2 Devices WS] ' + modelKey + ' ' + deviceId + ' ' + eventData.type);
+
+      try {
+        if (modelKey === 'camera') {
+          const driverCamera = this.homey.drivers.getDriver('protectcamera');
+          const deviceCamera = driverCamera.getUnifiDeviceById(deviceId);
+          if (deviceCamera) {
+            driverCamera.onParseWebsocketMessage(deviceCamera, payload);
+          }
+
+          const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
+          const deviceDoorbell = driverDoorbell.getUnifiDeviceById(deviceId);
+          if (deviceDoorbell) {
+            driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload);
+          }
+        } else if (modelKey === 'light') {
+          const driver = this.homey.drivers.getDriver('protectlight');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'sensor') {
+          const driver = this.homey.drivers.getDriver('protectsensor');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'chime') {
+          const driver = this.homey.drivers.getDriver('protectchime');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'nvr') {
+          try {
+            const alarmDriver = this.homey.drivers.getDriver('protect-nvr-alarm');
+            const alarmDevice = alarmDriver.getNVRAlarmDevice();
+            if (alarmDevice) {
+              alarmDriver.onParseWebsocketMessage(alarmDevice, payload);
+            }
+          } catch (e) {
+            // driver may not be installed
+          }
+        }
+      } catch (e) {
+        this.homey.app.debug('[V2 Devices WS] dispatch error: ' + e);
+      }
 
     });
     this._eventListenerConfigured = true;

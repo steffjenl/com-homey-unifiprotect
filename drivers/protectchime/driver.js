@@ -23,10 +23,19 @@ class UniFiChimeDriver extends Homey.Driver {
         });
 
         session.setHandler("list_devices", async function (data) {
-            return Object.values(await homey.app.api.getChimes()).map(light => {
+            let chimes;
+            if (homey.app.isV1Available()) {
+                chimes = await homey.app.api.getChimes();
+            } else if (homey.app.isV2Available()) {
+                chimes = await homey.app.apiV2.getChimes();
+            } else {
+                homey.app.debug('[protectchime] No API available for listing chimes');
+                return [];
+            }
+            return Object.values(chimes).map(chime => {
                 return {
-                    data: {id: String(light.id)},
-                    name: light.name,
+                    data: {id: String(chime.id)},
+                    name: chime.name,
                 };
             });
         });

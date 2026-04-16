@@ -87,7 +87,7 @@ const SmartDetectionMixin = {
     }
 
     const lastDetectionAt = event.detectionTime;
-    const score = event.detectionScore;
+    const score = typeof event.detectionScore === 'number' ? event.detectionScore : 0;
     const smartDetectTypes = event.detectionTypes;
 
     let zones = '';
@@ -103,7 +103,9 @@ const SmartDetectionMixin = {
     this.setCapabilityValue('last_smart_detection_at', lastDetectionAt).catch(this.error);
     this.setCapabilityValue('last_smart_detection_date', lastDetection.toLocaleDateString()).catch(this.error);
     this.setCapabilityValue('last_smart_detection_time', lastDetection.toLocaleTimeString()).catch(this.error);
-    this.setCapabilityValue('last_smart_detection_score', score).catch(this.error);
+    if (typeof score === 'number') {
+      this.setCapabilityValue('last_smart_detection_score', score).catch(this.error);
+    }
 
     if (smartDetectTypes.length > 0) {
       for (const type of smartDetectTypes) {

@@ -39,7 +39,15 @@ class UniFiDoorbellDriver extends Homey.Driver {
 
         session.setHandler("list_devices", async function (data) {
             try {
-                const doorbells = await homey.app.api.getDoorbells();
+                let doorbells;
+                if (homey.app.isV1Available()) {
+                    doorbells = await homey.app.api.getDoorbells();
+                } else if (homey.app.isV2Available()) {
+                    doorbells = await homey.app.apiV2.getDoorbells();
+                } else {
+                    homey.app.debug('[protectdoorbell] No API available for listing doorbells');
+                    return [];
+                }
                 return Object.values(doorbells).map((camera) => ({
                     data: { id: String(camera.id) },
                     name: camera.name,

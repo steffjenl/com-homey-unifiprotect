@@ -70,7 +70,12 @@ class AppProtect extends BaseClass {
         const _setRecordingModeV2 = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_RECORDING_MODE_V2);
         _setRecordingModeV2.registerRunListener(async (args, state) => {
             if (typeof args.device.getData().id !== 'undefined') {
-                return this.homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode);
+                if (this.homey.app.isV1Available()) {
+                    return this.homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode);
+                } else if (this.homey.app.isV2Available()) {
+                    // V2 does not support changing recording mode directly
+                    this.homey.app.debug('[V2] setRecordingMode not available in V2 Integration API');
+                }
             }
             return Promise.resolve(true);
         });
@@ -483,8 +488,13 @@ class AppProtect extends BaseClass {
         const refreshAuthTokens = this.homey.setInterval(() => {
             try {
                 this.homey.app.debug('Refreshing auth tokens');
-                this.homey.app.api._lastUpdateId = null;
-                this._appLogin();
+
+                // Only refresh V1 (username/password) if credentials are configured
+                const credentials = this.homey.settings.get('ufp:credentials');
+                if (credentials && credentials.username && credentials.password) {
+                    this.homey.app.api._lastUpdateId = null;
+                    this._appLogin();
+                }
 
                 // clean Device Storage
                 this.cleanDeviceStorage();
@@ -500,8 +510,14 @@ class AppProtect extends BaseClass {
                     && tokens.protectV2ApiKey !== ''
                     && !this.homey.app.apiV2.websocket.isWebsocketConnected()
                 ) {
-                    this.homey.appProtect.loginToProtectV2().catch(this.error);
-                    this.homey.appAccess.loginToAccess().catch(this.error);
+                    this.homey.app.appProtect.loginToProtectV2().catch(this.error);
+                }
+
+                if (
+                    tokens && typeof tokens.accessApiKey !== 'undefined'
+                    && tokens.accessApiKey !== ''
+                ) {
+                    this.homey.app.appAccess.loginToAccess().catch(this.error);
                 }
             } catch (error) {
                 this.homey.error(`${JSON.stringify(error)}`);
