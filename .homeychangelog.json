@@ -301,5 +301,8 @@
   },
   "1.9.7": {
     "en": "Fix UniFi Chime Volume and Doorbell"
+  },
+  "1.9.8": {
+    "en": "Fix: Hub Keypad"
   }
 }
