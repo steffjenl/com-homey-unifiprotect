@@ -280,6 +280,32 @@ class AppProtect extends BaseClass {
             return Promise.reject(new Error('No device found'));
         });
 
+        const _actionSetCameraFaceDetection = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_CAMERA_FACE_DETECTION);
+        _actionSetCameraFaceDetection.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+                this.homey.app.debug(`Set Camera Face Detection ${args.device.getData().id} to ${args.enabled}`);
+                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+                if (device) {
+                    this.homey.app.debug(`Found device ${device.getName()}`);
+                    return this.homey.app.api.setFaceDetection(device.getData(), args.enabled).catch(this.error);
+                }
+            }
+            return Promise.reject(new Error('No device found'));
+        });
+
+        const _actionSetDoorbellFaceDetection = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_FACE_DETECTION);
+        _actionSetDoorbellFaceDetection.registerRunListener(async (args, state) => {
+            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+                this.homey.app.debug(`Set Doorbell Face Detection ${args.device.getData().id} to ${args.enabled}`);
+                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+                if (device) {
+                    this.homey.app.debug(`Found device ${device.getName()}`);
+                    return this.homey.app.api.setFaceDetection(device.getData(), args.enabled).catch(this.error);
+                }
+            }
+            return Promise.reject(new Error('No device found'));
+        });
+
         const _actionTestRingtone = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_TEST_RINGTONE);
         _actionTestRingtone.registerRunListener(async (args, state) => {
             if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {

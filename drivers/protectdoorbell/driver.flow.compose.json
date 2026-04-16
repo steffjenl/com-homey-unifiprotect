@@ -1813,6 +1813,57 @@
           }
         }
       ]
+    },
+    {
+      "id": "ufv_set_device_doorbell_face_detection",
+      "title": {
+        "en": "Enable/Disable face detection",
+        "nl": "Gezichtsherkenning in-/uitschakelen",
+        "de": "Gesichtserkennung aktivieren/deaktivieren",
+        "fr": "Activer/Désactiver la reconnaissance faciale",
+        "it": "Abilita/Disabilita il riconoscimento facciale",
+        "sv": "Aktivera/Inaktivera ansiktsigenkänning",
+        "no": "Aktiver/Deaktiver ansiktsgjenkjenning",
+        "es": "Activar/Desactivar reconocimiento facial",
+        "da": "Aktiver/Deaktiver ansigtsgenkendelse",
+        "ru": "Включить/Отключить распознавание лиц",
+        "pl": "Włącz/Wyłącz rozpoznawanie twarzy",
+        "ko": "얼굴 인식 활성화/비활성화"
+      },
+      "titleFormatted": {
+        "en": "Set face detection [[enabled]]",
+        "nl": "Stel gezichtsherkenning in op [[enabled]]",
+        "de": "Gesichtserkennung [[enabled]] setzen",
+        "fr": "Définir la reconnaissance faciale [[enabled]]",
+        "it": "Imposta riconoscimento facciale [[enabled]]",
+        "sv": "Ställ in ansiktsigenkänning [[enabled]]",
+        "no": "Angi ansiktsgjenkjenning [[enabled]]",
+        "es": "Establecer reconocimiento facial [[enabled]]",
+        "da": "Indstil ansigtsgenkendelse [[enabled]]",
+        "ru": "Установить распознавание лиц [[enabled]]",
+        "pl": "Ustaw rozpoznawanie twarzy [[enabled]]",
+        "ko": "얼굴 인식 설정 [[enabled]]"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "enabled",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld",
+            "de": "Aktiviert",
+            "fr": "Activé",
+            "it": "Abilitato",
+            "sv": "Aktiverad",
+            "no": "Aktivert",
+            "es": "Habilitado",
+            "da": "Aktiveret",
+            "ru": "Включено",
+            "pl": "Włączone",
+            "ko": "활성화됨"
+          }
+        }
+      ]
     }
 
   ]

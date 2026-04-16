@@ -1059,6 +1059,27 @@
           }
         }
       ]
+    },
+    {
+      "id": "ufv_set_device_camera_face_detection",
+      "title": {
+        "en": "Enable/Disable face detection",
+        "nl": "Gezichtsherkenning in-/uitschakelen"
+      },
+      "titleFormatted": {
+        "en": "Set face detection [[enabled]]",
+        "nl": "Stel gezichtsherkenning in op [[enabled]]"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "enabled",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld"
+          }
+        }
+      ]
     }
   ]
 }

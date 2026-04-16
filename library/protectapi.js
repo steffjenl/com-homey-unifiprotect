@@ -937,6 +937,26 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    setFaceDetection(camera, enabled) {
+        return new Promise((resolve, reject) => {
+            this.webclient.get(`cameras/${camera.id}`)
+                .then(response => {
+                    const cameraConfig = JSON.parse(response);
+                    let objectTypes = (cameraConfig.smartDetectSettings && Array.isArray(cameraConfig.smartDetectSettings.objectTypes))
+                        ? [...cameraConfig.smartDetectSettings.objectTypes]
+                        : [];
+                    if (enabled) {
+                        if (!objectTypes.includes('face')) objectTypes.push('face');
+                    } else {
+                        objectTypes = objectTypes.filter(t => t !== 'face');
+                    }
+                    return this.webclient.patch(`cameras/${camera.id}`, { smartDetectSettings: { objectTypes } });
+                })
+                .then(() => resolve('Face Detection successfully set.'))
+                .catch(error => reject(new Error(`Error setting Face Detection: ${error}`)));
+        });
+    }
+
     testRingtone(camera) {
         return new Promise((resolve, reject) => {
             return this.webclient.post(`cameras/${camera.id}/test-ringtone`, {})
