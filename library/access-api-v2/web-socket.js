@@ -245,22 +245,25 @@ class AccessWebSocket extends BaseClass {
 
     this.homey.app.debug(`[AccessWS] access.logs.add hubMac=${hubMac} credential=${credentialProvider} actor=${actor} result=${result}`);
 
-    // Resolve hub MAC → door UUID via the Access REST API
-    // (access.logs.add events identify doors by hub MAC, but Homey devices are keyed by door UUID)
+    // Resolve hub MAC → door UUID via the Access REST API.
+    // access.logs.add events identify the door by hub MAC (event_object_id), but Homey devices
+    // are keyed by door location UUID (from getDoors). The devices endpoint returns hub objects
+    // with a `mac` field and a `location_id` field pointing to the door UUID.
     let doorId;
     try {
-      const doors = await this.homey.app.accessApi.getDoors();
-      const door = doors.find(
-        (d) => Array.isArray(d.device_ids)
-          && d.device_ids.some((mac) => String(mac).toLowerCase() === String(hubMac).toLowerCase()),
-      );
-      if (!door) {
-        this.homey.app.debug(`[AccessWS] access.logs.add: no door found for hubMac=${hubMac}`);
+      const hubs = await this.homey.app.accessApi.getHubs();
+      const hub = hubs.find((h) => String(h.mac || '').toLowerCase() === hubMac.toLowerCase());
+      if (!hub) {
+        this.homey.app.debug(`[AccessWS] access.logs.add: no hub found for hubMac=${hubMac}`);
         return;
       }
-      doorId = String(door.id);
+      if (!hub.location_id) {
+        this.homey.app.debug(`[AccessWS] access.logs.add: hub found but missing location_id for hubMac=${hubMac}`);
+        return;
+      }
+      doorId = String(hub.location_id);
     } catch (err) {
-      this.homey.app.debug(`[AccessWS] access.logs.add getDoors failed: ${err}`);
+      this.homey.app.debug(`[AccessWS] access.logs.add getHubs failed: ${err}`);
       return;
     }
 
