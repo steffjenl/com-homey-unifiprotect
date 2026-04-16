@@ -18,12 +18,18 @@ class UniFiSirenDriver extends Homey.Driver {
         });
 
         session.setHandler("list_devices", async function (data) {
-            return Object.values(await homey.app.api.getSirens()).map(siren => {
-                return {
-                    data: {id: String(siren.id)},
-                    name: siren.name,
-                };
-            });
+            if (homey.app.isV1Available()) {
+                const sirens = await homey.app.api.getSirens();
+                return Object.values(sirens).map(siren => {
+                    return {
+                        data: {id: String(siren.id)},
+                        name: siren.name,
+                    };
+                });
+            }
+            // Sirens are not supported in the V2 Protect Integration API
+            homey.app.debug('[protect-siren] Sirens not supported in V2 API, requires V1 (username/password)');
+            return [];
         });
     }
 

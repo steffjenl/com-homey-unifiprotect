@@ -147,46 +147,74 @@ class ProtectWebSocket extends BaseClass {
 
             this.lastWebsocketMessage = this.homey.app.toLocalTime(new Date()).toISOString().slice(0, 16);
 
-            // this.homey.app.log('Websocket Events event received: ' + JSON.stringify(eventData));
+            this.homey.app.debug('[V2 Events WS] ' + JSON.stringify(eventData));
 
-            // {"item":{"id":"68d7a86500bddd03e4534022","modelKey":"event","type":"ring","start":1758963811189,"device":"672e0e8103aadb03e40003ff"},"type":"add"}
+            if (!eventData || !eventData.item || !eventData.item.device) {
+                return;
+            }
 
-            // {"item":{"id":"68d7a86400b0dd03e4533fd8","modelKey":"event","type":"smartDetectZone","start":1758963809984,"device":"672e0e8103aadb03e40003ff","smartDetectTypes":[]},"type":"add"}
-            // {"item":{"id":"68d7a86400b0dd03e4533fd8","modelKey":"event","type":"smartDetectZone","start":1758963809984,"device":"672e0e8103aadb03e40003ff","smartDetectTypes":["person"]},"type":"update"}
+            const item = eventData.item;
+            const deviceId = item.device;
+            const eventType = eventData.type; // 'add' or 'update'
+            const itemType = item.type; // 'ring', 'motion', 'smartDetectZone', etc.
 
-            // {"item":{"id":"68d7a86303addd03e4533fcd","modelKey":"event","type":"motion","start":1758963808651,"device":"672e0e8103aadb03e40003ff"},"type":"add"}
-            // {"item":{"id":"68d7a86303addd03e4533fcd","modelKey":"event","type":"motion","start":1758963808651,"device":"672e0e8103aadb03e40003ff"},"type":"update"}
-
-            if (
-                eventData.type === 'add'
-                && typeof eventData.item.device !== 'undefined'
-                && eventData.item.type === 'ring'
-            ) {
-                this.homey.app.log('doorbell ring event received');
-
-                const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-                const deviceDoorbell = driverDoorbell.getUnifiDeviceById(eventData.item.device);
-                if (deviceDoorbell) {
-                    deviceDoorbell.onDoorbellRinging(eventData.item.start)
-                }
-            } else if (
-                eventData.type === 'add'
-                && typeof eventData.item.device !== 'undefined'
-                && eventData.item.type === 'motion'
-            ) {
-                this.homey.app.log('camera motion event received');
+            try {
                 const driverCamera = this.homey.drivers.getDriver('protectcamera');
                 const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-                const deviceCamera = driverCamera.getUnifiDeviceById(eventData.item.device);
-                const deviceDoorbell = driverDoorbell.getUnifiDeviceById(eventData.item.device);
-                if (deviceCamera) {
-                    deviceCamera.onMotionDetected(eventData.item.start, true);
+                const deviceCamera = driverCamera.getUnifiDeviceById(deviceId);
+                const deviceDoorbell = driverDoorbell.getUnifiDeviceById(deviceId);
+
+                // Ring event (doorbell)
+                if (itemType === 'ring' && eventType === 'add') {
+                    this.homey.app.debug('[V2] doorbell ring event');
+                    if (deviceDoorbell) {
+                        deviceDoorbell.onDoorbellRinging(item.start);
+                    }
                 }
-                if (deviceDoorbell) {
-                    deviceDoorbell.onMotionDetected(eventData.item.start, true);
+
+                // Motion event
+                if (itemType === 'motion') {
+                    if (eventType === 'add') {
+                        // Motion started
+                        this.homey.app.debug('[V2] motion start on ' + deviceId);
+                        if (deviceCamera) {
+                            deviceCamera.onMotionDetected(item.start, true);
+                        }
+                        if (deviceDoorbell) {
+                            deviceDoorbell.onMotionDetected(item.start, true);
+                        }
+                    } else if (eventType === 'update' && item.end) {
+                        // Motion ended
+                        this.homey.app.debug('[V2] motion end on ' + deviceId);
+                        if (deviceCamera) {
+                            deviceCamera.onMotionDetected(item.end, false);
+                        }
+                        if (deviceDoorbell) {
+                            deviceDoorbell.onMotionDetected(item.end, false);
+                        }
+                    }
                 }
-            } else {
-                this.homey.app.log('Websocket unhandled event received: ' + JSON.stringify(eventData));
+
+                // Smart detection event
+                if (itemType === 'smartDetectZone') {
+                    if (item.smartDetectTypes && item.smartDetectTypes.length > 0) {
+                        this.homey.app.debug('[V2] smart detection: ' + JSON.stringify(item.smartDetectTypes) + ' on ' + deviceId);
+                        const payload = {
+                            smartDetectTypes: item.smartDetectTypes,
+                            start: item.start,
+                            end: item.end || null,
+                        };
+                        if (deviceCamera) {
+                            driverCamera.onParseWebsocketMessage(deviceCamera, payload, eventType, item.id);
+                        }
+                        if (deviceDoorbell) {
+                            driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, eventType, item.id);
+                        }
+                    }
+                }
+
+            } catch (e) {
+                this.homey.app.debug('[V2 Events WS] dispatch error: ' + e);
             }
         });
         this._eventListenerConfigured = true;

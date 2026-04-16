@@ -98,7 +98,12 @@ class UniFiProtect extends Homey.App {
             this.appProtect.loginToProtectV2().catch(this.error);
         }
 
-        this.appProtect._appLogin();
+        // Only attempt V1 login if credentials (username/password) are configured
+        const credentials = this.homey.settings.get('ufp:credentials');
+        if (credentials && credentials.username && credentials.password) {
+            this.appProtect._appLogin();
+        }
+
         // refresh auth tokens every hour
         await this.appProtect.refreshAuthTokens();
 
@@ -148,6 +153,20 @@ class UniFiProtect extends Homey.App {
             }
 
         }
+    }
+
+    /**
+     * Check if V1 API (username/password) is logged in and available
+     */
+    isV1Available() {
+        return this.api && this.api.loggedInStatus === 'Connected';
+    }
+
+    /**
+     * Check if V2 API (API key) is configured and available
+     */
+    isV2Available() {
+        return this.apiV2 && this.apiV2.webclient && this.apiV2.webclient._apiToken;
     }
 
     async debug() {

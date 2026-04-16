@@ -18,7 +18,16 @@ class UniFiLightDriver extends Homey.Driver {
         });
 
         session.setHandler("list_devices", async function (data) {
-            return Object.values(await homey.app.api.getLights()).map(light => {
+            let lights;
+            if (homey.app.isV1Available()) {
+                lights = await homey.app.api.getLights();
+            } else if (homey.app.isV2Available()) {
+                lights = await homey.app.apiV2.getLights();
+            } else {
+                homey.app.debug('[protectlight] No API available for listing lights');
+                return [];
+            }
+            return Object.values(lights).map(light => {
                 return {
                     data: {id: String(light.id)},
                     name: light.name,
