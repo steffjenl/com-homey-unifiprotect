@@ -124,7 +124,12 @@ class WeatherDevice extends Homey.Device {
         .catch((err) => this.error(err));
 
     } catch (error) {
-      this.error(`[WeatherDevice] _pollWeather error: ${error.message}`);
+      if (error.message && (error.message.includes('NOT_FOUND') || error.message.includes('404'))) {
+        this.homey.app.debug(`[WeatherDevice] weather endpoint not available on this NVR, stopping polling: ${error.message}`);
+        this._stopPolling();
+      } else {
+        this.error(`[WeatherDevice] _pollWeather error: ${error.message}`);
+      }
     }
   }
 

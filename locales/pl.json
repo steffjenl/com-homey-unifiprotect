@@ -32,7 +32,22 @@
         "ignoreEventsDoorbell": "Okres pomiędzy zdarzeniami dzwonka (w sekundach)",
         "protectV2ApiKey": "Klucz API UniFi Protect V2",
         "protectV2Credentials": "Dane UniFi Protect V2",
-        "status": "Status"
+        "status": "Status",
+        "tab": {
+            "protect": "UniFi Protect",
+            "access": "UniFi Access",
+            "status": "Status"
+        },
+        "saveLogToPersistentStorage": "Zapisz dziennik w trwałym magazynie",
+        "protectV2ApiKeySection": "Klucz API Protect V2",
+        "protectV2ApiKeyDescription": "Opcjonalnie: połącz za pomocą klucza API V2. Może być używany samodzielnie lub razem z danymi logowania V1.",
+        "protectV1Section": "Protect V1 (Użytkownik/Hasło)",
+        "realtimeStatus": "Status w czasie rzeczywistym",
+        "lastUpdateAt": "Ostatnia aktualizacja o",
+        "accessWebsocket": {
+            "status": "Status Access w czasie rzeczywistym",
+            "at": "Ostatnia aktualizacja Access o"
+        }
     },
     "events": {
         "camera": {
@@ -96,6 +111,14 @@
             "heavy_snow": "Intensywne opady śniegu",
             "blizzard": "Zamieć",
             "not_available": "Brak danych"
+        }
+    },
+    "status": {
+        "connection": {
+            "Connected": "Połączono",
+            "Connecting...": "Łączenie...",
+            "Disconnected": "Rozłączono",
+            "Initialized": "Uruchamianie"
         }
     }
 }

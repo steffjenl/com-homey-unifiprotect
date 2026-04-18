@@ -32,7 +32,22 @@
         "ignoreEventsDoorbell": "Nedkølingsperiode mellem dørklokke hændelser (i sekunder)",
         "protectV2ApiKey": "UniFi Protect V2 API-nøgle",
         "protectV2Credentials": "UniFi Protect V2 legitimationsoplysninger",
-        "status": "Status"
+        "status": "Status",
+        "tab": {
+            "protect": "UniFi Protect",
+            "access": "UniFi Access",
+            "status": "Status"
+        },
+        "saveLogToPersistentStorage": "Gem log til vedvarende lager",
+        "protectV2ApiKeySection": "Protect V2 API-nøgle",
+        "protectV2ApiKeyDescription": "Valgfrit: opret forbindelse med en V2 API-nøgle. Kan bruges alene eller sammen med V1-legitimationsoplysninger.",
+        "protectV1Section": "Protect V1 (Brugernavn/Adgangskode)",
+        "realtimeStatus": "Realtidsstatus",
+        "lastUpdateAt": "Sidst opdateret kl.",
+        "accessWebsocket": {
+            "status": "Access realtidsstatus",
+            "at": "Access sidst opdateret kl."
+        }
     },
     "events": {
         "camera": {
@@ -96,6 +111,14 @@
             "heavy_snow": "Kraftigt snefald",
             "blizzard": "Snestorm",
             "not_available": "Ikke tilgængelig"
+        }
+    },
+    "status": {
+        "connection": {
+            "Connected": "Forbundet",
+            "Connecting...": "Forbinder...",
+            "Disconnected": "Forbindelsen afbrudt",
+            "Initialized": "Starter"
         }
     }
 }

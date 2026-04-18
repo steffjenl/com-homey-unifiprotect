@@ -400,6 +400,10 @@
     "getLastProtectV2WebsocketMessageTime": {
       "method": "GET",
       "path": "/getLastProtectV2WebsocketMessageTime"
+    },
+    "testV2ApiKey": {
+      "method": "POST",
+      "path": "/testV2ApiKey"
     }
   }
 }

@@ -32,7 +32,22 @@
         "ignoreEventsDoorbell": "Период между событиями звонка (в секундах)",
         "protectV2ApiKey": "API-ключ UniFi Protect V2",
         "protectV2Credentials": "Учетные данные UniFi Protect V2",
-        "status": "Статус"
+        "status": "Статус",
+        "tab": {
+            "protect": "UniFi Protect",
+            "access": "UniFi Access",
+            "status": "Статус"
+        },
+        "saveLogToPersistentStorage": "Сохранять журнал в постоянном хранилище",
+        "protectV2ApiKeySection": "Ключ API Protect V2",
+        "protectV2ApiKeyDescription": "Необязательно: подключение с использованием ключа API V2. Можно использовать самостоятельно или вместе с учётными данными V1.",
+        "protectV1Section": "Protect V1 (Имя пользователя/Пароль)",
+        "realtimeStatus": "Статус в реальном времени",
+        "lastUpdateAt": "Последнее обновление в",
+        "accessWebsocket": {
+            "status": "Статус Access в реальном времени",
+            "at": "Последнее обновление Access в"
+        }
     },
     "events": {
         "camera": {
@@ -96,6 +111,14 @@
             "heavy_snow": "Сильный снегопад",
             "blizzard": "Пурга",
             "not_available": "Н/Д"
+        }
+    },
+    "status": {
+        "connection": {
+            "Connected": "Подключено",
+            "Connecting...": "Подключение...",
+            "Disconnected": "Отключено",
+            "Initialized": "Инициализация"
         }
     }
 }

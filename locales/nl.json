@@ -32,7 +32,22 @@
         },
         "protectV2ApiKey": "UniFi Protect V2 API-sleutel",
         "protectV2Credentials": "UniFi Protect V2 inloggegevens",
-        "status": "Status"
+        "status": "Status",
+        "tab": {
+            "protect": "UniFi Protect",
+            "access": "UniFi Access",
+            "status": "Status"
+        },
+        "saveLogToPersistentStorage": "Log opslaan in permanente opslag",
+        "protectV2ApiKeySection": "Protect V2 API-sleutel",
+        "protectV2ApiKeyDescription": "Optioneel: verbinden met een V2 API-sleutel. Kan zelfstandig of samen met V1-inloggegevens worden gebruikt.",
+        "protectV1Section": "Protect V1 (gebruikersnaam/wachtwoord)",
+        "realtimeStatus": "Realtime status",
+        "lastUpdateAt": "Laatste update om",
+        "accessWebsocket": {
+            "status": "Access realtime status",
+            "at": "Access laatste update om"
+        }
     },
     "events": {
         "camera": {

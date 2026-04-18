@@ -32,7 +32,22 @@
         "ignoreEventsDoorbell": "Nedkjølingsperiode mellom ringeklokke hendelser (i sekunder)",
         "protectV2ApiKey": "UniFi Protect V2 API-nøkkel",
         "protectV2Credentials": "UniFi Protect V2 legitimasjon",
-        "status": "Status"
+        "status": "Status",
+        "tab": {
+            "protect": "UniFi Protect",
+            "access": "UniFi Access",
+            "status": "Status"
+        },
+        "saveLogToPersistentStorage": "Lagre logg i vedvarende lagring",
+        "protectV2ApiKeySection": "Protect V2 API-nøkkel",
+        "protectV2ApiKeyDescription": "Valgfritt: koble til med en V2 API-nøkkel. Kan brukes alene eller sammen med V1-legitimasjon.",
+        "protectV1Section": "Protect V1 (Brukernavn/Passord)",
+        "realtimeStatus": "Sanntidsstatus",
+        "lastUpdateAt": "Sist oppdatert kl.",
+        "accessWebsocket": {
+            "status": "Access sanntidsstatus",
+            "at": "Access sist oppdatert kl."
+        }
     },
     "events": {
         "camera": {
@@ -96,6 +111,14 @@
             "heavy_snow": "Kraftig snøfall",
             "blizzard": "Snøstorm",
             "not_available": "Ikke tilgjengelig"
+        }
+    },
+    "status": {
+        "connection": {
+            "Connected": "Tilkoblet",
+            "Connecting...": "Kobler til...",
+            "Disconnected": "Frakoblet",
+            "Initialized": "Starter"
         }
     }
 }

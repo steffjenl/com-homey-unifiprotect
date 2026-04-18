@@ -1045,16 +1045,8 @@ class ProtectAPI extends BaseClass {
       if (this._bootstrap && this._bootstrap.nvr && this._bootstrap.nvr.armMode) {
         return resolve(this._bootstrap.nvr.armMode);
       }
-      // Fallback: try live GET /proxy/protect/api/arm
-      return this.webclient.get('arm')
-        .then((response) => {
-          const result = JSON.parse(response);
-          if (result) {
-            return resolve(result);
-          }
-          return reject(new Error('Error obtaining NVR arm state.'));
-        })
-        .catch((error) => reject(error));
+      // No live GET endpoint exists for arm state — only POST arm/enable and POST arm/disable
+      return reject(new Error('NVR arm state not available in bootstrap'));
     });
   }
 }

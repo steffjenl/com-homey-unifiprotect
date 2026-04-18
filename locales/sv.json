@@ -32,7 +32,22 @@
         "ignoreEventsDoorbell": "Nedkylningsperiod mellan dörrklockshändelser (i sekunder)",
         "protectV2ApiKey": "UniFi Protect V2 API-nyckel",
         "protectV2Credentials": "UniFi Protect V2-uppgifter",
-        "status": "Status"
+        "status": "Status",
+        "tab": {
+            "protect": "UniFi Protect",
+            "access": "UniFi Access",
+            "status": "Status"
+        },
+        "saveLogToPersistentStorage": "Spara logg i beständig lagring",
+        "protectV2ApiKeySection": "Protect V2 API-nyckel",
+        "protectV2ApiKeyDescription": "Valfritt: anslut med en V2 API-nyckel. Kan användas separat eller tillsammans med V1-inloggningsuppgifter.",
+        "protectV1Section": "Protect V1 (Användarnamn/Lösenord)",
+        "realtimeStatus": "Realtidsstatus",
+        "lastUpdateAt": "Senast uppdaterad",
+        "accessWebsocket": {
+            "status": "Access realtidsstatus",
+            "at": "Access senast uppdaterad"
+        }
     },
     "events": {
         "camera": {
@@ -96,6 +111,14 @@
             "heavy_snow": "Kraftigt snöfall",
             "blizzard": "Snöstorm",
             "not_available": "Ej tillgängligt"
+        }
+    },
+    "status": {
+        "connection": {
+            "Connected": "Ansluten",
+            "Connecting...": "Ansluter...",
+            "Disconnected": "Frånkopplad",
+            "Initialized": "Startar"
         }
     }
 }

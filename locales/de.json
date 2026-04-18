@@ -32,7 +32,22 @@
         "ignoreEventsDoorbell": "Abklingzeit zwischen Türklingel-Ereignissen (in Sekunden)",
         "protectV2ApiKey": "UniFi Protect V2 API-Schlüssel",
         "protectV2Credentials": "UniFi Protect V2 Zugangsdaten",
-        "status": "Status"
+        "status": "Status",
+        "tab": {
+            "protect": "UniFi Protect",
+            "access": "UniFi Access",
+            "status": "Status"
+        },
+        "saveLogToPersistentStorage": "Protokoll in dauerhaftem Speicher sichern",
+        "protectV2ApiKeySection": "Protect V2 API-Schlüssel",
+        "protectV2ApiKeyDescription": "Optional: Verbindung mit einem V2 API-Schlüssel. Kann eigenständig oder zusammen mit V1-Zugangsdaten verwendet werden.",
+        "protectV1Section": "Protect V1 (Benutzername/Passwort)",
+        "realtimeStatus": "Echtzeit-Status",
+        "lastUpdateAt": "Letzte Aktualisierung um",
+        "accessWebsocket": {
+            "status": "Access Echtzeit-Status",
+            "at": "Access letzte Aktualisierung um"
+        }
     },
     "events": {
         "camera": {
@@ -102,6 +117,14 @@
             "heavy_snow": "Starker Schneefall",
             "blizzard": "Schneesturm",
             "not_available": "N/A"
+        }
+    },
+    "status": {
+        "connection": {
+            "Connected": "Verbunden",
+            "Connecting...": "Verbinde...",
+            "Disconnected": "Getrennt",
+            "Initialized": "Wird gestartet"
         }
     }
 }
