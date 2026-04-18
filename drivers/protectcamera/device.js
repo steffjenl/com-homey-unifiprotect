@@ -361,12 +361,10 @@ class Camera extends Homey.Device {
         }).catch(this.error);
       }).catch(this.error);
     } else {
-      this.homey.app._fingerPrintIdentifiedTrigger.trigger({
-        ufp_fingerprint_identified_camera: this.getName(),
-        ufp_fingerprint_identified_person: '',
-        ufp_fingerprint_identified_first_name: '',
-        ufp_fingerprint_identified_last_name: '',
-        ufp_fingerprint_identified_user_unique_id: '',
+      // Unknown fingerprint (ulpId is null) — fire unknown fingerprint trigger
+      this.homey.app.debug('[Camera] Fingerprint event has no ulpId, firing unknown fingerprint trigger');
+      this.homey.app._fingerPrintUnknownTrigger.trigger({
+        ufp_fingerprint_unknown_camera: this.getName(),
       }).catch(this.error);
     }
     return true;

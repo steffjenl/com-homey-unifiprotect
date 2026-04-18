@@ -168,3 +168,38 @@ button:hover {
         transform: rotate(360deg);
     }
 }
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper .homey-form-input {
+    padding-right: 40px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    color: #666;
+    line-height: 1;
+}
+
+.toggle-password:hover {
+    color: #159EDA;
+    background: none;
+}
+
+.toggle-password svg {
+    width: 18px;
+    height: 18px;
+}

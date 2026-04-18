@@ -1,0 +1,21 @@
+{
+  "id": "ufp_fingerprint_unknown",
+  "title": {
+    "en": "An unknown fingerprint was detected",
+    "nl": "Een onbekende vingerafdruk is gedetecteerd"
+  },
+  "tokens": [
+    {
+      "name": "ufp_fingerprint_unknown_camera",
+      "type": "string",
+      "title": {
+        "en": "Camera",
+        "nl": "Camera"
+      },
+      "example": {
+        "en": "Doorbell",
+        "nl": "Deurbel"
+      }
+    }
+  ]
+}

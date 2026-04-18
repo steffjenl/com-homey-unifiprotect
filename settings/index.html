@@ -51,7 +51,13 @@
         <!-- Password -->
         <div class="field row">
             <label class="homey-form-label" for="txt_password" data-i18n="settings.password"></label>
-            <input class="homey-form-input" id="txt_password" type="password" value=""/>
+            <div class="password-wrapper">
+                <input class="homey-form-input" id="txt_password" type="password" value=""/>
+                <button type="button" class="toggle-password" data-target="txt_password" aria-label="Toggle password visibility">
+                    <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-off-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
         </div>
     </fieldset>
 
@@ -62,7 +68,13 @@
         <!-- API-Key -->
         <div class="field row">
             <label class="homey-form-label" for="txt_protectV2ApiKey" data-i18n="settings.protectV2ApiKey"></label>
-            <input class="homey-form-input" id="txt_protectV2ApiKey" type="text" value=""/>
+            <div class="password-wrapper">
+                <input class="homey-form-input" id="txt_protectV2ApiKey" type="password" value=""/>
+                <button type="button" class="toggle-password" data-target="txt_protectV2ApiKey" aria-label="Toggle API key visibility">
+                    <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-off-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
         </div>
         <p>
             <em>Optional: connect using a V2 API key. Can be used standalone or together with V1 credentials.</em>
@@ -123,7 +135,13 @@
         <!-- API-Key -->
         <div class="field row">
             <label class="homey-form-label" for="txt_accessApiKey" data-i18n="settings.accessApiKey"></label>
-            <input class="homey-form-input" id="txt_accessApiKey" type="text" value=""/>
+            <div class="password-wrapper">
+                <input class="homey-form-input" id="txt_accessApiKey" type="password" value=""/>
+                <button type="button" class="toggle-password" data-target="txt_accessApiKey" aria-label="Toggle API key visibility">
+                    <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-off-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
         </div>
     </fieldset>
 
@@ -350,6 +368,16 @@
         });
 
         readSettings();
+
+        document.querySelectorAll('.toggle-password').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var input = document.getElementById(btn.getAttribute('data-target'));
+                var isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                btn.querySelector('.eye-icon').style.display = isPassword ? 'none' : '';
+                btn.querySelector('.eye-off-icon').style.display = isPassword ? '' : 'none';
+            });
+        });
 
         document.getElementById("defaultOpen").click();
 

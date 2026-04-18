@@ -409,21 +409,13 @@ class Doorbell extends Homey.Device {
         }).catch(this.error);
       }).catch(this.error);
     } else {
-      // Unknown fingerprint (ulpId is null) — fire trigger with empty user info
-      this.homey.app._fingerPrintIdentifiedTrigger.trigger({
-        ufp_fingerprint_identified_camera: this.getName(),
-        ufp_fingerprint_identified_person: '',
-        ufp_fingerprint_identified_first_name: '',
-        ufp_fingerprint_identified_last_name: '',
-        ufp_fingerprint_identified_user_unique_id: '',
+      // Unknown fingerprint (ulpId is null) — fire unknown fingerprint triggers
+      this.homey.app.debug('[Object] Fingerprint event has no ulpId, firing unknown fingerprint trigger');
+      this.homey.app._fingerPrintUnknownTrigger.trigger({
+        ufp_fingerprint_unknown_camera: this.getName(),
       }).catch(this.error);
 
-      this.driver._deviceFingerprintIdentifiedTrigger.trigger(this, {
-        ufp_device_fingerprint_identified_person: '',
-        ufp_device_fingerprint_identified_first_name: '',
-        ufp_device_fingerprint_identified_last_name: '',
-        ufp_device_fingerprint_identified_user_unique_id: '',
-      }).catch(this.error);
+      this.driver._deviceFingerprintUnknownTrigger.trigger(this, {}).catch(this.error);
     }
     return true;
   }

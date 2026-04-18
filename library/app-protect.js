@@ -27,6 +27,7 @@ class AppProtect extends BaseClass {
         this.homey.app._smartDetectionTriggerLicensePlate = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_LICENSEPLATE);
         this.homey.app._smartDetectionTriggerFace = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_FACE);
         this.homey.app._fingerPrintIdentifiedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_FINGERPRINT_IDENTIFIED);
+        this.homey.app._fingerPrintUnknownTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_FINGERPRINT_UNKNOWN);
         this.homey.app._doorAccessTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOOR_ACCESS);
         this.homey.app._nfcCardScannedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_NFC_CARD_SCANNED);
         this.homey.app._nfcUnknownCardScannedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_NFC_UNKNOWN_CARD_SCANNED);

@@ -199,6 +199,23 @@
       ]
     },
     {
+      "id": "ufp_device_fingerprint_unknown",
+      "title": {
+        "en": "An unknown fingerprint was detected",
+        "nl": "Een onbekende vingerafdruk is gedetecteerd",
+        "de": "Ein unbekannter Fingerabdruck wurde erkannt",
+        "fr": "Une empreinte digitale inconnue a été détectée",
+        "it": "È stata rilevata un'impronta digitale sconosciuta",
+        "sv": "Ett okänt fingeravtryck har identifierats",
+        "no": "Et ukjent fingeravtrykk ble oppdaget",
+        "es": "Se ha detectado una huella dactilar desconocida",
+        "da": "Et ukendt fingeraftryk blev registreret",
+        "ru": "Обнаружен неизвестный отпечаток пальца",
+        "pl": "Wykryto nieznany odcisk palca",
+        "ko": "알 수 없는 지문이 감지되었습니다"
+      }
+    },
+    {
       "deprecated": true,
       "id": "ufp_device_door_access",
       "title": {
