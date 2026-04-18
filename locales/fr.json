@@ -1,104 +1,101 @@
 {
-  "title": "UniFi Protect",
-  "pair": {
-    "validate": {
-      "title": "Validation de la clé UniFi Cloud",
-      "instruction": "Veuillez d'abord définir la clé Cloud dans les paramètres."
+    "title": "UniFi Protect",
+    "pair": {
+        "validate": {
+            "title": "Validation de la clé UniFi Cloud",
+            "instruction": "Veuillez d'abord définir la clé Cloud dans les paramètres."
+        },
+        "login": {
+            "title": "Connexion"
+        }
     },
-    "login": {
-      "title": "Connexion"
+    "settings": {
+        "title": "Paramètres UniFi Protect",
+        "instruction": "Connectez-vous avec les identifiants de l'utilisateur UniFi Protect.",
+        "nvr": "Détails du serveur",
+        "nvrip": "Adresse IP",
+        "nvrport": "Port",
+        "credentials": "Identifiants utilisateur",
+        "username": "Nom d'utilisateur",
+        "password": "Mot de passe",
+        "apply": "Appliquer",
+        "saved": "Paramètres enregistrés.",
+        "settings": "Paramètres",
+        "testConnection": "Tester la connexion",
+        "test_status": {
+            "success": "Les identifiants sont valides.",
+            "failure": "Les identifiants sont invalides."
+        },
+        "accessApiKey": "Clé API",
+        "accessCredentials": "Identifiants UniFi Access",
+        "ignoreEventsNfcFingerprint": "Délai entre les événements NFC/empreinte digitale (en secondes)",
+        "ignoreEventsDoorbell": "Délai entre les événements de sonnette (en secondes)",
+        "protectV2ApiKey": "Clé API UniFi Protect V2",
+        "protectV2Credentials": "Identifiants UniFi Protect V2",
+        "status": "Statut"
+    },
+    "events": {
+        "camera": {
+            "motion_started": "Mouvement commencé",
+            "motion_ended": "Mouvement terminé",
+            "motion_inprogress": "Mouvement",
+            "ftr_inprogress": "Temps plein",
+            "disabled": "Désactivé",
+            "failed": "Échec",
+            "done": "Terminé",
+            "always": "Toujours",
+            "motion": "Mouvement",
+            "never": "Jamais",
+            "detections": "Détections"
+        },
+        "health": {}
+    },
+    "nvr_alarm": {
+        "armed": "Armé (Absent)",
+        "disarmed": "Désarmé",
+        "state_changed": "État de l'alarme modifié"
+    },
+    "weather": {
+        "conditions": {
+            "tornado": "Tornado",
+            "tropical_storm": "Tempête tropicale",
+            "hurricane": "Ouragan",
+            "thunderstorms": "Orages",
+            "rain_snow_mix": "Pluie/neige mêlée",
+            "rain_sleet_mix": "Pluie/grésil mêlé",
+            "snow_sleet_mix": "Neige/grésil mêlé",
+            "freezing_drizzle": "Bruine verglaçante",
+            "drizzle": "Bruine",
+            "freezing_rain": "Pluie verglaçante",
+            "showers": "Averses",
+            "snow_flurries": "Rafales de neige",
+            "light_snow": "Légère neige",
+            "blowing_snow": "Neige soufflée",
+            "snow": "Neige",
+            "hail": "Grêle",
+            "sleet": "Grésil",
+            "dust": "Poussière",
+            "fog": "Brouillard",
+            "haze": "Brume",
+            "smoke": "Fumée",
+            "windy": "Venteux",
+            "frigid": "Glacial",
+            "cloudy": "Nuageux",
+            "mostly_cloudy": "Très nuageux",
+            "partly_cloudy": "Partiellement nuageux",
+            "clear": "Dégagé",
+            "sunny": "Ensoleillé",
+            "fair": "Légèrement nuageux",
+            "rain_hail_mix": "Pluie/grêle mêlée",
+            "hot": "Chaud",
+            "isolated_thunderstorms": "Orages isolés",
+            "scattered_thunderstorms": "Orages épars",
+            "scattered_showers": "Averses éparses",
+            "heavy_rain": "Fortes pluies",
+            "scattered_snow": "Neige éparse",
+            "heavy_snow": "Fortes chutes de neige",
+            "blizzard": "Blizzard",
+            "not_available": "N/A"
+        }
     }
-  },
-  "settings": {
-    "title": "Paramètres UniFi Protect",
-    "instruction": "Connectez-vous avec les identifiants de l'utilisateur UniFi Protect.",
-    "nvr": "Détails du serveur",
-    "nvrip": "Adresse IP",
-    "nvrport": "Port",
-    "credentials": "Identifiants utilisateur",
-    "username": "Nom d'utilisateur",
-    "password": "Mot de passe",
-    "apply": "Appliquer",
-    "saved": "Paramètres enregistrés.",
-    "settings": "Paramètres",
-    "useCameraSnapshot": "Utiliser l'instantané de la caméra",
-    "useCameraSnapshotInstruction": "Utilisez 'Utiliser l'instantané de la caméra' uniquement lorsque 'Activer l'instantané anonyme' est activé dans les paramètres locaux de la caméra. Voulez-vous vraiment activer cela?",
-    "testConnection": "Tester la connexion",
-    "test_status": {
-      "success": "Les identifiants sont valides.",
-      "failure": "Les identifiants sont invalides."
-    },
-    "accessApiKey": "Clé API",
-    "accessCredentials": "Identifiants UniFi Access",
-    "ignoreEventsNfcFingerprint": "Délai entre les événements NFC/empreinte digitale (en secondes)",
-    "ignoreEventsDoorbell": "Délai entre les événements de sonnette (en secondes)",
-    "protectV2ApiKey": "Clé API UniFi Protect V2",
-    "protectV2Credentials": "Identifiants UniFi Protect V2",
-    "status": "Statut"
-  },
-  "events": {
-    "camera": {
-      "motion_started": "Mouvement commencé",
-      "motion_ended": "Mouvement terminé",
-      "motion_inprogress": "Mouvement",
-      "ftr_inprogress": "Temps plein",
-      "disabled": "Désactivé",
-      "failed": "Échec",
-      "done": "Terminé",
-      "always": "Toujours",
-      "motion": "Mouvement",
-      "never": "Jamais",
-      "detections": "Détections"
-    },
-    "health": {}
-  },
-  "nvr_alarm": {
-    "armed": "Armé (Absent)",
-    "disarmed": "Désarmé",
-    "state_changed": "État de l'alarme modifié"
-  },
-  "weather": {
-    "conditions": {
-      "tornado": "Tornado",
-      "tropical_storm": "Tempête tropicale",
-      "hurricane": "Ouragan",
-      "thunderstorms": "Orages",
-      "rain_snow_mix": "Pluie/neige mêlée",
-      "rain_sleet_mix": "Pluie/grésil mêlé",
-      "snow_sleet_mix": "Neige/grésil mêlé",
-      "freezing_drizzle": "Bruine verglaçante",
-      "drizzle": "Bruine",
-      "freezing_rain": "Pluie verglaçante",
-      "showers": "Averses",
-      "snow_flurries": "Rafales de neige",
-      "light_snow": "Légère neige",
-      "blowing_snow": "Neige soufflée",
-      "snow": "Neige",
-      "hail": "Grêle",
-      "sleet": "Grésil",
-      "dust": "Poussière",
-      "fog": "Brouillard",
-      "haze": "Brume",
-      "smoke": "Fumée",
-      "windy": "Venteux",
-      "frigid": "Glacial",
-      "cloudy": "Nuageux",
-      "mostly_cloudy": "Très nuageux",
-      "partly_cloudy": "Partiellement nuageux",
-      "clear": "Dégagé",
-      "sunny": "Ensoleillé",
-      "fair": "Légèrement nuageux",
-      "rain_hail_mix": "Pluie/grêle mêlée",
-      "hot": "Chaud",
-      "isolated_thunderstorms": "Orages isolés",
-      "scattered_thunderstorms": "Orages épars",
-      "scattered_showers": "Averses éparses",
-      "heavy_rain": "Fortes pluies",
-      "scattered_snow": "Neige éparse",
-      "heavy_snow": "Fortes chutes de neige",
-      "blizzard": "Blizzard",
-      "not_available": "N/A"
-    }
-  }
 }
-

@@ -18,5 +18,38 @@
     "placeholder": {
       "en": "rtsp://proxy.server:8554/stream1"
     }
+  },
+  {
+    "type": "checkbox",
+    "label": {
+      "en": "Use camera snapshot",
+      "nl": "Gebruik camera afbeelding",
+      "da": "Brug kamera snapshot",
+      "de": "Kamera-Snapshot verwenden",
+      "fr": "Utiliser l'instantané de la caméra",
+      "it": "Usa snapshot della telecamera",
+      "es": "Usar instantánea de la cámara",
+      "pl": "Użyj zdjęcia z kamery",
+      "sv": "Använd kamerabild",
+      "ko": "카메라 스냅샷 사용",
+      "no": "Bruk kamera snapshot",
+      "ru": "Использовать снимок камеры"
+    },
+    "hint": {
+      "en": "Use 'Use camera snapshot' only when 'Enable Anonymous Snapshot' is enabled in the local camera settings.",
+      "nl": "Gebruik 'Gebruik camera afbeelding' alleen wanneer 'Anonieme snapshot inschakelen' is ingeschakeld in de lokale camerainstellingen.",
+      "da": "Brug 'Brug kamera snapshot' kun når 'Aktiver anonym snapshot' er aktiveret i lokale kameraindstillinger.",
+      "de": "Verwenden Sie 'Kamera-Snapshot verwenden' nur, wenn 'Anonymen Snapshot aktivieren' in den lokalen Kameraeinstellungen aktiviert ist.",
+      "fr": "Utilisez 'Utiliser l'instantané de la caméra' uniquement lorsque 'Activer l'instantané anonyme' est activé dans les paramètres locaux de la caméra.",
+      "it": "Usa 'Usa snapshot della telecamera' solo quando 'Abilita snapshot anonimo' è abilitato nelle impostazioni locali della telecamera.",
+      "es": "Utilice 'Usar instantánea de la cámara' solo cuando 'Habilitar instantánea anónima' esté activado en la configuración local de la cámara.",
+      "pl": "Używaj 'Użyj zdjęcia z kamery' tylko gdy 'Włącz anonimowe zdjęcie' jest aktywne w lokalnych ustawieniach kamery.",
+      "sv": "Använd 'Använd kamerabild' endast när 'Aktivera anonym bild' är aktiverat i kamerans lokala inställningar.",
+      "ko": "'카메라 스냅샷 사용'은 로컬 카메라 설정에서 '익명 스냅샷 활성화'가 활성화된 경우에만 사용하세요.",
+      "no": "Bruk 'Bruk kamera snapshot' kun når 'Aktiver anonym snapshot' er aktivert i lokale kamerainnstillinger.",
+      "ru": "Используйте 'Использовать снимок камеры' только если 'Включить анонимный снимок' включен в локальных настройках камеры."
+    },
+    "id": "useCameraSnapshot",
+    "value": false
   }
 ]

@@ -85,15 +85,6 @@
     <fieldset class="homey-form-fieldset">
         <legend class="homey-form-legend" data-i18n="settings.settings"></legend>
 
-        <!-- useCameraSnapshot -->
-        <div class="field row">
-            <label class="homey-form-checkbox">
-                <input class="homey-form-checkbox-input" id="txt_useCameraSnapshot" type="checkbox" value="true">
-                <span class="homey-form-checkbox-checkmark"></span>
-                <span class="homey-form-checkbox-text"><span data-i18n="settings.useCameraSnapshot"></span></span>
-            </label>
-        </div>
-
         <!-- ignoreEventsNfcFingerprint -->
         <div class="field row">
             <label class="homey-form-label" for="txt_ignoreEventsNfcFingerprint"
@@ -203,7 +194,6 @@
     const txtPassword = document.getElementById('txt_password');
     const txtAccessApiKey = document.getElementById('txt_accessApiKey');
     const txtProtectV2ApiKey = document.getElementById('txt_protectV2ApiKey');
-    const txtuseCameraSnapshot = document.getElementById('txt_useCameraSnapshot');
     const txtIgnoreEventsNfcFingerprint = document.getElementById('txt_ignoreEventsNfcFingerprint');
     const txtIgnoreEventsDoorbell = document.getElementById('txt_ignoreEventsDoorbell');
     const txtsaveLogToPersistentStorage = document.getElementById('txt_saveLogToPersistentStorage');
@@ -258,7 +248,6 @@
             Homey.get('ufp:settings', (error, settings) => {
                 if (error) return Homey.alert(error);
                 if (settings) {
-                    txtuseCameraSnapshot.checked = settings.useCameraSnapshot;
                     txtIgnoreEventsNfcFingerprint.value = settings.ignoreEventsNfcFingerprint || 5;
                     txtIgnoreEventsDoorbell.value = settings.ignoreEventsDoorbell || 5;
                     txtsaveLogToPersistentStorage.checked = settings.saveLogToPersistentStorage;
@@ -300,7 +289,6 @@
             });
 
             const settings = {
-                'useCameraSnapshot': (!!txtuseCameraSnapshot.checked),
                 'ignoreEventsNfcFingerprint': parseInt(txtIgnoreEventsNfcFingerprint.value) || 5,
                 'ignoreEventsDoorbell': parseInt(txtIgnoreEventsDoorbell.value) || 5,
                 'saveLogToPersistentStorage': (!!txtsaveLogToPersistentStorage.checked)
@@ -342,29 +330,11 @@
         });
 
         btnApply.addEventListener('click', e => {
-            if (txtuseCameraSnapshot.checked) {
-                Homey.confirm(Homey.__('settings.useCameraSnapshotInstruction'), 'info', (err, confirmed) => {
-                    if (err) return Homey.alert(err);
-                    if (confirmed) {
-                        saveSettings();
-                    }
-                });
-            } else {
-                saveSettings();
-            }
+            saveSettings();
         });
 
         btnAccessApply.addEventListener('click', e => {
-            if (txtuseCameraSnapshot.checked) {
-                Homey.confirm(Homey.__('settings.useCameraSnapshotInstruction'), 'info', (err, confirmed) => {
-                    if (err) return Homey.alert(err);
-                    if (confirmed) {
-                        saveSettings();
-                    }
-                });
-            } else {
-                saveSettings();
-            }
+            saveSettings();
         });
 
         readSettings();

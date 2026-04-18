@@ -1,104 +1,101 @@
 {
-  "title": "UniFi Protect",
-  "pair": {
-    "validate": {
-      "title": "Проверка UniFi Cloud Key",
-      "instruction": "Пожалуйста, сначала установите Cloud Key в настройках."
+    "title": "UniFi Protect",
+    "pair": {
+        "validate": {
+            "title": "Проверка UniFi Cloud Key",
+            "instruction": "Пожалуйста, сначала установите Cloud Key в настройках."
+        },
+        "login": {
+            "title": "Войти"
+        }
     },
-    "login": {
-      "title": "Войти"
+    "settings": {
+        "title": "Настройки UniFi Protect",
+        "instruction": "Войдите с учетными данными пользователя UniFi Protect.",
+        "nvr": "Детали сервера",
+        "nvrip": "IP-адрес",
+        "nvrport": "Порт",
+        "credentials": "Учетные данные пользователя",
+        "username": "Имя пользователя",
+        "password": "Пароль",
+        "apply": "Применить",
+        "saved": "Настройки сохранены.",
+        "settings": "Настройки",
+        "testConnection": "Проверить соединение",
+        "test_status": {
+            "success": "Учетные данные действительны.",
+            "failure": "Учетные данные недействительны."
+        },
+        "accessApiKey": "API-ключ",
+        "accessCredentials": "Учетные данные UniFi Access",
+        "ignoreEventsNfcFingerprint": "Период между событиями NFC/отпечатка пальца (в секундах)",
+        "ignoreEventsDoorbell": "Период между событиями звонка (в секундах)",
+        "protectV2ApiKey": "API-ключ UniFi Protect V2",
+        "protectV2Credentials": "Учетные данные UniFi Protect V2",
+        "status": "Статус"
+    },
+    "events": {
+        "camera": {
+            "motion_started": "Движение началось",
+            "motion_ended": "Движение завершено",
+            "motion_inprogress": "Движение",
+            "ftr_inprogress": "Полное время",
+            "disabled": "Отключено",
+            "failed": "Не удалось",
+            "done": "Готово",
+            "always": "Всегда",
+            "motion": "Движение",
+            "never": "Никогда",
+            "detections": "Обнаружения"
+        },
+        "health": {}
+    },
+    "nvr_alarm": {
+        "armed": "Активировано (Отсутствие)",
+        "disarmed": "Снято",
+        "state_changed": "Статус тревоги изменён"
+    },
+    "weather": {
+        "conditions": {
+            "tornado": "Торнадо",
+            "tropical_storm": "Тропический шторм",
+            "hurricane": "Ураган",
+            "thunderstorms": "Грозы",
+            "rain_snow_mix": "Дождь со снегом",
+            "rain_sleet_mix": "Дождь с мокрым снегом",
+            "snow_sleet_mix": "Снег с мокрым снегом",
+            "freezing_drizzle": "Ледяная морось",
+            "drizzle": "Морось",
+            "freezing_rain": "Ледяной дождь",
+            "showers": "Ливни",
+            "snow_flurries": "Снежные заряды",
+            "light_snow": "Лёгкий снег",
+            "blowing_snow": "Метель",
+            "snow": "Снег",
+            "hail": "Град",
+            "sleet": "Мокрый снег",
+            "dust": "Пыль",
+            "fog": "Туман",
+            "haze": "Дымка",
+            "smoke": "Дым",
+            "windy": "Ветрено",
+            "frigid": "Лютый мороз",
+            "cloudy": "Пасмурно",
+            "mostly_cloudy": "Преимущественно облачно",
+            "partly_cloudy": "Переменная облачность",
+            "clear": "Ясно",
+            "sunny": "Солнечно",
+            "fair": "Малооблачно",
+            "rain_hail_mix": "Дождь с градом",
+            "hot": "Жарко",
+            "isolated_thunderstorms": "Редкие грозы",
+            "scattered_thunderstorms": "Рассеянные грозы",
+            "scattered_showers": "Рассеянные ливни",
+            "heavy_rain": "Сильный дождь",
+            "scattered_snow": "Рассеянный снег",
+            "heavy_snow": "Сильный снегопад",
+            "blizzard": "Пурга",
+            "not_available": "Н/Д"
+        }
     }
-  },
-  "settings": {
-    "title": "Настройки UniFi Protect",
-    "instruction": "Войдите с учетными данными пользователя UniFi Protect.",
-    "nvr": "Детали сервера",
-    "nvrip": "IP-адрес",
-    "nvrport": "Порт",
-    "credentials": "Учетные данные пользователя",
-    "username": "Имя пользователя",
-    "password": "Пароль",
-    "apply": "Применить",
-    "saved": "Настройки сохранены.",
-    "settings": "Настройки",
-    "useCameraSnapshot": "Использовать снимок камеры",
-    "useCameraSnapshotInstruction": "Используйте 'Использовать снимок камеры' только если 'Включить анонимный снимок' включен в локальных настройках камеры. Вы уверены, что хотите включить это?",
-    "testConnection": "Проверить соединение",
-    "test_status": {
-      "success": "Учетные данные действительны.",
-      "failure": "Учетные данные недействительны."
-    },
-    "accessApiKey": "API-ключ",
-    "accessCredentials": "Учетные данные UniFi Access",
-    "ignoreEventsNfcFingerprint": "Период между событиями NFC/отпечатка пальца (в секундах)",
-    "ignoreEventsDoorbell": "Период между событиями звонка (в секундах)",
-    "protectV2ApiKey": "API-ключ UniFi Protect V2",
-    "protectV2Credentials": "Учетные данные UniFi Protect V2",
-    "status": "Статус"
-  },
-  "events": {
-    "camera": {
-      "motion_started": "Движение началось",
-      "motion_ended": "Движение завершено",
-      "motion_inprogress": "Движение",
-      "ftr_inprogress": "Полное время",
-      "disabled": "Отключено",
-      "failed": "Не удалось",
-      "done": "Готово",
-      "always": "Всегда",
-      "motion": "Движение",
-      "never": "Никогда",
-      "detections": "Обнаружения"
-    },
-    "health": {}
-  },
-  "nvr_alarm": {
-    "armed": "Активировано (Отсутствие)",
-    "disarmed": "Снято",
-    "state_changed": "Статус тревоги изменён"
-  },
-  "weather": {
-    "conditions": {
-      "tornado": "Торнадо",
-      "tropical_storm": "Тропический шторм",
-      "hurricane": "Ураган",
-      "thunderstorms": "Грозы",
-      "rain_snow_mix": "Дождь со снегом",
-      "rain_sleet_mix": "Дождь с мокрым снегом",
-      "snow_sleet_mix": "Снег с мокрым снегом",
-      "freezing_drizzle": "Ледяная морось",
-      "drizzle": "Морось",
-      "freezing_rain": "Ледяной дождь",
-      "showers": "Ливни",
-      "snow_flurries": "Снежные заряды",
-      "light_snow": "Лёгкий снег",
-      "blowing_snow": "Метель",
-      "snow": "Снег",
-      "hail": "Град",
-      "sleet": "Мокрый снег",
-      "dust": "Пыль",
-      "fog": "Туман",
-      "haze": "Дымка",
-      "smoke": "Дым",
-      "windy": "Ветрено",
-      "frigid": "Лютый мороз",
-      "cloudy": "Пасмурно",
-      "mostly_cloudy": "Преимущественно облачно",
-      "partly_cloudy": "Переменная облачность",
-      "clear": "Ясно",
-      "sunny": "Солнечно",
-      "fair": "Малооблачно",
-      "rain_hail_mix": "Дождь с градом",
-      "hot": "Жарко",
-      "isolated_thunderstorms": "Редкие грозы",
-      "scattered_thunderstorms": "Рассеянные грозы",
-      "scattered_showers": "Рассеянные ливни",
-      "heavy_rain": "Сильный дождь",
-      "scattered_snow": "Рассеянный снег",
-      "heavy_snow": "Сильный снегопад",
-      "blizzard": "Пурга",
-      "not_available": "Н/Д"
-    }
-  }
 }
-

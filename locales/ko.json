@@ -1,103 +1,101 @@
 {
-  "title": "UniFi Protect",
-  "pair": {
-    "validate": {
-      "title": "UniFi Cloud Key 확인",
-      "instruction": "설정에서 Cloud Key를 먼저 설정하세요."
+    "title": "UniFi Protect",
+    "pair": {
+        "validate": {
+            "title": "UniFi Cloud Key 확인",
+            "instruction": "설정에서 Cloud Key를 먼저 설정하세요."
+        },
+        "login": {
+            "title": "로그인"
+        }
     },
-    "login": {
-      "title": "로그인"
+    "settings": {
+        "title": "UniFi Protect 설정",
+        "instruction": "UniFi Protect 사용자 자격 증명으로 로그인하세요.",
+        "nvr": "서버 세부 정보",
+        "nvrip": "IP 주소",
+        "nvrport": "포트",
+        "credentials": "사용자 자격 증명",
+        "username": "사용자 이름",
+        "password": "비밀번호",
+        "apply": "적용",
+        "saved": "설정이 저장되었습니다.",
+        "settings": "설정",
+        "testConnection": "연결 테스트",
+        "test_status": {
+            "success": "자격 증명이 유효합니다.",
+            "failure": "자격 증명이 유효하지 않습니다."
+        },
+        "accessApiKey": "API 키",
+        "accessCredentials": "UniFi Access 자격 증명",
+        "ignoreEventsNfcFingerprint": "NFC/지문 이벤트 간 쿨다운 기간(초)",
+        "ignoreEventsDoorbell": "초인종 이벤트 간 쿨다운 기간(초)",
+        "protectV2ApiKey": "UniFi Protect V2 API 키",
+        "protectV2Credentials": "UniFi Protect V2 자격 증명",
+        "status": "상태"
+    },
+    "events": {
+        "camera": {
+            "motion_started": "움직임 시작됨",
+            "motion_ended": "움직임 종료됨",
+            "motion_inprogress": "움직임",
+            "ftr_inprogress": "전체 시간",
+            "disabled": "비활성화됨",
+            "failed": "실패함",
+            "done": "완료됨",
+            "always": "항상",
+            "motion": "움직임",
+            "never": "절대",
+            "detections": "감지"
+        },
+        "health": {}
+    },
+    "nvr_alarm": {
+        "armed": "무장됨 (외출)",
+        "disarmed": "해제됨",
+        "state_changed": "알람 상태 변경됨"
+    },
+    "weather": {
+        "conditions": {
+            "tornado": "토네이도",
+            "tropical_storm": "열대 폭풍",
+            "hurricane": "허리케인",
+            "thunderstorms": "뇌우",
+            "rain_snow_mix": "진눈깨비 (비+눈)",
+            "rain_sleet_mix": "진눈깨비 (비+우박)",
+            "snow_sleet_mix": "진눈깨비 (눈+우박)",
+            "freezing_drizzle": "어는 안개비",
+            "drizzle": "이슬비",
+            "freezing_rain": "어는 비",
+            "showers": "소나기",
+            "snow_flurries": "눈보라",
+            "light_snow": "약한 눈",
+            "blowing_snow": "날리는 눈",
+            "snow": "눈",
+            "hail": "우박",
+            "sleet": "진눈깨비",
+            "dust": "황사",
+            "fog": "안개",
+            "haze": "연무",
+            "smoke": "연기",
+            "windy": "강풍",
+            "frigid": "극한의 추위",
+            "cloudy": "흐림",
+            "mostly_cloudy": "대체로 흐림",
+            "partly_cloudy": "구름 조금",
+            "clear": "맑음",
+            "sunny": "화창함",
+            "fair": "구름 약간",
+            "rain_hail_mix": "비 + 우박",
+            "hot": "매우 더움",
+            "isolated_thunderstorms": "국지성 뇌우",
+            "scattered_thunderstorms": "산발적 뇌우",
+            "scattered_showers": "산발적 소나기",
+            "heavy_rain": "폭우",
+            "scattered_snow": "산발적 눈",
+            "heavy_snow": "폭설",
+            "blizzard": "눈보라",
+            "not_available": "해당 없음"
+        }
     }
-  },
-  "settings": {
-    "title": "UniFi Protect 설정",
-    "instruction": "UniFi Protect 사용자 자격 증명으로 로그인하세요.",
-    "nvr": "서버 세부 정보",
-    "nvrip": "IP 주소",
-    "nvrport": "포트",
-    "credentials": "사용자 자격 증명",
-    "username": "사용자 이름",
-    "password": "비밀번호",
-    "apply": "적용",
-    "saved": "설정이 저장되었습니다.",
-    "settings": "설정",
-    "useCameraSnapshot": "카메라 스냅샷 사용",
-    "useCameraSnapshotInstruction": "'카메라 스냅샷 사용'은 로컬 카메라 설정에서 '익명 스냅샷 활성화'가 활성화된 경우에만 사용하세요. 정말 활성화하시겠습니까?",
-    "testConnection": "연결 테스트",
-    "test_status": {
-      "success": "자격 증명이 유효합니다.",
-      "failure": "자격 증명이 유효하지 않습니다."
-    },
-    "accessApiKey": "API 키",
-    "accessCredentials": "UniFi Access 자격 증명",
-    "ignoreEventsNfcFingerprint": "NFC/지문 이벤트 간 쿨다운 기간(초)",
-    "ignoreEventsDoorbell": "초인종 이벤트 간 쿨다운 기간(초)",
-    "protectV2ApiKey": "UniFi Protect V2 API 키",
-    "protectV2Credentials": "UniFi Protect V2 자격 증명",
-    "status": "상태"
-  },
-  "events": {
-    "camera": {
-      "motion_started": "움직임 시작됨",
-      "motion_ended": "움직임 종료됨",
-      "motion_inprogress": "움직임",
-      "ftr_inprogress": "전체 시간",
-      "disabled": "비활성화됨",
-      "failed": "실패함",
-      "done": "완료됨",
-      "always": "항상",
-      "motion": "움직임",
-      "never": "절대",
-      "detections": "감지"
-    },
-    "health": {}
-  },
-  "nvr_alarm": {
-    "armed": "무장됨 (외출)",
-    "disarmed": "해제됨",
-    "state_changed": "알람 상태 변경됨"
-  },
-  "weather": {
-    "conditions": {
-      "tornado": "토네이도",
-      "tropical_storm": "열대 폭풍",
-      "hurricane": "허리케인",
-      "thunderstorms": "뇌우",
-      "rain_snow_mix": "진눈깨비 (비+눈)",
-      "rain_sleet_mix": "진눈깨비 (비+우박)",
-      "snow_sleet_mix": "진눈깨비 (눈+우박)",
-      "freezing_drizzle": "어는 안개비",
-      "drizzle": "이슬비",
-      "freezing_rain": "어는 비",
-      "showers": "소나기",
-      "snow_flurries": "눈보라",
-      "light_snow": "약한 눈",
-      "blowing_snow": "날리는 눈",
-      "snow": "눈",
-      "hail": "우박",
-      "sleet": "진눈깨비",
-      "dust": "황사",
-      "fog": "안개",
-      "haze": "연무",
-      "smoke": "연기",
-      "windy": "강풍",
-      "frigid": "극한의 추위",
-      "cloudy": "흐림",
-      "mostly_cloudy": "대체로 흐림",
-      "partly_cloudy": "구름 조금",
-      "clear": "맑음",
-      "sunny": "화창함",
-      "fair": "구름 약간",
-      "rain_hail_mix": "비 + 우박",
-      "hot": "매우 더움",
-      "isolated_thunderstorms": "국지성 뇌우",
-      "scattered_thunderstorms": "산발적 뇌우",
-      "scattered_showers": "산발적 소나기",
-      "heavy_rain": "폭우",
-      "scattered_snow": "산발적 눈",
-      "heavy_snow": "폭설",
-      "blizzard": "눈보라",
-      "not_available": "해당 없음"
-    }
-  }
 }

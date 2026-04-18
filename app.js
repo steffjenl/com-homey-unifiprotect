@@ -23,7 +23,6 @@ class UniFiProtect extends Homey.App {
         this.nvrPort = null;
         this.nvrUsername = null;
         this.nvrPassword = null;
-        this.useCameraSnapshot = false;
         this.ignoreEventsNfcFingerprint = 5; // seconds
         this.ignoreEventsDoorbell = 5; // seconds
         this._refreshAuthTokensnterval = 60 * 60 * 1000; // 1 hour
@@ -55,7 +54,6 @@ class UniFiProtect extends Homey.App {
             }
             if (key === 'ufp:settings') {
                 const settings = this.homey.settings.get('ufp:settings');
-                this.useCameraSnapshot = settings.useCameraSnapshot;
                 this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
                 this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
             }
@@ -79,7 +77,6 @@ class UniFiProtect extends Homey.App {
         // set settings
         const settings = this.homey.settings.get('ufp:settings');
         if (settings) {
-            this.useCameraSnapshot = settings.useCameraSnapshot;
             this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
             this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
         }

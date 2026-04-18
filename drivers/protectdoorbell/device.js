@@ -15,6 +15,17 @@ class Doorbell extends Homey.Device {
     this.cloudUrlPackage = null;
     this.rtspUrl = null;
     this.rtspPackageUrl = null;
+
+    // Migrate useCameraSnapshot from app-wide setting to per-device setting (one-time)
+    const migrated = await this.getStoreValue('snapshotMigrated');
+    if (!migrated) {
+      const appSettings = this.homey.settings.get('ufp:settings');
+      if (appSettings && appSettings.useCameraSnapshot === true) {
+        await this.setSettings({ useCameraSnapshot: true }).catch(this.error);
+      }
+      await this.setStoreValue('snapshotMigrated', true).catch(this.error);
+    }
+
     this.settings = this.getSettings();
     await this.waitForBootstrap();
     this.cleanSmartDetectionEvents();
@@ -48,6 +59,9 @@ class Doorbell extends Homey.Device {
       this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspPackageUrl}`);
       this.setCameraVideo('package-snapshot', `${this.getName()} Package Video`, this.packageVideo);
       return;
+    }
+    if (changedKeys.includes('useCameraSnapshot')) {
+      this.settings.useCameraSnapshot = newSettings.useCameraSnapshot;
     }
     this.homey.app.debug('UnifiDoorbell Device settings where changed');
   }
@@ -730,16 +744,30 @@ class Doorbell extends Homey.Device {
       let snapshotUrl = null;
       const headers = {};
 
-      if (this.homey.app.useCameraSnapshot) {
-        snapshotUrl = `https://${ipAddress}/snap.jpeg`;
-      } else if (this.homey.app.isV1Available()) {
+      const agent = new https.Agent({
+        rejectUnauthorized: false, // rejectUnauthorized: false is intentional — NVR uses self-signed TLS
+        keepAlive: false,
+      });
+
+      if (this.settings.useCameraSnapshot) {
+        const directUrl = `https://${ipAddress}/snap.jpeg`;
+        // Check if the direct snapshot URL is available before using it
+        const headRes = await fetch(directUrl, { method: 'HEAD', agent }).catch(() => null);
+        if (headRes && headRes.ok) {
+          snapshotUrl = directUrl;
+        } else {
+          this.homey.app.debug(`[DoorbellDevice] Direct snapshot URL not available for ${this.getName()}, falling back to API.`);
+        }
+      }
+
+      if (!snapshotUrl && this.homey.app.isV1Available()) {
         await this.homey.app.api.createSnapshotUrl(this.getData())
           .then((url) => {
             snapshotUrl = url;
           })
           .catch(this.error.bind(this, 'Could not create snapshot URL.'));
         headers['Cookie'] = this.homey.app.api.getProxyCookieToken();
-      } else if (this.homey.app.isV2Available()) {
+      } else if (!snapshotUrl && this.homey.app.isV2Available()) {
         snapshotUrl = this.homey.app.apiV2.getSnapshotUrl(this.getData().id);
         const v2Headers = this.homey.app.apiV2.getSnapshotHeaders();
         Object.assign(headers, v2Headers);
@@ -748,11 +776,6 @@ class Doorbell extends Homey.Device {
       if (!snapshotUrl) {
         throw new Error('Invalid snapshot url.');
       }
-
-      const agent = new https.Agent({
-        rejectUnauthorized: false,
-        keepAlive: false,
-      });
 
       // Fetch image
       const res = await fetch(snapshotUrl, {
@@ -800,15 +823,29 @@ class Doorbell extends Homey.Device {
         let snapshotUrl = null;
         const headers = {};
 
-        if (this.homey.app.useCameraSnapshot) {
-          snapshotUrl = `https://${ipAddress}/snap_2.jpeg`;
-        } else if (this.homey.app.isV1Available()) {
+        const agent = new https.Agent({
+          rejectUnauthorized: false, // rejectUnauthorized: false is intentional — NVR uses self-signed TLS
+          keepAlive: false,
+        });
+
+        if (this.settings.useCameraSnapshot) {
+          const directUrl = `https://${ipAddress}/snap_2.jpeg`;
+          // Check if the direct package snapshot URL is available before using it
+          const headRes = await fetch(directUrl, { method: 'HEAD', agent }).catch(() => null);
+          if (headRes && headRes.ok) {
+            snapshotUrl = directUrl;
+          } else {
+            this.homey.app.debug(`[DoorbellDevice] Direct package snapshot URL not available for ${this.getName()}, falling back to API.`);
+          }
+        }
+
+        if (!snapshotUrl && this.homey.app.isV1Available()) {
           await this.homey.app.api.createPackageSnapshotUrl(this.getData())
             .then((url) => {
               snapshotUrl = url;
             });
           headers['Cookie'] = this.homey.app.api.getProxyCookieToken();
-        } else if (this.homey.app.isV2Available()) {
+        } else if (!snapshotUrl && this.homey.app.isV2Available()) {
           // V2 snapshot endpoint (package camera not separately supported in V2)
           snapshotUrl = this.homey.app.apiV2.getSnapshotUrl(this.getData().id);
           const v2Headers = this.homey.app.apiV2.getSnapshotHeaders();
@@ -819,11 +856,6 @@ class Doorbell extends Homey.Device {
           reject('Invalid snapshot url.');
           return;
         }
-
-        const agent = new https.Agent({
-          rejectUnauthorized: false,
-          keepAlive: false,
-        });
 
         // Fetch image
         const res = await fetch(snapshotUrl, {

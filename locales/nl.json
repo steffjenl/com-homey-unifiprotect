@@ -1,117 +1,115 @@
 {
-  "title": "UniFi Protect",
-  "pair": {
-    "validate": {
-      "title": "UniFi Cloud Key valideren",
-      "instruction": "Graag eerst bij Instellingen de Cloud Key instellen."
+    "title": "UniFi Protect",
+    "pair": {
+        "validate": {
+            "title": "UniFi Cloud Key valideren",
+            "instruction": "Graag eerst bij Instellingen de Cloud Key instellen."
+        },
+        "login": {
+            "title": "Inloggen"
+        }
     },
-    "login": {
-      "title": "Inloggen"
-    }
-  },
-  "settings": {
-    "title": "UniFi Protect instellingen",
-    "instruction": "Log in met de gegevens van de UniFi Protect-gebruiker.",
-    "nvr": "Server gegevens",
-    "nvrip": "IP-adres",
-    "nvrport": "Port",
-    "credentials": "Gebruikersgegevens",
-    "username": "Gebruikersnaam",
-    "password": "Wachtwoord",
-    "apply": "Toepassen",
-    "saved": "Instellingen opgeslagen.",
-    "settings": "Instellingen",
-    "useCameraSnapshot": "Gebruik camera afbeelding",
-    "useCameraSnapshotInstruction": "Gebruik 'Gebruik camera afbeelding' alleen wanneer 'Anonieme snapshot inschakelen' is ingeschakeld in de lokale camerainstellingen. Weet u zeker dat u dit wilt inschakelen?",
-    "accessApiKey": "API-sleutel",
-    "accessCredentials": "UniFi Access inloggegevens",
-    "ignoreEventsNfcFingerprint": "Cooldown-periode tussen NFC/vingerafdruk gebeurtenissen (in seconden)",
-    "ignoreEventsDoorbell": "Cooldown-periode tussen deurbel gebeurtenissen (in seconden)",
-    "testConnection": "Verbinding testen",
-    "test_status": {
-        "success": "Inloggegevens zijn geldig.",
-        "failure": "Inloggegevens zijn ongeldig."
+    "settings": {
+        "title": "UniFi Protect instellingen",
+        "instruction": "Log in met de gegevens van de UniFi Protect-gebruiker.",
+        "nvr": "Server gegevens",
+        "nvrip": "IP-adres",
+        "nvrport": "Port",
+        "credentials": "Gebruikersgegevens",
+        "username": "Gebruikersnaam",
+        "password": "Wachtwoord",
+        "apply": "Toepassen",
+        "saved": "Instellingen opgeslagen.",
+        "settings": "Instellingen",
+        "accessApiKey": "API-sleutel",
+        "accessCredentials": "UniFi Access inloggegevens",
+        "ignoreEventsNfcFingerprint": "Cooldown-periode tussen NFC/vingerafdruk gebeurtenissen (in seconden)",
+        "ignoreEventsDoorbell": "Cooldown-periode tussen deurbel gebeurtenissen (in seconden)",
+        "testConnection": "Verbinding testen",
+        "test_status": {
+            "success": "Inloggegevens zijn geldig.",
+            "failure": "Inloggegevens zijn ongeldig."
+        },
+        "protectV2ApiKey": "UniFi Protect V2 API-sleutel",
+        "protectV2Credentials": "UniFi Protect V2 inloggegevens",
+        "status": "Status"
     },
-    "protectV2ApiKey": "UniFi Protect V2 API-sleutel",
-    "protectV2Credentials": "UniFi Protect V2 inloggegevens",
-    "status": "Status"
-  },
-  "events": {
-    "camera": {
-      "motion_started": "Start beweging",
-      "motion_ended": "Einde beweging",
-      "motion_inprogress": "Beweging",
-      "ftr_inprogress": "Continu",
-      "disabled": "Uitgeschakeld",
-      "failed": "Mislukt",
-      "done": "Klaar",
-      "always": "Altijd",
-      "motion": "Bij beweging",
-      "never": "Nooit",
-      "detections": "Bij beweging"
+    "events": {
+        "camera": {
+            "motion_started": "Start beweging",
+            "motion_ended": "Einde beweging",
+            "motion_inprogress": "Beweging",
+            "ftr_inprogress": "Continu",
+            "disabled": "Uitgeschakeld",
+            "failed": "Mislukt",
+            "done": "Klaar",
+            "always": "Altijd",
+            "motion": "Bij beweging",
+            "never": "Nooit",
+            "detections": "Bij beweging"
+        },
+        "health": {
+            "unknown": "Onbekend",
+            "green": "Gezond",
+            "orange": "Waarschuwing",
+            "red": "Kritiek"
+        }
     },
-    "health": {
-      "unknown": "Onbekend",
-      "green": "Gezond",
-      "orange": "Waarschuwing",
-      "red": "Kritiek"
+    "status": {
+        "connection": {
+            "Connected": "Verbonden",
+            "Connecting": "Bezig met verbinden...",
+            "Disconnected": "Verbinding verbroken",
+            "Initialized": "Bezig met starten"
+        }
+    },
+    "package_camera": "__name__ (Pakketcamera)",
+    "nvr_alarm": {
+        "armed": "Ingeschakeld (Weg)",
+        "disarmed": "Uitgeschakeld",
+        "state_changed": "Alarmstatus gewijzigd"
+    },
+    "weather": {
+        "conditions": {
+            "tornado": "Tornado",
+            "tropical_storm": "Tropische storm",
+            "hurricane": "Orkaan",
+            "thunderstorms": "Onweersbuien",
+            "rain_snow_mix": "Regen/snee mix",
+            "rain_sleet_mix": "Regen/ijzel mix",
+            "snow_sleet_mix": "Sneeuw/ijzel mix",
+            "freezing_drizzle": "Bevriezende motregen",
+            "drizzle": "Motregen",
+            "freezing_rain": "Bevriezende regen",
+            "showers": "Buien",
+            "snow_flurries": "Sneeuwvlagen",
+            "light_snow": "Lichte sneeuw",
+            "blowing_snow": "Stuifsneeuw",
+            "snow": "Sneeuw",
+            "hail": "Hagel",
+            "sleet": "IJzel",
+            "dust": "Stof",
+            "fog": "Mist",
+            "haze": "Nevel",
+            "smoke": "Rook",
+            "windy": "Winderig",
+            "frigid": "IJzig koud",
+            "cloudy": "Bewolkt",
+            "mostly_cloudy": "Meest bewolkt",
+            "partly_cloudy": "Gedeeltelijk bewolkt",
+            "clear": "Helder",
+            "sunny": "Zonnig",
+            "fair": "Licht bewolkt",
+            "rain_hail_mix": "Regen/hagel mix",
+            "hot": "Heet",
+            "isolated_thunderstorms": "Plaatselijk onweer",
+            "scattered_thunderstorms": "Verspreide onweersbuien",
+            "scattered_showers": "Verspreide buien",
+            "heavy_rain": "Zware regen",
+            "scattered_snow": "Verspreide sneeuw",
+            "heavy_snow": "Zware sneeuw",
+            "blizzard": "Sneeuwstorm",
+            "not_available": "N.v.t."
+        }
     }
-  },
-  "status": {
-    "connection": {
-      "Connected": "Verbonden",
-      "Connecting": "Bezig met verbinden...",
-      "Disconnected": "Verbinding verbroken",
-      "Initialized": "Bezig met starten"
-    }
-  },
-  "package_camera": "__name__ (Pakketcamera)",
-  "nvr_alarm": {
-    "armed": "Ingeschakeld (Weg)",
-    "disarmed": "Uitgeschakeld",
-    "state_changed": "Alarmstatus gewijzigd"
-  },
-  "weather": {
-    "conditions": {
-      "tornado": "Tornado",
-      "tropical_storm": "Tropische storm",
-      "hurricane": "Orkaan",
-      "thunderstorms": "Onweersbuien",
-      "rain_snow_mix": "Regen/snee mix",
-      "rain_sleet_mix": "Regen/ijzel mix",
-      "snow_sleet_mix": "Sneeuw/ijzel mix",
-      "freezing_drizzle": "Bevriezende motregen",
-      "drizzle": "Motregen",
-      "freezing_rain": "Bevriezende regen",
-      "showers": "Buien",
-      "snow_flurries": "Sneeuwvlagen",
-      "light_snow": "Lichte sneeuw",
-      "blowing_snow": "Stuifsneeuw",
-      "snow": "Sneeuw",
-      "hail": "Hagel",
-      "sleet": "IJzel",
-      "dust": "Stof",
-      "fog": "Mist",
-      "haze": "Nevel",
-      "smoke": "Rook",
-      "windy": "Winderig",
-      "frigid": "IJzig koud",
-      "cloudy": "Bewolkt",
-      "mostly_cloudy": "Meest bewolkt",
-      "partly_cloudy": "Gedeeltelijk bewolkt",
-      "clear": "Helder",
-      "sunny": "Zonnig",
-      "fair": "Licht bewolkt",
-      "rain_hail_mix": "Regen/hagel mix",
-      "hot": "Heet",
-      "isolated_thunderstorms": "Plaatselijk onweer",
-      "scattered_thunderstorms": "Verspreide onweersbuien",
-      "scattered_showers": "Verspreide buien",
-      "heavy_rain": "Zware regen",
-      "scattered_snow": "Verspreide sneeuw",
-      "heavy_snow": "Zware sneeuw",
-      "blizzard": "Sneeuwstorm",
-      "not_available": "N.v.t."
-    }
-  }
 }

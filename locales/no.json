@@ -1,103 +1,101 @@
 {
-  "title": "UniFi Protect",
-  "pair": {
-    "validate": {
-      "title": "Valider UniFi Cloud Key",
-      "instruction": "Vennligst sett Cloud Key i Innstillinger først."
+    "title": "UniFi Protect",
+    "pair": {
+        "validate": {
+            "title": "Valider UniFi Cloud Key",
+            "instruction": "Vennligst sett Cloud Key i Innstillinger først."
+        },
+        "login": {
+            "title": "Logg inn"
+        }
     },
-    "login": {
-      "title": "Logg inn"
+    "settings": {
+        "title": "UniFi Protect-innstillinger",
+        "instruction": "Logg inn med UniFi Protect-brukerens legitimasjon.",
+        "nvr": "Serverdetaljer",
+        "nvrip": "IP-adresse",
+        "nvrport": "Port",
+        "credentials": "Brukerlegitimasjon",
+        "username": "Brukernavn",
+        "password": "Passord",
+        "apply": "Bruk",
+        "saved": "Innstillinger lagret.",
+        "settings": "Innstillinger",
+        "testConnection": "Test tilkobling",
+        "test_status": {
+            "success": "Legitimasjonene er gyldige.",
+            "failure": "Legitimasjonene er ugyldige."
+        },
+        "accessApiKey": "API-nøkkel",
+        "accessCredentials": "UniFi Access legitimasjon",
+        "ignoreEventsNfcFingerprint": "Nedkjølingsperiode mellom NFC/fingeravtrykk hendelser (i sekunder)",
+        "ignoreEventsDoorbell": "Nedkjølingsperiode mellom ringeklokke hendelser (i sekunder)",
+        "protectV2ApiKey": "UniFi Protect V2 API-nøkkel",
+        "protectV2Credentials": "UniFi Protect V2 legitimasjon",
+        "status": "Status"
+    },
+    "events": {
+        "camera": {
+            "motion_started": "Bevegelse startet",
+            "motion_ended": "Bevegelse avsluttet",
+            "motion_inprogress": "Bevegelse",
+            "ftr_inprogress": "Full tid",
+            "disabled": "Deaktivert",
+            "failed": "Mislyktes",
+            "done": "Ferdig",
+            "always": "Alltid",
+            "motion": "Bevegelse",
+            "never": "Aldri",
+            "detections": "Deteksjoner"
+        },
+        "health": {}
+    },
+    "nvr_alarm": {
+        "armed": "Armert (Borte)",
+        "disarmed": "Dearmert",
+        "state_changed": "Alarmstatus endret"
+    },
+    "weather": {
+        "conditions": {
+            "tornado": "Tornado",
+            "tropical_storm": "Tropisk storm",
+            "hurricane": "Orkan",
+            "thunderstorms": "Tordenvær",
+            "rain_snow_mix": "Regn/snøblanding",
+            "rain_sleet_mix": "Regn/sluddblanding",
+            "snow_sleet_mix": "Snø/sluddblanding",
+            "freezing_drizzle": "Underkjølt yr",
+            "drizzle": "Yr",
+            "freezing_rain": "Underkjølt regn",
+            "showers": "Regnbyger",
+            "snow_flurries": "Snøbyger",
+            "light_snow": "Lett snø",
+            "blowing_snow": "Snøfokk",
+            "snow": "Snø",
+            "hail": "Hagl",
+            "sleet": "Sludd",
+            "dust": "Støv",
+            "fog": "Tåke",
+            "haze": "Dis",
+            "smoke": "Røyk",
+            "windy": "Blåsig",
+            "frigid": "Iskaldt",
+            "cloudy": "Overskyet",
+            "mostly_cloudy": "Mest overskyet",
+            "partly_cloudy": "Delvis overskyet",
+            "clear": "Klart",
+            "sunny": "Sol",
+            "fair": "Lettskyet",
+            "rain_hail_mix": "Regn/haglblanding",
+            "hot": "Varmt",
+            "isolated_thunderstorms": "Isolert tordenvær",
+            "scattered_thunderstorms": "Spredt tordenvær",
+            "scattered_showers": "Spredte byger",
+            "heavy_rain": "Kraftig regn",
+            "scattered_snow": "Spredt snø",
+            "heavy_snow": "Kraftig snøfall",
+            "blizzard": "Snøstorm",
+            "not_available": "Ikke tilgjengelig"
+        }
     }
-  },
-  "settings": {
-    "title": "UniFi Protect-innstillinger",
-    "instruction": "Logg inn med UniFi Protect-brukerens legitimasjon.",
-    "nvr": "Serverdetaljer",
-    "nvrip": "IP-adresse",
-    "nvrport": "Port",
-    "credentials": "Brukerlegitimasjon",
-    "username": "Brukernavn",
-    "password": "Passord",
-    "apply": "Bruk",
-    "saved": "Innstillinger lagret.",
-    "settings": "Innstillinger",
-    "useCameraSnapshot": "Bruk kamera snapshot",
-    "useCameraSnapshotInstruction": "Bruk 'Bruk kamera snapshot' kun når 'Aktiver anonym snapshot' er aktivert i lokale kamerainnstillinger. Er du sikker på at du vil aktivere dette?",
-    "testConnection": "Test tilkobling",
-    "test_status": {
-      "success": "Legitimasjonene er gyldige.",
-      "failure": "Legitimasjonene er ugyldige."
-    },
-    "accessApiKey": "API-nøkkel",
-    "accessCredentials": "UniFi Access legitimasjon",
-    "ignoreEventsNfcFingerprint": "Nedkjølingsperiode mellom NFC/fingeravtrykk hendelser (i sekunder)",
-    "ignoreEventsDoorbell": "Nedkjølingsperiode mellom ringeklokke hendelser (i sekunder)",
-    "protectV2ApiKey": "UniFi Protect V2 API-nøkkel",
-    "protectV2Credentials": "UniFi Protect V2 legitimasjon",
-    "status": "Status"
-  },
-  "events": {
-    "camera": {
-      "motion_started": "Bevegelse startet",
-      "motion_ended": "Bevegelse avsluttet",
-      "motion_inprogress": "Bevegelse",
-      "ftr_inprogress": "Full tid",
-      "disabled": "Deaktivert",
-      "failed": "Mislyktes",
-      "done": "Ferdig",
-      "always": "Alltid",
-      "motion": "Bevegelse",
-      "never": "Aldri",
-      "detections": "Deteksjoner"
-    },
-    "health": {}
-  },
-  "nvr_alarm": {
-    "armed": "Armert (Borte)",
-    "disarmed": "Dearmert",
-    "state_changed": "Alarmstatus endret"
-  },
-  "weather": {
-    "conditions": {
-      "tornado": "Tornado",
-      "tropical_storm": "Tropisk storm",
-      "hurricane": "Orkan",
-      "thunderstorms": "Tordenvær",
-      "rain_snow_mix": "Regn/snøblanding",
-      "rain_sleet_mix": "Regn/sluddblanding",
-      "snow_sleet_mix": "Snø/sluddblanding",
-      "freezing_drizzle": "Underkjølt yr",
-      "drizzle": "Yr",
-      "freezing_rain": "Underkjølt regn",
-      "showers": "Regnbyger",
-      "snow_flurries": "Snøbyger",
-      "light_snow": "Lett snø",
-      "blowing_snow": "Snøfokk",
-      "snow": "Snø",
-      "hail": "Hagl",
-      "sleet": "Sludd",
-      "dust": "Støv",
-      "fog": "Tåke",
-      "haze": "Dis",
-      "smoke": "Røyk",
-      "windy": "Blåsig",
-      "frigid": "Iskaldt",
-      "cloudy": "Overskyet",
-      "mostly_cloudy": "Mest overskyet",
-      "partly_cloudy": "Delvis overskyet",
-      "clear": "Klart",
-      "sunny": "Sol",
-      "fair": "Lettskyet",
-      "rain_hail_mix": "Regn/haglblanding",
-      "hot": "Varmt",
-      "isolated_thunderstorms": "Isolert tordenvær",
-      "scattered_thunderstorms": "Spredt tordenvær",
-      "scattered_showers": "Spredte byger",
-      "heavy_rain": "Kraftig regn",
-      "scattered_snow": "Spredt snø",
-      "heavy_snow": "Kraftig snøfall",
-      "blizzard": "Snøstorm",
-      "not_available": "Ikke tilgjengelig"
-    }
-  }
 }

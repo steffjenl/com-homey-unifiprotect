@@ -12,6 +12,17 @@ class Camera extends Homey.Device {
   async onInit() {
     this.device = this;
     this.cloudUrl = null;
+
+    // Migrate useCameraSnapshot from app-wide setting to per-device setting (one-time)
+    const migrated = await this.getStoreValue('snapshotMigrated');
+    if (!migrated) {
+      const appSettings = this.homey.settings.get('ufp:settings');
+      if (appSettings && appSettings.useCameraSnapshot === true) {
+        await this.setSettings({ useCameraSnapshot: true }).catch(this.error);
+      }
+      await this.setStoreValue('snapshotMigrated', true).catch(this.error);
+    }
+
     this.settings = this.getSettings();
     await this.waitForBootstrap();
     this.log('UnifiCamera Device has been initialized');
@@ -34,6 +45,9 @@ class Camera extends Homey.Device {
      */
   async onSettings({ oldSettings, newSettings, changedKeys }) {
     this.homey.app.debug('UnifiCamera Device settings where changed');
+    if (changedKeys.includes('useCameraSnapshot')) {
+      this.settings.useCameraSnapshot = newSettings.useCameraSnapshot;
+    }
   }
 
   /**
@@ -528,16 +542,30 @@ class Camera extends Homey.Device {
       let snapshotUrl = null;
       const headers = {};
 
-      if (this.homey.app.useCameraSnapshot) {
-        snapshotUrl = `https://${ipAddress}/snap.jpeg`;
-      } else if (this.homey.app.isV1Available()) {
+      const agent = new https.Agent({
+        rejectUnauthorized: false, // rejectUnauthorized: false is intentional — NVR uses self-signed TLS
+        keepAlive: false,
+      });
+
+      if (this.settings.useCameraSnapshot) {
+        const directUrl = `https://${ipAddress}/snap.jpeg`;
+        // Check if the direct snapshot URL is available before using it
+        const headRes = await fetch(directUrl, { method: 'HEAD', agent }).catch(() => null);
+        if (headRes && headRes.ok) {
+          snapshotUrl = directUrl;
+        } else {
+          this.homey.app.debug(`[CameraDevice] Direct snapshot URL not available for ${this.getName()}, falling back to API.`);
+        }
+      }
+
+      if (!snapshotUrl && this.homey.app.isV1Available()) {
         await this.homey.app.api.createSnapshotUrl(this.getData())
           .then((url) => {
             snapshotUrl = url;
           })
           .catch(this.error.bind(this, 'Could not create snapshot URL.'));
         headers['Cookie'] = this.homey.app.api.getProxyCookieToken();
-      } else if (this.homey.app.isV2Available()) {
+      } else if (!snapshotUrl && this.homey.app.isV2Available()) {
         snapshotUrl = this.homey.app.apiV2.getSnapshotUrl(this.getData().id);
         const v2Headers = this.homey.app.apiV2.getSnapshotHeaders();
         Object.assign(headers, v2Headers);
@@ -546,11 +574,6 @@ class Camera extends Homey.Device {
       if (!snapshotUrl) {
         throw new Error('Invalid snapshot url.');
       }
-
-      const agent = new https.Agent({
-        rejectUnauthorized: false,
-        keepAlive: false,
-      });
 
       // Fetch image
       const res = await fetch(snapshotUrl, {
