@@ -494,7 +494,7 @@ class Camera extends Homey.Device {
     try {
       this.video = await this.homey.videos.createVideoRTSP({
         allowInvalidCertificates: true,
-        demuxer: 'hevc',
+        demuxer: 'h265',
       });
 
       this.video.registerVideoUrlListener(async () => {
