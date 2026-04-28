@@ -307,5 +307,8 @@
   },
   "1.9.9": {
     "en": "Fix: Fingerprint unknown event and moved snapshot camera setting from app settings to device settings."
+  },
+  "1.9.10": {
+    "en": "Fix: demuxer h265"
   }
 }
