@@ -14,3 +14,4 @@ yarn.lock
 /tools/protect-v1-debug/.env
 /specs/example-bootstra.json
 /specs/example-websocket.json
+tools/.DS_Store
