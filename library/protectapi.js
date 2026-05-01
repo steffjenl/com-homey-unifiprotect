@@ -672,6 +672,70 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    findRelayById(id) {
+        return new Promise((resolve, reject) => {
+            this.webclient.get(`relays/${id}`)
+                .then(response => {
+                    const result = JSON.parse(response);
+
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining relay.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    getRelays() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('relays')
+                .then(response => {
+                    const result = JSON.parse(response);
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining relays.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    setRelayOutputState(relayId, outputId, isOn) {
+        return new Promise((resolve, reject) => {
+            this.findRelayById(relayId)
+                .then((relay) => {
+                    if (!relay || !Array.isArray(relay.outputs)) {
+                        return reject(new Error('Relay outputs not found.'));
+                    }
+
+                    let outputFound = false;
+                    const outputIdString = String(outputId);
+                    const outputs = relay.outputs.map((output) => {
+                        if (String(output.id) !== outputIdString) {
+                            return output;
+                        }
+
+                        outputFound = true;
+                        return Object.assign({}, output, {
+                            state: isOn ? 'on' : 'off'
+                        });
+                    });
+
+                    if (!outputFound) {
+                        return reject(new Error(`Relay output ${outputId} not found.`));
+                    }
+
+                    return this.webclient.patch(`relays/${relayId}`, { outputs })
+                        .then(() => resolve('Relay output successfully set.'))
+                        .catch(error => reject(new Error(`Error setting relay output: ${error}`)));
+                })
+                .catch(error => reject(new Error(`Error setting relay output: ${error}`)));
+        });
+    }
+
     setLightOn(light, isLightOn) {
         return new Promise((resolve, reject) => {
             const isLedForceOn = {

@@ -178,6 +178,12 @@ class ProtectWebSocket extends BaseClass {
           if (device) {
             driver.onParseWebsocketMessage(device, payload);
           }
+        } else if (modelKey === 'relay') {
+          const driver = this.homey.drivers.getDriver('protect-relay');
+          const devices = driver.getUnifiDevicesByRelayId(deviceId);
+          devices.forEach((device) => {
+            driver.onParseWebsocketMessage(device, payload);
+          });
         } else if (modelKey === 'sensor') {
           const driver = this.homey.drivers.getDriver('protectsensor');
           const device = driver.getUnifiDeviceById(deviceId);

@@ -198,6 +198,9 @@ class ProtectWebSocket extends BaseClass {
     } if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'light') {
       // Updates lastMotion or the lastRing
       return true;
+    } if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'relay') {
+      // Relay output / state updates
+      return true;
     } if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'sensor') {
       // Updates lastMotion or the lastRing
       return true;
@@ -463,6 +466,14 @@ class ProtectWebSocket extends BaseClass {
           // Parse Websocket payload message
           driver.onParseWebsocketMessage(device, payload);
         }
+      } else if (updatePacket.action.modelKey === 'relay') {
+        // get protect-relay driver
+        const driver = this.homey.drivers.getDriver('protect-relay');
+        const relayId = updatePacket.action.id;
+        const devices = driver.getUnifiDevicesByRelayId(relayId);
+        devices.forEach((device) => {
+          driver.onParseWebsocketMessage(device, payload);
+        });
       } else if (updatePacket.action.modelKey === 'sensor') {
         // get protectsensor driver
         const driver = this.homey.drivers.getDriver('protectsensor');

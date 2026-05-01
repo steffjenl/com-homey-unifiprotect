@@ -44,6 +44,7 @@ module.exports.ACTION_SET_DEVICE_TEST_CHIME_TONE = 'ufv_set_device_chime_test_to
 module.exports.ACTION_SET_DEVICE_DOORBELL_RING_VOLUME = 'ufp_set_device_doorbell_ring_volume';
 module.exports.ACTION_SET_DEVICE_DOORBELL_SPEAKER_VOLUME = 'ufp_set_device_doorbell_speaker_volume';
 module.exports.ACTION_SET_DEVICE_DOORBELL_CHIME_VOLUME = 'ufp_set_device_doorbell_chime_volume';
+module.exports.ACTION_SET_DEVICE_RELAY_ONOFF = 'ufp_set_device_relay_onoff';
 
 module.exports.EVENT_CONNECTION_KEEPALIVE = 'ufv_event_connection_keepalive';
 module.exports.EVENT_CONNECTION_ERROR = 'ufv_event_connection_error';
@@ -97,6 +98,9 @@ module.exports.EVENT_NFC_CARD_SCANNED = 'ufp_nfc_card_scanned';
 module.exports.EVENT_DEVICE_NFC_CARD_SCANNED = 'ufp_device_nfc_card_scanned';
 module.exports.EVENT_NFC_UNKNOWN_CARD_SCANNED = 'ufp_nfc_unknown_card_scanned';
 module.exports.EVENT_DEVICE_NFC_UNKNOWN_CARD_SCANNED = 'ufp_device_nfc_unknown_card_scanned';
+module.exports.EVENT_DEVICE_RELAY_STATE_CHANGED = 'ufp_device_relay_state_changed';
+module.exports.EVENT_DEVICE_RELAY_TURNED_ON = 'ufp_device_relay_turned_on';
+module.exports.EVENT_DEVICE_RELAY_TURNED_OFF = 'ufp_device_relay_turned_off';
 
 // UniFi Access — keypad / PIN access
 module.exports.EVENT_ACCESS_KEYPAD_USED = 'ufv_access_keypad_used';

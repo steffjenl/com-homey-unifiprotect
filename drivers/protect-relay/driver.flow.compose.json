@@ -1,0 +1,71 @@
+{
+  "triggers": [
+    {
+      "id": "ufp_device_relay_state_changed",
+      "title": {
+        "en": "Relay state changed",
+        "nl": "Relaisstatus gewijzigd"
+      },
+      "titleFormatted": {
+        "en": "Relay state changed to [[relay_state]]",
+        "nl": "Relaisstatus gewijzigd naar [[relay_state]]"
+      },
+      "tokens": [
+        {
+          "name": "relay_state",
+          "type": "string",
+          "title": {
+            "en": "Relay state",
+            "nl": "Relaisstatus"
+          }
+        },
+        {
+          "name": "relay_state_onoff",
+          "type": "boolean",
+          "title": {
+            "en": "Relay on",
+            "nl": "Relais aan"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ufp_device_relay_turned_on",
+      "title": {
+        "en": "Relay turned on",
+        "nl": "Relais ingeschakeld"
+      }
+    },
+    {
+      "id": "ufp_device_relay_turned_off",
+      "title": {
+        "en": "Relay turned off",
+        "nl": "Relais uitgeschakeld"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "ufp_set_device_relay_onoff",
+      "title": {
+        "en": "Set relay",
+        "nl": "Stel relais in"
+      },
+      "titleFormatted": {
+        "en": "Set relay [[enabled]]",
+        "nl": "Stel relais [[enabled]] in"
+      },
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "enabled",
+          "title": {
+            "en": "Enabled",
+            "nl": "Ingeschakeld"
+          }
+        }
+      ]
+    }
+  ]
+}
+

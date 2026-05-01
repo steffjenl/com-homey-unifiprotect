@@ -1649,6 +1649,70 @@
         ]
       },
       {
+        "id": "ufp_device_relay_state_changed",
+        "title": {
+          "en": "Relay state changed",
+          "nl": "Relaisstatus gewijzigd"
+        },
+        "titleFormatted": {
+          "en": "Relay state changed to [[relay_state]]",
+          "nl": "Relaisstatus gewijzigd naar [[relay_state]]"
+        },
+        "tokens": [
+          {
+            "name": "relay_state",
+            "type": "string",
+            "title": {
+              "en": "Relay state",
+              "nl": "Relaisstatus"
+            }
+          },
+          {
+            "name": "relay_state_onoff",
+            "type": "boolean",
+            "title": {
+              "en": "Relay on",
+              "nl": "Relais aan"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_relay_turned_on",
+        "title": {
+          "en": "Relay turned on",
+          "nl": "Relais ingeschakeld"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_relay_turned_off",
+        "title": {
+          "en": "Relay turned off",
+          "nl": "Relais uitgeschakeld"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
         "id": "ufp_weather_updated",
         "title": {
           "en": "Weather updated",
@@ -5540,6 +5604,32 @@
         ]
       },
       {
+        "id": "ufp_set_device_relay_onoff",
+        "title": {
+          "en": "Set relay",
+          "nl": "Stel relais in"
+        },
+        "titleFormatted": {
+          "en": "Set relay [[enabled]]",
+          "nl": "Stel relais [[enabled]] in"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            }
+          }
+        ]
+      },
+      {
         "id": "ufv_set_device_doorbell_test_siren",
         "title": {
           "en": "Test siren sound",
@@ -6518,6 +6608,53 @@
           "id": "add_devices",
           "template": "add_devices"
         }
+      ]
+    },
+    {
+      "id": "protect-relay",
+      "class": "socket",
+      "capabilities": [
+        "onoff"
+      ],
+      "name": {
+        "en": "Relay",
+        "nl": "Relais",
+        "de": "Relais",
+        "fr": "Relais",
+        "it": "Relay",
+        "sv": "Relay",
+        "no": "Relay",
+        "es": "Relay",
+        "da": "Relay",
+        "ru": "Реле",
+        "pl": "Przekaźnik",
+        "ko": "릴레이"
+      },
+      "images": {
+        "large": "drivers/protect-relay/assets/images/large.png",
+        "small": "drivers/protect-relay/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
       ]
     },
     {

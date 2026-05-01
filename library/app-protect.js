@@ -374,6 +374,15 @@ class AppProtect extends BaseClass {
             return Promise.reject(new Error('No device found'));
         });
 
+        const _actionSetRelayOnOff = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_RELAY_ONOFF);
+        _actionSetRelayOnOff.registerRunListener(async (args, state) => {
+            if (args.device && typeof args.device.setRelayState === 'function') {
+                await args.device.setRelayState(args.enabled);
+                return Promise.resolve(true);
+            }
+            return Promise.reject(new Error('No relay device found'));
+        });
+
     }
 
     async loginToProtectV2() {
