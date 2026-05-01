@@ -310,5 +310,8 @@
   },
   "1.9.10": {
     "en": "Fix: demuxer h265"
+  },
+  "1.9.11": {
+    "en": "Feature: Add support for relay"
   }
 }
