@@ -10,3 +10,5 @@ yarn.lock
 /.DS_Store
 
 
+/tools/protect-v1-debug/output/
+/tools/protect-v1-debug/.env
