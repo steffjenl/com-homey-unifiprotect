@@ -703,6 +703,14 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    setViewerLiveview(viewerId, liveviewId) {
+        return new Promise((resolve, reject) => {
+            this.webclient.patch(`viewers/${viewerId}`, { liveview: liveviewId })
+                .then(() => resolve(true))
+                .catch(error => reject(error));
+        });
+    }
+
     setRelayOutputState(relayId, outputId, isOn) {
         return new Promise((resolve, reject) => {
             this.findRelayById(relayId)

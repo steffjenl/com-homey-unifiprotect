@@ -83,6 +83,27 @@ class AccessAPI extends BaseClient {
         });
     }
 
+    async getIntercoms() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('devices')
+                .then(response => {
+                    const result = JSON.parse(response);
+                    const intercoms = [];
+                    for (const device of result.data[0]) {
+                        if (
+                            device.capabilities.includes('is_intercom')
+                            || (device.device_type && device.device_type.toLowerCase().includes('intercom'))
+                            || (device.display_model && device.display_model.toLowerCase().includes('intercom'))
+                        ) {
+                            intercoms.push(device);
+                        }
+                    }
+                    return resolve(intercoms);
+                })
+                .catch(error => reject(error));
+        });
+    }
+
     async getDevice(deviceId) {
         return new Promise((resolve, reject) => {
             this.webclient.get('devices/' + deviceId + '/settings')

@@ -219,6 +219,12 @@ class AccessWebSocket extends BaseClass {
         if (deviceGarageDoor) {
           driverGarageDoor.onParseWebsocketMessage(deviceGarageDoor, eventData.data);
         }
+
+        const driverIntercom = this.homey.drivers.getDriver('access-intercom');
+        const deviceIntercom = driverIntercom.getUnifiDeviceById(eventData.data.id);
+        if (deviceIntercom) {
+          driverIntercom.onParseWebsocketMessage(deviceIntercom, eventData.data);
+        }
       } else if (eventData.event === 'access.logs.add') {
         this.homey.app.debug(`[AccessWS] access.logs.add received: ${JSON.stringify(eventData)}`);
         this._dispatchAccessLogEvent(eventData).catch((err) => this.homey.app.debug(`[AccessWS] _dispatchAccessLogEvent error: ${err}`));

@@ -1,0 +1,59 @@
+{
+  "id": "ufp_audio_detection",
+  "title": {
+    "en": "An audio event was detected",
+    "nl": "Er is een audio gebeurtenis gedetecteerd",
+    "de": "Ein Audio-Ereignis wurde erkannt",
+    "fr": "Un événement audio a été détecté",
+    "it": "È stato rilevato un evento audio",
+    "sv": "En ljudhändelse har detekterats",
+    "no": "En lydhendelse ble oppdaget",
+    "es": "Se detectó un evento de audio",
+    "da": "En lydhændelse blev registreret",
+    "ru": "Обнаружено аудиособытие",
+    "pl": "Wykryto zdarzenie dźwiękowe",
+    "ko": "오디오 이벤트가 감지되었습니다"
+  },
+  "hint": {
+    "en": "Triggered when a camera detects an audio event such as glass break, smoke alarm, or baby cry",
+    "nl": "Geactiveerd wanneer een camera een audio gebeurtenis detecteert zoals glasbreuk, rookalarm of baby huilen"
+  },
+  "tokens": [
+    {
+      "name": "ufp_audio_detection_camera",
+      "type": "string",
+      "title": {
+        "en": "Camera",
+        "nl": "Camera"
+      },
+      "example": {
+        "en": "Doorbell",
+        "nl": "Deurbel"
+      }
+    },
+    {
+      "name": "audio_detection_type",
+      "type": "string",
+      "title": {
+        "en": "Audio detection type",
+        "nl": "Audio detectie type"
+      },
+      "example": {
+        "en": "glass_break",
+        "nl": "glass_break"
+      }
+    },
+    {
+      "name": "score",
+      "type": "number",
+      "title": {
+        "en": "Score",
+        "nl": "Score"
+      },
+      "example": {
+        "en": "72",
+        "nl": "72"
+      }
+    }
+  ]
+}

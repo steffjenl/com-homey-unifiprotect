@@ -1,0 +1,45 @@
+{
+  "id": "access-intercom",
+  "name": {
+    "en": "Access Intercom",
+    "nl": "Access Intercom",
+    "de": "Access Intercom",
+    "fr": "Interphone Access",
+    "it": "Citofono Access",
+    "sv": "Access Intercom",
+    "no": "Access Intercom",
+    "es": "Videoportero Access",
+    "da": "Access Intercom",
+    "ru": "Домофон Access",
+    "pl": "Domofon Access",
+    "ko": "액세스 인터콤"
+  },
+  "class": "doorbell",
+  "capabilities": [
+    "alarm_contact",
+    "locked"
+  ],
+  "platforms": ["local"],
+  "connectivity": ["cloud"],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

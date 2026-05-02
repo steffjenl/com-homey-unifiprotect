@@ -1,0 +1,45 @@
+{
+  "id": "protect-ai-port",
+  "class": "other",
+  "capabilities": [
+    "onoff",
+    "ip_address"
+  ],
+  "name": {
+    "en": "AI Port",
+    "nl": "AI Port",
+    "de": "AI Port",
+    "fr": "AI Port",
+    "it": "AI Port",
+    "sv": "AI Port",
+    "no": "AI Port",
+    "es": "AI Port",
+    "da": "AI Port",
+    "ru": "AI Port",
+    "pl": "AI Port",
+    "ko": "AI 포트"
+  },
+  "images": {
+    "large": "drivers/protect-ai-port/assets/images/large.png",
+    "small": "drivers/protect-ai-port/assets/images/small.png",
+    "xlarge": "drivers/protect-ai-port/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "platforms": ["local"],
+  "connectivity": ["cloud"]
+}

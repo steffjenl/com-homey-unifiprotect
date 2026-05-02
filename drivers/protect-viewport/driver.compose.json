@@ -1,0 +1,44 @@
+{
+  "id": "protect-viewport",
+  "class": "other",
+  "capabilities": [
+    "onoff"
+  ],
+  "name": {
+    "en": "Viewport",
+    "nl": "Viewport",
+    "de": "Viewport",
+    "fr": "Viewport",
+    "it": "Viewport",
+    "sv": "Viewport",
+    "no": "Viewport",
+    "es": "Viewport",
+    "da": "Viewport",
+    "ru": "Viewport",
+    "pl": "Viewport",
+    "ko": "뷰포트"
+  },
+  "images": {
+    "large": "drivers/protect-viewport/assets/images/large.png",
+    "small": "drivers/protect-viewport/assets/images/small.png",
+    "xlarge": "drivers/protect-viewport/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "platforms": ["local"],
+  "connectivity": ["cloud"]
+}

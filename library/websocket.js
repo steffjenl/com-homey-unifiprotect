@@ -213,6 +213,12 @@ class ProtectWebSocket extends BaseClass {
     } if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'nvr') {
       // NVR updates
       return true;
+    } if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'viewer') {
+      // Viewport state updates
+      return true;
+    } if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'aiport') {
+      // AI Port state updates
+      return true;
     }
 
     return false;
@@ -414,15 +420,13 @@ class ProtectWebSocket extends BaseClass {
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'ring'
       ) {
-        // TODO: implement ring event and remove old doorbell code
-        // // get doorbell driver
-        // const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-        // // Get device from camera id
-        // const deviceDoorbell = driverDoorbell.getUnifiDeviceById(updatePacket.action.recordId);
-        // if (deviceDoorbell) {
-        //     // Parse Websocket payload message
-        //     driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
-        // }
+        this.homey.app.debug(`ring event: ${JSON.stringify(updatePacket.payload)}`);
+        const resolvedId = this._resolveCameraId(updatePacket);
+        const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
+        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(resolvedId);
+        if (deviceDoorbell) {
+          deviceDoorbell.onDoorbellRinging(updatePacket.payload.start);
+        }
       } else if (
         typeof updatePacket.action.modelKey !== 'undefined'
                 && updatePacket.action.modelKey === 'nvr'
@@ -502,6 +506,20 @@ class ProtectWebSocket extends BaseClass {
         const device = driver.getUnifiDeviceById(deviceId);
         if (device) {
           // Parse Websocket payload message
+          driver.onParseWebsocketMessage(device, payload);
+        }
+      } else if (updatePacket.action.modelKey === 'viewer') {
+        const driver = this.homey.drivers.getDriver('protect-viewport');
+        const deviceId = updatePacket.action.id;
+        const device = driver.getUnifiDeviceById(deviceId);
+        if (device) {
+          driver.onParseWebsocketMessage(device, payload);
+        }
+      } else if (updatePacket.action.modelKey === 'aiport') {
+        const driver = this.homey.drivers.getDriver('protect-ai-port');
+        const deviceId = updatePacket.action.id;
+        const device = driver.getUnifiDeviceById(deviceId);
+        if (device) {
           driver.onParseWebsocketMessage(device, payload);
         }
       } else {

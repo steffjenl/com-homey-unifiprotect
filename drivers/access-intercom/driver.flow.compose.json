@@ -1,0 +1,40 @@
+{
+  "triggers": [
+    {
+      "id": "ufv_device_intercom_bell_pressed",
+      "title": {
+        "en": "Intercom bell was pressed",
+        "nl": "Intercom bel werd ingedrukt",
+        "de": "Intercom-Klingel wurde gedrückt",
+        "fr": "La sonnette de l'interphone a été pressée",
+        "it": "Il campanello del citofono è stato premuto",
+        "sv": "Intercom-klockan trycktes",
+        "no": "Intercom-klokken ble trykket",
+        "es": "Se presionó el timbre del videoportero",
+        "da": "Intercom-klokken blev trykket",
+        "ru": "Нажата кнопка домофона",
+        "pl": "Naciśnięto dzwonek domofonu",
+        "ko": "인터콤 벨이 눌렸습니다"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "ufv_intercom_unlock_door",
+      "title": {
+        "en": "Unlock intercom door",
+        "nl": "Intercom deur ontgrendelen",
+        "de": "Intercom-Tür entriegeln",
+        "fr": "Déverrouiller la porte de l'interphone",
+        "it": "Sblocca la porta del citofono",
+        "sv": "Lås upp intercom-dörren",
+        "no": "Lås opp intercom-dør",
+        "es": "Desbloquear puerta del videoportero",
+        "da": "Lås intercom-dør op",
+        "ru": "Разблокировать дверь домофона",
+        "pl": "Odblokuj drzwi domofonu",
+        "ko": "인터콤 문 잠금 해제"
+      }
+    }
+  ]
+}

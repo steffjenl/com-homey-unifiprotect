@@ -527,6 +527,28 @@
             "pl": "1, 2",
             "ko": "1, 2"
           }
+        },
+        {
+          "name": "license_plate",
+          "type": "string",
+          "title": {
+            "en": "License plate",
+            "nl": "Kenteken",
+            "de": "Kennzeichen",
+            "fr": "Plaque d'immatriculation",
+            "it": "Targa",
+            "sv": "Registreringsskylt",
+            "no": "Registreringsskilt",
+            "es": "Matrícula",
+            "da": "Nummerplade",
+            "ru": "Номерной знак",
+            "pl": "Tablica rejestracyjna",
+            "ko": "번호판"
+          },
+          "example": {
+            "en": "ABC-123",
+            "nl": "AB-12-CD"
+          }
         }
       ]
     },

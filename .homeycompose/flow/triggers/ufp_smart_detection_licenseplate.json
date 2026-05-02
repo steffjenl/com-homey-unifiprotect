@@ -28,6 +28,18 @@
         "en": "62",
         "nl": "62"
       }
+    },
+    {
+      "name": "license_plate",
+      "type": "string",
+      "title": {
+        "en": "License plate",
+        "nl": "Kenteken"
+      },
+      "example": {
+        "en": "ABC-123",
+        "nl": "AB-12-CD"
+      }
     }
   ]
 }

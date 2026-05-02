@@ -340,13 +340,10 @@ class Doorbell extends Homey.Device {
       this.driver._doorbellPressetTrigger.trigger(this, {
         ufp_pressed_camera: this.getName(),
       });
-    }
 
-    if (!lastRingAt) {
-      if (this.homey.env.DEBUG) this.homey.app.debug(`set last_ring_at to last datetime: ${this.getData().id}`);
+      if (this.homey.env.DEBUG) this.homey.app.debug(`set last_ring_at: ${this.getData().id}`);
       this.setCapabilityValue('last_ring_at', lastRing)
         .catch(this.error);
-
     }
   }
 

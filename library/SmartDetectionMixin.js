@@ -99,6 +99,10 @@ const SmartDetectionMixin = {
         .join(', ');
     }
 
+    const licensePlateText = (payload && payload.metadata && payload.metadata.licensePlate && payload.metadata.licensePlate.name)
+      ? payload.metadata.licensePlate.name
+      : '';
+
     const lastDetection = this.homey.app.toLocalTime(new Date(lastDetectionAt));
     this.setCapabilityValue('last_smart_detection_at', lastDetectionAt).catch(this.error);
     this.setCapabilityValue('last_smart_detection_date', lastDetection.toLocaleDateString()).catch(this.error);
@@ -119,7 +123,7 @@ const SmartDetectionMixin = {
         } else if (type === 'package') {
           this.triggerSmartDetectionTriggerPackage(score, zones);
         } else if (type === 'licensePlate') {
-          this.triggerSmartDetectionTriggerLicensePlate(score, zones);
+          this.triggerSmartDetectionTriggerLicensePlate(score, zones, licensePlateText);
         } else if (type === 'face') {
           this.triggerSmartDetectionTriggerFace(score, zones);
         } else {
@@ -308,7 +312,7 @@ const SmartDetectionMixin = {
     }).catch(this.error);
   },
 
-  triggerSmartDetectionTriggerLicensePlate(score, zones) {
+  triggerSmartDetectionTriggerLicensePlate(score, zones, licensePlate = '') {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'licensePlate',
@@ -324,10 +328,12 @@ const SmartDetectionMixin = {
       ufp_smart_detection_camera: this.getName(),
       score,
       zones,
+      license_plate: licensePlate,
     }).catch(this.error);
     this.driver._deviceSmartDetectionTriggerLicensePlate.trigger(this, {
       score,
       zones,
+      license_plate: licensePlate,
     }).catch(this.error);
   },
 
@@ -371,6 +377,12 @@ const SmartDetectionMixin = {
       alrmGlassBreak: 'glass_break',
     };
     const mappedType = audioTypeMap[audioType] || audioType;
+
+    this.homey.app._audioDetectionTrigger.trigger({
+      ufp_audio_detection_camera: this.getName(),
+      audio_detection_type: mappedType,
+      score,
+    }).catch(this.error);
 
     this.driver._deviceAudioDetectionTrigger.trigger(this, {
       audio_detection_type: mappedType,

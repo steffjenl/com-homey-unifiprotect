@@ -410,6 +410,65 @@
   "flow": {
     "triggers": [
       {
+        "id": "ufp_audio_detection",
+        "title": {
+          "en": "An audio event was detected",
+          "nl": "Er is een audio gebeurtenis gedetecteerd",
+          "de": "Ein Audio-Ereignis wurde erkannt",
+          "fr": "Un événement audio a été détecté",
+          "it": "È stato rilevato un evento audio",
+          "sv": "En ljudhändelse har detekterats",
+          "no": "En lydhendelse ble oppdaget",
+          "es": "Se detectó un evento de audio",
+          "da": "En lydhændelse blev registreret",
+          "ru": "Обнаружено аудиособытие",
+          "pl": "Wykryto zdarzenie dźwiękowe",
+          "ko": "오디오 이벤트가 감지되었습니다"
+        },
+        "hint": {
+          "en": "Triggered when a camera detects an audio event such as glass break, smoke alarm, or baby cry",
+          "nl": "Geactiveerd wanneer een camera een audio gebeurtenis detecteert zoals glasbreuk, rookalarm of baby huilen"
+        },
+        "tokens": [
+          {
+            "name": "ufp_audio_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "audio_detection_type",
+            "type": "string",
+            "title": {
+              "en": "Audio detection type",
+              "nl": "Audio detectie type"
+            },
+            "example": {
+              "en": "glass_break",
+              "nl": "glass_break"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "72",
+              "nl": "72"
+            }
+          }
+        ]
+      },
+      {
         "id": "ufp_connection_changed",
         "title": {
           "en": "Connection status of camera has changed",
@@ -900,6 +959,18 @@
             "example": {
               "en": "62",
               "nl": "62"
+            }
+          },
+          {
+            "name": "license_plate",
+            "type": "string",
+            "title": {
+              "en": "License plate",
+              "nl": "Kenteken"
+            },
+            "example": {
+              "en": "ABC-123",
+              "nl": "AB-12-CD"
             }
           }
         ]
@@ -1515,6 +1586,30 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
+        "id": "ufv_device_intercom_bell_pressed",
+        "title": {
+          "en": "Intercom bell was pressed",
+          "nl": "Intercom bel werd ingedrukt",
+          "de": "Intercom-Klingel wurde gedrückt",
+          "fr": "La sonnette de l'interphone a été pressée",
+          "it": "Il campanello del citofono è stato premuto",
+          "sv": "Intercom-klockan trycktes",
+          "no": "Intercom-klokken ble trykket",
+          "es": "Se presionó el timbre del videoportero",
+          "da": "Intercom-klokken blev trykket",
+          "ru": "Нажата кнопка домофона",
+          "pl": "Naciśnięto dzwonek domofonu",
+          "ko": "인터콤 벨이 눌렸습니다"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-intercom"
           }
         ]
       },
@@ -2547,6 +2642,28 @@
               "ru": "1, 2",
               "pl": "1, 2",
               "ko": "1, 2"
+            }
+          },
+          {
+            "name": "license_plate",
+            "type": "string",
+            "title": {
+              "en": "License plate",
+              "nl": "Kenteken",
+              "de": "Kennzeichen",
+              "fr": "Plaque d'immatriculation",
+              "it": "Targa",
+              "sv": "Registreringsskylt",
+              "no": "Registreringsskilt",
+              "es": "Matrícula",
+              "da": "Nummerplade",
+              "ru": "Номерной знак",
+              "pl": "Tablica rejestracyjna",
+              "ko": "번호판"
+            },
+            "example": {
+              "en": "ABC-123",
+              "nl": "AB-12-CD"
             }
           }
         ],
@@ -4171,6 +4288,28 @@
               "pl": "1, 2",
               "ko": "1, 2"
             }
+          },
+          {
+            "name": "license_plate",
+            "type": "string",
+            "title": {
+              "en": "License plate",
+              "nl": "Kenteken",
+              "de": "Kennzeichen",
+              "fr": "Plaque d'immatriculation",
+              "it": "Targa",
+              "sv": "Registreringsskylt",
+              "no": "Registreringsskilt",
+              "es": "Matrícula",
+              "da": "Nummerplade",
+              "ru": "Номерной знак",
+              "pl": "Tablica rejestracyjna",
+              "ko": "번호판"
+            },
+            "example": {
+              "en": "ABC-123",
+              "nl": "AB-12-CD"
+            }
           }
         ],
         "args": [
@@ -5380,6 +5519,30 @@
         ]
       },
       {
+        "id": "ufv_intercom_unlock_door",
+        "title": {
+          "en": "Unlock intercom door",
+          "nl": "Intercom deur ontgrendelen",
+          "de": "Intercom-Tür entriegeln",
+          "fr": "Déverrouiller la porte de l'interphone",
+          "it": "Sblocca la porta del citofono",
+          "sv": "Lås upp intercom-dörren",
+          "no": "Lås opp intercom-dør",
+          "es": "Desbloquear puerta del videoportero",
+          "da": "Lås intercom-dør op",
+          "ru": "Разблокировать дверь домофона",
+          "pl": "Odblokuj drzwi domofonu",
+          "ko": "인터콤 문 잠금 해제"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-intercom"
+          }
+        ]
+      },
+      {
         "id": "ufv_set_reader_access_method_wave",
         "title": {
           "en": "Set Reader Access Method Wave",
@@ -5658,6 +5821,56 @@
             "label": "%",
             "labelMultiplier": 100,
             "labelDecimals": 0
+          }
+        ]
+      },
+      {
+        "id": "ufp_set_viewport_liveview",
+        "title": {
+          "en": "Set Viewport Liveview",
+          "nl": "Stel Viewport Liveview in",
+          "de": "Viewport-Liveview einstellen",
+          "fr": "Définir la vue en direct du viewport",
+          "it": "Imposta la visualizzazione live del viewport",
+          "sv": "Ställ in viewport livevisning",
+          "no": "Angi viewport live-visning",
+          "es": "Establecer vista en vivo del viewport",
+          "da": "Indstil viewport live-visning",
+          "ru": "Установить прямой эфир viewport",
+          "pl": "Ustaw widok na żywo viewportu",
+          "ko": "뷰포트 라이브뷰 설정"
+        },
+        "titleFormatted": {
+          "en": "Set Viewport to liveview [[liveview_id]]",
+          "nl": "Stel Viewport in op liveview [[liveview_id]]",
+          "de": "Viewport auf Liveview [[liveview_id]] einstellen",
+          "fr": "Définir le viewport sur la vue en direct [[liveview_id]]",
+          "it": "Imposta il viewport sulla visualizzazione live [[liveview_id]]",
+          "sv": "Ställ in viewport på livevisning [[liveview_id]]",
+          "no": "Sett viewport til live-visning [[liveview_id]]",
+          "es": "Establecer viewport en vista en vivo [[liveview_id]]",
+          "da": "Indstil viewport til live-visning [[liveview_id]]",
+          "ru": "Установить viewport на прямой эфир [[liveview_id]]",
+          "pl": "Ustaw viewport na widok na żywo [[liveview_id]]",
+          "ko": "뷰포트를 라이브뷰 [[liveview_id]]로 설정"
+        },
+        "hint": {
+          "en": "Enter the liveview ID from the UniFi Protect NVR",
+          "nl": "Voer het liveview ID in van de UniFi Protect NVR"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-viewport"
+          },
+          {
+            "type": "text",
+            "name": "liveview_id",
+            "placeholder": {
+              "en": "Liveview ID (e.g. 68f0885c0245f403e42ca91a)",
+              "nl": "Liveview ID (bijv. 68f0885c0245f403e42ca91a)"
+            }
           }
         ]
       },
@@ -6516,6 +6729,55 @@
       "id": "access-hub"
     },
     {
+      "id": "access-intercom",
+      "name": {
+        "en": "Access Intercom",
+        "nl": "Access Intercom",
+        "de": "Access Intercom",
+        "fr": "Interphone Access",
+        "it": "Citofono Access",
+        "sv": "Access Intercom",
+        "no": "Access Intercom",
+        "es": "Videoportero Access",
+        "da": "Access Intercom",
+        "ru": "Домофон Access",
+        "pl": "Domofon Access",
+        "ko": "액세스 인터콤"
+      },
+      "class": "doorbell",
+      "capabilities": [
+        "alarm_contact",
+        "locked"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ],
+      "images": {
+        "small": "/drivers/access-intercom/assets/images/small.png",
+        "large": "/drivers/access-intercom/assets/images/large.png",
+        "xlarge": "/drivers/access-intercom/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
       "name": {
         "en": "Access Reader",
         "de": "Access Leser",
@@ -6565,6 +6827,55 @@
         }
       ],
       "id": "access-reader"
+    },
+    {
+      "id": "protect-ai-port",
+      "class": "other",
+      "capabilities": [
+        "onoff",
+        "ip_address"
+      ],
+      "name": {
+        "en": "AI Port",
+        "nl": "AI Port",
+        "de": "AI Port",
+        "fr": "AI Port",
+        "it": "AI Port",
+        "sv": "AI Port",
+        "no": "AI Port",
+        "es": "AI Port",
+        "da": "AI Port",
+        "ru": "AI Port",
+        "pl": "AI Port",
+        "ko": "AI 포트"
+      },
+      "images": {
+        "large": "drivers/protect-ai-port/assets/images/large.png",
+        "small": "drivers/protect-ai-port/assets/images/small.png",
+        "xlarge": "drivers/protect-ai-port/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ]
     },
     {
       "id": "protect-nvr-alarm",
@@ -6777,6 +7088,54 @@
       "images": {
         "large": "drivers/protect-siren/assets/images/large.png",
         "small": "drivers/protect-siren/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ]
+    },
+    {
+      "id": "protect-viewport",
+      "class": "other",
+      "capabilities": [
+        "onoff"
+      ],
+      "name": {
+        "en": "Viewport",
+        "nl": "Viewport",
+        "de": "Viewport",
+        "fr": "Viewport",
+        "it": "Viewport",
+        "sv": "Viewport",
+        "no": "Viewport",
+        "es": "Viewport",
+        "da": "Viewport",
+        "ru": "Viewport",
+        "pl": "Viewport",
+        "ko": "뷰포트"
+      },
+      "images": {
+        "large": "drivers/protect-viewport/assets/images/large.png",
+        "small": "drivers/protect-viewport/assets/images/small.png",
+        "xlarge": "drivers/protect-viewport/assets/images/xlarge.png"
       },
       "pair": [
         {
