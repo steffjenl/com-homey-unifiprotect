@@ -20,7 +20,8 @@
   },
   "images": {
     "large": "drivers/protect-relay/assets/images/large.png",
-    "small": "drivers/protect-relay/assets/images/small.png"
+    "small": "drivers/protect-relay/assets/images/small.png",
+    "xlarge": "drivers/protect-relay/assets/images/xlarge.png"
   },
   "pair": [
     {
@@ -41,5 +42,4 @@
   "platforms": ["local"],
   "connectivity": ["cloud"]
 }
-
 

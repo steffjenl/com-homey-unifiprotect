@@ -99,7 +99,7 @@ class Relay extends Homey.Device {
       return;
     }
 
-    this.onOutputsChange(relay.outputs);
+    this.onRelayUpdate(relay);
   }
 
   getOutputId() {
@@ -122,6 +122,15 @@ class Relay extends Homey.Device {
     return String(this.getData().outputType) === 'garageDoor';
   }
 
+  getRelayStatusSource() {
+    const configured = this.getSetting('ufp:relay_status_source');
+    if (configured === 'input' || configured === 'output' || configured === 'auto') {
+      return configured;
+    }
+
+    return 'auto';
+  }
+
   async setRelayState(isOn) {
     const relayId = this.getRelayId();
     const outputId = this.getOutputId();
@@ -137,7 +146,11 @@ class Relay extends Homey.Device {
     return Promise.reject(new Error('No API available for relay control'));
   }
 
-  onOutputsChange(outputs) {
+  onRelayUpdate(relayPayload) {
+    const outputs = relayPayload && Array.isArray(relayPayload.outputs)
+      ? relayPayload.outputs
+      : null;
+
     if (!Array.isArray(outputs)) {
       return;
     }
@@ -155,7 +168,9 @@ class Relay extends Homey.Device {
     }
 
     if (this.hasCapability('garagedoor_closed')) {
-      this.setCapabilityValue('garagedoor_closed', !relayOn).catch(this.error);
+      const garageDoorClosed = this.resolveGarageDoorClosed(relayPayload, selectedOutput, relayOn);
+      this.setCapabilityValue('garagedoor_closed', garageDoorClosed).catch(this.error);
+      this.setStoreValue('lastGarageDoorClosed', garageDoorClosed).catch(this.error);
     }
 
     if (typeof previousRelayOn === 'boolean' && previousRelayOn !== relayOn) {
@@ -169,9 +184,114 @@ class Relay extends Homey.Device {
 
     this.setStoreValue('lastRelayOn', relayOn).catch(this.error);
   }
+
+  onOutputsChange(outputs) {
+    this.onRelayUpdate({ outputs });
+  }
+
+  resolveGarageDoorClosed(relayPayload, selectedOutput, relayOn) {
+    const statusSource = this.getRelayStatusSource();
+
+    if (statusSource !== 'output') {
+      const inputClosed = this.resolveGarageDoorClosedFromInput(relayPayload, selectedOutput);
+      if (typeof inputClosed === 'boolean') {
+        return inputClosed;
+      }
+
+      if (statusSource === 'input') {
+        const capabilityClosed = this.getCapabilityValue('garagedoor_closed');
+        if (typeof capabilityClosed === 'boolean') {
+          return capabilityClosed;
+        }
+
+        const storedClosed = this.getStoreValue('lastGarageDoorClosed');
+        if (typeof storedClosed === 'boolean') {
+          return storedClosed;
+        }
+      }
+    }
+
+    return !relayOn;
+  }
+
+  resolveGarageDoorClosedFromInput(relayPayload, selectedOutput) {
+    if (!relayPayload || !Array.isArray(relayPayload.inputs) || relayPayload.inputs.length === 0) {
+      return null;
+    }
+
+    const outputId = this.getOutputId();
+    const candidateInput = relayPayload.inputs.find((input) => String(input.actionOutputId) === String(outputId))
+      || relayPayload.inputs.find((input) => String(input.id) === String(outputId))
+      || relayPayload.inputs[0];
+
+    if (!candidateInput) {
+      return null;
+    }
+
+    const opened = this.toBooleanState(candidateInput.state, selectedOutput);
+    if (typeof opened !== 'boolean') {
+      return null;
+    }
+
+    return !opened;
+  }
+
+  toBooleanState(state, selectedOutput) {
+    if (typeof state === 'boolean') {
+      return state;
+    }
+
+    if (typeof state === 'number') {
+      return state !== 0;
+    }
+
+    if (typeof state === 'string') {
+      const normalized = state.toLowerCase();
+      if (normalized === 'open' || normalized === 'on' || normalized === 'active' || normalized === 'true') {
+        return true;
+      }
+
+      if (normalized === 'closed' || normalized === 'off' || normalized === 'inactive' || normalized === 'false') {
+        return false;
+      }
+    }
+
+    if (selectedOutput && typeof selectedOutput.state === 'string') {
+      return selectedOutput.state === 'on';
+    }
+
+    return null;
+  }
+
+  isRelayStatusOpen() {
+    if (this.hasCapability('garagedoor_closed')) {
+      const isClosed = this.getCapabilityValue('garagedoor_closed');
+      if (typeof isClosed === 'boolean') {
+        return !isClosed;
+      }
+
+      const storedClosed = this.getStoreValue('lastGarageDoorClosed');
+      if (typeof storedClosed === 'boolean') {
+        return !storedClosed;
+      }
+    }
+
+    if (this.hasCapability('onoff')) {
+      const onoff = this.getCapabilityValue('onoff');
+      if (typeof onoff === 'boolean') {
+        return onoff;
+      }
+    }
+
+    const lastRelayOn = this.getStoreValue('lastRelayOn');
+    return lastRelayOn === true;
+  }
+
+  isRelayStatusClosed() {
+    return !this.isRelayStatusOpen();
+  }
 }
 
 module.exports = Relay;
-
 
 

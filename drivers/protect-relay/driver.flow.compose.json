@@ -66,6 +66,36 @@
         }
       ]
     }
+  ],
+  "conditions": [
+    {
+      "id": "ufp_device_garage_is_open",
+      "title": {
+        "en": "Garage is open",
+        "nl": "Garage is open"
+      }
+    },
+    {
+      "id": "ufp_device_garage_is_closed",
+      "title": {
+        "en": "Garage is closed",
+        "nl": "Garage is dicht"
+      }
+    },
+    {
+      "id": "ufp_device_relay_is_open",
+      "title": {
+        "en": "Relay status is open",
+        "nl": "Relaisstatus is open"
+      }
+    },
+    {
+      "id": "ufp_device_relay_is_closed",
+      "title": {
+        "en": "Relay status is closed",
+        "nl": "Relaisstatus is dicht"
+      }
+    }
   ]
 }
 

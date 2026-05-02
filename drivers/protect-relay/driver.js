@@ -63,8 +63,11 @@ class UniFiRelayDriver extends Homey.Driver {
 
   onParseWebsocketMessage(device, payload) {
     if (Object.prototype.hasOwnProperty.call(device, '_events')) {
-      if (Object.prototype.hasOwnProperty.call(payload, 'outputs')) {
-        device.onOutputsChange(payload.outputs);
+      if (
+        Object.prototype.hasOwnProperty.call(payload, 'outputs')
+        || Object.prototype.hasOwnProperty.call(payload, 'inputs')
+      ) {
+        device.onRelayUpdate(payload);
       }
     }
   }
@@ -106,5 +109,4 @@ class UniFiRelayDriver extends Homey.Driver {
 }
 
 module.exports = UniFiRelayDriver;
-
 

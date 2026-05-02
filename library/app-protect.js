@@ -383,6 +383,58 @@ class AppProtect extends BaseClass {
             return Promise.reject(new Error('No relay device found'));
         });
 
+        const _conditionGarageIsOpen = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_GARAGE_IS_OPEN);
+        _conditionGarageIsOpen.registerRunListener(async (args, state) => {
+            try {
+                if (args.device && typeof args.device.isRelayStatusOpen === 'function') {
+                    return Promise.resolve(args.device.isRelayStatusOpen());
+                }
+            } catch (error) {
+                this.error(error);
+            }
+
+            return Promise.resolve(false);
+        });
+
+        const _conditionGarageIsClosed = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_GARAGE_IS_CLOSED);
+        _conditionGarageIsClosed.registerRunListener(async (args, state) => {
+            try {
+                if (args.device && typeof args.device.isRelayStatusClosed === 'function') {
+                    return Promise.resolve(args.device.isRelayStatusClosed());
+                }
+            } catch (error) {
+                this.error(error);
+            }
+
+            return Promise.resolve(false);
+        });
+
+        const _conditionRelayIsOpen = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_RELAY_IS_OPEN);
+        _conditionRelayIsOpen.registerRunListener(async (args, state) => {
+            try {
+                if (args.device && typeof args.device.isRelayStatusOpen === 'function') {
+                    return Promise.resolve(args.device.isRelayStatusOpen());
+                }
+            } catch (error) {
+                this.error(error);
+            }
+
+            return Promise.resolve(false);
+        });
+
+        const _conditionRelayIsClosed = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_RELAY_IS_CLOSED);
+        _conditionRelayIsClosed.registerRunListener(async (args, state) => {
+            try {
+                if (args.device && typeof args.device.isRelayStatusClosed === 'function') {
+                    return Promise.resolve(args.device.isRelayStatusClosed());
+                }
+            } catch (error) {
+                this.error(error);
+            }
+
+            return Promise.resolve(false);
+        });
+
     }
 
     async loginToProtectV2() {
