@@ -339,7 +339,7 @@
     "security",
     "video"
   ],
-  "version": "1.9.11",
+  "version": "1.9.12",
   "compatibility": ">=12.6.0",
   "author": {
     "name": "MonkeySoft",
@@ -6311,6 +6311,64 @@
           }
         ]
       }
+    ],
+    "conditions": [
+      {
+        "id": "ufp_device_garage_is_open",
+        "title": {
+          "en": "Garage is open",
+          "nl": "Garage is open"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_garage_is_closed",
+        "title": {
+          "en": "Garage is closed",
+          "nl": "Garage is dicht"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_relay_is_open",
+        "title": {
+          "en": "Relay status is open",
+          "nl": "Relaisstatus is open"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_relay_is_closed",
+        "title": {
+          "en": "Relay status is closed",
+          "nl": "Relaisstatus is dicht"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      }
     ]
   },
   "drivers": [
@@ -6632,7 +6690,8 @@
       },
       "images": {
         "large": "drivers/protect-relay/assets/images/large.png",
-        "small": "drivers/protect-relay/assets/images/small.png"
+        "small": "drivers/protect-relay/assets/images/small.png",
+        "xlarge": "drivers/protect-relay/assets/images/xlarge.png"
       },
       "pair": [
         {
@@ -6655,6 +6714,44 @@
       ],
       "connectivity": [
         "cloud"
+      ],
+      "settings": [
+        {
+          "type": "dropdown",
+          "id": "ufp:relay_status_source",
+          "label": {
+            "en": "Garage status source",
+            "nl": "Bron voor garagestatus"
+          },
+          "hint": {
+            "en": "Choose how open/closed status is derived for garage relay outputs. Auto tries relay input first and falls back to relay output state.",
+            "nl": "Kies hoe open/dicht status wordt bepaald voor garage-relaisuitgangen. Auto probeert eerst relay-input en valt daarna terug op relay-uitgangsstatus."
+          },
+          "value": "auto",
+          "values": [
+            {
+              "id": "auto",
+              "label": {
+                "en": "Auto (input first, output fallback)",
+                "nl": "Auto (eerst input, dan output)"
+              }
+            },
+            {
+              "id": "input",
+              "label": {
+                "en": "Input only",
+                "nl": "Alleen input"
+              }
+            },
+            {
+              "id": "output",
+              "label": {
+                "en": "Output only",
+                "nl": "Alleen output"
+              }
+            }
+          ]
+        }
       ]
     },
     {
@@ -7300,6 +7397,15 @@
           "title": {
             "en": "Camera",
             "nl": "Camera"
+          }
+        },
+        {
+          "id": "enableLiveSnapshot",
+          "type": "checkbox",
+          "value": true,
+          "title": {
+            "en": "Live snapshot (requires local network access)",
+            "nl": "Live snapshot (vereist lokaal netwerktoegang)"
           }
         },
         {
