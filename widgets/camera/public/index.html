@@ -34,7 +34,8 @@
                 return;
             }
             const start = Date.now();
-            Homey.api('GET', '/snapshot?deviceId=' + settings.device.id)
+            const live = settings.enableLiveSnapshot !== false;
+            Homey.api('GET', '/snapshot?deviceId=' + settings.device.id + '&live=' + live)
                 .then((dataUrl) => {
                     const img = document.getElementById('camera');
                     img.src = dataUrl;

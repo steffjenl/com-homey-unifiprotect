@@ -20,10 +20,10 @@ module.exports = {
   },
 
   async getSnapshot({ homey, query }) {
-    const { deviceId } = query;
+    const { deviceId, live } = query;
 
     const webclient = homey.app.apiV2?.webclient;
-    if (!webclient?._serverHost) {
+    if (live !== 'true' || !webclient?._serverHost) {
       const driver = homey.drivers.getDriver('protectcamera');
       const device = driver?.getUnifiDeviceById(deviceId);
       return device?.cloudUrl ?? 'loading.png';
