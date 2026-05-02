@@ -26,39 +26,26 @@
         Homey.ready();
 
         const settings = Homey.getSettings();
+        const interval = Math.max(1, settings.refreshInterval || 2) * 1000;
 
-        Homey.on('com.ubnt.unifiprotect.updateWidgetCamera', (...args) => {
-            console.log('updateWidgetImage event received with args:', args, settings.device.id);
-            if (args.deviceId && args.deviceId !== settings.device.id) return;
-            updateCamera(Homey, settings);
-        });
-
-        setInterval(() => {
-            updateCamera(Homey, settings);
-        }, settings.refreshInterval * 1000 || 5000); // Default to 5 seconds if not set
-
-        setTimeout(() => {
-            updateCamera(Homey, settings);
-        }, 1000); // Initial update after 1 second
-    }
-
-    function updateCamera(Homey, settings) {
-        if (settings.device.id) {
-            Homey.api('GET', '/?deviceId=' + settings.device.id)
-                .then((result) => {
-                    console.log('Received image URL:', result);
-                    if (result !== 'loading.png') {
-                        document.getElementById('camera').src = String(result) + '?t=' + new Date().getTime(); // Prevent caching
-                        document.getElementById('camera').className = 'camera';
-                    } else {
-                        document.getElementById('camera').src = String(result);
-                        document.getElementById('camera').className = 'loading';
-                    }
+        function poll() {
+            if (!settings.device?.id) {
+                setTimeout(poll, interval);
+                return;
+            }
+            const start = Date.now();
+            const live = settings.enableLiveSnapshot !== false;
+            Homey.api('GET', '/snapshot?deviceId=' + settings.device.id + '&live=' + live)
+                .then((dataUrl) => {
+                    const img = document.getElementById('camera');
+                    img.src = dataUrl;
+                    img.className = 'camera';
                 })
-                .catch(console.error);
-        } else {
-            console.warn('No device ID found in settings.');
+                .catch(console.error)
+                .finally(() => setTimeout(poll, Math.max(0, interval - (Date.now() - start))));
         }
+
+        setTimeout(poll, 500);
     }
 </script>
 </body>
