@@ -316,5 +316,8 @@
   },
   "1.9.12": {
     "en": "Feature: Relay fase 2"
+  },
+  "1.10.0": {
+    "en": "feat: add Access Intercom and AI Port device support with audio detection triggers"
   }
 }
