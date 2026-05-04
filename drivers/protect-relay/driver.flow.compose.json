@@ -46,27 +46,6 @@
   ],
   "actions": [
     {
-      "id": "ufp_set_device_relay_onoff",
-      "title": {
-        "en": "Set relay",
-        "nl": "Stel relais in"
-      },
-      "titleFormatted": {
-        "en": "Set relay [[enabled]]",
-        "nl": "Stel relais [[enabled]] in"
-      },
-      "args": [
-        {
-          "type": "checkbox",
-          "name": "enabled",
-          "title": {
-            "en": "Enabled",
-            "nl": "Ingeschakeld"
-          }
-        }
-      ]
-    },
-    {
       "id": "ufp_pulse_device_relay",
       "title": {
         "en": "Pulse relay",

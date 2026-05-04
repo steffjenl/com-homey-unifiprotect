@@ -44,7 +44,6 @@ module.exports.ACTION_SET_DEVICE_TEST_CHIME_TONE = 'ufv_set_device_chime_test_to
 module.exports.ACTION_SET_DEVICE_DOORBELL_RING_VOLUME = 'ufp_set_device_doorbell_ring_volume';
 module.exports.ACTION_SET_DEVICE_DOORBELL_SPEAKER_VOLUME = 'ufp_set_device_doorbell_speaker_volume';
 module.exports.ACTION_SET_DEVICE_DOORBELL_CHIME_VOLUME = 'ufp_set_device_doorbell_chime_volume';
-module.exports.ACTION_SET_DEVICE_RELAY_ONOFF = 'ufp_set_device_relay_onoff';
 module.exports.ACTION_PULSE_DEVICE_RELAY = 'ufp_pulse_device_relay';
 module.exports.CONDITION_DEVICE_RELAY_IS_OPEN = 'ufp_device_relay_is_open';
 module.exports.CONDITION_DEVICE_RELAY_IS_CLOSED = 'ufp_device_relay_is_closed';

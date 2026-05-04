@@ -28,11 +28,11 @@ class Relay extends Homey.Device {
     await this._createMissingCapabilities();
 
     if (this.hasCapability('onoff')) {
-      this.registerCapabilityListener('onoff', (value) => this.setRelayState(value));
+      this.registerCapabilityListener('onoff', () => this.pulseRelay(1000));
     }
 
     if (this.hasCapability('garagedoor_closed')) {
-      this.registerCapabilityListener('garagedoor_closed', (value) => this.setRelayState(!value));
+      this.registerCapabilityListener('garagedoor_closed', () => this.pulseRelay(1000));
     }
 
     await this._initRelayData();
