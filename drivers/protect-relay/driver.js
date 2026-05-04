@@ -13,10 +13,25 @@ class UniFiRelayDriver extends Homey.Driver {
 
   onPair(session) {
     const homey = this.homey;
+    let pairMode = 'auto';
 
     session.setHandler('validate', async function () {
       const nvrip = homey.settings.get('ufp:nvrip');
       return (nvrip ? 'ok' : 'nok');
+    });
+
+    session.setHandler('set_pair_mode', async function (mode) {
+      if (mode === 'force_garagedoor' || mode === 'force_relay' || mode === 'auto') {
+        pairMode = mode;
+      } else {
+        pairMode = 'auto';
+      }
+
+      return pairMode;
+    });
+
+    session.setHandler('get_pair_mode', async function () {
+      return pairMode;
     });
 
     session.setHandler('list_devices', async function () {
@@ -38,6 +53,9 @@ class UniFiRelayDriver extends Homey.Driver {
         return outputs.map((output) => {
           const outputName = output.name || `Output ${Number(output.id) + 1}`;
           const outputType = output.type || 'relay';
+          const classOverride = pairMode === 'force_garagedoor'
+            ? 'garagedoor'
+            : (pairMode === 'force_relay' ? 'relay' : null);
 
           return {
             data: {
@@ -45,6 +63,7 @@ class UniFiRelayDriver extends Homey.Driver {
               relayId: String(relay.id),
               outputId: Number(output.id),
               outputType,
+              classOverride,
             },
             name: `${relayName} (${outputName})`,
           };

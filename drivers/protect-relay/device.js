@@ -119,6 +119,15 @@ class Relay extends Homey.Device {
   }
 
   isGarageDoorOutput() {
+    const classOverride = this.getData().classOverride;
+    if (classOverride === 'garagedoor') {
+      return true;
+    }
+
+    if (classOverride === 'relay') {
+      return false;
+    }
+
     return String(this.getData().outputType) === 'garageDoor';
   }
 

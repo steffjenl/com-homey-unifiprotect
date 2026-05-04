@@ -3,19 +3,47 @@
   <span data-i18n="pair.validate.instruction"></span>
 </div>
 
+<div class="field row">
+  <label for="relay-pair-mode">Relay class mode</label>
+</div>
+
+<div class="field row">
+  <select id="relay-pair-mode">
+    <option value="auto">Auto (based on output type)</option>
+    <option value="force_garagedoor">Force Garage Door class</option>
+    <option value="force_relay">Force Relay class</option>
+  </select>
+</div>
+
+<div class="field row">
+  <button id="relay-pair-continue" class="homey-button-primary-full">Continue</button>
+</div>
+
 <script type="text/javascript">
   Homey.setTitle(__('pair.validate.title'));
-  Homey.showLoadingOverlay();
+  const modeSelect = document.getElementById('relay-pair-mode');
+  const continueButton = document.getElementById('relay-pair-continue');
 
-  Homey.emit('validate', null).then(function (result) {
-    if (result === 'ok') {
-      Homey.showView('list_devices');
-    } else {
-      Homey.hideLoadingOverlay();
-      Homey.setNavigationClose();
-    }
-  }).catch(function (error) {
-    return Homey.alert(error);
+  continueButton.addEventListener('click', function () {
+    Homey.showLoadingOverlay();
+    const selectedMode = modeSelect ? modeSelect.value : 'auto';
+
+    Homey.emit('set_pair_mode', selectedMode)
+      .then(function () {
+        return Homey.emit('validate', null);
+      })
+      .then(function (result) {
+        if (result === 'ok') {
+          Homey.showView('list_devices');
+        } else {
+          Homey.hideLoadingOverlay();
+          Homey.setNavigationClose();
+        }
+      })
+      .catch(function (error) {
+        Homey.hideLoadingOverlay();
+        return Homey.alert(error);
+      });
   });
 </script>
 </body>
