@@ -155,6 +155,23 @@ class Relay extends Homey.Device {
     return Promise.reject(new Error('No API available for relay control'));
   }
 
+  async pulseRelay(pulseDuration) {
+    const relayId = this.getRelayId();
+    const outputId = this.getOutputId();
+    const duration = Number(pulseDuration);
+    const safeDuration = Number.isFinite(duration) && duration > 0 ? Math.round(duration) : 1000;
+
+    if (this.homey.app.isV1Available()) {
+      return this.homey.app.api.pulseRelayOutput(relayId, outputId, safeDuration);
+    }
+
+    if (this.homey.app.isV2Available()) {
+      return this.homey.app.apiV2.pulseRelayOutput(relayId, outputId, safeDuration);
+    }
+
+    return Promise.reject(new Error('No API available for relay pulse control'));
+  }
+
   onRelayUpdate(relayPayload) {
     const outputs = relayPayload && Array.isArray(relayPayload.outputs)
       ? relayPayload.outputs

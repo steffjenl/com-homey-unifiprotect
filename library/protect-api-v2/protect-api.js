@@ -219,6 +219,17 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    async pulseRelayOutput(relayId, outputId, pulseDuration = 1000) {
+        return new Promise((resolve, reject) => {
+            const duration = Number(pulseDuration);
+            const safeDuration = Number.isFinite(duration) && duration > 0 ? Math.round(duration) : 1000;
+
+            this.webclient.post(`relays/${relayId}/outputs/${outputId}/activate`, { pulseDuration: safeDuration })
+                .then(response => resolve(response || 'Relay output successfully pulsed.'))
+                .catch(error => reject(error));
+        });
+    }
+
     // Sensors
     async getSensors() {
         return new Promise((resolve, reject) => {

@@ -65,6 +65,32 @@
           }
         }
       ]
+    },
+    {
+      "id": "ufp_pulse_device_relay",
+      "title": {
+        "en": "Pulse relay",
+        "nl": "Puls relais"
+      },
+      "titleFormatted": {
+        "en": "Pulse relay for [[pulse_duration]] ms",
+        "nl": "Puls relais voor [[pulse_duration]] ms"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "pulse_duration",
+          "title": {
+            "en": "Pulse duration (ms)",
+            "nl": "Pulsduur (ms)"
+          },
+          "defaultValue": 1000,
+          "required": true,
+          "minValue": 1,
+          "maxValue": 60000,
+          "stepValue": 1
+        }
+      ]
     }
   ],
   "conditions": [

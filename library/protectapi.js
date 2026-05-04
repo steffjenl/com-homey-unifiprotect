@@ -744,6 +744,17 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    pulseRelayOutput(relayId, outputId, pulseDuration = 1000) {
+        return new Promise((resolve, reject) => {
+            const duration = Number(pulseDuration);
+            const safeDuration = Number.isFinite(duration) && duration > 0 ? Math.round(duration) : 1000;
+
+            return this.webclient.post(`relays/${relayId}/outputs/${outputId}/activate`, { pulseDuration: safeDuration })
+                .then(() => resolve('Relay output successfully pulsed.'))
+                .catch(error => reject(new Error(`Error pulsing relay output: ${error}`)));
+        });
+    }
+
     setLightOn(light, isLightOn) {
         return new Promise((resolve, reject) => {
             const isLedForceOn = {

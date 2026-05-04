@@ -384,6 +384,18 @@ class AppProtect extends BaseClass {
             return Promise.reject(new Error('No relay device found'));
         });
 
+        const _actionPulseRelay = this.homey.flow.getActionCard(UfvConstants.ACTION_PULSE_DEVICE_RELAY);
+        _actionPulseRelay.registerRunListener(async (args, state) => {
+            if (args.device && typeof args.device.pulseRelay === 'function') {
+                const pulseDuration = Number(args.pulse_duration);
+                const safeDuration = Number.isFinite(pulseDuration) && pulseDuration > 0 ? Math.round(pulseDuration) : 1000;
+                await args.device.pulseRelay(safeDuration);
+                return Promise.resolve(true);
+            }
+
+            return Promise.reject(new Error('No relay device found'));
+        });
+
         const _conditionGarageIsOpen = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_GARAGE_IS_OPEN);
         _conditionGarageIsOpen.registerRunListener(async (args, state) => {
             try {
