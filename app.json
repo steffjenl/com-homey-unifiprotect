@@ -694,6 +694,154 @@
         ]
       },
       {
+        "id": "ufp_fob_button",
+        "title": {
+          "en": "A FOB button event was detected",
+          "nl": "Een FOB-knopgebeurtenis is gedetecteerd"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_device_id",
+            "type": "string",
+            "title": {
+              "en": "FOB device ID",
+              "nl": "FOB apparaat-ID"
+            },
+            "example": {
+              "en": "65f0ab12cd34ef56ab78cd90",
+              "nl": "65f0ab12cd34ef56ab78cd90"
+            }
+          },
+          {
+            "name": "ufp_fob_sensor_name",
+            "type": "string",
+            "title": {
+              "en": "FOB name",
+              "nl": "FOB naam"
+            },
+            "example": {
+              "en": "Main gate FOB",
+              "nl": "Hoofdpoort FOB"
+            }
+          },
+          {
+            "name": "ufp_fob_button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop"
+            },
+            "example": {
+              "en": "arm",
+              "nl": "arm"
+            }
+          },
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype"
+            },
+            "example": {
+              "en": "press",
+              "nl": "press"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel"
+            },
+            "example": {
+              "en": "1716587400000",
+              "nl": "1716587400000"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_fob_button_device",
+        "title": {
+          "en": "A FOB button event for [[fob]] was detected",
+          "nl": "Een FOB-knopgebeurtenis voor [[fob]] is gedetecteerd"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "fob",
+            "title": {
+              "en": "FOB",
+              "nl": "FOB"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "ufp_fob_device_id",
+            "type": "string",
+            "title": {
+              "en": "FOB device ID",
+              "nl": "FOB apparaat-ID"
+            },
+            "example": {
+              "en": "65f0ab12cd34ef56ab78cd90",
+              "nl": "65f0ab12cd34ef56ab78cd90"
+            }
+          },
+          {
+            "name": "ufp_fob_sensor_name",
+            "type": "string",
+            "title": {
+              "en": "FOB name",
+              "nl": "FOB naam"
+            },
+            "example": {
+              "en": "Main gate FOB",
+              "nl": "Hoofdpoort FOB"
+            }
+          },
+          {
+            "name": "ufp_fob_button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop"
+            },
+            "example": {
+              "en": "arm",
+              "nl": "arm"
+            }
+          },
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype"
+            },
+            "example": {
+              "en": "press",
+              "nl": "press"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel"
+            },
+            "example": {
+              "en": "1716587400000",
+              "nl": "1716587400000"
+            }
+          }
+        ]
+      },
+      {
         "id": "ufp_nfc_card_scanned",
         "title": {
           "en": "A NFC card was scanned",
@@ -1610,6 +1758,50 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=access-intercom"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button",
+        "title": {
+          "en": "FOB button event",
+          "nl": "FOB-knopgebeurtenis"
+        },
+        "titleFormatted": {
+          "en": "FOB button [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "nl": "FOB-knop [[ufp_fob_button]] ([[ufp_fob_press_type]])"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop"
+            }
+          },
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
           }
         ]
       },
@@ -4705,6 +4897,165 @@
         ]
       }
     ],
+    "conditions": [
+      {
+        "id": "ufp_fob_button_is",
+        "title": {
+          "en": "FOB button is [[button]]",
+          "nl": "FOB-knop is [[button]]"
+        },
+        "args": [
+          {
+            "type": "dropdown",
+            "name": "button",
+            "title": {
+              "en": "Button",
+              "nl": "Knop"
+            },
+            "values": [
+              {
+                "id": "arm",
+                "title": {
+                  "en": "Arm",
+                  "nl": "Inschakelen"
+                }
+              },
+              {
+                "id": "disarm",
+                "title": {
+                  "en": "Disarm",
+                  "nl": "Uitschakelen"
+                }
+              },
+              {
+                "id": "panic",
+                "title": {
+                  "en": "Panic",
+                  "nl": "Paniek"
+                }
+              },
+              {
+                "id": "night",
+                "title": {
+                  "en": "Night",
+                  "nl": "Nacht"
+                }
+              },
+              {
+                "id": "left",
+                "title": {
+                  "en": "Left",
+                  "nl": "Links"
+                }
+              },
+              {
+                "id": "right",
+                "title": {
+                  "en": "Right",
+                  "nl": "Rechts"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ufp_fob_press_type_is",
+        "title": {
+          "en": "FOB press type is [[press_type]]",
+          "nl": "FOB-druktype is [[press_type]]"
+        },
+        "args": [
+          {
+            "type": "dropdown",
+            "name": "press_type",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype"
+            },
+            "values": [
+              {
+                "id": "press",
+                "title": {
+                  "en": "Press",
+                  "nl": "Drukken"
+                }
+              },
+              {
+                "id": "longPress",
+                "title": {
+                  "en": "Long press",
+                  "nl": "Lang indrukken"
+                }
+              },
+              {
+                "id": "doublePress",
+                "title": {
+                  "en": "Double press",
+                  "nl": "Dubbel drukken"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_garage_is_open",
+        "title": {
+          "en": "Garage is open",
+          "nl": "Garage is open"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_garage_is_closed",
+        "title": {
+          "en": "Garage is closed",
+          "nl": "Garage is dicht"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_relay_is_open",
+        "title": {
+          "en": "Relay status is open",
+          "nl": "Relaisstatus is open"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_relay_is_closed",
+        "title": {
+          "en": "Relay status is closed",
+          "nl": "Relaisstatus is dicht"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      }
+    ],
     "actions": [
       {
         "id": "ufv_set_camera_status_led",
@@ -6526,64 +6877,6 @@
               "pl": "Włączone",
               "ko": "활성화됨"
             }
-          }
-        ]
-      }
-    ],
-    "conditions": [
-      {
-        "id": "ufp_device_garage_is_open",
-        "title": {
-          "en": "Garage is open",
-          "nl": "Garage is open"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=protect-relay"
-          }
-        ]
-      },
-      {
-        "id": "ufp_device_garage_is_closed",
-        "title": {
-          "en": "Garage is closed",
-          "nl": "Garage is dicht"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=protect-relay"
-          }
-        ]
-      },
-      {
-        "id": "ufp_device_relay_is_open",
-        "title": {
-          "en": "Relay status is open",
-          "nl": "Relaisstatus is open"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=protect-relay"
-          }
-        ]
-      },
-      {
-        "id": "ufp_device_relay_is_closed",
-        "title": {
-          "en": "Relay status is closed",
-          "nl": "Relaisstatus is dicht"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=protect-relay"
           }
         ]
       }

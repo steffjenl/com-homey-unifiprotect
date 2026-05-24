@@ -1,0 +1,42 @@
+{
+  "triggers": [
+    {
+      "id": "ufp_device_fob_button",
+      "title": {
+        "en": "FOB button event",
+        "nl": "FOB-knopgebeurtenis"
+      },
+      "titleFormatted": {
+        "en": "FOB button [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+        "nl": "FOB-knop [[ufp_fob_button]] ([[ufp_fob_press_type]])"
+      },
+      "tokens": [
+        {
+          "name": "ufp_fob_button",
+          "type": "string",
+          "title": {
+            "en": "Button",
+            "nl": "Knop"
+          }
+        },
+        {
+          "name": "ufp_fob_press_type",
+          "type": "string",
+          "title": {
+            "en": "Press type",
+            "nl": "Druktype"
+          }
+        },
+        {
+          "name": "ufp_fob_timestamp",
+          "type": "number",
+          "title": {
+            "en": "Timestamp",
+            "nl": "Tijdstempel"
+          }
+        }
+      ]
+    }
+  ]
+}
+

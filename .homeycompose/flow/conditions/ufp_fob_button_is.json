@@ -1,0 +1,62 @@
+{
+  "id": "ufp_fob_button_is",
+  "title": {
+    "en": "FOB button is [[button]]",
+    "nl": "FOB-knop is [[button]]"
+  },
+  "args": [
+    {
+      "type": "dropdown",
+      "name": "button",
+      "title": {
+        "en": "Button",
+        "nl": "Knop"
+      },
+      "values": [
+        {
+          "id": "arm",
+          "title": {
+            "en": "Arm",
+            "nl": "Inschakelen"
+          }
+        },
+        {
+          "id": "disarm",
+          "title": {
+            "en": "Disarm",
+            "nl": "Uitschakelen"
+          }
+        },
+        {
+          "id": "panic",
+          "title": {
+            "en": "Panic",
+            "nl": "Paniek"
+          }
+        },
+        {
+          "id": "night",
+          "title": {
+            "en": "Night",
+            "nl": "Nacht"
+          }
+        },
+        {
+          "id": "left",
+          "title": {
+            "en": "Left",
+            "nl": "Links"
+          }
+        },
+        {
+          "id": "right",
+          "title": {
+            "en": "Right",
+            "nl": "Rechts"
+          }
+        }
+      ]
+    }
+  ]
+}
+
