@@ -4,6 +4,10 @@
     "en": "A FOB button event for [[fob]] was detected",
     "nl": "Een FOB-knopgebeurtenis voor [[fob]] is gedetecteerd"
   },
+  "titleFormatted": {
+    "en": "A FOB button event for [[fob]] was detected",
+    "nl": "Een FOB-knopgebeurtenis voor [[fob]] is gedetecteerd"
+  },
   "args": [
     {
       "type": "autocomplete",
@@ -77,4 +81,5 @@
     }
   ]
 }
+
 

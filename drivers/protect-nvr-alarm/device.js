@@ -80,7 +80,11 @@ class NVRAlarmDevice extends Homey.Device {
 
       await this._applyAlarmState(isAway, false);
     } catch (error) {
-      this.error(`[NVRAlarmDevice] getNvrArmState failed, falling back to bootstrap nvr.isAway: ${error.message}`);
+      if (error && error.message === 'NVR arm state not available in bootstrap') {
+        this.homey.app.debug('[NVRAlarmDevice] getNvrArmState unavailable in bootstrap, skipping initial arm state sync');
+      } else {
+        this.error(`[NVRAlarmDevice] getNvrArmState failed, falling back to bootstrap nvr.isAway: ${error.message}`);
+      }
       const bootstrap = this.homey.app.api.getBootstrap();
       if (bootstrap && bootstrap.nvr) {
         const isAway = bootstrap.nvr.isAway === true;

@@ -1223,6 +1223,17 @@ class ProtectAPI extends BaseClass {
       if (this._bootstrap && this._bootstrap.nvr && this._bootstrap.nvr.armMode) {
         return resolve(this._bootstrap.nvr.armMode);
       }
+      if (
+        this._bootstrap
+        && this._bootstrap.nvr
+        && typeof this._bootstrap.nvr.isAway !== 'undefined'
+      ) {
+        const isAway = this._bootstrap.nvr.isAway === true;
+        return resolve({
+          status: isAway ? 'armed' : 'disarmed',
+          isAway,
+        });
+      }
       // No live GET endpoint exists for arm state — only POST arm/enable and POST arm/disable
       return reject(new Error('NVR arm state not available in bootstrap'));
     });

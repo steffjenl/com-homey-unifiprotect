@@ -4,6 +4,10 @@
     "en": "FOB press type is [[press_type]]",
     "nl": "FOB-druktype is [[press_type]]"
   },
+  "titleFormatted": {
+    "en": "FOB press type is [[press_type]]",
+    "nl": "FOB-druktype is [[press_type]]"
+  },
   "args": [
     {
       "type": "dropdown",
@@ -38,4 +42,5 @@
     }
   ]
 }
+
 

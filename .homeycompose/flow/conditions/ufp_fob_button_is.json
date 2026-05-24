@@ -4,6 +4,10 @@
     "en": "FOB button is [[button]]",
     "nl": "FOB-knop is [[button]]"
   },
+  "titleFormatted": {
+    "en": "FOB button is [[button]]",
+    "nl": "FOB-knop is [[button]]"
+  },
   "args": [
     {
       "type": "dropdown",
@@ -59,4 +63,5 @@
     }
   ]
 }
+
 

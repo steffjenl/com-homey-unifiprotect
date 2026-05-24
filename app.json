@@ -339,7 +339,7 @@
     "security",
     "video"
   ],
-  "version": "1.10.1",
+  "version": "1.10.2",
   "compatibility": ">=12.6.0",
   "author": {
     "name": "MonkeySoft",
@@ -765,6 +765,10 @@
       {
         "id": "ufp_fob_button_device",
         "title": {
+          "en": "A FOB button event for [[fob]] was detected",
+          "nl": "Een FOB-knopgebeurtenis voor [[fob]] is gedetecteerd"
+        },
+        "titleFormatted": {
           "en": "A FOB button event for [[fob]] was detected",
           "nl": "Een FOB-knopgebeurtenis voor [[fob]] is gedetecteerd"
         },
@@ -4904,6 +4908,10 @@
           "en": "FOB button is [[button]]",
           "nl": "FOB-knop is [[button]]"
         },
+        "titleFormatted": {
+          "en": "FOB button is [[button]]",
+          "nl": "FOB-knop is [[button]]"
+        },
         "args": [
           {
             "type": "dropdown",
@@ -4962,6 +4970,10 @@
       {
         "id": "ufp_fob_press_type_is",
         "title": {
+          "en": "FOB press type is [[press_type]]",
+          "nl": "FOB-druktype is [[press_type]]"
+        },
+        "titleFormatted": {
           "en": "FOB press type is [[press_type]]",
           "nl": "FOB-druktype is [[press_type]]"
         },
