@@ -7,7 +7,7 @@ yarn.lock
 /.homeybuild/
 /history.txt
 /.ai/
-/.DS_Store
+.DS_Store
 
 
 /tools/protect-v1-debug/output/
