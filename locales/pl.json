@@ -3,7 +3,14 @@
     "pair": {
         "validate": {
             "title": "Weryfikacja UniFi Cloud Key",
-            "instruction": "Najpierw ustaw Cloud Key w Ustawieniach."
+            "instruction": "Najpierw ustaw Cloud Key w Ustawieniach.",
+            "relay": {
+                "mode_label": "Tryb klasy przekaźnika",
+                "mode_auto": "Automatycznie (na podstawie typu wyjścia)",
+                "mode_force_garagedoor": "Wymuś klasę bramy garażowej",
+                "mode_force_relay": "Wymuś klasę przekaźnika",
+                "continue": "Kontynuuj"
+            }
         },
         "login": {
             "title": "Zaloguj się"

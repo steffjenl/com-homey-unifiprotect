@@ -3,7 +3,14 @@
     "pair": {
         "validate": {
             "title": "Validating UniFi Cloud Key",
-            "instruction": "Please set the Cloud Key in Settings first."
+            "instruction": "Please set the Cloud Key in Settings first.",
+            "relay": {
+                "mode_label": "Relay class mode",
+                "mode_auto": "Auto (based on output type)",
+                "mode_force_garagedoor": "Force Garage Door class",
+                "mode_force_relay": "Force Relay class",
+                "continue": "Continue"
+            }
         },
         "login": {
             "title": "Log in"

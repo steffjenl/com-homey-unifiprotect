@@ -3,7 +3,14 @@
     "pair": {
         "validate": {
             "title": "Validation de la clé UniFi Cloud",
-            "instruction": "Veuillez d'abord définir la clé Cloud dans les paramètres."
+            "instruction": "Veuillez d'abord définir la clé Cloud dans les paramètres.",
+            "relay": {
+                "mode_label": "Mode de classe du relais",
+                "mode_auto": "Automatique (selon le type de sortie)",
+                "mode_force_garagedoor": "Forcer la classe de porte de garage",
+                "mode_force_relay": "Forcer la classe relais",
+                "continue": "Continuer"
+            }
         },
         "login": {
             "title": "Connexion"

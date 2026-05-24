@@ -4,19 +4,16 @@
 </div>
 
 <div class="field row">
-  <label for="relay-pair-mode">Relay class mode</label>
-</div>
-
-<div class="field row">
-  <select id="relay-pair-mode">
-    <option value="auto">Auto (based on output type)</option>
-    <option value="force_garagedoor">Force Garage Door class</option>
-    <option value="force_relay">Force Relay class</option>
+  <label class="homey-form-label" for="relay-pair-mode" data-i18n="pair.validate.relay.mode_label"></label>
+  <select id="relay-pair-mode" class="homey-form-input">
+    <option value="auto" data-i18n="pair.validate.relay.mode_auto"></option>
+    <option value="force_garagedoor" data-i18n="pair.validate.relay.mode_force_garagedoor"></option>
+    <option value="force_relay" data-i18n="pair.validate.relay.mode_force_relay"></option>
   </select>
 </div>
 
 <div class="field row">
-  <button id="relay-pair-continue" class="homey-button-primary-full">Continue</button>
+  <button id="relay-pair-continue" type="button" class="homey-button-primary-full" data-i18n="pair.validate.relay.continue"></button>
 </div>
 
 <script type="text/javascript">

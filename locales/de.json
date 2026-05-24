@@ -3,7 +3,14 @@
     "pair": {
         "validate": {
             "title": "UniFi Cloud Key validieren",
-            "instruction": "Bitte zuerst den Cloud Key in den Einstellungen festlegen."
+            "instruction": "Bitte zuerst den Cloud Key in den Einstellungen festlegen.",
+            "relay": {
+                "mode_label": "Relais-Klassenmodus",
+                "mode_auto": "Automatisch (basierend auf Ausgangstyp)",
+                "mode_force_garagedoor": "Garagentor-Klasse erzwingen",
+                "mode_force_relay": "Relais-Klasse erzwingen",
+                "continue": "Weiter"
+            }
         },
         "login": {
             "title": "Anmelden"

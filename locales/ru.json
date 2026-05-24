@@ -3,7 +3,14 @@
     "pair": {
         "validate": {
             "title": "Проверка UniFi Cloud Key",
-            "instruction": "Пожалуйста, сначала установите Cloud Key в настройках."
+            "instruction": "Пожалуйста, сначала установите Cloud Key в настройках.",
+            "relay": {
+                "mode_label": "Режим класса реле",
+                "mode_auto": "Авто (на основе типа выхода)",
+                "mode_force_garagedoor": "Принудительно использовать класс гаражной двери",
+                "mode_force_relay": "Принудительно использовать класс реле",
+                "continue": "Продолжить"
+            }
         },
         "login": {
             "title": "Войти"

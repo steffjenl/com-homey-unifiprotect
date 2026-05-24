@@ -3,7 +3,14 @@
     "pair": {
         "validate": {
             "title": "Validando UniFi Cloud Key",
-            "instruction": "Por favor, configure la Cloud Key en Configuración primero."
+            "instruction": "Por favor, configure la Cloud Key en Configuración primero.",
+            "relay": {
+                "mode_label": "Modo de clase del relé",
+                "mode_auto": "Automático (según el tipo de salida)",
+                "mode_force_garagedoor": "Forzar clase de puerta de garaje",
+                "mode_force_relay": "Forzar clase de relé",
+                "continue": "Continuar"
+            }
         },
         "login": {
             "title": "Iniciar sesión"

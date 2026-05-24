@@ -3,7 +3,14 @@
     "pair": {
         "validate": {
             "title": "Validering af UniFi Cloud Key",
-            "instruction": "Indstil venligst Cloud Key under Indstillinger først."
+            "instruction": "Indstil venligst Cloud Key under Indstillinger først.",
+            "relay": {
+                "mode_label": "Relæ-klassetilstand",
+                "mode_auto": "Automatisk (baseret på udgangstype)",
+                "mode_force_garagedoor": "Tving garagedør-klasse",
+                "mode_force_relay": "Tving relæ-klasse",
+                "continue": "Fortsæt"
+            }
         },
         "login": {
             "title": "Log ind"

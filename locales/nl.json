@@ -3,7 +3,14 @@
     "pair": {
         "validate": {
             "title": "UniFi Cloud Key valideren",
-            "instruction": "Graag eerst bij Instellingen de Cloud Key instellen."
+            "instruction": "Graag eerst bij Instellingen de Cloud Key instellen.",
+            "relay": {
+                "mode_label": "Relais klassemodus",
+                "mode_auto": "Automatisch (op basis van uitgangstype)",
+                "mode_force_garagedoor": "Forceer Garagedeur-klasse",
+                "mode_force_relay": "Forceer Relais-klasse",
+                "continue": "Doorgaan"
+            }
         },
         "login": {
             "title": "Inloggen"

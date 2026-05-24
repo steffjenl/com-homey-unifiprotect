@@ -3,7 +3,14 @@
     "pair": {
         "validate": {
             "title": "Validera UniFi Cloud Key",
-            "instruction": "Ställ först in Cloud Key i Inställningar."
+            "instruction": "Ställ först in Cloud Key i Inställningar.",
+            "relay": {
+                "mode_label": "Reläklassläge",
+                "mode_auto": "Automatiskt (baserat på utgångstyp)",
+                "mode_force_garagedoor": "Tvinga garageportsklass",
+                "mode_force_relay": "Tvinga reläklass",
+                "continue": "Fortsätt"
+            }
         },
         "login": {
             "title": "Logga in"
