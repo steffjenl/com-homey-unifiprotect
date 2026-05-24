@@ -49,6 +49,8 @@ module.exports.CONDITION_DEVICE_RELAY_IS_OPEN = 'ufp_device_relay_is_open';
 module.exports.CONDITION_DEVICE_RELAY_IS_CLOSED = 'ufp_device_relay_is_closed';
 module.exports.CONDITION_DEVICE_GARAGE_IS_OPEN = 'ufp_device_garage_is_open';
 module.exports.CONDITION_DEVICE_GARAGE_IS_CLOSED = 'ufp_device_garage_is_closed';
+module.exports.CONDITION_FOB_BUTTON_IS = 'ufp_fob_button_is';
+module.exports.CONDITION_FOB_PRESS_TYPE_IS = 'ufp_fob_press_type_is';
 
 module.exports.EVENT_CONNECTION_KEEPALIVE = 'ufv_event_connection_keepalive';
 module.exports.EVENT_CONNECTION_ERROR = 'ufv_event_connection_error';
@@ -105,6 +107,14 @@ module.exports.EVENT_DEVICE_NFC_UNKNOWN_CARD_SCANNED = 'ufp_device_nfc_unknown_c
 module.exports.EVENT_DEVICE_RELAY_STATE_CHANGED = 'ufp_device_relay_state_changed';
 module.exports.EVENT_DEVICE_RELAY_TURNED_ON = 'ufp_device_relay_turned_on';
 module.exports.EVENT_DEVICE_RELAY_TURNED_OFF = 'ufp_device_relay_turned_off';
+
+// FOB button events (internal routing)
+module.exports.EVENT_FOB_BUTTON = 'ufp_fob_button';
+module.exports.EVENT_FOB_BUTTON_DEVICE = 'ufp_fob_button_device';
+module.exports.EVENT_DEVICE_FOB_BUTTON = 'ufp_device_fob_button';
+module.exports.FOB_EVENT_TYPE = 'fob.button';
+module.exports.FOB_BUTTONS = ['arm', 'disarm', 'panic', 'night', 'left', 'right'];
+module.exports.FOB_PRESS_TYPES = ['press', 'longPress', 'doublePress'];
 
 // UniFi Access — keypad / PIN access
 module.exports.EVENT_ACCESS_KEYPAD_USED = 'ufv_access_keypad_used';

@@ -32,6 +32,37 @@ class AppProtect extends BaseClass {
         this.homey.app._nfcCardScannedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_NFC_CARD_SCANNED);
         this.homey.app._nfcUnknownCardScannedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_NFC_UNKNOWN_CARD_SCANNED);
         this.homey.app._audioDetectionTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_AUDIO_DETECTION);
+        this.homey.app._fobButtonTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_FOB_BUTTON);
+        this.homey.app._fobButtonDeviceTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_FOB_BUTTON_DEVICE);
+
+        this.homey.app._fobButtonDeviceTrigger.registerArgumentAutocompleteListener('fob', async (query, args) => {
+            const bootstrap = this.homey.app.api.getBootstrap();
+            if (!bootstrap || !Array.isArray(bootstrap.fobs)) {
+                return [];
+            }
+
+            const normalizedQuery = String(query || '').toLowerCase().trim();
+
+            return bootstrap.fobs
+                .map((fob) => {
+                    const fobId = String(fob.id || '');
+                    const fobName = String(fob.name || fob.displayName || fob.mac || fobId);
+                    return { id: fobId, name: fobName };
+                })
+                .filter((item) => item.id !== '' && (normalizedQuery === '' || item.name.toLowerCase().includes(normalizedQuery) || item.id.toLowerCase().includes(normalizedQuery)));
+        });
+
+        this.homey.app._fobButtonDeviceTrigger.registerRunListener(async (args, state) => {
+            try {
+                const selectedFobId = String(args.fob && args.fob.id ? args.fob.id : '').trim();
+                const triggerFobId = String(state && state.fob_device_id ? state.fob_device_id : '').trim();
+                return Promise.resolve(selectedFobId !== '' && triggerFobId !== '' && selectedFobId === triggerFobId);
+            } catch (error) {
+                this.error(error);
+            }
+
+            return Promise.resolve(false);
+        });
 
         // Weather
         this.homey.app._weatherUpdatedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_WEATHER_UPDATED);
@@ -432,6 +463,32 @@ class AppProtect extends BaseClass {
                 if (args.device && typeof args.device.isRelayStatusClosed === 'function') {
                     return Promise.resolve(args.device.isRelayStatusClosed());
                 }
+            } catch (error) {
+                this.error(error);
+            }
+
+            return Promise.resolve(false);
+        });
+
+        const _conditionFobButtonIs = this.homey.flow.getConditionCard(UfvConstants.CONDITION_FOB_BUTTON_IS);
+        _conditionFobButtonIs.registerRunListener(async (args, state) => {
+            try {
+                const expectedButton = String(args.button || '').trim();
+                const actualButton = String((state && (state.fob_button || state.ufp_fob_button)) || '').trim();
+                return Promise.resolve(expectedButton !== '' && actualButton !== '' && expectedButton === actualButton);
+            } catch (error) {
+                this.error(error);
+            }
+
+            return Promise.resolve(false);
+        });
+
+        const _conditionFobPressTypeIs = this.homey.flow.getConditionCard(UfvConstants.CONDITION_FOB_PRESS_TYPE_IS);
+        _conditionFobPressTypeIs.registerRunListener(async (args, state) => {
+            try {
+                const expectedPressType = String(args.press_type || '').trim();
+                const actualPressType = String((state && (state.fob_press_type || state.ufp_fob_press_type)) || '').trim();
+                return Promise.resolve(expectedPressType !== '' && actualPressType !== '' && expectedPressType === actualPressType);
             } catch (error) {
                 this.error(error);
             }

@@ -204,6 +204,12 @@ class ProtectWebSocket extends BaseClass {
     } if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'sensor') {
       // Updates lastMotion or the lastRing
       return true;
+    } if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'fob') {
+      // FOB state updates
+      return true;
+    } if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'speaker') {
+      // Speaker state updates
+      return true;
     } if (updatePacket.action.action === 'add' && updatePacket.action.modelKey === 'event') {
       // Smart detections
       return true;
@@ -305,6 +311,12 @@ class ProtectWebSocket extends BaseClass {
       }
 
       if (
+        updatePacket.action.modelKey === 'event'
+                && typeof updatePacket.payload.type !== 'undefined'
+                && updatePacket.payload.type === 'sensorButtonPressed'
+      ) {
+        this.homey.app.onFobWebsocketMessage(updatePacket);
+      } else if (
         updatePacket.action.modelKey === 'event'
                 && !!this._resolveCameraId(updatePacket)
                 && typeof updatePacket.payload.smartDetectTypes !== 'undefined'
@@ -486,6 +498,20 @@ class ProtectWebSocket extends BaseClass {
         const device = driver.getUnifiDeviceById(deviceId);
         if (device) {
           // Parse Websocket payload message
+          driver.onParseWebsocketMessage(device, payload);
+        }
+      } else if (updatePacket.action.modelKey === 'fob') {
+        const driver = this.homey.drivers.getDriver('protect-fob');
+        const deviceId = updatePacket.action.id;
+        const device = driver.getUnifiDeviceById(deviceId);
+        if (device) {
+          driver.onParseWebsocketMessage(device, payload);
+        }
+      } else if (updatePacket.action.modelKey === 'speaker') {
+        const driver = this.homey.drivers.getDriver('protect-horn-speaker');
+        const deviceId = updatePacket.action.id;
+        const device = driver.getUnifiDeviceById(deviceId);
+        if (device) {
           driver.onParseWebsocketMessage(device, payload);
         }
       } else if (updatePacket.action.modelKey === 'chime') {

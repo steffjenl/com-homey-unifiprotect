@@ -9,6 +9,9 @@ const AppAccess = require('./library/app-access');
 const AppProtect = require('./library/app-protect');
 const AccessAPI = require('./library/access-api-v2/access-api');
 const ProtectAPIV2 = require('./library/protect-api-v2/protect-api');
+const FobHandler = require('./library/fob-handler');
+const FobActionMapper = require('./library/action-mapper');
+const SpeakerService = require('./library/speaker-service');
 //
 const { stat, createWriteFile, existsSync, mkdirSync, rmSync, unlinkSync, readdirSync, statSync, readFileSync, openSync, readSync, closeSync, writeFileSync, writeFile } = require("fs");
 
@@ -40,6 +43,20 @@ class UniFiProtect extends Homey.App {
         this.accessApi.setHomeyObject(this.homey);
         this.appAccess = new AppAccess();
         this.appAccess.setHomeyObject(this.homey);
+
+        this.speakerService = new SpeakerService();
+        this.speakerService.setHomeyObject(this.homey);
+
+        this.fobHandler = new FobHandler();
+        this.fobHandler.setHomeyObject(this.homey);
+
+        this.fobActionMapper = new FobActionMapper({
+            setArmMode: this._setNvrArmModeFromFob.bind(this),
+            triggerAlarm: this._triggerAlarmFromFob.bind(this),
+            customAction: this._runCustomFobAction.bind(this),
+            sendSpeakerMessage: this.speakerService.sendSpeakerMessage.bind(this.speakerService),
+        });
+        this.fobActionMapper.setHomeyObject(this.homey);
 
         await this.appProtect.onInit();
         await this.appAccess.onInit();
@@ -150,6 +167,81 @@ class UniFiProtect extends Homey.App {
             }
 
         }
+    }
+
+    onFobWebsocketMessage(updatePacket) {
+        try {
+            const event = this.fobHandler.parseWebsocketPacket(updatePacket);
+            if (!event) {
+                return false;
+            }
+
+            this.homey.app.debug('[FOB] normalized event: ' + JSON.stringify(event));
+            if (this.homey.app._fobButtonTrigger) {
+                this.homey.app._fobButtonTrigger.trigger({
+                    ufp_fob_device_id: event.deviceId,
+                    ufp_fob_sensor_name: event.sensorName || event.deviceId,
+                    ufp_fob_button: event.button,
+                    ufp_fob_press_type: event.pressType,
+                    ufp_fob_timestamp: event.timestamp,
+                }, {
+                    fob_device_id: event.deviceId,
+                    fob_button: event.button,
+                    fob_press_type: event.pressType,
+                }).catch((error) => this.error(error));
+            }
+
+            if (this.homey.app._fobButtonDeviceTrigger) {
+                this.homey.app._fobButtonDeviceTrigger.trigger({
+                    ufp_fob_device_id: event.deviceId,
+                    ufp_fob_sensor_name: event.sensorName || event.deviceId,
+                    ufp_fob_button: event.button,
+                    ufp_fob_press_type: event.pressType,
+                    ufp_fob_timestamp: event.timestamp,
+                }, {
+                    fob_device_id: event.deviceId,
+                    fob_button: event.button,
+                    fob_press_type: event.pressType,
+                }).catch((error) => this.error(error));
+            }
+
+            try {
+                const fobDriver = this.homey.drivers.getDriver('protect-fob');
+                const fobDevice = fobDriver.getUnifiDeviceById(event.deviceId);
+                if (fobDevice) {
+                    fobDevice.onFobButtonEvent(event).catch((error) => this.error(error));
+                }
+            } catch (error) {
+                // Driver may not be paired/installed yet.
+            }
+
+            this.fobActionMapper.handleEvent(event).catch((error) => this.error(error));
+            return true;
+        } catch (error) {
+            this.error(error);
+            return false;
+        }
+    }
+
+    async _setNvrArmModeFromFob(mode) {
+        this.homey.app.debug('[FOB] setArmMode=' + mode);
+        return this.api.setNvrArmMode(mode);
+    }
+
+    async _triggerAlarmFromFob(context) {
+        this.homey.app.debug('[FOB] panic requested context=' + JSON.stringify(context || {}));
+
+        // Keep panic implementation abstract and non-breaking for existing setups.
+        if (this.api && typeof this.api.triggerAlarm === 'function') {
+            return this.api.triggerAlarm(context || {});
+        }
+
+        return Promise.resolve(true);
+    }
+
+    async _runCustomFobAction(actionId, event) {
+        this.homey.app.debug('[FOB] custom action=' + actionId + ' event=' + JSON.stringify(event));
+        return Promise.resolve(true);
     }
 
     /**

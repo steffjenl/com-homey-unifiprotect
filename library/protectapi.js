@@ -634,6 +634,21 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    getSpeakers() {
+        return new Promise((resolve, reject) => {
+            this.webclient.get('speakers')
+                .then(response => {
+                    const result = JSON.parse(response);
+                    if (result) {
+                        return resolve(result);
+                    } else {
+                        return reject(new Error('Error obtaining speakers.'));
+                    }
+                })
+                .catch(error => reject(error));
+        });
+    }
+
     setChimeVolume(chime, volumeLevel) {
         return new Promise((resolve, reject) => {
             const volumeInt = Math.round(volumeLevel * 100);
@@ -654,6 +669,18 @@ class ProtectAPI extends BaseClass {
             return this.webclient.patch(`chimes/${chime.id}`, params)
                 .then(() => resolve('volume successfully set.'))
                 .catch(error => reject(new Error(`Error setting volume: ${error}`)));
+        });
+    }
+
+    setSpeakerVolume(speaker, volumeLevel) {
+        return new Promise((resolve, reject) => {
+            const params = {
+                volume: Math.round(volumeLevel * 100)
+            };
+
+            return this.webclient.patch(`speakers/${speaker.id}`, params)
+                .then(() => resolve('Speaker volume successfully set.'))
+                .catch(error => reject(new Error(`Error setting speaker volume: ${error}`)));
         });
     }
 
@@ -1092,6 +1119,74 @@ class ProtectAPI extends BaseClass {
                 .catch(error => reject(new Error(`Error send test siren: ${error}`)));
         });
     }
+
+  setNvrArmMode(mode) {
+    const normalizedMode = String(mode || '').toLowerCase();
+
+    if (normalizedMode === 'disabled' || normalizedMode === 'disarm' || normalizedMode === 'disarmed') {
+      return this.setNvrAwayMode(false);
+    }
+
+    if (normalizedMode === 'away' || normalizedMode === 'arm' || normalizedMode === 'armed') {
+      return this.setNvrAwayMode(true);
+    }
+
+    if (normalizedMode !== 'night') {
+      return Promise.reject(new Error(`Unsupported arm mode: ${mode}`));
+    }
+
+    const armProfileId = this._findArmProfileIdByName('night');
+    if (!armProfileId) {
+      return Promise.reject(new Error('No night arm profile found in bootstrap.'));
+    }
+
+    return new Promise((resolve, reject) => {
+      return this.webclient.post('arm/enable', { armProfileId })
+        .then(() => resolve('NVR night mode enabled successfully.'))
+        .catch((error) => reject(new Error(`Error enabling night mode: ${error}`)));
+    });
+  }
+
+  _findArmProfileIdByName(targetMode) {
+    if (!this._bootstrap || !this._bootstrap.nvr) {
+      return null;
+    }
+
+    const nvr = this._bootstrap.nvr;
+    const profileGroups = [
+      nvr.armProfiles,
+      nvr.armModeProfiles,
+      nvr.alarmSettings && nvr.alarmSettings.armProfiles,
+    ];
+
+    for (const profiles of profileGroups) {
+      if (!Array.isArray(profiles)) {
+        continue;
+      }
+
+      const profile = profiles.find((item) => {
+        if (!item || typeof item !== 'object') {
+          return false;
+        }
+
+        const candidates = [
+          item.type,
+          item.name,
+          item.mode,
+          item.key,
+          item.description,
+        ].filter(Boolean).map((value) => String(value).toLowerCase());
+
+        return candidates.includes(String(targetMode).toLowerCase());
+      });
+
+      if (profile && profile.id) {
+        return String(profile.id);
+      }
+    }
+
+    return null;
+  }
 
   setNvrAwayMode(isAway) {
     if (isAway) {
