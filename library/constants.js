@@ -112,6 +112,16 @@ module.exports.EVENT_DEVICE_RELAY_TURNED_OFF = 'ufp_device_relay_turned_off';
 module.exports.EVENT_FOB_BUTTON = 'ufp_fob_button';
 module.exports.EVENT_FOB_BUTTON_DEVICE = 'ufp_fob_button_device';
 module.exports.EVENT_DEVICE_FOB_BUTTON = 'ufp_device_fob_button';
+module.exports.EVENT_DEVICE_FOB_BUTTON_PRESS = 'ufp_device_fob_button_press';
+module.exports.EVENT_DEVICE_FOB_BUTTON_LONG_PRESS = 'ufp_device_fob_button_long_press';
+module.exports.EVENT_DEVICE_FOB_BUTTON_DOUBLE_PRESS = 'ufp_device_fob_button_double_press';
+// Per-button device trigger cards
+module.exports.EVENT_DEVICE_FOB_BUTTON_ARM = 'ufp_device_fob_button_arm';
+module.exports.EVENT_DEVICE_FOB_BUTTON_DISARM = 'ufp_device_fob_button_disarm';
+module.exports.EVENT_DEVICE_FOB_BUTTON_PANIC = 'ufp_device_fob_button_panic';
+module.exports.EVENT_DEVICE_FOB_BUTTON_NIGHT = 'ufp_device_fob_button_night';
+module.exports.EVENT_DEVICE_FOB_BUTTON_LEFT = 'ufp_device_fob_button_left';
+module.exports.EVENT_DEVICE_FOB_BUTTON_RIGHT = 'ufp_device_fob_button_right';
 module.exports.FOB_EVENT_TYPE = 'fob.button';
 module.exports.FOB_BUTTONS = ['arm', 'disarm', 'panic', 'night', 'left', 'right'];
 module.exports.FOB_PRESS_TYPES = ['press', 'longPress', 'doublePress'];

@@ -1769,11 +1769,31 @@
         "id": "ufp_device_fob_button",
         "title": {
           "en": "FOB button event",
-          "nl": "FOB-knopgebeurtenis"
+          "nl": "FOB-knopgebeurtenis",
+          "de": "FOB-Tastenereignis",
+          "fr": "Événement de bouton FOB",
+          "it": "Evento pulsante FOB",
+          "sv": "FOB-knapphändelse",
+          "no": "FOB-knappehendelse",
+          "es": "Evento de botón FOB",
+          "da": "FOB-knaphændelse",
+          "ru": "Событие кнопки FOB",
+          "pl": "Zdarzenie przycisku FOB",
+          "ko": "FOB 버튼 이벤트"
         },
         "titleFormatted": {
           "en": "FOB button [[ufp_fob_button]] ([[ufp_fob_press_type]])",
-          "nl": "FOB-knop [[ufp_fob_button]] ([[ufp_fob_press_type]])"
+          "nl": "FOB-knop [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "de": "FOB-Taste [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "fr": "Bouton FOB [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "it": "Pulsante FOB [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "sv": "FOB-knapp [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "no": "FOB-knapp [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "es": "Botón FOB [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "da": "FOB-knap [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "ru": "Кнопка FOB [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "pl": "Przycisk FOB [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "ko": "FOB 버튼 [[ufp_fob_button]] ([[ufp_fob_press_type]])"
         },
         "tokens": [
           {
@@ -1781,7 +1801,17 @@
             "type": "string",
             "title": {
               "en": "Button",
-              "nl": "Knop"
+              "nl": "Knop",
+              "de": "Taste",
+              "fr": "Bouton",
+              "it": "Pulsante",
+              "sv": "Knapp",
+              "no": "Knapp",
+              "es": "Botón",
+              "da": "Knap",
+              "ru": "Кнопка",
+              "pl": "Przycisk",
+              "ko": "버튼"
             }
           },
           {
@@ -1789,7 +1819,17 @@
             "type": "string",
             "title": {
               "en": "Press type",
-              "nl": "Druktype"
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
             }
           },
           {
@@ -1797,7 +1837,755 @@
             "type": "number",
             "title": {
               "en": "Timestamp",
-              "nl": "Tijdstempel"
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_press",
+        "title": {
+          "en": "FOB button pressed",
+          "nl": "FOB-knop ingedrukt",
+          "de": "FOB-Taste gedrückt",
+          "fr": "Bouton FOB pressé",
+          "it": "Pulsante FOB premuto",
+          "sv": "FOB-knapp tryckt",
+          "no": "FOB-knapp trykket",
+          "es": "Botón FOB pulsado",
+          "da": "FOB-knap trykket",
+          "ru": "Кнопка FOB нажата",
+          "pl": "Przycisk FOB naciśnięty",
+          "ko": "FOB 버튼 눌림"
+        },
+        "titleFormatted": {
+          "en": "FOB button [[ufp_fob_button]] pressed",
+          "nl": "FOB-knop [[ufp_fob_button]] ingedrukt",
+          "de": "FOB-Taste [[ufp_fob_button]] gedrückt",
+          "fr": "Bouton FOB [[ufp_fob_button]] pressé",
+          "it": "Pulsante FOB [[ufp_fob_button]] premuto",
+          "sv": "FOB-knapp [[ufp_fob_button]] tryckt",
+          "no": "FOB-knapp [[ufp_fob_button]] trykket",
+          "es": "Botón FOB [[ufp_fob_button]] pulsado",
+          "da": "FOB-knap [[ufp_fob_button]] trykket",
+          "ru": "Кнопка FOB [[ufp_fob_button]] нажата",
+          "pl": "Przycisk FOB [[ufp_fob_button]] naciśnięty",
+          "ko": "FOB 버튼 [[ufp_fob_button]] 눌림"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop",
+              "de": "Taste",
+              "fr": "Bouton",
+              "it": "Pulsante",
+              "sv": "Knapp",
+              "no": "Knapp",
+              "es": "Botón",
+              "da": "Knap",
+              "ru": "Кнопка",
+              "pl": "Przycisk",
+              "ko": "버튼"
+            }
+          },
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_long_press",
+        "title": {
+          "en": "FOB button long pressed",
+          "nl": "FOB-knop lang ingedrukt",
+          "de": "FOB-Taste lang gedrückt",
+          "fr": "Bouton FOB maintenu",
+          "it": "Pulsante FOB tenuto premuto",
+          "sv": "FOB-knapp hålls intryckt",
+          "no": "FOB-knapp holdt inne",
+          "es": "Botón FOB mantenido",
+          "da": "FOB-knap holdt nede",
+          "ru": "Кнопка FOB удерживается",
+          "pl": "Przycisk FOB przytrzymany",
+          "ko": "FOB 버튼 길게 눌림"
+        },
+        "titleFormatted": {
+          "en": "FOB button [[ufp_fob_button]] long pressed",
+          "nl": "FOB-knop [[ufp_fob_button]] lang ingedrukt",
+          "de": "FOB-Taste [[ufp_fob_button]] lang gedrückt",
+          "fr": "Bouton FOB [[ufp_fob_button]] maintenu",
+          "it": "Pulsante FOB [[ufp_fob_button]] tenuto premuto",
+          "sv": "FOB-knapp [[ufp_fob_button]] hålls intryckt",
+          "no": "FOB-knapp [[ufp_fob_button]] holdt inne",
+          "es": "Botón FOB [[ufp_fob_button]] mantenido",
+          "da": "FOB-knap [[ufp_fob_button]] holdt nede",
+          "ru": "Кнопка FOB [[ufp_fob_button]] удерживается",
+          "pl": "Przycisk FOB [[ufp_fob_button]] przytrzymany",
+          "ko": "FOB 버튼 [[ufp_fob_button]] 길게 눌림"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop",
+              "de": "Taste",
+              "fr": "Bouton",
+              "it": "Pulsante",
+              "sv": "Knapp",
+              "no": "Knapp",
+              "es": "Botón",
+              "da": "Knap",
+              "ru": "Кнопка",
+              "pl": "Przycisk",
+              "ko": "버튼"
+            }
+          },
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_double_press",
+        "title": {
+          "en": "FOB button double pressed",
+          "nl": "FOB-knop dubbel ingedrukt",
+          "de": "FOB-Taste doppelt gedrückt",
+          "fr": "Bouton FOB double-pressé",
+          "it": "Pulsante FOB premuto due volte",
+          "sv": "FOB-knapp dubbelklickad",
+          "no": "FOB-knapp dobbelttrykket",
+          "es": "Botón FOB pulsado dos veces",
+          "da": "FOB-knap dobbelt trykket",
+          "ru": "Кнопка FOB нажата дважды",
+          "pl": "Przycisk FOB naciśnięty dwukrotnie",
+          "ko": "FOB 버튼 두 번 눌림"
+        },
+        "titleFormatted": {
+          "en": "FOB button [[ufp_fob_button]] double pressed",
+          "nl": "FOB-knop [[ufp_fob_button]] dubbel ingedrukt",
+          "de": "FOB-Taste [[ufp_fob_button]] doppelt gedrückt",
+          "fr": "Bouton FOB [[ufp_fob_button]] double-pressé",
+          "it": "Pulsante FOB [[ufp_fob_button]] premuto due volte",
+          "sv": "FOB-knapp [[ufp_fob_button]] dubbelklickad",
+          "no": "FOB-knapp [[ufp_fob_button]] dobbelttrykket",
+          "es": "Botón FOB [[ufp_fob_button]] pulsado dos veces",
+          "da": "FOB-knap [[ufp_fob_button]] dobbelt trykket",
+          "ru": "Кнопка FOB [[ufp_fob_button]] нажата дважды",
+          "pl": "Przycisk FOB [[ufp_fob_button]] naciśnięty dwukrotnie",
+          "ko": "FOB 버튼 [[ufp_fob_button]] 두 번 눌림"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop",
+              "de": "Taste",
+              "fr": "Bouton",
+              "it": "Pulsante",
+              "sv": "Knapp",
+              "no": "Knapp",
+              "es": "Botón",
+              "da": "Knap",
+              "ru": "Кнопка",
+              "pl": "Przycisk",
+              "ko": "버튼"
+            }
+          },
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_arm",
+        "title": {
+          "en": "ARM button was pressed",
+          "nl": "ARM-knop ingedrukt",
+          "de": "ARM-Taste wurde gedrückt",
+          "fr": "Le bouton ARM a été pressé",
+          "it": "Il pulsante ARM è stato premuto",
+          "sv": "ARM-knappen trycktes",
+          "no": "ARM-knappen ble trykket",
+          "es": "Se pulsó el botón ARM",
+          "da": "ARM-knappen blev trykket",
+          "ru": "Кнопка ARM нажата",
+          "pl": "Naciśnięto przycisk ARM",
+          "ko": "ARM 버튼이 눌렸습니다"
+        },
+        "titleFormatted": {
+          "en": "ARM button was [[ufp_fob_press_type]]",
+          "nl": "ARM-knop [[ufp_fob_press_type]]",
+          "de": "ARM-Taste [[ufp_fob_press_type]]",
+          "fr": "Bouton ARM [[ufp_fob_press_type]]",
+          "it": "Pulsante ARM [[ufp_fob_press_type]]",
+          "sv": "ARM-knapp [[ufp_fob_press_type]]",
+          "no": "ARM-knapp [[ufp_fob_press_type]]",
+          "es": "Botón ARM [[ufp_fob_press_type]]",
+          "da": "ARM-knap [[ufp_fob_press_type]]",
+          "ru": "Кнопка ARM: [[ufp_fob_press_type]]",
+          "pl": "Przycisk ARM: [[ufp_fob_press_type]]",
+          "ko": "ARM 버튼: [[ufp_fob_press_type]]"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_disarm",
+        "title": {
+          "en": "DISARM button was pressed",
+          "nl": "DISARM-knop ingedrukt",
+          "de": "DISARM-Taste wurde gedrückt",
+          "fr": "Le bouton DISARM a été pressé",
+          "it": "Il pulsante DISARM è stato premuto",
+          "sv": "DISARM-knappen trycktes",
+          "no": "DISARM-knappen ble trykket",
+          "es": "Se pulsó el botón DISARM",
+          "da": "DISARM-knappen blev trykket",
+          "ru": "Кнопка DISARM нажата",
+          "pl": "Naciśnięto przycisk DISARM",
+          "ko": "DISARM 버튼이 눌렸습니다"
+        },
+        "titleFormatted": {
+          "en": "DISARM button was [[ufp_fob_press_type]]",
+          "nl": "DISARM-knop [[ufp_fob_press_type]]",
+          "de": "DISARM-Taste [[ufp_fob_press_type]]",
+          "fr": "Bouton DISARM [[ufp_fob_press_type]]",
+          "it": "Pulsante DISARM [[ufp_fob_press_type]]",
+          "sv": "DISARM-knapp [[ufp_fob_press_type]]",
+          "no": "DISARM-knapp [[ufp_fob_press_type]]",
+          "es": "Botón DISARM [[ufp_fob_press_type]]",
+          "da": "DISARM-knap [[ufp_fob_press_type]]",
+          "ru": "Кнопка DISARM: [[ufp_fob_press_type]]",
+          "pl": "Przycisk DISARM: [[ufp_fob_press_type]]",
+          "ko": "DISARM 버튼: [[ufp_fob_press_type]]"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_panic",
+        "title": {
+          "en": "PANIC button was pressed",
+          "nl": "PANIC-knop ingedrukt",
+          "de": "PANIC-Taste wurde gedrückt",
+          "fr": "Le bouton PANIC a été pressé",
+          "it": "Il pulsante PANIC è stato premuto",
+          "sv": "PANIC-knappen trycktes",
+          "no": "PANIC-knappen ble trykket",
+          "es": "Se pulsó el botón PANIC",
+          "da": "PANIC-knappen blev trykket",
+          "ru": "Кнопка PANIC нажата",
+          "pl": "Naciśnięto przycisk PANIC",
+          "ko": "PANIC 버튼이 눌렸습니다"
+        },
+        "titleFormatted": {
+          "en": "PANIC button was [[ufp_fob_press_type]]",
+          "nl": "PANIC-knop [[ufp_fob_press_type]]",
+          "de": "PANIC-Taste [[ufp_fob_press_type]]",
+          "fr": "Bouton PANIC [[ufp_fob_press_type]]",
+          "it": "Pulsante PANIC [[ufp_fob_press_type]]",
+          "sv": "PANIC-knapp [[ufp_fob_press_type]]",
+          "no": "PANIC-knapp [[ufp_fob_press_type]]",
+          "es": "Botón PANIC [[ufp_fob_press_type]]",
+          "da": "PANIC-knap [[ufp_fob_press_type]]",
+          "ru": "Кнопка PANIC: [[ufp_fob_press_type]]",
+          "pl": "Przycisk PANIC: [[ufp_fob_press_type]]",
+          "ko": "PANIC 버튼: [[ufp_fob_press_type]]"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_night",
+        "title": {
+          "en": "NIGHT button was pressed",
+          "nl": "NACHT-knop ingedrukt",
+          "de": "NACHT-Taste wurde gedrückt",
+          "fr": "Le bouton NUIT a été pressé",
+          "it": "Il pulsante NOTTE è stato premuto",
+          "sv": "NATT-knappen trycktes",
+          "no": "NATT-knappen ble trykket",
+          "es": "Se pulsó el botón NOCHE",
+          "da": "NAT-knappen blev trykket",
+          "ru": "Кнопка НОЧЬ нажата",
+          "pl": "Naciśnięto przycisk NOC",
+          "ko": "밤 버튼이 눌렸습니다"
+        },
+        "titleFormatted": {
+          "en": "NIGHT button was [[ufp_fob_press_type]]",
+          "nl": "NACHT-knop [[ufp_fob_press_type]]",
+          "de": "NACHT-Taste [[ufp_fob_press_type]]",
+          "fr": "Bouton NUIT [[ufp_fob_press_type]]",
+          "it": "Pulsante NOTTE [[ufp_fob_press_type]]",
+          "sv": "NATT-knapp [[ufp_fob_press_type]]",
+          "no": "NATT-knapp [[ufp_fob_press_type]]",
+          "es": "Botón NOCHE [[ufp_fob_press_type]]",
+          "da": "NAT-knap [[ufp_fob_press_type]]",
+          "ru": "Кнопка НОЧЬ: [[ufp_fob_press_type]]",
+          "pl": "Przycisk NOC: [[ufp_fob_press_type]]",
+          "ko": "밤 버튼: [[ufp_fob_press_type]]"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_left",
+        "title": {
+          "en": "LEFT button was pressed",
+          "nl": "LINKS-knop ingedrukt",
+          "de": "LINKS-Taste wurde gedrückt",
+          "fr": "Le bouton GAUCHE a été pressé",
+          "it": "Il pulsante SINISTRA è stato premuto",
+          "sv": "VÄNSTER-knappen trycktes",
+          "no": "VENSTRE-knappen ble trykket",
+          "es": "Se pulsó el botón IZQUIERDA",
+          "da": "VENSTRE-knappen blev trykket",
+          "ru": "Кнопка ВЛЕВО нажата",
+          "pl": "Naciśnięto przycisk LEWO",
+          "ko": "왼쪽 버튼이 눌렸습니다"
+        },
+        "titleFormatted": {
+          "en": "LEFT button was [[ufp_fob_press_type]]",
+          "nl": "LINKS-knop [[ufp_fob_press_type]]",
+          "de": "LINKS-Taste [[ufp_fob_press_type]]",
+          "fr": "Bouton GAUCHE [[ufp_fob_press_type]]",
+          "it": "Pulsante SINISTRA [[ufp_fob_press_type]]",
+          "sv": "VÄNSTER-knapp [[ufp_fob_press_type]]",
+          "no": "VENSTRE-knapp [[ufp_fob_press_type]]",
+          "es": "Botón IZQUIERDA [[ufp_fob_press_type]]",
+          "da": "VENSTRE-knap [[ufp_fob_press_type]]",
+          "ru": "Кнопка ВЛЕВО: [[ufp_fob_press_type]]",
+          "pl": "Przycisk LEWO: [[ufp_fob_press_type]]",
+          "ko": "왼쪽 버튼: [[ufp_fob_press_type]]"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_right",
+        "title": {
+          "en": "RIGHT button was pressed",
+          "nl": "RECHTS-knop ingedrukt",
+          "de": "RECHTS-Taste wurde gedrückt",
+          "fr": "Le bouton DROITE a été pressé",
+          "it": "Il pulsante DESTRA è stato premuto",
+          "sv": "HÖGER-knappen trycktes",
+          "no": "HØYRE-knappen ble trykket",
+          "es": "Se pulsó el botón DERECHA",
+          "da": "HØJRE-knappen blev trykket",
+          "ru": "Кнопка ВПРАВО нажата",
+          "pl": "Naciśnięto przycisk PRAWO",
+          "ko": "오른쪽 버튼이 눌렸습니다"
+        },
+        "titleFormatted": {
+          "en": "RIGHT button was [[ufp_fob_press_type]]",
+          "nl": "RECHTS-knop [[ufp_fob_press_type]]",
+          "de": "RECHTS-Taste [[ufp_fob_press_type]]",
+          "fr": "Bouton DROITE [[ufp_fob_press_type]]",
+          "it": "Pulsante DESTRA [[ufp_fob_press_type]]",
+          "sv": "HÖGER-knapp [[ufp_fob_press_type]]",
+          "no": "HØYRE-knapp [[ufp_fob_press_type]]",
+          "es": "Botón DERECHA [[ufp_fob_press_type]]",
+          "da": "HØJRE-knap [[ufp_fob_press_type]]",
+          "ru": "Кнопка ВПРАВО: [[ufp_fob_press_type]]",
+          "pl": "Przycisk PRAWO: [[ufp_fob_press_type]]",
+          "ko": "오른쪽 버튼: [[ufp_fob_press_type]]"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
             }
           }
         ],

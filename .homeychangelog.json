@@ -322,5 +322,8 @@
   },
   "1.10.1": {
     "en": "Add USL-FOB device"
+  },
+  "1.10.2": {
+    "en": "Fix crash after boot"
   }
 }
