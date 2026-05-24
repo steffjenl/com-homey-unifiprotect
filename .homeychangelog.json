@@ -319,5 +319,8 @@
   },
   "1.10.0": {
     "en": "feat: add Access Intercom and AI Port device support with audio detection triggers"
+  },
+  "1.10.1": {
+    "en": "Add USL-FOB device"
   }
 }
