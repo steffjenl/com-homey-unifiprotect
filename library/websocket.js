@@ -148,6 +148,35 @@ class ProtectWebSocket extends BaseClass {
     }
   }
 
+  _dispatchNvrAlarmPayload(payload) {
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+      return;
+    }
+
+    if (this.homey.app.api._bootstrap && this.homey.app.api._bootstrap.nvr) {
+      if (typeof payload.armMode !== 'undefined') {
+        this.homey.app.api._bootstrap.nvr.armMode = payload.armMode;
+      }
+      if (typeof payload.isAway !== 'undefined') {
+        this.homey.app.api._bootstrap.nvr.isAway = payload.isAway;
+      }
+    }
+
+    try {
+      const alarmDriver = this.homey.drivers.getDriver('protect-nvr-alarm');
+      if (!alarmDriver || typeof alarmDriver.getNVRAlarmDevice !== 'function') {
+        this.homey.app.debug('[WS Events] protect-nvr-alarm driver not available for dispatch');
+      } else {
+        const alarmDevice = alarmDriver.getNVRAlarmDevice();
+        if (alarmDevice) {
+          alarmDriver.onParseWebsocketMessage(alarmDevice, payload);
+        }
+      }
+    } catch (e) {
+      this.homey.app.debug(`[WS Events] skipping NVR alarm dispatch: ${e.message}`);
+    }
+  }
+
   /**
      * Update actions that we care about (doorbell rings, motion detection, smart detection)
      *
@@ -231,6 +260,9 @@ class ProtectWebSocket extends BaseClass {
       return true;
     } if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'nvr') {
       // NVR updates
+      return true;
+    } if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'externalArmProfile') {
+      // Alarm profile state updates
       return true;
     } if (updatePacket.action.action === 'update' && updatePacket.action.modelKey === 'viewer') {
       // Viewport state updates
@@ -329,6 +361,30 @@ class ProtectWebSocket extends BaseClass {
                 && updatePacket.payload.type === 'sensorButtonPressed'
       ) {
         this.homey.app.onFobWebsocketMessage(updatePacket);
+      } else if (
+        updatePacket.action.modelKey === 'event'
+                && updatePacket.action.action === 'add'
+                && updatePacket.action.recordModel === 'nvr'
+                && typeof updatePacket.payload.type !== 'undefined'
+                && ['armed', 'disarmed', 'breach'].includes(String(updatePacket.payload.type).toLowerCase())
+      ) {
+        const stateType = String(updatePacket.payload.type).toLowerCase();
+        const alarmPayload = {
+          armMode: {
+            status: stateType,
+            armProfileId: updatePacket.payload.metadata && updatePacket.payload.metadata.armProfileId,
+            armProfileName: updatePacket.payload.metadata && updatePacket.payload.metadata.armProfileName,
+          },
+        };
+
+        if (stateType === 'armed') {
+          alarmPayload.isAway = true;
+        } else if (stateType === 'disarmed') {
+          alarmPayload.isAway = false;
+        }
+
+        this.homey.app.debug(`[WS Events] NVR alarm event received: ${stateType}`);
+        this._dispatchNvrAlarmPayload(alarmPayload);
       } else if (
         updatePacket.action.modelKey === 'event'
                 && !!this._resolveCameraId(updatePacket)
@@ -466,28 +522,28 @@ class ProtectWebSocket extends BaseClass {
         // Dispatch armMode / isAway changes to protect-nvr-alarm driver
         if (payload && typeof payload === 'object' && !Array.isArray(payload)
           && (typeof payload.armMode !== 'undefined' || typeof payload.isAway !== 'undefined')) {
-          // Keep in-memory bootstrap in sync so getNvrArmState() stays current
-          if (this.homey.app.api._bootstrap && this.homey.app.api._bootstrap.nvr) {
-            if (typeof payload.armMode !== 'undefined') {
-              this.homey.app.api._bootstrap.nvr.armMode = payload.armMode;
-            }
-            if (typeof payload.isAway !== 'undefined') {
-              this.homey.app.api._bootstrap.nvr.isAway = payload.isAway;
-            }
-          }
+          this._dispatchNvrAlarmPayload(payload);
+        }
+      } else if (updatePacket.action.modelKey === 'externalArmProfile') {
+        if (payload && typeof payload.state !== 'undefined') {
+          const profileState = String(payload.state).toLowerCase();
+          if (['armed', 'disarmed', 'breach'].includes(profileState)) {
+            const externalAlarmPayload = {
+              armMode: {
+                status: profileState,
+                armProfileId: payload.id,
+                armProfileName: payload.title,
+              },
+            };
 
-          try {
-            const alarmDriver = this.homey.drivers.getDriver('protect-nvr-alarm');
-            if (!alarmDriver || typeof alarmDriver.getNVRAlarmDevice !== 'function') {
-              this.homey.app.debug('[WS Events] protect-nvr-alarm driver not available for dispatch');
-            } else {
-              const alarmDevice = alarmDriver.getNVRAlarmDevice();
-              if (alarmDevice) {
-                alarmDriver.onParseWebsocketMessage(alarmDevice, payload);
-              }
+            if (profileState === 'armed') {
+              externalAlarmPayload.isAway = true;
+            } else if (profileState === 'disarmed') {
+              externalAlarmPayload.isAway = false;
             }
-          } catch (e) {
-            this.homey.app.debug(`[WS Events] skipping NVR alarm dispatch: ${e.message}`);
+
+            this.homey.app.debug(`[WS Events] externalArmProfile state received: ${profileState}`);
+            this._dispatchNvrAlarmPayload(externalAlarmPayload);
           }
         }
       } else if (updatePacket.action.modelKey === 'light') {

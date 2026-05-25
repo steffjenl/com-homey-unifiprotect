@@ -331,5 +331,11 @@
   },
   "1.10.4": {
     "en": "fix: prevent websocket payload crashes, harden weather polling, and improve NVR alarm state handling for disabled arm mode"
+  },
+  "1.10.5": {
+    "en": "fix: add support for new Protect v2 alarm arm/disarm profile endpoints with fallback to legacy v1 arm API"
+  },
+  "1.10.6": {
+    "en": "fix: sync NVR alarm state from websocket event/externalArmProfile messages for armed and disarmed updates"
   }
 }

@@ -84,8 +84,8 @@ All paths relative to `https://<NVR_IP>:443/proxy/protect/integration`.
 |--------|------|-------------|
 | `GET` | `/v1/nvrs` | Get NVR details (returns array) |
 
-> ⚠️ **Important**: The official v2 API exposes NVR as **read-only** (GET only, no PATCH).  
-> The `isAway` alarm mode must be controlled via the **v1 API** (`PATCH /proxy/protect/api/nvr`).
+> ⚠️ **Important**: The official v2 integration API keeps `nvrs` read-only (GET only, no PATCH).  
+> Alarm arming is handled via dedicated alarm action endpoints (see **NVR Alarm / Away Mode** below), not via `PATCH /v1/nvrs/{id}`.
 
 ### Chimes
 | Method | Path | Description |
@@ -166,27 +166,89 @@ All paths relative to `https://<NVR_IP>:443/proxy/protect/integration`.
 
 ## NVR Alarm / Away Mode
 
-The NVR alarm (away mode) is controlled via dedicated **arm** endpoints in the **v1 API**:
+Protect firmware now exposes alarm actions through dedicated **v2** endpoints, with **v1** fallback for compatibility.
+
+### Preferred v2 endpoints (observed on UNVR Instant 7.1.69)
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `GET` | `/proxy/protect/api/arm` | Read current arm/away state |
+| `POST` | `/api/v2/alarms/profiles/{profileId}/actions/arm` | Arm selected alarm profile |
+| `POST` | `/api/v2/alarms/profiles/{profileId}/actions/disarm` | Disarm selected alarm profile |
+| `POST` | `/api/v2/alarms/actions/disarm` | Generic disarm fallback endpoint |
+
+Notes:
+- These calls use cookie + CSRF auth (same as v1 web session), not `X-API-KEY`.
+- Current app behavior: try profile-specific v2 endpoint first, then fallback.
+
+### Legacy v1 fallback endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
 | `POST` | `/proxy/protect/api/arm/enable` | Enable away mode (arm) |
 | `POST` | `/proxy/protect/api/arm/disable` | Disable away mode (disarm) |
 
-> ⚠️ **Important**: Do NOT use `PATCH /proxy/protect/api/nvr` with `isAway` — this does not work.  
-> The correct method is `POST arm/enable` / `POST arm/disable`.
+> ⚠️ **Important**: Do NOT use `PATCH /proxy/protect/api/nvr` with `isAway` for alarm control.  
+> Use alarm action endpoints only (`/api/v2/alarms/...` preferred, `arm/enable|disable` fallback).
 
-**GET /arm response** (may include either shape — handle both):
+### State sources used by the app
+
+Primary state comes from bootstrap (`nvr.armMode`) and websocket events.
+
+`nvr.armMode` can include statuses such as:
+```json
+{ "status": "armed" }
+```
+or
+```json
+{ "status": "disarmed" }
+```
+or
+```json
+{ "status": "disabled" }
+```
+
+Legacy shapes also occur on older paths:
 ```json
 { "isEnabled": true }
 ```
-or (older firmware):
 ```json
 { "isAway": true }
 ```
 
-The `isAway` field also appears in the v1 **WebSocket NVR update** payload after an arm/disarm action.
+### WebSocket alarm state messages (observed)
+
+The app now handles all three patterns below:
+
+1) **NVR model update** (`modelKey: nvr`) with `payload.armMode` and/or `payload.isAway`.
+
+2) **NVR event message** (`modelKey: event`, `recordModel: nvr`) with `payload.type`:
+```json
+{
+  "action": { "action": "add", "modelKey": "event", "recordModel": "nvr" },
+  "payload": {
+    "type": "armed",
+    "metadata": {
+      "armProfileId": "019e3e47-6673-7c32-b4bf-37da150c9ed9",
+      "armProfileName": "Alarm Profiel Thuis"
+    }
+  }
+}
+```
+and
+```json
+{
+  "action": { "action": "add", "modelKey": "event", "recordModel": "nvr" },
+  "payload": {
+    "type": "disarmed",
+    "metadata": {
+      "armProfileId": "019e3e47-6673-7c32-b4bf-37da150c9ed9",
+      "armProfileName": "Alarm Profiel Thuis"
+    }
+  }
+}
+```
+
+3) **External alarm profile update** (`modelKey: externalArmProfile`) with `payload.state` (`armed`/`disarmed`).
 
 ---
 
@@ -214,4 +276,5 @@ All paths relative to `https://<NVR_IP>:<port>/proxy/protect/api/`.
 - `rejectUnauthorized: false` is required — NVRs use self-signed TLS certificates
 - WebSocket connections need a **ping every 30 seconds** to prevent timeout
 - The v2 `/subscribe/devices` NVR item does NOT include `isAway` in its official schema
+- Newer firmware can emit alarm transitions as `event` (`recordModel: nvr`, `type: armed|disarmed`) and `externalArmProfile` updates instead of only `nvr.armMode` updates
 
