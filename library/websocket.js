@@ -180,6 +180,19 @@ class ProtectWebSocket extends BaseClass {
      * }
      */
   shouldProcessEvent(updatePacket) {
+    if (!updatePacket || typeof updatePacket !== 'object' || Array.isArray(updatePacket)) {
+      return false;
+    }
+
+    if (!updatePacket.action || typeof updatePacket.action !== 'object' || Array.isArray(updatePacket.action)) {
+      return false;
+    }
+
+    if (!updatePacket.payload || typeof updatePacket.payload !== 'object' || Array.isArray(updatePacket.payload)) {
+      // Ignore non-object payload packets (format 2/3 frames) to avoid crashes.
+      return false;
+    }
+
     if (updatePacket.payload.stats) {
       // We're not interested in stats
       return false;
@@ -451,7 +464,8 @@ class ProtectWebSocket extends BaseClass {
         }
 
         // Dispatch armMode / isAway changes to protect-nvr-alarm driver
-        if (typeof payload.armMode !== 'undefined' || typeof payload.isAway !== 'undefined') {
+        if (payload && typeof payload === 'object' && !Array.isArray(payload)
+          && (typeof payload.armMode !== 'undefined' || typeof payload.isAway !== 'undefined')) {
           // Keep in-memory bootstrap in sync so getNvrArmState() stays current
           if (this.homey.app.api._bootstrap && this.homey.app.api._bootstrap.nvr) {
             if (typeof payload.armMode !== 'undefined') {
@@ -464,12 +478,16 @@ class ProtectWebSocket extends BaseClass {
 
           try {
             const alarmDriver = this.homey.drivers.getDriver('protect-nvr-alarm');
-            const alarmDevice = alarmDriver.getNVRAlarmDevice();
-            if (alarmDevice) {
-              alarmDriver.onParseWebsocketMessage(alarmDevice, payload);
+            if (!alarmDriver || typeof alarmDriver.getNVRAlarmDevice !== 'function') {
+              this.homey.app.debug('[WS Events] protect-nvr-alarm driver not available for dispatch');
+            } else {
+              const alarmDevice = alarmDriver.getNVRAlarmDevice();
+              if (alarmDevice) {
+                alarmDriver.onParseWebsocketMessage(alarmDevice, payload);
+              }
             }
           } catch (e) {
-            // driver may not be installed — ignore gracefully
+            this.homey.app.debug(`[WS Events] skipping NVR alarm dispatch: ${e.message}`);
           }
         }
       } else if (updatePacket.action.modelKey === 'light') {

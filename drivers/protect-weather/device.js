@@ -7,6 +7,8 @@ class WeatherDevice extends Homey.Device {
 
   async onInit() {
     this.homey.app.debug('[WeatherDevice] initializing');
+    this._isActive = true;
+    this._bootstrapTimer = null;
     await this._createMissingCapabilities();
     this._pollTimer = null;
     await this.waitForBootstrap();
@@ -18,6 +20,20 @@ class WeatherDevice extends Homey.Device {
 
   async onDeleted() {
     this.homey.app.debug('[WeatherDevice] deleted');
+    this._isActive = false;
+    if (this._bootstrapTimer) {
+      this.homey.clearTimeout(this._bootstrapTimer);
+      this._bootstrapTimer = null;
+    }
+    this._stopPolling();
+  }
+
+  async onUninit() {
+    this._isActive = false;
+    if (this._bootstrapTimer && this.homey && typeof this.homey.clearTimeout === 'function') {
+      this.homey.clearTimeout(this._bootstrapTimer);
+      this._bootstrapTimer = null;
+    }
     this._stopPolling();
   }
 
@@ -33,13 +49,20 @@ class WeatherDevice extends Homey.Device {
   }
 
   async waitForBootstrap() {
+    if (!this._isActive || !this.homey || !this.homey.app || !this.homey.app.api) {
+      return;
+    }
+
     const v1Ready = typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null;
     const v2Ready = this.homey.app.isV2Available();
 
     if (v1Ready || v2Ready) {
       await this.initDevice();
     } else {
-      this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
+      this._bootstrapTimer = this.homey.setTimeout(() => {
+        this._bootstrapTimer = null;
+        this.waitForBootstrap().catch((error) => this.error(`[WeatherDevice] waitForBootstrap retry error: ${error.message}`));
+      }, 250);
     }
   }
 
@@ -83,14 +106,24 @@ class WeatherDevice extends Homey.Device {
       this.homey.app.debug('[WeatherDevice] polling weather');
       const data = await this.homey.app.api.getWeather();
 
+      if (!data || typeof data !== 'object' || !data.current || typeof data.current !== 'object') {
+        this.homey.app.debug('[WeatherDevice] weather response missing current payload, skipping update');
+        return;
+      }
+
       const { current } = data;
       const location = current.location
-        ? `${current.location.city}, ${current.location.countryCode}`
+        ? `${current.location.city || ''}${current.location.countryCode ? `, ${current.location.countryCode}` : ''}`
         : '';
       const condition = this._iconCodeToText(current.iconCode);
       const temperature = typeof current.temperature === 'number'
         ? current.temperature
         : parseFloat(current.temperature);
+
+      if (!Number.isFinite(temperature)) {
+        this.homey.app.debug('[WeatherDevice] weather response has invalid temperature, skipping update');
+        return;
+      }
 
       await this.setCapabilityValue('measure_temperature', temperature).catch(this.error);
       await this.setCapabilityValue('weather_condition', condition).catch(this.error);
@@ -107,9 +140,10 @@ class WeatherDevice extends Homey.Device {
       for (let i = 1; i <= 5; i++) {
         const slot = hourly[i - 1];
         if (slot) {
-          tokens[`forecast_${i}_temperature`] = typeof slot.temperature === 'number'
+          const slotTemperature = typeof slot.temperature === 'number'
             ? slot.temperature
             : parseFloat(slot.temperature);
+          tokens[`forecast_${i}_temperature`] = Number.isFinite(slotTemperature) ? slotTemperature : null;
           tokens[`forecast_${i}_condition`] = this._iconCodeToText(slot.iconCode);
         } else {
           tokens[`forecast_${i}_temperature`] = null;
@@ -124,11 +158,12 @@ class WeatherDevice extends Homey.Device {
         .catch((err) => this.error(err));
 
     } catch (error) {
-      if (error.message && (error.message.includes('NOT_FOUND') || error.message.includes('404'))) {
-        this.homey.app.debug(`[WeatherDevice] weather endpoint not available on this NVR, stopping polling: ${error.message}`);
+      const message = error && error.message ? error.message : String(error);
+      if (message.includes('NOT_FOUND') || message.includes('404')) {
+        this.homey.app.debug(`[WeatherDevice] weather endpoint not available on this NVR, stopping polling: ${message}`);
         this._stopPolling();
       } else {
-        this.error(`[WeatherDevice] _pollWeather error: ${error.message}`);
+        this.error(`[WeatherDevice] _pollWeather error: ${message}`);
       }
     }
   }
