@@ -337,5 +337,8 @@
   },
   "1.10.6": {
     "en": "fix: sync NVR alarm state from websocket event/externalArmProfile messages for armed and disarmed updates"
+  },
+  "1.10.7": {
+    "en": "fix: resolve v2 alarm profile ID via GET /api/v2/alarms/profiles instead of bootstrap armProfileId to fix 404 on arm/disarm"
   }
 }
