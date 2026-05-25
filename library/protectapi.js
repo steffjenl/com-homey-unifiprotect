@@ -1259,6 +1259,7 @@ class ProtectAPI extends BaseClass {
       nvr.armMode && nvr.armMode.armProfileId,
     ].filter(Boolean).map((value) => String(value));
 
+    // Only accept UUID-format profile IDs for v2 API endpoints
     const directUuid = directCandidates.find((candidate) => this._isUuid(candidate));
     if (directUuid) {
       return directUuid;
@@ -1404,54 +1405,157 @@ class ProtectAPI extends BaseClass {
     });
   }
 
-  _setNvrAwayModeV2(isAway) {
-    if (!isAway) {
-      const profileId = this._getV2AlarmProfileId();
-      const disarmEndpoints = [];
-
-      // Prefer profile-specific disarm endpoint (confirmed on newer NVR firmware).
-      if (profileId) {
-        disarmEndpoints.push(`/api/v2/alarms/profiles/${profileId}/actions/disarm`);
+  _getAbsolutePath(path) {
+    return new Promise((resolve, reject) => {
+      if (!this.webclient.getServerHost()) {
+        return reject(new Error('Invalid host.'));
+      }
+      if (!this.webclient.getCookieToken()) {
+        return reject(new Error('Not logged in.'));
       }
 
-      // Keep generic endpoint as fallback for compatibility.
-      disarmEndpoints.push('/api/v2/alarms/actions/disarm');
+      const options = {
+        host: this.webclient.getServerHost(),
+        port: this.webclient.getServerPort(),
+        path,
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          Cookie: this.webclient.getCookieToken(),
+          'x-csrf-token': this.webclient.getCSRFToken(),
+        },
+        maxRedirects: 20,
+        rejectUnauthorized: false,
+        keepAlive: true,
+      };
 
-      return new Promise((resolve, reject) => {
-        const tryEndpoint = (index, lastError) => {
-          if (index >= disarmEndpoints.length) {
-            return reject(lastError || new Error('No v2 disarm endpoint succeeded.'));
+      const req = https.request(options, (res) => {
+        res.setEncoding('utf8');
+        const data = [];
+
+        res.on('data', (chunk) => data.push(chunk));
+        res.on('end', () => {
+          if (res.statusCode === 401 || res.statusCode === 403) {
+            return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
           }
 
-          const endpoint = disarmEndpoints[index];
-          return this._postAbsolutePath(endpoint, {})
-            .then(() => resolve({
-              message: 'NVR disarmed successfully (v2).',
-              endpoint,
-            }))
-            .catch((error) => {
-              if (this._isAuthError(error)) {
-                return reject(error);
-              }
-              return tryEndpoint(index + 1, error);
-            });
-        };
+          if (res.statusCode !== 200) {
+            return reject(new Error(`Failed to GET url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+          }
 
-        return tryEndpoint(0, null);
+          return resolve(data.join(''));
+        });
       });
+
+      req.on('error', (error) => reject(error));
+      req.end();
+    });
+  }
+
+  _getV2AlarmProfileIdFromApi() {
+    return this._getAbsolutePath('/api/v2/alarms/profiles')
+      .then((rawData) => {
+        let profiles;
+        try {
+          profiles = JSON.parse(rawData);
+        } catch (error) {
+          throw new Error(`Invalid JSON from /api/v2/alarms/profiles: ${error.message}`);
+        }
+
+        if (!Array.isArray(profiles) || profiles.length === 0) {
+          throw new Error('No alarm profiles returned by /api/v2/alarms/profiles');
+        }
+
+        // Current behavior requested: use the first profile for arm/disarm.
+        const profileId = this._extractProfileId(profiles[0]);
+        if (!profileId) {
+          throw new Error('First alarm profile has no usable id field.');
+        }
+
+        if (this.homey && this.homey.app) {
+          this.homey.app.debug(`[ProtectAPI] using v2 alarm profile id from /api/v2/alarms/profiles: ${profileId}`);
+        }
+
+        return profileId;
+      });
+  }
+
+  _setNvrAwayModeV2(isAway) {
+    const bootstrapProfileId = this._getV2AlarmProfileId();
+
+    return this._getV2AlarmProfileIdFromApi()
+      .catch((apiError) => {
+        if (this._isAuthError(apiError)) {
+          throw apiError;
+        }
+
+        if (bootstrapProfileId) {
+          if (this.homey && this.homey.app) {
+            this.homey.app.debug(`[ProtectAPI] /api/v2/alarms/profiles failed, falling back to bootstrap profile id: ${bootstrapProfileId}`);
+          }
+          return bootstrapProfileId;
+        }
+
+        throw new Error(`Unable to resolve v2 alarm profile id: ${apiError.message}`);
+      })
+      .then((profileId) => {
+        const action = isAway ? 'arm' : 'disarm';
+        const endpoint = `/api/v2/alarms/profiles/${profileId}/actions/${action}`;
+
+        return this._postAbsolutePath(endpoint, {})
+          .then(() => ({
+            message: `NVR ${action}ed successfully (v2).`,
+            endpoint,
+          }));
+      });
+  }
+
+  _setNvrAwayModeV1(isAway) {
+    if (isAway) {
+      const armProfileId = this._bootstrap
+        && this._bootstrap.nvr
+        && this._bootstrap.nvr.armMode
+        && this._bootstrap.nvr.armMode.armProfileId;
+
+      if (!armProfileId) {
+        return Promise.reject(new Error('No armProfileId found in bootstrap. Cannot arm the NVR. Ensure alarm is configured on NVR and synchronized to Homey.'));
+      }
+
+      if (this.homey && this.homey.app) {
+        this.homey.app.debug('[ProtectAPI] arming via v1 endpoint: /proxy/protect/api/arm/enable');
+      }
+
+      return new Promise((resolve, reject) => this.webclient.post('arm/enable', { armProfileId })
+        .then(() => resolve('NVR armed successfully.'))
+        .catch((error) => reject(new Error(`Error arming NVR: ${error}`))));
     }
 
-    const profileId = this._getV2AlarmProfileId();
-    if (!profileId) {
-      return Promise.reject(new Error('No v2 alarm profile id found in bootstrap.'));
+    if (this.homey && this.homey.app) {
+      this.homey.app.debug('[ProtectAPI] disarming via v1 endpoint: /proxy/protect/api/arm/disable');
     }
 
-    const endpoint = `/api/v2/alarms/profiles/${profileId}/actions/arm`;
-    return this._postAbsolutePath(endpoint, {})
-      .then(() => ({
-        message: 'NVR armed successfully (v2).',
-        endpoint,
-      }));
+    return new Promise((resolve, reject) => this.webclient.post('arm/disable', {})
+      .then(() => resolve('NVR disarmed successfully.'))
+      .catch((error) => reject(new Error(`Error disarming NVR: ${error}`))));
+  }
+
+  _canFallbackToV1FromV2Error(error) {
+    if (!error) {
+      return false;
+    }
+
+    if (this._isAuthError(error)) {
+      return false;
+    }
+
+    const message = error.message ? String(error.message) : String(error);
+    return message.includes('/api/v2/alarms/profiles') && (
+      message.includes('status code: 404')
+      || message.includes('status code: 405')
+      || message.includes('status code: 500')
+      || message.includes('No alarm profiles returned')
+      || message.includes('Unable to resolve v2 alarm profile id')
+    );
   }
 
   _setNvrModeV2(mode) {
@@ -1478,74 +1582,30 @@ class ProtectAPI extends BaseClass {
       }));
   }
 
-  setNvrAwayMode(isAway) {
-    const attemptV2 = () => this._setNvrAwayModeV2(isAway)
-      .catch((v2Error) => {
-        if (this._isAuthError(v2Error)) {
-          throw v2Error;
-        }
-        if (this.homey && this.homey.app) {
-          this.homey.app.debug(`[ProtectAPI] v2 alarm ${isAway ? 'arm' : 'disarm'} endpoint failed, falling back to v1: ${v2Error.message}`);
-        }
-        return null;
-      });
+   setNvrAwayMode(isAway) {
+     return this._setNvrAwayModeV2(isAway)
+       .then((result) => {
+         if (this.homey && this.homey.app) {
+           this.homey.app.debug(`[ProtectAPI] ${isAway ? 'arm' : 'disarm'} via v2 endpoint: ${result.endpoint}`);
+         }
+         return result.message;
+       })
+       .catch((v2Error) => {
+         if (this._isAuthError(v2Error)) {
+           throw v2Error;
+         }
 
-    if (isAway) {
-      // Arm: POST /proxy/protect/api/arm/enable  { armProfileId: "<id>" }
-      // armProfileId comes from bootstrap nvr.armMode.armProfileId
-      const armProfileId = this._bootstrap
-        && this._bootstrap.nvr
-        && this._bootstrap.nvr.armMode
-        && this._bootstrap.nvr.armMode.armProfileId;
+         if (!this._canFallbackToV1FromV2Error(v2Error)) {
+           this.homey.app.error(`[ProtectAPI] v2 alarm ${isAway ? 'arm' : 'disarm'} failed and no v1 fallback available: ${v2Error.message}`);
+           throw v2Error;
+         }
 
-      if (!armProfileId) {
-        return attemptV2().then((result) => {
-          if (result) {
-            if (this.homey && this.homey.app) {
-              this.homey.app.debug(`[ProtectAPI] arming via v2 endpoint: ${result.endpoint}`);
-            }
-            return result.message;
-          }
-          throw new Error('No armProfileId found in bootstrap. Cannot arm the NVR.');
-        });
-      }
-
-      return attemptV2().then((result) => {
-        if (result) {
-          if (this.homey && this.homey.app) {
-            this.homey.app.debug(`[ProtectAPI] arming via v2 endpoint: ${result.endpoint}`);
-          }
-          return result.message;
-        }
-        if (this.homey && this.homey.app) {
-          this.homey.app.debug('[ProtectAPI] arming via v1 endpoint: /proxy/protect/api/arm/enable');
-        }
-        return new Promise((resolve, reject) => {
-          return this.webclient.post('arm/enable', { armProfileId })
-            .then(() => resolve('NVR armed successfully.'))
-            .catch((error) => reject(new Error(`Error arming NVR: ${error}`)));
-        });
-      });
-    }
-
-    // Disarm: POST /proxy/protect/api/arm/disable
-    return attemptV2().then((result) => {
-      if (result) {
-        if (this.homey && this.homey.app) {
-          this.homey.app.debug(`[ProtectAPI] disarming via v2 endpoint: ${result.endpoint}`);
-        }
-        return result.message;
-      }
-      if (this.homey && this.homey.app) {
-        this.homey.app.debug('[ProtectAPI] disarming via v1 endpoint: /proxy/protect/api/arm/disable');
-      }
-      return new Promise((resolve, reject) => {
-        return this.webclient.post('arm/disable', {})
-          .then(() => resolve('NVR disarmed successfully.'))
-          .catch((error) => reject(new Error(`Error disarming NVR: ${error}`)));
-      });
-    });
-  }
+         if (this.homey && this.homey.app) {
+           this.homey.app.debug(`[ProtectAPI] v2 profile discovery unavailable, falling back to v1 for ${isAway ? 'arm' : 'disarm'}: ${v2Error.message}`);
+         }
+         return this._setNvrAwayModeV1(isAway);
+       });
+   }
 
   getNvrArmState() {
     // Read the current arm state from the cached bootstrap nvr.armMode

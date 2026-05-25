@@ -9608,7 +9608,8 @@
       },
       "getable": true,
       "setable": false,
-      "uiComponent": "sensor"
+      "uiComponent": "sensor",
+      "icon": "/assets/condition/icon.svg"
     },
     "weather_location": {
       "type": "string",
@@ -9628,7 +9629,8 @@
       },
       "getable": true,
       "setable": false,
-      "uiComponent": "sensor"
+      "uiComponent": "sensor",
+      "icon": "/assets/location/icon.svg"
     }
   }
 }

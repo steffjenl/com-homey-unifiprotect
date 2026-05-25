@@ -35,9 +35,9 @@ class ProtectWebSocket extends BaseClass {
   }
 
   notificationsUrl() {
-
-      // https://YOUR_CONSOLE_IP/proxy/protect/integration/v1/subscribe/devices
-    return `wss://${this.homey.app.apiV2.webclient._serverHost}:${this.homey.app.apiV2.webclient._serverPort}/proxy/protect/integration/v1/subscribe/devices`;
+    const webclient = this.homey.app.apiV2.webclient;
+    const path = webclient.buildApiPath('subscribe/devices');
+    return `wss://${webclient._serverHost}:${webclient._serverPort}${path}`;
   }
 
   launchNotificationsListener() {
@@ -196,12 +196,52 @@ class ProtectWebSocket extends BaseClass {
           if (device) {
             driver.onParseWebsocketMessage(device, payload);
           }
+        } else if (modelKey === 'viewer') {
+          const driver = this.homey.drivers.getDriver('protect-viewport');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'speaker') {
+          const driver = this.homey.drivers.getDriver('protect-horn-speaker');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'fob') {
+          const driver = this.homey.drivers.getDriver('protect-fob');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'aiport') {
+          const driver = this.homey.drivers.getDriver('protect-ai-port');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'siren') {
+          const driver = this.homey.drivers.getDriver('protect-siren');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
         } else if (modelKey === 'nvr') {
           try {
             const alarmDriver = this.homey.drivers.getDriver('protect-nvr-alarm');
             const alarmDevice = alarmDriver.getNVRAlarmDevice();
             if (alarmDevice) {
               alarmDriver.onParseWebsocketMessage(alarmDevice, payload);
+            }
+          } catch (e) {
+            // driver may not be installed
+          }
+
+          try {
+            const unifiOsDriver = this.homey.drivers.getDriver('unifi-os');
+            const unifiOsDevice = unifiOsDriver.getUnifiDeviceById('unifi-os-controller');
+            if (unifiOsDevice) {
+              unifiOsDriver.onParseWebsocketMessage(unifiOsDevice, payload);
             }
           } catch (e) {
             // driver may not be installed

@@ -2,6 +2,7 @@
 
 const https = require('https');
 const ProtectWebClient = require('./library/webclient');
+const UfvConstants = require('./library/constants');
 
 module.exports = {
     async getStatus({homey, query}) {
@@ -133,7 +134,7 @@ module.exports = {
                     method: 'GET',
                     hostname: body.host,
                     port: body.port || 443,
-                    path: '/proxy/protect/integration/v1/cameras',
+                    path: `${UfvConstants.PROTECT_V2_API_BASE_PATH}/${UfvConstants.PROTECT_V2_API_VERSION}/cameras`,
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8',
                         Accept: '*/*',

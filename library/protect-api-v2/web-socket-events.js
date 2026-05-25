@@ -35,9 +35,9 @@ class ProtectWebSocket extends BaseClass {
     }
 
     notificationsUrl() {
-
-        // https://YOUR_CONSOLE_IP/proxy/protect/integration/v1/subscribe/events
-        return `wss://${this.homey.app.apiV2.webclient._serverHost}:${this.homey.app.apiV2.webclient._serverPort}/proxy/protect/integration/v1/subscribe/events`;
+        const webclient = this.homey.app.apiV2.webclient;
+        const path = webclient.buildApiPath('subscribe/events');
+        return `wss://${webclient._serverHost}:${webclient._serverPort}${path}`;
     }
 
     launchNotificationsListener() {

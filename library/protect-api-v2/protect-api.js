@@ -329,7 +329,8 @@ class ProtectAPI extends BaseClass {
         const host = this.webclient._serverHost;
         const port = this.webclient._serverPort;
         const quality = highQuality ? 'true' : 'false';
-        return `https://${host}:${port}/proxy/protect/integration/v1/cameras/${cameraId}/snapshot?highQuality=${quality}`;
+        const path = this.webclient.buildApiPath(`cameras/${cameraId}/snapshot`, { highQuality: quality });
+        return `https://${host}:${port}${path}`;
     }
 
     getSnapshotHeaders() {

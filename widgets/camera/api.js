@@ -34,7 +34,7 @@ module.exports = {
         {
           hostname: webclient._serverHost,
           port: webclient._serverPort,
-          path: `/proxy/protect/integration/v1/cameras/${deviceId}/snapshot`,
+          path: webclient.buildApiPath(`cameras/${deviceId}/snapshot`),
           method: 'GET',
           headers: { 'X-API-KEY': webclient._apiToken },
           rejectUnauthorized: false,

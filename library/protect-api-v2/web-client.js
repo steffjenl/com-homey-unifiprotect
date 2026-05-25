@@ -1,4 +1,7 @@
+'use strict';
+
 const BaseClass = require('../baseclass');
+const UfvConstants = require('../constants');
 const https = require('node:https');
 
 class WebClient extends BaseClass {
@@ -10,13 +13,25 @@ class WebClient extends BaseClass {
         this._apiToken = null;
     }
 
+    getIntegrationPrefix() {
+        return `${UfvConstants.PROTECT_V2_API_BASE_PATH}/${UfvConstants.PROTECT_V2_API_VERSION}`;
+    }
+
+    buildApiPath(resource = '', params = null) {
+        const normalizedResource = String(resource || '').replace(/^\/+/, '');
+        const path = normalizedResource
+            ? `${this.getIntegrationPrefix()}/${normalizedResource}`
+            : this.getIntegrationPrefix();
+        return `${path}${this.toQueryString(params)}`;
+    }
+
     async get(resource, params = {}) {
         return new Promise((resolve, reject) => {
             const options = {
                 method: 'GET',
                 hostname: this._serverHost,
                 port: this._serverPort,
-                path: `/proxy/protect/integration/v1/${resource}${this.toQueryString(params)}`,
+                path: this.buildApiPath(resource, params),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                     Accept: '*/*',
@@ -56,7 +71,7 @@ class WebClient extends BaseClass {
                 method: 'POST',
                 hostname: this._serverHost,
                 port: this._serverPort,
-                path: `/proxy/protect/integration/v1/${resource}`,
+                path: this.buildApiPath(resource),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                     'Content-Length': Buffer.byteLength(body),
@@ -101,7 +116,7 @@ class WebClient extends BaseClass {
                 method: 'PUT',
                 hostname: this._serverHost,
                 port: this._serverPort,
-                path: `/proxy/protect/integration/v1/${resource}${this.toQueryString(params)}`,
+                path: this.buildApiPath(resource, params),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                     'Content-Length': Buffer.byteLength(body),
@@ -146,7 +161,7 @@ class WebClient extends BaseClass {
                 method: 'PATCH',
                 hostname: this._serverHost,
                 port: this._serverPort,
-                path: `/proxy/protect/integration/v1/${resource}${this.toQueryString(params)}`,
+                path: this.buildApiPath(resource, params),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                     'Content-Length': Buffer.byteLength(body),
@@ -189,7 +204,7 @@ class WebClient extends BaseClass {
                 method: 'DELETE',
                 hostname: this._serverHost,
                 port: this._serverPort,
-                path: `/proxy/protect/integration/v1/${resource}`,
+                path: this.buildApiPath(resource),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                     Accept: '*/*',
