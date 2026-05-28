@@ -340,5 +340,8 @@
   },
   "1.10.7": {
     "en": "fix: resolve v2 alarm profile ID via GET /api/v2/alarms/profiles instead of bootstrap armProfileId to fix 404 on arm/disarm"
+  },
+  "1.10.8": {
+    "en": "fix: update snapshot trigger method and improve error handling in device.js"
   }
 }
