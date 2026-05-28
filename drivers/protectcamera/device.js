@@ -594,13 +594,13 @@ class Camera extends Homey.Device {
       };
 
       getStreamUrl().then((rtspUrl) => {
-        this.homey.app.triggerSnapshotTrigger({
+        this.homey.app._snapshotTrigger.trigger({
           ufv_snapshot_token: this._snapshotImage,
           ufv_snapshot_camera: this.getName(),
           ufv_snapshot_snapshot_url: '',
           ufv_snapshot_stream_url: rtspUrl,
-        });
-      }).catch(this.log);
+        }).catch(this.error);
+      }).catch(this.error);
     }
 
     this.cloudUrl = this._snapshotImage.cloudUrl;
