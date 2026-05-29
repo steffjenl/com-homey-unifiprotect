@@ -39,6 +39,9 @@ class ViewportDevice extends Homey.Device {
       const isConnected = payload.state === 'CONNECTED';
       this.setCapabilityValue('onoff', isConnected).catch(this.error);
     }
+    if (typeof payload.liveview === 'string') {
+      this.setCapabilityValue('liveview', payload.liveview).catch(this.error);
+    }
   }
 }
 

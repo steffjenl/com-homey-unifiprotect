@@ -8317,7 +8317,8 @@
       "id": "protect-viewport",
       "class": "other",
       "capabilities": [
-        "onoff"
+        "onoff",
+        "liveview"
       ],
       "name": {
         "en": "Viewport",
@@ -9412,6 +9413,16 @@
       "setable": true,
       "uiComponent": "toggle",
       "uiQuickAction": true
+    },
+    "liveview": {
+      "type": "string",
+      "title": {
+        "en": "Live View",
+        "nl": "Live View"
+      },
+      "uiComponent": null,
+      "getable": true,
+      "setable": true
     },
     "nvr_cpu_load": {
       "type": "number",
