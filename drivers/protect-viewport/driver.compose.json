@@ -2,7 +2,8 @@
   "id": "protect-viewport",
   "class": "other",
   "capabilities": [
-    "onoff"
+    "onoff",
+    "liveview"
   ],
   "name": {
     "en": "Viewport",
