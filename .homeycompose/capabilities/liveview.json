@@ -2,9 +2,9 @@
   "type": "string",
   "title": {
     "en": "Live View",
-    "nl": "Live View"
+    "nl": "Liveweergave"
   },
   "uiComponent": null,
   "getable": true,
-  "setable": true
+  "setable": false
 }

@@ -9418,11 +9418,11 @@
       "type": "string",
       "title": {
         "en": "Live View",
-        "nl": "Live View"
+        "nl": "Liveweergave"
       },
       "uiComponent": null,
       "getable": true,
-      "setable": true
+      "setable": false
     },
     "nvr_cpu_load": {
       "type": "number",
