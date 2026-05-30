@@ -213,6 +213,23 @@ class ProtectWebSocket extends BaseClass {
                     }
                 }
 
+                // Smart audio detection event - smartDetectTypes may be empty on initial 'add' and filled in on 'update'
+                if (itemType === 'smartAudioDetect') {
+                    this.homey.app.debug('[V2] smart audio detection: ' + JSON.stringify(item.smartDetectTypes || []) + ' on ' + deviceId);
+                    const payload = {
+                        smartDetectTypes: item.smartDetectTypes || [],
+                        start: item.start,
+                        end: item.end || null,
+                        score: item.score,
+                    };
+                    if (deviceCamera) {
+                        deviceCamera.onAudioDetection(payload, eventType, item.id);
+                    }
+                    if (deviceDoorbell) {
+                        deviceDoorbell.onAudioDetection(payload, eventType, item.id);
+                    }
+                }
+
             } catch (e) {
                 this.homey.app.debug('[V2 Events WS] dispatch error: ' + e);
             }
