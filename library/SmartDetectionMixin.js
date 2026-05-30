@@ -113,6 +113,11 @@ const SmartDetectionMixin = {
 
     if (smartDetectTypes.length > 0) {
       for (const type of smartDetectTypes) {
+        // Only trigger each type once per detection event (eventId).
+        if (event.triggered.has(type)) {
+          continue;
+        }
+        event.triggered.add(type);
         this.homey.app.debug('[SmartDetection] type=' + type + ' device=' + this.getData().id);
         if (type === 'person') {
           this.triggerSmartDetectionTriggerPerson(score, zones);
@@ -177,6 +182,11 @@ const SmartDetectionMixin = {
 
     if (audioDetectTypes && audioDetectTypes.length > 0) {
       for (const audioType of audioDetectTypes) {
+        // Only trigger each audio type once per detection event (eventId).
+        if (event.triggered.has(audioType)) {
+          continue;
+        }
+        event.triggered.add(audioType);
         this.homey.app.debug(`[AudioDetection] type=${audioType} device=${this.getData().id}`);
         const readableType = this.mapAudioDetectionType(audioType);
         this.triggerAudioDetectionTrigger(audioType, readableType, score);
