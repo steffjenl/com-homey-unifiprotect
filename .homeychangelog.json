@@ -343,5 +343,8 @@
   },
   "1.10.8": {
     "en": "fix: update snapshot trigger method and improve error handling in device.js"
+  },
+  "1.10.9": {
+    "en": "feat(websocket): implement exponential backoff for reconnection attempts"
   }
 }

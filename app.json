@@ -339,7 +339,7 @@
     "security",
     "video"
   ],
-  "version": "1.10.8",
+  "version": "1.10.9",
   "compatibility": ">=12.6.0",
   "author": {
     "name": "MonkeySoft",
@@ -9392,6 +9392,16 @@
         }
       ]
     },
+    "liveview": {
+      "type": "string",
+      "title": {
+        "en": "Live View",
+        "nl": "Liveweergave"
+      },
+      "uiComponent": null,
+      "getable": true,
+      "setable": false
+    },
     "locked": {
       "type": "boolean",
       "title": {
@@ -9413,16 +9423,6 @@
       "setable": true,
       "uiComponent": "toggle",
       "uiQuickAction": true
-    },
-    "liveview": {
-      "type": "string",
-      "title": {
-        "en": "Live View",
-        "nl": "Liveweergave"
-      },
-      "uiComponent": null,
-      "getable": true,
-      "setable": false
     },
     "nvr_cpu_load": {
       "type": "number",
