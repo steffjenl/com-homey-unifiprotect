@@ -177,7 +177,7 @@ const SmartDetectionMixin = {
 
     this.homey.app.debug(`[AudioDetection] onAudioDetection ${JSON.stringify(event)}`);
 
-    const score = event.detectionScore;
+    const score = typeof event.detectionScore === 'number' ? event.detectionScore : 0;
     const audioDetectTypes = event.detectionTypes;
 
     if (audioDetectTypes && audioDetectTypes.length > 0) {
