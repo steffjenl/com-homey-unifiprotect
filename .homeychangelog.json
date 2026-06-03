@@ -346,5 +346,8 @@
   },
   "1.10.9": {
     "en": "feat(websocket): implement exponential backoff for reconnection attempts"
+  },
+  "1.10.10": {
+    "en": "Fix Audio Smart Detections and new icons"
   }
 }
