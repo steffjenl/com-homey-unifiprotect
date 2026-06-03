@@ -9,5 +9,6 @@
   "uiComponent": "slider",
   "min": 0,
   "max": 100,
+  "step": 1,
   "icon": "/assets/microphone.svg"
 }

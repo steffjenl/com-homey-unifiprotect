@@ -339,7 +339,7 @@
     "security",
     "video"
   ],
-  "version": "1.9.1",
+  "version": "1.10.9",
   "compatibility": ">=12.6.0",
   "author": {
     "name": "MonkeySoft",
@@ -401,10 +401,73 @@
     "getLastProtectV2WebsocketMessageTime": {
       "method": "GET",
       "path": "/getLastProtectV2WebsocketMessageTime"
+    },
+    "testV2ApiKey": {
+      "method": "POST",
+      "path": "/testV2ApiKey"
     }
   },
   "flow": {
     "triggers": [
+      {
+        "id": "ufp_audio_detection",
+        "title": {
+          "en": "An audio event was detected",
+          "nl": "Er is een audio gebeurtenis gedetecteerd",
+          "de": "Ein Audio-Ereignis wurde erkannt",
+          "fr": "Un événement audio a été détecté",
+          "it": "È stato rilevato un evento audio",
+          "sv": "En ljudhändelse har detekterats",
+          "no": "En lydhendelse ble oppdaget",
+          "es": "Se detectó un evento de audio",
+          "da": "En lydhændelse blev registreret",
+          "ru": "Обнаружено аудиособытие",
+          "pl": "Wykryto zdarzenie dźwiękowe",
+          "ko": "오디오 이벤트가 감지되었습니다"
+        },
+        "hint": {
+          "en": "Triggered when a camera detects an audio event such as glass break, smoke alarm, or baby cry",
+          "nl": "Geactiveerd wanneer een camera een audio gebeurtenis detecteert zoals glasbreuk, rookalarm of baby huilen"
+        },
+        "tokens": [
+          {
+            "name": "ufp_audio_detection_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "audio_detection_type",
+            "type": "string",
+            "title": {
+              "en": "Audio detection type",
+              "nl": "Audio detectie type"
+            },
+            "example": {
+              "en": "glass_break",
+              "nl": "glass_break"
+            }
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "title": {
+              "en": "Score",
+              "nl": "Score"
+            },
+            "example": {
+              "en": "72",
+              "nl": "72"
+            }
+          }
+        ]
+      },
       {
         "id": "ufp_connection_changed",
         "title": {
@@ -610,6 +673,179 @@
         ]
       },
       {
+        "id": "ufp_fingerprint_unknown",
+        "title": {
+          "en": "An unknown fingerprint was detected",
+          "nl": "Een onbekende vingerafdruk is gedetecteerd"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fingerprint_unknown_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_fob_button",
+        "title": {
+          "en": "A FOB button event was detected",
+          "nl": "Een FOB-knopgebeurtenis is gedetecteerd"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_device_id",
+            "type": "string",
+            "title": {
+              "en": "FOB device ID",
+              "nl": "FOB apparaat-ID"
+            },
+            "example": {
+              "en": "65f0ab12cd34ef56ab78cd90",
+              "nl": "65f0ab12cd34ef56ab78cd90"
+            }
+          },
+          {
+            "name": "ufp_fob_sensor_name",
+            "type": "string",
+            "title": {
+              "en": "FOB name",
+              "nl": "FOB naam"
+            },
+            "example": {
+              "en": "Main gate FOB",
+              "nl": "Hoofdpoort FOB"
+            }
+          },
+          {
+            "name": "ufp_fob_button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop"
+            },
+            "example": {
+              "en": "arm",
+              "nl": "arm"
+            }
+          },
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype"
+            },
+            "example": {
+              "en": "press",
+              "nl": "press"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel"
+            },
+            "example": {
+              "en": "1716587400000",
+              "nl": "1716587400000"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_fob_button_device",
+        "title": {
+          "en": "A FOB button event for [[fob]] was detected",
+          "nl": "Een FOB-knopgebeurtenis voor [[fob]] is gedetecteerd"
+        },
+        "titleFormatted": {
+          "en": "A FOB button event for [[fob]] was detected",
+          "nl": "Een FOB-knopgebeurtenis voor [[fob]] is gedetecteerd"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "fob",
+            "title": {
+              "en": "FOB",
+              "nl": "FOB"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "ufp_fob_device_id",
+            "type": "string",
+            "title": {
+              "en": "FOB device ID",
+              "nl": "FOB apparaat-ID"
+            },
+            "example": {
+              "en": "65f0ab12cd34ef56ab78cd90",
+              "nl": "65f0ab12cd34ef56ab78cd90"
+            }
+          },
+          {
+            "name": "ufp_fob_sensor_name",
+            "type": "string",
+            "title": {
+              "en": "FOB name",
+              "nl": "FOB naam"
+            },
+            "example": {
+              "en": "Main gate FOB",
+              "nl": "Hoofdpoort FOB"
+            }
+          },
+          {
+            "name": "ufp_fob_button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop"
+            },
+            "example": {
+              "en": "arm",
+              "nl": "arm"
+            }
+          },
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype"
+            },
+            "example": {
+              "en": "press",
+              "nl": "press"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel"
+            },
+            "example": {
+              "en": "1716587400000",
+              "nl": "1716587400000"
+            }
+          }
+        ]
+      },
+      {
         "id": "ufp_nfc_card_scanned",
         "title": {
           "en": "A NFC card was scanned",
@@ -686,6 +922,51 @@
             "example": {
               "en": "xxxxxx",
               "nl": "xxxxxx"
+            }
+          },
+          {
+            "name": "ufp_nfc_card_scanned_nfc_id",
+            "type": "string",
+            "title": {
+              "en": "NFC ID",
+              "nl": "NFC ID"
+            },
+            "example": {
+              "en": "01234AA2A12345",
+              "nl": "01234AA2A12345"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_nfc_unknown_card_scanned",
+        "title": {
+          "en": "An unknown NFC card was scanned",
+          "nl": "Een onbekende NFC kaart is gescand"
+        },
+        "tokens": [
+          {
+            "name": "ufp_nfc_unknown_card_scanned_camera",
+            "type": "string",
+            "title": {
+              "en": "Camera",
+              "nl": "Camera"
+            },
+            "example": {
+              "en": "Doorbell",
+              "nl": "Deurbel"
+            }
+          },
+          {
+            "name": "ufp_nfc_unknown_card_scanned_nfc_id",
+            "type": "string",
+            "title": {
+              "en": "NFC ID",
+              "nl": "NFC ID"
+            },
+            "example": {
+              "en": "01234AA2A12345",
+              "nl": "01234AA2A12345"
             }
           }
         ]
@@ -830,6 +1111,18 @@
             "example": {
               "en": "62",
               "nl": "62"
+            }
+          },
+          {
+            "name": "license_plate",
+            "type": "string",
+            "title": {
+              "en": "License plate",
+              "nl": "Kenteken"
+            },
+            "example": {
+              "en": "ABC-123",
+              "nl": "AB-12-CD"
             }
           }
         ]
@@ -1029,6 +1322,178 @@
         ]
       },
       {
+        "id": "ufv_device_access_keypad_used",
+        "title": {
+          "en": "Keypad / PIN used on door",
+          "nl": "Keypad / PIN gebruikt op deur",
+          "de": "Keypad / PIN an Tür verwendet",
+          "fr": "Clavier / PIN utilisé sur la porte",
+          "it": "Tastiera / PIN utilizzato sulla porta",
+          "sv": "Knappsats / PIN använd på dörr",
+          "no": "Tastatur / PIN brukt på dør",
+          "es": "Teclado / PIN usado en la puerta",
+          "da": "Tastatur / PIN brugt på dør",
+          "ru": "Клавиатура / PIN использован на двери",
+          "pl": "Klawiatura / PIN użyta przy drzwiach",
+          "ko": "문에서 키패드 / PIN 사용됨"
+        },
+        "tokens": [
+          {
+            "name": "ufv_actor",
+            "type": "string",
+            "title": {
+              "en": "User name",
+              "nl": "Gebruikersnaam",
+              "de": "Benutzername",
+              "fr": "Nom d'utilisateur",
+              "it": "Nome utente",
+              "sv": "Användarnamn",
+              "no": "Brukernavn",
+              "es": "Nombre de usuario",
+              "da": "Brugernavn",
+              "ru": "Имя пользователя",
+              "pl": "Nazwa użytkownika",
+              "ko": "사용자 이름"
+            },
+            "example": {
+              "en": "John Doe",
+              "nl": "Jan de Vries",
+              "de": "Max Mustermann",
+              "fr": "Jean Dupont",
+              "it": "Mario Rossi",
+              "sv": "Anna Svensson",
+              "no": "Ola Nordmann",
+              "es": "Juan García",
+              "da": "Peter Jensen",
+              "ru": "Иван Иванов",
+              "pl": "Jan Kowalski",
+              "ko": "홍길동"
+            }
+          },
+          {
+            "name": "ufv_auth_method",
+            "type": "string",
+            "title": {
+              "en": "Auth method",
+              "nl": "Authenticatiemethode",
+              "de": "Authentifizierungsmethode",
+              "fr": "Méthode d'authentification",
+              "it": "Metodo di autenticazione",
+              "sv": "Autentiseringsmetod",
+              "no": "Autentiseringsmetode",
+              "es": "Método de autenticación",
+              "da": "Godkendelsesmetode",
+              "ru": "Метод аутентификации",
+              "pl": "Metoda uwierzytelniania",
+              "ko": "인증 방법"
+            },
+            "example": {
+              "en": "pin_code",
+              "nl": "pin_code",
+              "de": "pin_code",
+              "fr": "pin_code",
+              "it": "pin_code",
+              "sv": "pin_code",
+              "no": "pin_code",
+              "es": "pin_code",
+              "da": "pin_code",
+              "ru": "pin_code",
+              "pl": "pin_code",
+              "ko": "pin_code"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-door"
+          }
+        ]
+      },
+      {
+        "id": "ufv_device_access_keypad_granted",
+        "title": {
+          "en": "Correct PIN entered on door",
+          "nl": "Juiste PIN ingevoerd op deur",
+          "de": "Richtiger PIN an Tür eingegeben",
+          "fr": "PIN correct saisi sur la porte",
+          "it": "PIN corretto inserito sulla porta",
+          "sv": "Rätt PIN angett på dörr",
+          "no": "Riktig PIN tastet inn på dør",
+          "es": "PIN correcto introducido en la puerta",
+          "da": "Korrekt PIN indtastet på dør",
+          "ru": "Правильный PIN введён на двери",
+          "pl": "Prawidłowy PIN wprowadzony przy drzwiach",
+          "ko": "문에서 올바른 PIN 입력됨"
+        },
+        "tokens": [
+          {
+            "name": "ufv_actor",
+            "type": "string",
+            "title": {
+              "en": "User name",
+              "nl": "Gebruikersnaam",
+              "de": "Benutzername",
+              "fr": "Nom d'utilisateur",
+              "it": "Nome utente",
+              "sv": "Användarnamn",
+              "no": "Brukernavn",
+              "es": "Nombre de usuario",
+              "da": "Brugernavn",
+              "ru": "Имя пользователя",
+              "pl": "Nazwa użytkownika",
+              "ko": "사용자 이름"
+            },
+            "example": {
+              "en": "John Doe",
+              "nl": "Jan de Vries",
+              "de": "Max Mustermann",
+              "fr": "Jean Dupont",
+              "it": "Mario Rossi",
+              "sv": "Anna Svensson",
+              "no": "Ola Nordmann",
+              "es": "Juan García",
+              "da": "Peter Jensen",
+              "ru": "Иван Иванов",
+              "pl": "Jan Kowalski",
+              "ko": "홍길동"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-door"
+          }
+        ]
+      },
+      {
+        "id": "ufv_device_access_keypad_denied",
+        "title": {
+          "en": "Wrong PIN entered on door",
+          "nl": "Verkeerde PIN ingevoerd op deur",
+          "de": "Falscher PIN an Tür eingegeben",
+          "fr": "PIN incorrect saisi sur la porte",
+          "it": "PIN errato inserito sulla porta",
+          "sv": "Fel PIN angett på dörr",
+          "no": "Feil PIN tastet inn på dør",
+          "es": "PIN incorrecto introducido en la puerta",
+          "da": "Forkert PIN indtastet på dør",
+          "ru": "Неверный PIN введён на двери",
+          "pl": "Nieprawidłowy PIN wprowadzony przy drzwiach",
+          "ko": "문에서 잘못된 PIN 입력됨"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-door"
+          }
+        ]
+      },
+      {
         "id": "ufv_reader_garagedoor_opened",
         "title": {
           "en": "Garage door opened",
@@ -1101,6 +1566,1034 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
+        "id": "ufv_device_access_garagedoor_keypad_used",
+        "title": {
+          "en": "Keypad / PIN used on garage door",
+          "nl": "Keypad / PIN gebruikt op garagedeur",
+          "de": "Keypad / PIN an Garagentor verwendet",
+          "fr": "Clavier / PIN utilisé sur la porte de garage",
+          "it": "Tastiera / PIN utilizzato sul portone del garage",
+          "sv": "Knappsats / PIN använd på garageport",
+          "no": "Tastatur / PIN brukt på garasjeport",
+          "es": "Teclado / PIN usado en la puerta del garaje",
+          "da": "Tastatur / PIN brugt på garageport",
+          "ru": "Клавиатура / PIN использован на воротах гаража",
+          "pl": "Klawiatura / PIN użyta przy bramie garażowej",
+          "ko": "차고문에서 키패드 / PIN 사용됨"
+        },
+        "tokens": [
+          {
+            "name": "ufv_actor",
+            "type": "string",
+            "title": {
+              "en": "User name",
+              "nl": "Gebruikersnaam",
+              "de": "Benutzername",
+              "fr": "Nom d'utilisateur",
+              "it": "Nome utente",
+              "sv": "Användarnamn",
+              "no": "Brukernavn",
+              "es": "Nombre de usuario",
+              "da": "Brugernavn",
+              "ru": "Имя пользователя",
+              "pl": "Nazwa użytkownika",
+              "ko": "사용자 이름"
+            },
+            "example": {
+              "en": "John Doe",
+              "nl": "Jan de Vries",
+              "de": "Max Mustermann",
+              "fr": "Jean Dupont",
+              "it": "Mario Rossi",
+              "sv": "Anna Svensson",
+              "no": "Ola Nordmann",
+              "es": "Juan García",
+              "da": "Peter Jensen",
+              "ru": "Иван Иванов",
+              "pl": "Jan Kowalski",
+              "ko": "홍길동"
+            }
+          },
+          {
+            "name": "ufv_auth_method",
+            "type": "string",
+            "title": {
+              "en": "Auth method",
+              "nl": "Authenticatiemethode",
+              "de": "Authentifizierungsmethode",
+              "fr": "Méthode d'authentification",
+              "it": "Metodo di autenticazione",
+              "sv": "Autentiseringsmetod",
+              "no": "Autentiseringsmetode",
+              "es": "Método de autenticación",
+              "da": "Godkendelsesmetode",
+              "ru": "Метод аутентификации",
+              "pl": "Metoda uwierzytelniania",
+              "ko": "인증 방법"
+            },
+            "example": {
+              "en": "pin_code",
+              "nl": "pin_code",
+              "de": "pin_code",
+              "fr": "pin_code",
+              "it": "pin_code",
+              "sv": "pin_code",
+              "no": "pin_code",
+              "es": "pin_code",
+              "da": "pin_code",
+              "ru": "pin_code",
+              "pl": "pin_code",
+              "ko": "pin_code"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
+        "id": "ufv_device_access_garagedoor_keypad_granted",
+        "title": {
+          "en": "Correct PIN entered on garage door",
+          "nl": "Juiste PIN ingevoerd op garagedeur",
+          "de": "Richtiger PIN an Garagentor eingegeben",
+          "fr": "PIN correct saisi sur la porte de garage",
+          "it": "PIN corretto inserito sul portone del garage",
+          "sv": "Rätt PIN angett på garageport",
+          "no": "Riktig PIN tastet inn på garasjeport",
+          "es": "PIN correcto introducido en la puerta del garaje",
+          "da": "Korrekt PIN indtastet på garageport",
+          "ru": "Правильный PIN введён на воротах гаража",
+          "pl": "Prawidłowy PIN wprowadzony przy bramie garażowej",
+          "ko": "차고문에서 올바른 PIN 입력됨"
+        },
+        "tokens": [
+          {
+            "name": "ufv_actor",
+            "type": "string",
+            "title": {
+              "en": "User name",
+              "nl": "Gebruikersnaam",
+              "de": "Benutzername",
+              "fr": "Nom d'utilisateur",
+              "it": "Nome utente",
+              "sv": "Användarnamn",
+              "no": "Brukernavn",
+              "es": "Nombre de usuario",
+              "da": "Brugernavn",
+              "ru": "Имя пользователя",
+              "pl": "Nazwa użytkownika",
+              "ko": "사용자 이름"
+            },
+            "example": {
+              "en": "John Doe",
+              "nl": "Jan de Vries",
+              "de": "Max Mustermann",
+              "fr": "Jean Dupont",
+              "it": "Mario Rossi",
+              "sv": "Anna Svensson",
+              "no": "Ola Nordmann",
+              "es": "Juan García",
+              "da": "Peter Jensen",
+              "ru": "Иван Иванов",
+              "pl": "Jan Kowalski",
+              "ko": "홍길동"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
+        "id": "ufv_device_access_garagedoor_keypad_denied",
+        "title": {
+          "en": "Wrong PIN entered on garage door",
+          "nl": "Verkeerde PIN ingevoerd op garagedeur",
+          "de": "Falscher PIN an Garagentor eingegeben",
+          "fr": "PIN incorrect saisi sur la porte de garage",
+          "it": "PIN errato inserito sul portone del garage",
+          "sv": "Fel PIN angett på garageport",
+          "no": "Feil PIN tastet inn på garasjeport",
+          "es": "PIN incorrecto introducido en la puerta del garaje",
+          "da": "Forkert PIN indtastet på garageport",
+          "ru": "Неверный PIN введён на воротах гаража",
+          "pl": "Nieprawidłowy PIN wprowadzony przy bramie garażowej",
+          "ko": "차고문에서 잘못된 PIN 입력됨"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
+        "id": "ufv_device_intercom_bell_pressed",
+        "title": {
+          "en": "Intercom bell was pressed",
+          "nl": "Intercom bel werd ingedrukt",
+          "de": "Intercom-Klingel wurde gedrückt",
+          "fr": "La sonnette de l'interphone a été pressée",
+          "it": "Il campanello del citofono è stato premuto",
+          "sv": "Intercom-klockan trycktes",
+          "no": "Intercom-klokken ble trykket",
+          "es": "Se presionó el timbre del videoportero",
+          "da": "Intercom-klokken blev trykket",
+          "ru": "Нажата кнопка домофона",
+          "pl": "Naciśnięto dzwonek domofonu",
+          "ko": "인터콤 벨이 눌렸습니다"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-intercom"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button",
+        "title": {
+          "en": "FOB button event",
+          "nl": "FOB-knopgebeurtenis",
+          "de": "FOB-Tastenereignis",
+          "fr": "Événement de bouton FOB",
+          "it": "Evento pulsante FOB",
+          "sv": "FOB-knapphändelse",
+          "no": "FOB-knappehendelse",
+          "es": "Evento de botón FOB",
+          "da": "FOB-knaphændelse",
+          "ru": "Событие кнопки FOB",
+          "pl": "Zdarzenie przycisku FOB",
+          "ko": "FOB 버튼 이벤트"
+        },
+        "titleFormatted": {
+          "en": "FOB button [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "nl": "FOB-knop [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "de": "FOB-Taste [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "fr": "Bouton FOB [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "it": "Pulsante FOB [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "sv": "FOB-knapp [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "no": "FOB-knapp [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "es": "Botón FOB [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "da": "FOB-knap [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "ru": "Кнопка FOB [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "pl": "Przycisk FOB [[ufp_fob_button]] ([[ufp_fob_press_type]])",
+          "ko": "FOB 버튼 [[ufp_fob_button]] ([[ufp_fob_press_type]])"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop",
+              "de": "Taste",
+              "fr": "Bouton",
+              "it": "Pulsante",
+              "sv": "Knapp",
+              "no": "Knapp",
+              "es": "Botón",
+              "da": "Knap",
+              "ru": "Кнопка",
+              "pl": "Przycisk",
+              "ko": "버튼"
+            }
+          },
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_press",
+        "title": {
+          "en": "FOB button pressed",
+          "nl": "FOB-knop ingedrukt",
+          "de": "FOB-Taste gedrückt",
+          "fr": "Bouton FOB pressé",
+          "it": "Pulsante FOB premuto",
+          "sv": "FOB-knapp tryckt",
+          "no": "FOB-knapp trykket",
+          "es": "Botón FOB pulsado",
+          "da": "FOB-knap trykket",
+          "ru": "Кнопка FOB нажата",
+          "pl": "Przycisk FOB naciśnięty",
+          "ko": "FOB 버튼 눌림"
+        },
+        "titleFormatted": {
+          "en": "FOB button [[ufp_fob_button]] pressed",
+          "nl": "FOB-knop [[ufp_fob_button]] ingedrukt",
+          "de": "FOB-Taste [[ufp_fob_button]] gedrückt",
+          "fr": "Bouton FOB [[ufp_fob_button]] pressé",
+          "it": "Pulsante FOB [[ufp_fob_button]] premuto",
+          "sv": "FOB-knapp [[ufp_fob_button]] tryckt",
+          "no": "FOB-knapp [[ufp_fob_button]] trykket",
+          "es": "Botón FOB [[ufp_fob_button]] pulsado",
+          "da": "FOB-knap [[ufp_fob_button]] trykket",
+          "ru": "Кнопка FOB [[ufp_fob_button]] нажата",
+          "pl": "Przycisk FOB [[ufp_fob_button]] naciśnięty",
+          "ko": "FOB 버튼 [[ufp_fob_button]] 눌림"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop",
+              "de": "Taste",
+              "fr": "Bouton",
+              "it": "Pulsante",
+              "sv": "Knapp",
+              "no": "Knapp",
+              "es": "Botón",
+              "da": "Knap",
+              "ru": "Кнопка",
+              "pl": "Przycisk",
+              "ko": "버튼"
+            }
+          },
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_long_press",
+        "title": {
+          "en": "FOB button long pressed",
+          "nl": "FOB-knop lang ingedrukt",
+          "de": "FOB-Taste lang gedrückt",
+          "fr": "Bouton FOB maintenu",
+          "it": "Pulsante FOB tenuto premuto",
+          "sv": "FOB-knapp hålls intryckt",
+          "no": "FOB-knapp holdt inne",
+          "es": "Botón FOB mantenido",
+          "da": "FOB-knap holdt nede",
+          "ru": "Кнопка FOB удерживается",
+          "pl": "Przycisk FOB przytrzymany",
+          "ko": "FOB 버튼 길게 눌림"
+        },
+        "titleFormatted": {
+          "en": "FOB button [[ufp_fob_button]] long pressed",
+          "nl": "FOB-knop [[ufp_fob_button]] lang ingedrukt",
+          "de": "FOB-Taste [[ufp_fob_button]] lang gedrückt",
+          "fr": "Bouton FOB [[ufp_fob_button]] maintenu",
+          "it": "Pulsante FOB [[ufp_fob_button]] tenuto premuto",
+          "sv": "FOB-knapp [[ufp_fob_button]] hålls intryckt",
+          "no": "FOB-knapp [[ufp_fob_button]] holdt inne",
+          "es": "Botón FOB [[ufp_fob_button]] mantenido",
+          "da": "FOB-knap [[ufp_fob_button]] holdt nede",
+          "ru": "Кнопка FOB [[ufp_fob_button]] удерживается",
+          "pl": "Przycisk FOB [[ufp_fob_button]] przytrzymany",
+          "ko": "FOB 버튼 [[ufp_fob_button]] 길게 눌림"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop",
+              "de": "Taste",
+              "fr": "Bouton",
+              "it": "Pulsante",
+              "sv": "Knapp",
+              "no": "Knapp",
+              "es": "Botón",
+              "da": "Knap",
+              "ru": "Кнопка",
+              "pl": "Przycisk",
+              "ko": "버튼"
+            }
+          },
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_double_press",
+        "title": {
+          "en": "FOB button double pressed",
+          "nl": "FOB-knop dubbel ingedrukt",
+          "de": "FOB-Taste doppelt gedrückt",
+          "fr": "Bouton FOB double-pressé",
+          "it": "Pulsante FOB premuto due volte",
+          "sv": "FOB-knapp dubbelklickad",
+          "no": "FOB-knapp dobbelttrykket",
+          "es": "Botón FOB pulsado dos veces",
+          "da": "FOB-knap dobbelt trykket",
+          "ru": "Кнопка FOB нажата дважды",
+          "pl": "Przycisk FOB naciśnięty dwukrotnie",
+          "ko": "FOB 버튼 두 번 눌림"
+        },
+        "titleFormatted": {
+          "en": "FOB button [[ufp_fob_button]] double pressed",
+          "nl": "FOB-knop [[ufp_fob_button]] dubbel ingedrukt",
+          "de": "FOB-Taste [[ufp_fob_button]] doppelt gedrückt",
+          "fr": "Bouton FOB [[ufp_fob_button]] double-pressé",
+          "it": "Pulsante FOB [[ufp_fob_button]] premuto due volte",
+          "sv": "FOB-knapp [[ufp_fob_button]] dubbelklickad",
+          "no": "FOB-knapp [[ufp_fob_button]] dobbelttrykket",
+          "es": "Botón FOB [[ufp_fob_button]] pulsado dos veces",
+          "da": "FOB-knap [[ufp_fob_button]] dobbelt trykket",
+          "ru": "Кнопка FOB [[ufp_fob_button]] нажата дважды",
+          "pl": "Przycisk FOB [[ufp_fob_button]] naciśnięty dwukrotnie",
+          "ko": "FOB 버튼 [[ufp_fob_button]] 두 번 눌림"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop",
+              "de": "Taste",
+              "fr": "Bouton",
+              "it": "Pulsante",
+              "sv": "Knapp",
+              "no": "Knapp",
+              "es": "Botón",
+              "da": "Knap",
+              "ru": "Кнопка",
+              "pl": "Przycisk",
+              "ko": "버튼"
+            }
+          },
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_arm",
+        "title": {
+          "en": "ARM button was pressed",
+          "nl": "ARM-knop ingedrukt",
+          "de": "ARM-Taste wurde gedrückt",
+          "fr": "Le bouton ARM a été pressé",
+          "it": "Il pulsante ARM è stato premuto",
+          "sv": "ARM-knappen trycktes",
+          "no": "ARM-knappen ble trykket",
+          "es": "Se pulsó el botón ARM",
+          "da": "ARM-knappen blev trykket",
+          "ru": "Кнопка ARM нажата",
+          "pl": "Naciśnięto przycisk ARM",
+          "ko": "ARM 버튼이 눌렸습니다"
+        },
+        "titleFormatted": {
+          "en": "ARM button was [[ufp_fob_press_type]]",
+          "nl": "ARM-knop [[ufp_fob_press_type]]",
+          "de": "ARM-Taste [[ufp_fob_press_type]]",
+          "fr": "Bouton ARM [[ufp_fob_press_type]]",
+          "it": "Pulsante ARM [[ufp_fob_press_type]]",
+          "sv": "ARM-knapp [[ufp_fob_press_type]]",
+          "no": "ARM-knapp [[ufp_fob_press_type]]",
+          "es": "Botón ARM [[ufp_fob_press_type]]",
+          "da": "ARM-knap [[ufp_fob_press_type]]",
+          "ru": "Кнопка ARM: [[ufp_fob_press_type]]",
+          "pl": "Przycisk ARM: [[ufp_fob_press_type]]",
+          "ko": "ARM 버튼: [[ufp_fob_press_type]]"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_disarm",
+        "title": {
+          "en": "DISARM button was pressed",
+          "nl": "DISARM-knop ingedrukt",
+          "de": "DISARM-Taste wurde gedrückt",
+          "fr": "Le bouton DISARM a été pressé",
+          "it": "Il pulsante DISARM è stato premuto",
+          "sv": "DISARM-knappen trycktes",
+          "no": "DISARM-knappen ble trykket",
+          "es": "Se pulsó el botón DISARM",
+          "da": "DISARM-knappen blev trykket",
+          "ru": "Кнопка DISARM нажата",
+          "pl": "Naciśnięto przycisk DISARM",
+          "ko": "DISARM 버튼이 눌렸습니다"
+        },
+        "titleFormatted": {
+          "en": "DISARM button was [[ufp_fob_press_type]]",
+          "nl": "DISARM-knop [[ufp_fob_press_type]]",
+          "de": "DISARM-Taste [[ufp_fob_press_type]]",
+          "fr": "Bouton DISARM [[ufp_fob_press_type]]",
+          "it": "Pulsante DISARM [[ufp_fob_press_type]]",
+          "sv": "DISARM-knapp [[ufp_fob_press_type]]",
+          "no": "DISARM-knapp [[ufp_fob_press_type]]",
+          "es": "Botón DISARM [[ufp_fob_press_type]]",
+          "da": "DISARM-knap [[ufp_fob_press_type]]",
+          "ru": "Кнопка DISARM: [[ufp_fob_press_type]]",
+          "pl": "Przycisk DISARM: [[ufp_fob_press_type]]",
+          "ko": "DISARM 버튼: [[ufp_fob_press_type]]"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_panic",
+        "title": {
+          "en": "PANIC button was pressed",
+          "nl": "PANIC-knop ingedrukt",
+          "de": "PANIC-Taste wurde gedrückt",
+          "fr": "Le bouton PANIC a été pressé",
+          "it": "Il pulsante PANIC è stato premuto",
+          "sv": "PANIC-knappen trycktes",
+          "no": "PANIC-knappen ble trykket",
+          "es": "Se pulsó el botón PANIC",
+          "da": "PANIC-knappen blev trykket",
+          "ru": "Кнопка PANIC нажата",
+          "pl": "Naciśnięto przycisk PANIC",
+          "ko": "PANIC 버튼이 눌렸습니다"
+        },
+        "titleFormatted": {
+          "en": "PANIC button was [[ufp_fob_press_type]]",
+          "nl": "PANIC-knop [[ufp_fob_press_type]]",
+          "de": "PANIC-Taste [[ufp_fob_press_type]]",
+          "fr": "Bouton PANIC [[ufp_fob_press_type]]",
+          "it": "Pulsante PANIC [[ufp_fob_press_type]]",
+          "sv": "PANIC-knapp [[ufp_fob_press_type]]",
+          "no": "PANIC-knapp [[ufp_fob_press_type]]",
+          "es": "Botón PANIC [[ufp_fob_press_type]]",
+          "da": "PANIC-knap [[ufp_fob_press_type]]",
+          "ru": "Кнопка PANIC: [[ufp_fob_press_type]]",
+          "pl": "Przycisk PANIC: [[ufp_fob_press_type]]",
+          "ko": "PANIC 버튼: [[ufp_fob_press_type]]"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_night",
+        "title": {
+          "en": "NIGHT button was pressed",
+          "nl": "NACHT-knop ingedrukt",
+          "de": "NACHT-Taste wurde gedrückt",
+          "fr": "Le bouton NUIT a été pressé",
+          "it": "Il pulsante NOTTE è stato premuto",
+          "sv": "NATT-knappen trycktes",
+          "no": "NATT-knappen ble trykket",
+          "es": "Se pulsó el botón NOCHE",
+          "da": "NAT-knappen blev trykket",
+          "ru": "Кнопка НОЧЬ нажата",
+          "pl": "Naciśnięto przycisk NOC",
+          "ko": "밤 버튼이 눌렸습니다"
+        },
+        "titleFormatted": {
+          "en": "NIGHT button was [[ufp_fob_press_type]]",
+          "nl": "NACHT-knop [[ufp_fob_press_type]]",
+          "de": "NACHT-Taste [[ufp_fob_press_type]]",
+          "fr": "Bouton NUIT [[ufp_fob_press_type]]",
+          "it": "Pulsante NOTTE [[ufp_fob_press_type]]",
+          "sv": "NATT-knapp [[ufp_fob_press_type]]",
+          "no": "NATT-knapp [[ufp_fob_press_type]]",
+          "es": "Botón NOCHE [[ufp_fob_press_type]]",
+          "da": "NAT-knap [[ufp_fob_press_type]]",
+          "ru": "Кнопка НОЧЬ: [[ufp_fob_press_type]]",
+          "pl": "Przycisk NOC: [[ufp_fob_press_type]]",
+          "ko": "밤 버튼: [[ufp_fob_press_type]]"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_left",
+        "title": {
+          "en": "LEFT button was pressed",
+          "nl": "LINKS-knop ingedrukt",
+          "de": "LINKS-Taste wurde gedrückt",
+          "fr": "Le bouton GAUCHE a été pressé",
+          "it": "Il pulsante SINISTRA è stato premuto",
+          "sv": "VÄNSTER-knappen trycktes",
+          "no": "VENSTRE-knappen ble trykket",
+          "es": "Se pulsó el botón IZQUIERDA",
+          "da": "VENSTRE-knappen blev trykket",
+          "ru": "Кнопка ВЛЕВО нажата",
+          "pl": "Naciśnięto przycisk LEWO",
+          "ko": "왼쪽 버튼이 눌렸습니다"
+        },
+        "titleFormatted": {
+          "en": "LEFT button was [[ufp_fob_press_type]]",
+          "nl": "LINKS-knop [[ufp_fob_press_type]]",
+          "de": "LINKS-Taste [[ufp_fob_press_type]]",
+          "fr": "Bouton GAUCHE [[ufp_fob_press_type]]",
+          "it": "Pulsante SINISTRA [[ufp_fob_press_type]]",
+          "sv": "VÄNSTER-knapp [[ufp_fob_press_type]]",
+          "no": "VENSTRE-knapp [[ufp_fob_press_type]]",
+          "es": "Botón IZQUIERDA [[ufp_fob_press_type]]",
+          "da": "VENSTRE-knap [[ufp_fob_press_type]]",
+          "ru": "Кнопка ВЛЕВО: [[ufp_fob_press_type]]",
+          "pl": "Przycisk LEWO: [[ufp_fob_press_type]]",
+          "ko": "왼쪽 버튼: [[ufp_fob_press_type]]"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_fob_button_right",
+        "title": {
+          "en": "RIGHT button was pressed",
+          "nl": "RECHTS-knop ingedrukt",
+          "de": "RECHTS-Taste wurde gedrückt",
+          "fr": "Le bouton DROITE a été pressé",
+          "it": "Il pulsante DESTRA è stato premuto",
+          "sv": "HÖGER-knappen trycktes",
+          "no": "HØYRE-knappen ble trykket",
+          "es": "Se pulsó el botón DERECHA",
+          "da": "HØJRE-knappen blev trykket",
+          "ru": "Кнопка ВПРАВО нажата",
+          "pl": "Naciśnięto przycisk PRAWO",
+          "ko": "오른쪽 버튼이 눌렸습니다"
+        },
+        "titleFormatted": {
+          "en": "RIGHT button was [[ufp_fob_press_type]]",
+          "nl": "RECHTS-knop [[ufp_fob_press_type]]",
+          "de": "RECHTS-Taste [[ufp_fob_press_type]]",
+          "fr": "Bouton DROITE [[ufp_fob_press_type]]",
+          "it": "Pulsante DESTRA [[ufp_fob_press_type]]",
+          "sv": "HÖGER-knapp [[ufp_fob_press_type]]",
+          "no": "HØYRE-knapp [[ufp_fob_press_type]]",
+          "es": "Botón DERECHA [[ufp_fob_press_type]]",
+          "da": "HØJRE-knap [[ufp_fob_press_type]]",
+          "ru": "Кнопка ВПРАВО: [[ufp_fob_press_type]]",
+          "pl": "Przycisk PRAWO: [[ufp_fob_press_type]]",
+          "ko": "오른쪽 버튼: [[ufp_fob_press_type]]"
+        },
+        "tokens": [
+          {
+            "name": "ufp_fob_press_type",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype",
+              "de": "Drucktyp",
+              "fr": "Type de pression",
+              "it": "Tipo di pressione",
+              "sv": "Trycktyp",
+              "no": "Trykktype",
+              "es": "Tipo de pulsación",
+              "da": "Tryktype",
+              "ru": "Тип нажатия",
+              "pl": "Typ naciśnięcia",
+              "ko": "누름 유형"
+            }
+          },
+          {
+            "name": "ufp_fob_timestamp",
+            "type": "number",
+            "title": {
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "de": "Zeitstempel",
+              "fr": "Horodatage",
+              "it": "Timestamp",
+              "sv": "Tidsstämpel",
+              "no": "Tidsstempel",
+              "es": "Marca de tiempo",
+              "da": "Tidsstempel",
+              "ru": "Временная метка",
+              "pl": "Znacznik czasu",
+              "ko": "타임스탬프"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-fob"
           }
         ]
       },
@@ -1207,6 +2700,94 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protect-nvr-alarm"
+          }
+        ]
+      },
+      {
+        "id": "ufp_nvr_alarm_breach",
+        "title": {
+          "en": "Alarm breached (intrusion detected)",
+          "nl": "Alarm geschonden (inbraak gedetecteerd)",
+          "de": "Alarm ausgelöst (Eindringen erkannt)",
+          "fr": "Alarme déclenchée (intrusion détectée)",
+          "it": "Allarme violato (intrusione rilevata)",
+          "sv": "Larm utlöst (intrång upptäckt)",
+          "no": "Alarm brutt (innbrudd oppdaget)",
+          "es": "Alarma activada (intrusión detectada)",
+          "da": "Alarm brudt (indbrud registreret)",
+          "ru": "Тревога сработала (обнаружено вторжение)",
+          "pl": "Alarm naruszony (wykryto włamanie)",
+          "ko": "알람 침해됨 (침입 감지됨)"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-nvr-alarm"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_relay_state_changed",
+        "title": {
+          "en": "Relay state changed",
+          "nl": "Relaisstatus gewijzigd"
+        },
+        "titleFormatted": {
+          "en": "Relay state changed to [[relay_state]]",
+          "nl": "Relaisstatus gewijzigd naar [[relay_state]]"
+        },
+        "tokens": [
+          {
+            "name": "relay_state",
+            "type": "string",
+            "title": {
+              "en": "Relay state",
+              "nl": "Relaisstatus"
+            }
+          },
+          {
+            "name": "relay_state_onoff",
+            "type": "boolean",
+            "title": {
+              "en": "Relay on",
+              "nl": "Relais aan"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_relay_turned_on",
+        "title": {
+          "en": "Relay turned on",
+          "nl": "Relais ingeschakeld"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_relay_turned_off",
+        "title": {
+          "en": "Relay turned off",
+          "nl": "Relais uitgeschakeld"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
           }
         ]
       },
@@ -2046,6 +3627,28 @@
               "pl": "1, 2",
               "ko": "1, 2"
             }
+          },
+          {
+            "name": "license_plate",
+            "type": "string",
+            "title": {
+              "en": "License plate",
+              "nl": "Kenteken",
+              "de": "Kennzeichen",
+              "fr": "Plaque d'immatriculation",
+              "it": "Targa",
+              "sv": "Registreringsskylt",
+              "no": "Registreringsskilt",
+              "es": "Matrícula",
+              "da": "Nummerplade",
+              "ru": "Номерной знак",
+              "pl": "Tablica rejestracyjna",
+              "ko": "번호판"
+            },
+            "example": {
+              "en": "ABC-123",
+              "nl": "AB-12-CD"
+            }
           }
         ],
         "args": [
@@ -2653,6 +4256,30 @@
         ]
       },
       {
+        "id": "ufp_device_fingerprint_unknown",
+        "title": {
+          "en": "An unknown fingerprint was detected",
+          "nl": "Een onbekende vingerafdruk is gedetecteerd",
+          "de": "Ein unbekannter Fingerabdruck wurde erkannt",
+          "fr": "Une empreinte digitale inconnue a été détectée",
+          "it": "È stata rilevata un'impronta digitale sconosciuta",
+          "sv": "Ett okänt fingeravtryck har identifierats",
+          "no": "Et ukjent fingeravtrykk ble oppdaget",
+          "es": "Se ha detectado una huella dactilar desconocida",
+          "da": "Et ukendt fingeraftryk blev registreret",
+          "ru": "Обнаружен неизвестный отпечаток пальца",
+          "pl": "Wykryto nieznany odcisk palca",
+          "ko": "알 수 없는 지문이 감지되었습니다"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
         "deprecated": true,
         "id": "ufp_device_door_access",
         "title": {
@@ -2982,6 +4609,96 @@
               "ru": "xxxxxx",
               "pl": "xxxxxx",
               "ko": "xxxxxx"
+            }
+          },
+          {
+            "name": "ufp_device_nfc_card_scanned_nfc_id",
+            "type": "string",
+            "title": {
+              "en": "NFC ID",
+              "nl": "NFC ID",
+              "de": "NFC-ID",
+              "fr": "ID NFC",
+              "it": "ID NFC",
+              "sv": "NFC-ID",
+              "no": "NFC-ID",
+              "es": "ID NFC",
+              "da": "NFC-ID",
+              "ru": "NFC ID",
+              "pl": "ID NFC",
+              "ko": "NFC ID"
+            },
+            "example": {
+              "en": "01234AA2A12345",
+              "nl": "01234AA2A12345",
+              "de": "01234AA2A12345",
+              "fr": "01234AA2A12345",
+              "it": "01234AA2A12345",
+              "sv": "01234AA2A12345",
+              "no": "01234AA2A12345",
+              "es": "01234AA2A12345",
+              "da": "01234AA2A12345",
+              "ru": "01234AA2A12345",
+              "pl": "01234AA2A12345",
+              "ko": "01234AA2A12345"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_nfc_unknown_card_scanned",
+        "title": {
+          "en": "An unknown NFC card was scanned",
+          "nl": "Een onbekende NFC kaart is gescand",
+          "de": "Eine unbekannte NFC-Karte wurde gescannt",
+          "fr": "Une carte NFC inconnue a été scannée",
+          "it": "È stata scansionata una scheda NFC sconosciuta",
+          "sv": "Ett okänt NFC-kort har skannats",
+          "no": "Et ukjent NFC-kort ble skannet",
+          "es": "Se ha escaneado una tarjeta NFC desconocida",
+          "da": "Et ukendt NFC-kort blev scannet",
+          "ru": "Сканирована неизвестная NFC-карта",
+          "pl": "Zeskanowano nieznaną kartę NFC",
+          "ko": "알 수 없는 NFC 카드가 스캔되었습니다"
+        },
+        "tokens": [
+          {
+            "name": "ufp_device_nfc_unknown_card_scanned_nfc_id",
+            "type": "string",
+            "title": {
+              "en": "NFC ID",
+              "nl": "NFC ID",
+              "de": "NFC-ID",
+              "fr": "ID NFC",
+              "it": "ID NFC",
+              "sv": "NFC-ID",
+              "no": "NFC-ID",
+              "es": "ID NFC",
+              "da": "NFC-ID",
+              "ru": "NFC ID",
+              "pl": "ID NFC",
+              "ko": "NFC ID"
+            },
+            "example": {
+              "en": "01234AA2A12345",
+              "nl": "01234AA2A12345",
+              "de": "01234AA2A12345",
+              "fr": "01234AA2A12345",
+              "it": "01234AA2A12345",
+              "sv": "01234AA2A12345",
+              "no": "01234AA2A12345",
+              "es": "01234AA2A12345",
+              "da": "01234AA2A12345",
+              "ru": "01234AA2A12345",
+              "pl": "01234AA2A12345",
+              "ko": "01234AA2A12345"
             }
           }
         ],
@@ -3555,6 +5272,28 @@
               "pl": "1, 2",
               "ko": "1, 2"
             }
+          },
+          {
+            "name": "license_plate",
+            "type": "string",
+            "title": {
+              "en": "License plate",
+              "nl": "Kenteken",
+              "de": "Kennzeichen",
+              "fr": "Plaque d'immatriculation",
+              "it": "Targa",
+              "sv": "Registreringsskylt",
+              "no": "Registreringsskilt",
+              "es": "Matrícula",
+              "da": "Nummerplade",
+              "ru": "Номерной знак",
+              "pl": "Tablica rejestracyjna",
+              "ko": "번호판"
+            },
+            "example": {
+              "en": "ABC-123",
+              "nl": "AB-12-CD"
+            }
           }
         ],
         "args": [
@@ -3946,6 +5685,173 @@
               "pl": "85",
               "ko": "85"
             }
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "ufp_fob_button_is",
+        "title": {
+          "en": "FOB button is [[button]]",
+          "nl": "FOB-knop is [[button]]"
+        },
+        "titleFormatted": {
+          "en": "FOB button is [[button]]",
+          "nl": "FOB-knop is [[button]]"
+        },
+        "args": [
+          {
+            "type": "dropdown",
+            "name": "button",
+            "title": {
+              "en": "Button",
+              "nl": "Knop"
+            },
+            "values": [
+              {
+                "id": "arm",
+                "title": {
+                  "en": "Arm",
+                  "nl": "Inschakelen"
+                }
+              },
+              {
+                "id": "disarm",
+                "title": {
+                  "en": "Disarm",
+                  "nl": "Uitschakelen"
+                }
+              },
+              {
+                "id": "panic",
+                "title": {
+                  "en": "Panic",
+                  "nl": "Paniek"
+                }
+              },
+              {
+                "id": "night",
+                "title": {
+                  "en": "Night",
+                  "nl": "Nacht"
+                }
+              },
+              {
+                "id": "left",
+                "title": {
+                  "en": "Left",
+                  "nl": "Links"
+                }
+              },
+              {
+                "id": "right",
+                "title": {
+                  "en": "Right",
+                  "nl": "Rechts"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ufp_fob_press_type_is",
+        "title": {
+          "en": "FOB press type is [[press_type]]",
+          "nl": "FOB-druktype is [[press_type]]"
+        },
+        "titleFormatted": {
+          "en": "FOB press type is [[press_type]]",
+          "nl": "FOB-druktype is [[press_type]]"
+        },
+        "args": [
+          {
+            "type": "dropdown",
+            "name": "press_type",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype"
+            },
+            "values": [
+              {
+                "id": "press",
+                "title": {
+                  "en": "Press",
+                  "nl": "Drukken"
+                }
+              },
+              {
+                "id": "longPress",
+                "title": {
+                  "en": "Long press",
+                  "nl": "Lang indrukken"
+                }
+              },
+              {
+                "id": "doublePress",
+                "title": {
+                  "en": "Double press",
+                  "nl": "Dubbel drukken"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_garage_is_open",
+        "title": {
+          "en": "Garage is open",
+          "nl": "Garage is open"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_garage_is_closed",
+        "title": {
+          "en": "Garage is closed",
+          "nl": "Garage is dicht"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_relay_is_open",
+        "title": {
+          "en": "Relay status is open",
+          "nl": "Relaisstatus is open"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          }
+        ]
+      },
+      {
+        "id": "ufp_device_relay_is_closed",
+        "title": {
+          "en": "Relay status is closed",
+          "nl": "Relaisstatus is dicht"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
           }
         ]
       }
@@ -4764,6 +6670,30 @@
         ]
       },
       {
+        "id": "ufv_intercom_unlock_door",
+        "title": {
+          "en": "Unlock intercom door",
+          "nl": "Intercom deur ontgrendelen",
+          "de": "Intercom-Tür entriegeln",
+          "fr": "Déverrouiller la porte de l'interphone",
+          "it": "Sblocca la porta del citofono",
+          "sv": "Lås upp intercom-dörren",
+          "no": "Lås opp intercom-dør",
+          "es": "Desbloquear puerta del videoportero",
+          "da": "Lås intercom-dør op",
+          "ru": "Разблокировать дверь домофона",
+          "pl": "Odblokuj drzwi domofonu",
+          "ko": "인터콤 문 잠금 해제"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-intercom"
+          }
+        ]
+      },
+      {
         "id": "ufv_set_reader_access_method_wave",
         "title": {
           "en": "Set Reader Access Method Wave",
@@ -4988,6 +6918,37 @@
         ]
       },
       {
+        "id": "ufp_pulse_device_relay",
+        "title": {
+          "en": "Pulse relay",
+          "nl": "Puls relais"
+        },
+        "titleFormatted": {
+          "en": "Pulse relay for [[pulse_duration]] ms",
+          "nl": "Puls relais voor [[pulse_duration]] ms"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-relay"
+          },
+          {
+            "type": "number",
+            "name": "pulse_duration",
+            "title": {
+              "en": "Pulse duration (ms)",
+              "nl": "Pulsduur (ms)"
+            },
+            "defaultValue": 1000,
+            "required": true,
+            "minValue": 1,
+            "maxValue": 60000,
+            "stepValue": 1
+          }
+        ]
+      },
+      {
         "id": "ufv_set_device_doorbell_test_siren",
         "title": {
           "en": "Test siren sound",
@@ -5016,6 +6977,56 @@
             "label": "%",
             "labelMultiplier": 100,
             "labelDecimals": 0
+          }
+        ]
+      },
+      {
+        "id": "ufp_set_viewport_liveview",
+        "title": {
+          "en": "Set Viewport Liveview",
+          "nl": "Stel Viewport Liveview in",
+          "de": "Viewport-Liveview einstellen",
+          "fr": "Définir la vue en direct du viewport",
+          "it": "Imposta la visualizzazione live del viewport",
+          "sv": "Ställ in viewport livevisning",
+          "no": "Angi viewport live-visning",
+          "es": "Establecer vista en vivo del viewport",
+          "da": "Indstil viewport live-visning",
+          "ru": "Установить прямой эфир viewport",
+          "pl": "Ustaw widok na żywo viewportu",
+          "ko": "뷰포트 라이브뷰 설정"
+        },
+        "titleFormatted": {
+          "en": "Set Viewport to liveview [[liveview_id]]",
+          "nl": "Stel Viewport in op liveview [[liveview_id]]",
+          "de": "Viewport auf Liveview [[liveview_id]] einstellen",
+          "fr": "Définir le viewport sur la vue en direct [[liveview_id]]",
+          "it": "Imposta il viewport sulla visualizzazione live [[liveview_id]]",
+          "sv": "Ställ in viewport på livevisning [[liveview_id]]",
+          "no": "Sett viewport til live-visning [[liveview_id]]",
+          "es": "Establecer viewport en vista en vivo [[liveview_id]]",
+          "da": "Indstil viewport til live-visning [[liveview_id]]",
+          "ru": "Установить viewport на прямой эфир [[liveview_id]]",
+          "pl": "Ustaw viewport na widok na żywo [[liveview_id]]",
+          "ko": "뷰포트를 라이브뷰 [[liveview_id]]로 설정"
+        },
+        "hint": {
+          "en": "Enter the liveview ID from the UniFi Protect NVR",
+          "nl": "Voer het liveview ID in van de UniFi Protect NVR"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-viewport"
+          },
+          {
+            "type": "text",
+            "name": "liveview_id",
+            "placeholder": {
+              "en": "Liveview ID (e.g. 68f0885c0245f403e42ca91a)",
+              "nl": "Liveview ID (bijv. 68f0885c0245f403e42ca91a)"
+            }
           }
         ]
       },
@@ -5220,6 +7231,56 @@
         ]
       },
       {
+        "id": "ufv_set_device_camera_face_detection",
+        "title": {
+          "en": "Enable/Disable face detection",
+          "nl": "Gezichtsherkenning in-/uitschakelen"
+        },
+        "titleFormatted": {
+          "en": "Set face detection [[enabled]]",
+          "nl": "Stel gezichtsherkenning in op [[enabled]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectcamera"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_device_chime_test_tone",
+        "title": {
+          "en": "Play test tone",
+          "nl": "Speel testtoon af",
+          "de": "Testton abspielen",
+          "fr": "Jouer un son test",
+          "it": "Riproduci tono di test",
+          "sv": "Spela testton",
+          "no": "Spill av testtone",
+          "es": "Reproducir tono de prueba",
+          "da": "Afspil testtone",
+          "ru": "Воспроизвести тестовый сигнал",
+          "pl": "Odtwórz dźwięk testowy",
+          "ko": "테스트 음 재생"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectchime"
+          }
+        ]
+      },
+      {
         "id": "ufv_set_device_doorbell_status_led",
         "title": {
           "en": "Set doorbell status LED",
@@ -5344,6 +7405,278 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectdoorbell"
+          }
+        ]
+      },
+      {
+        "id": "ufp_set_device_doorbell_ring_volume",
+        "title": {
+          "en": "Set doorbell ring volume",
+          "nl": "Stel deurbel belvolume in",
+          "de": "Klingelvolumen der Türklingel einstellen",
+          "fr": "Définir le volume de sonnerie de la sonnette",
+          "it": "Imposta volume suoneria campanello",
+          "sv": "Ställ in dörrklockornas ringvolym",
+          "no": "Angi ringeklokke ringevolum",
+          "es": "Establecer volumen de timbre del timbre",
+          "da": "Indstil dørklokke ringelydstyrke",
+          "ru": "Установить громкость звонка домофона",
+          "pl": "Ustaw głośność dzwonka przy drzwiach",
+          "ko": "도어벨 벨소리 볼륨 설정"
+        },
+        "titleFormatted": {
+          "en": "Set doorbell ring volume to [[volume]]",
+          "nl": "Stel deurbel belvolume in op [[volume]]",
+          "de": "Klingelvolumen der Türklingel auf [[volume]] einstellen",
+          "fr": "Définir le volume de sonnerie de la sonnette sur [[volume]]",
+          "it": "Imposta volume suoneria campanello su [[volume]]",
+          "sv": "Ställ in dörrklockornas ringvolym till [[volume]]",
+          "no": "Angi ringeklokke ringevolum til [[volume]]",
+          "es": "Establecer volumen de timbre del timbre en [[volume]]",
+          "da": "Indstil dørklokke ringelydstyrke til [[volume]]",
+          "ru": "Установить громкость звонка домофона на [[volume]]",
+          "pl": "Ustaw głośność dzwonka przy drzwiach na [[volume]]",
+          "ko": "도어벨 벨소리 볼륨을 [[volume]]으로 설정"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "name": "volume",
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "title": {
+              "en": "Volume (0-100)",
+              "nl": "Volume (0-100)",
+              "de": "Lautstärke (0-100)",
+              "fr": "Volume (0-100)",
+              "it": "Volume (0-100)",
+              "sv": "Volym (0-100)",
+              "no": "Volum (0-100)",
+              "es": "Volumen (0-100)",
+              "da": "Lydstyrke (0-100)",
+              "ru": "Громкость (0-100)",
+              "pl": "Głośność (0-100)",
+              "ko": "볼륨 (0-100)"
+            },
+            "placeholder": {
+              "en": "50",
+              "nl": "50",
+              "de": "50",
+              "fr": "50",
+              "it": "50",
+              "sv": "50",
+              "no": "50",
+              "es": "50",
+              "da": "50",
+              "ru": "50",
+              "pl": "50",
+              "ko": "50"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_set_device_doorbell_speaker_volume",
+        "title": {
+          "en": "Set doorbell speaker volume",
+          "nl": "Stel deurbel luidspreker volume in",
+          "de": "Lautsprecherlautstärke der Türklingel einstellen",
+          "fr": "Définir le volume du haut-parleur de la sonnette",
+          "it": "Imposta volume altoparlante campanello",
+          "sv": "Ställ in dörrklockornas högtalarvolym",
+          "no": "Angi ringeklokke høyttaler volum",
+          "es": "Establecer volumen del altavoz del timbre",
+          "da": "Indstil dørklokke højttalerlydstyrke",
+          "ru": "Установить громкость динамика домофона",
+          "pl": "Ustaw głośność głośnika dzwonka przy drzwiach",
+          "ko": "도어벨 스피커 볼륨 설정"
+        },
+        "titleFormatted": {
+          "en": "Set doorbell speaker volume to [[volume]]",
+          "nl": "Stel deurbel luidspreker volume in op [[volume]]",
+          "de": "Lautsprecherlautstärke der Türklingel auf [[volume]] einstellen",
+          "fr": "Définir le volume du haut-parleur de la sonnette sur [[volume]]",
+          "it": "Imposta volume altoparlante campanello su [[volume]]",
+          "sv": "Ställ in dörrklockornas högtalarvolym till [[volume]]",
+          "no": "Angi ringeklokke høyttaler volum til [[volume]]",
+          "es": "Establecer volumen del altavoz del timbre en [[volume]]",
+          "da": "Indstil dørklokke højttalerlydstyrke til [[volume]]",
+          "ru": "Установить громкость динамика домофона на [[volume]]",
+          "pl": "Ustaw głośność głośnika dzwonka przy drzwiach na [[volume]]",
+          "ko": "도어벨 스피커 볼륨을 [[volume]]으로 설정"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "name": "volume",
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "title": {
+              "en": "Volume (0-100)",
+              "nl": "Volume (0-100)",
+              "de": "Lautstärke (0-100)",
+              "fr": "Volume (0-100)",
+              "it": "Volume (0-100)",
+              "sv": "Volym (0-100)",
+              "no": "Volum (0-100)",
+              "es": "Volumen (0-100)",
+              "da": "Lydstyrke (0-100)",
+              "ru": "Громкость (0-100)",
+              "pl": "Głośność (0-100)",
+              "ko": "볼륨 (0-100)"
+            },
+            "placeholder": {
+              "en": "50",
+              "nl": "50",
+              "de": "50",
+              "fr": "50",
+              "it": "50",
+              "sv": "50",
+              "no": "50",
+              "es": "50",
+              "da": "50",
+              "ru": "50",
+              "pl": "50",
+              "ko": "50"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufp_set_device_doorbell_chime_volume",
+        "title": {
+          "en": "Set paired chime volume",
+          "nl": "Stel gekoppeld belvolume in",
+          "de": "Lautstärke der gekoppelten Türglocke einstellen",
+          "fr": "Définir le volume du carillon associé",
+          "it": "Imposta volume campanello abbinato",
+          "sv": "Ställ in parkopplad klockas volym",
+          "no": "Angi volum for koblet ringeklokke",
+          "es": "Establecer volumen del timbre emparejado",
+          "da": "Indstil parret klokkelydstyrke",
+          "ru": "Установить громкость сопряжённого звонка",
+          "pl": "Ustaw głośność sparowanego dzwonka",
+          "ko": "연결된 차임벨 볼륨 설정"
+        },
+        "titleFormatted": {
+          "en": "Set paired chime volume to [[volume]]",
+          "nl": "Stel gekoppeld belvolume in op [[volume]]",
+          "de": "Lautstärke der gekoppelten Türglocke auf [[volume]] einstellen",
+          "fr": "Définir le volume du carillon associé sur [[volume]]",
+          "it": "Imposta volume campanello abbinato su [[volume]]",
+          "sv": "Ställ in parkopplad klockas volym till [[volume]]",
+          "no": "Angi volum for koblet ringeklokke til [[volume]]",
+          "es": "Establecer volumen del timbre emparejado en [[volume]]",
+          "da": "Indstil parret klokkelydstyrke til [[volume]]",
+          "ru": "Установить громкость сопряжённого звонка на [[volume]]",
+          "pl": "Ustaw głośność sparowanego dzwonka na [[volume]]",
+          "ko": "연결된 차임벨 볼륨을 [[volume]]으로 설정"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "name": "volume",
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "title": {
+              "en": "Volume (0-100)",
+              "nl": "Volume (0-100)",
+              "de": "Lautstärke (0-100)",
+              "fr": "Volume (0-100)",
+              "it": "Volume (0-100)",
+              "sv": "Volym (0-100)",
+              "no": "Volum (0-100)",
+              "es": "Volumen (0-100)",
+              "da": "Lydstyrke (0-100)",
+              "ru": "Громкость (0-100)",
+              "pl": "Głośność (0-100)",
+              "ko": "볼륨 (0-100)"
+            },
+            "placeholder": {
+              "en": "50",
+              "nl": "50",
+              "de": "50",
+              "fr": "50",
+              "it": "50",
+              "sv": "50",
+              "no": "50",
+              "es": "50",
+              "da": "50",
+              "ru": "50",
+              "pl": "50",
+              "ko": "50"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ufv_set_device_doorbell_face_detection",
+        "title": {
+          "en": "Enable/Disable face detection",
+          "nl": "Gezichtsherkenning in-/uitschakelen",
+          "de": "Gesichtserkennung aktivieren/deaktivieren",
+          "fr": "Activer/Désactiver la reconnaissance faciale",
+          "it": "Abilita/Disabilita il riconoscimento facciale",
+          "sv": "Aktivera/Inaktivera ansiktsigenkänning",
+          "no": "Aktiver/Deaktiver ansiktsgjenkjenning",
+          "es": "Activar/Desactivar reconocimiento facial",
+          "da": "Aktiver/Deaktiver ansigtsgenkendelse",
+          "ru": "Включить/Отключить распознавание лиц",
+          "pl": "Włącz/Wyłącz rozpoznawanie twarzy",
+          "ko": "얼굴 인식 활성화/비활성화"
+        },
+        "titleFormatted": {
+          "en": "Set face detection [[enabled]]",
+          "nl": "Stel gezichtsherkenning in op [[enabled]]",
+          "de": "Gesichtserkennung [[enabled]] setzen",
+          "fr": "Définir la reconnaissance faciale [[enabled]]",
+          "it": "Imposta riconoscimento facciale [[enabled]]",
+          "sv": "Ställ in ansiktsigenkänning [[enabled]]",
+          "no": "Angi ansiktsgjenkjenning [[enabled]]",
+          "es": "Establecer reconocimiento facial [[enabled]]",
+          "da": "Indstil ansigtsgenkendelse [[enabled]]",
+          "ru": "Установить распознавание лиц [[enabled]]",
+          "pl": "Ustaw rozpoznawanie twarzy [[enabled]]",
+          "ko": "얼굴 인식 설정 [[enabled]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "type": "checkbox",
+            "name": "enabled",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld",
+              "de": "Aktiviert",
+              "fr": "Activé",
+              "it": "Abilitato",
+              "sv": "Aktiverad",
+              "no": "Aktivert",
+              "es": "Habilitado",
+              "da": "Aktiveret",
+              "ru": "Включено",
+              "pl": "Włączone",
+              "ko": "활성화됨"
+            }
           }
         ]
       }
@@ -5494,6 +7827,55 @@
       "id": "access-hub"
     },
     {
+      "id": "access-intercom",
+      "name": {
+        "en": "Access Intercom",
+        "nl": "Access Intercom",
+        "de": "Access Intercom",
+        "fr": "Interphone Access",
+        "it": "Citofono Access",
+        "sv": "Access Intercom",
+        "no": "Access Intercom",
+        "es": "Videoportero Access",
+        "da": "Access Intercom",
+        "ru": "Домофон Access",
+        "pl": "Domofon Access",
+        "ko": "액세스 인터콤"
+      },
+      "class": "doorbell",
+      "capabilities": [
+        "alarm_contact",
+        "locked"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ],
+      "images": {
+        "small": "/drivers/access-intercom/assets/images/small.png",
+        "large": "/drivers/access-intercom/assets/images/large.png",
+        "xlarge": "/drivers/access-intercom/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
       "name": {
         "en": "Access Reader",
         "de": "Access Leser",
@@ -5543,6 +7925,158 @@
         }
       ],
       "id": "access-reader"
+    },
+    {
+      "id": "protect-ai-port",
+      "class": "other",
+      "capabilities": [
+        "onoff",
+        "ip_address"
+      ],
+      "name": {
+        "en": "AI Port",
+        "nl": "AI Port",
+        "de": "AI Port",
+        "fr": "AI Port",
+        "it": "AI Port",
+        "sv": "AI Port",
+        "no": "AI Port",
+        "es": "AI Port",
+        "da": "AI Port",
+        "ru": "AI Port",
+        "pl": "AI Port",
+        "ko": "AI 포트"
+      },
+      "images": {
+        "large": "drivers/protect-ai-port/assets/images/large.png",
+        "small": "drivers/protect-ai-port/assets/images/small.png",
+        "xlarge": "drivers/protect-ai-port/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ]
+    },
+    {
+      "id": "protect-fob",
+      "class": "sensor",
+      "capabilities": [
+        "measure_battery",
+        "alarm_battery"
+      ],
+      "energy": {
+        "batteries": [
+          "CR2032"
+        ]
+      },
+      "name": {
+        "en": "FOB",
+        "nl": "FOB",
+        "de": "FOB",
+        "fr": "FOB",
+        "it": "FOB",
+        "sv": "FOB",
+        "no": "FOB",
+        "es": "FOB",
+        "da": "FOB",
+        "ru": "FOB",
+        "pl": "FOB",
+        "ko": "FOB"
+      },
+      "images": {
+        "xlarge": "drivers/protect-fob/assets/images/xlarge.png",
+        "large": "drivers/protect-fob/assets/images/large.png",
+        "small": "drivers/protect-fob/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ]
+    },
+    {
+      "id": "protect-horn-speaker",
+      "class": "speaker",
+      "capabilities": [
+        "onoff",
+        "volume_set"
+      ],
+      "name": {
+        "en": "Horn Speaker",
+        "nl": "Horn Speaker",
+        "de": "Horn Speaker",
+        "fr": "Horn Speaker",
+        "it": "Horn Speaker",
+        "sv": "Horn Speaker",
+        "no": "Horn Speaker",
+        "es": "Horn Speaker",
+        "da": "Horn Speaker",
+        "ru": "Horn Speaker",
+        "pl": "Horn Speaker",
+        "ko": "Horn Speaker"
+      },
+      "images": {
+        "xlarge": "drivers/protect-horn-speaker/assets/images/xlarge.png",
+        "large": "drivers/protect-horn-speaker/assets/images/large.png",
+        "small": "drivers/protect-horn-speaker/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ]
     },
     {
       "id": "protect-nvr-alarm",
@@ -5647,6 +8181,92 @@
       ]
     },
     {
+      "id": "protect-relay",
+      "class": "socket",
+      "capabilities": [
+        "onoff"
+      ],
+      "name": {
+        "en": "Relay",
+        "nl": "Relais",
+        "de": "Relais",
+        "fr": "Relais",
+        "it": "Relay",
+        "sv": "Relay",
+        "no": "Relay",
+        "es": "Relay",
+        "da": "Relay",
+        "ru": "Реле",
+        "pl": "Przekaźnik",
+        "ko": "릴레이"
+      },
+      "images": {
+        "large": "drivers/protect-relay/assets/images/large.png",
+        "small": "drivers/protect-relay/assets/images/small.png",
+        "xlarge": "drivers/protect-relay/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ],
+      "settings": [
+        {
+          "type": "dropdown",
+          "id": "ufp:relay_status_source",
+          "label": {
+            "en": "Garage status source",
+            "nl": "Bron voor garagestatus"
+          },
+          "hint": {
+            "en": "Choose how open/closed status is derived for garage relay outputs. Auto tries relay input first and falls back to relay output state.",
+            "nl": "Kies hoe open/dicht status wordt bepaald voor garage-relaisuitgangen. Auto probeert eerst relay-input en valt daarna terug op relay-uitgangsstatus."
+          },
+          "value": "auto",
+          "values": [
+            {
+              "id": "auto",
+              "label": {
+                "en": "Auto (input first, output fallback)",
+                "nl": "Auto (eerst input, dan output)"
+              }
+            },
+            {
+              "id": "input",
+              "label": {
+                "en": "Input only",
+                "nl": "Alleen input"
+              }
+            },
+            {
+              "id": "output",
+              "label": {
+                "en": "Output only",
+                "nl": "Alleen output"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "protect-siren",
       "class": "siren",
       "capabilities": [
@@ -5669,6 +8289,55 @@
       "images": {
         "large": "drivers/protect-siren/assets/images/large.png",
         "small": "drivers/protect-siren/assets/images/small.png"
+      },
+      "pair": [
+        {
+          "id": "validate"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ]
+    },
+    {
+      "id": "protect-viewport",
+      "class": "other",
+      "capabilities": [
+        "onoff",
+        "liveview"
+      ],
+      "name": {
+        "en": "Viewport",
+        "nl": "Viewport",
+        "de": "Viewport",
+        "fr": "Viewport",
+        "it": "Viewport",
+        "sv": "Viewport",
+        "no": "Viewport",
+        "es": "Viewport",
+        "da": "Viewport",
+        "ru": "Viewport",
+        "pl": "Viewport",
+        "ko": "뷰포트"
+      },
+      "images": {
+        "large": "drivers/protect-viewport/assets/images/large.png",
+        "small": "drivers/protect-viewport/assets/images/small.png",
+        "xlarge": "drivers/protect-viewport/assets/images/xlarge.png"
       },
       "pair": [
         {
@@ -5886,6 +8555,39 @@
           "placeholder": {
             "en": "rtsp://proxy.server:8554/stream1"
           }
+        },
+        {
+          "type": "checkbox",
+          "label": {
+            "en": "Use camera snapshot",
+            "nl": "Gebruik camera afbeelding",
+            "da": "Brug kamera snapshot",
+            "de": "Kamera-Snapshot verwenden",
+            "fr": "Utiliser l'instantané de la caméra",
+            "it": "Usa snapshot della telecamera",
+            "es": "Usar instantánea de la cámara",
+            "pl": "Użyj zdjęcia z kamery",
+            "sv": "Använd kamerabild",
+            "ko": "카메라 스냅샷 사용",
+            "no": "Bruk kamera snapshot",
+            "ru": "Использовать снимок камеры"
+          },
+          "hint": {
+            "en": "Use 'Use camera snapshot' only when 'Enable Anonymous Snapshot' is enabled in the local camera settings.",
+            "nl": "Gebruik 'Gebruik camera afbeelding' alleen wanneer 'Anonieme snapshot inschakelen' is ingeschakeld in de lokale camerainstellingen.",
+            "da": "Brug 'Brug kamera snapshot' kun når 'Aktiver anonym snapshot' er aktiveret i lokale kameraindstillinger.",
+            "de": "Verwenden Sie 'Kamera-Snapshot verwenden' nur, wenn 'Anonymen Snapshot aktivieren' in den lokalen Kameraeinstellungen aktiviert ist.",
+            "fr": "Utilisez 'Utiliser l'instantané de la caméra' uniquement lorsque 'Activer l'instantané anonyme' est activé dans les paramètres locaux de la caméra.",
+            "it": "Usa 'Usa snapshot della telecamera' solo quando 'Abilita snapshot anonimo' è abilitato nelle impostazioni locali della telecamera.",
+            "es": "Utilice 'Usar instantánea de la cámara' solo cuando 'Habilitar instantánea anónima' esté activado en la configuración local de la cámara.",
+            "pl": "Używaj 'Użyj zdjęcia z kamery' tylko gdy 'Włącz anonimowe zdjęcie' jest aktywne w lokalnych ustawieniach kamery.",
+            "sv": "Använd 'Använd kamerabild' endast när 'Aktivera anonym bild' är aktiverat i kamerans lokala inställningar.",
+            "ko": "'카메라 스냅샷 사용'은 로컬 카메라 설정에서 '익명 스냅샷 활성화'가 활성화된 경우에만 사용하세요.",
+            "no": "Bruk 'Bruk kamera snapshot' kun når 'Aktiver anonym snapshot' er aktivert i lokale kamerainnstillinger.",
+            "ru": "Используйте 'Использовать снимок камеры' только если 'Включить анонимный снимок' включен в локальных настройках камеры."
+          },
+          "id": "useCameraSnapshot",
+          "value": false
         }
       ]
     },
@@ -6029,6 +8731,39 @@
           "placeholder": {
             "en": "rtsp://proxy.server:8554/stream1"
           }
+        },
+        {
+          "type": "checkbox",
+          "label": {
+            "en": "Use camera snapshot",
+            "nl": "Gebruik camera afbeelding",
+            "da": "Brug kamera snapshot",
+            "de": "Kamera-Snapshot verwenden",
+            "fr": "Utiliser l'instantané de la caméra",
+            "it": "Usa snapshot della telecamera",
+            "es": "Usar instantánea de la cámara",
+            "pl": "Użyj zdjęcia z kamery",
+            "sv": "Använd kamerabild",
+            "ko": "카메라 스냅샷 사용",
+            "no": "Bruk kamera snapshot",
+            "ru": "Использовать снимок камеры"
+          },
+          "hint": {
+            "en": "Use 'Use camera snapshot' only when 'Enable Anonymous Snapshot' is enabled in the local camera settings.",
+            "nl": "Gebruik 'Gebruik camera afbeelding' alleen wanneer 'Anonieme snapshot inschakelen' is ingeschakeld in de lokale camerainstellingen.",
+            "da": "Brug 'Brug kamera snapshot' kun når 'Aktiver anonym snapshot' er aktiveret i lokale kameraindstillinger.",
+            "de": "Verwenden Sie 'Kamera-Snapshot verwenden' nur, wenn 'Anonymen Snapshot aktivieren' in den lokalen Kameraeinstellungen aktiviert ist.",
+            "fr": "Utilisez 'Utiliser l'instantané de la caméra' uniquement lorsque 'Activer l'instantané anonyme' est activé dans les paramètres locaux de la caméra.",
+            "it": "Usa 'Usa snapshot della telecamera' solo quando 'Abilita snapshot anonimo' è abilitato nelle impostazioni locali della telecamera.",
+            "es": "Utilice 'Usar instantánea de la cámara' solo cuando 'Habilitar instantánea anónima' esté activado en la configuración local de la cámara.",
+            "pl": "Używaj 'Użyj zdjęcia z kamery' tylko gdy 'Włącz anonimowe zdjęcie' jest aktywne w lokalnych ustawieniach kamery.",
+            "sv": "Använd 'Använd kamerabild' endast när 'Aktivera anonym bild' är aktiverat i kamerans lokala inställningar.",
+            "ko": "'카메라 스냅샷 사용'은 로컬 카메라 설정에서 '익명 스냅샷 활성화'가 활성화된 경우에만 사용하세요.",
+            "no": "Bruk 'Bruk kamera snapshot' kun når 'Aktiver anonym snapshot' er aktivert i lokale kamerainnstillinger.",
+            "ru": "Используйте 'Использовать снимок камеры' только если 'Включить анонимный снимок' включен в локальных настройках камеры."
+          },
+          "id": "useCameraSnapshot",
+          "value": false
         }
       ]
     },
@@ -6225,13 +8960,23 @@
           }
         },
         {
+          "id": "enableLiveSnapshot",
+          "type": "checkbox",
+          "value": true,
+          "title": {
+            "en": "Live snapshot (requires local network access)",
+            "nl": "Live snapshot (vereist lokaal netwerktoegang)"
+          }
+        },
+        {
           "id": "refreshInterval",
           "type": "number",
-          "value": 10,
-          "min": 5,
+          "value": 2,
+          "min": 1,
+          "max": 60,
           "title": {
-            "en": "Refresh interval (seconds)",
-            "nl": "Verversingsinterval (seconden)"
+            "en": "Refresh every (seconds)",
+            "nl": "Ververs elke (seconden)"
           }
         }
       ],
@@ -6239,6 +8984,10 @@
         "getSnapshotUrl": {
           "method": "GET",
           "path": "/"
+        },
+        "getSnapshot": {
+          "method": "GET",
+          "path": "/snapshot"
         }
       },
       "id": "camera"
@@ -6321,6 +9070,7 @@
       "uiComponent": "slider",
       "min": 0,
       "max": 100,
+      "step": 1,
       "icon": "/assets/microphone.svg"
     },
     "camera_nightvision_set": {
@@ -6414,6 +9164,54 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/assets/recording.svg"
+    },
+    "doorbell_ring_volume": {
+      "type": "number",
+      "title": {
+        "en": "Ring volume",
+        "nl": "Belvolume",
+        "de": "Klingelvolumen",
+        "fr": "Volume sonnerie",
+        "it": "Volume suoneria",
+        "sv": "Ringvolym",
+        "no": "Ringevolum",
+        "es": "Volumen de timbre",
+        "da": "Ringelydstyrke",
+        "ru": "Громкость звонка",
+        "pl": "Głośność dzwonka",
+        "ko": "벨소리 볼륨"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "icon": "/assets/microphone.svg"
+    },
+    "doorbell_speaker_volume": {
+      "type": "number",
+      "title": {
+        "en": "Speaker volume",
+        "nl": "Luidsprekersvolume",
+        "de": "Lautsprecherlautstärke",
+        "fr": "Volume haut-parleur",
+        "it": "Volume altoparlante",
+        "sv": "Högtalarvolym",
+        "no": "Høyttaler volum",
+        "es": "Volumen del altavoz",
+        "da": "Højttalerlydstyrke",
+        "ru": "Громкость динамика",
+        "pl": "Głośność głośnika",
+        "ko": "스피커 볼륨"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "icon": "/assets/microphone.svg"
     },
     "garagedoor_closed": {
       "type": "boolean",
@@ -6593,6 +9391,16 @@
           }
         }
       ]
+    },
+    "liveview": {
+      "type": "string",
+      "title": {
+        "en": "Live View",
+        "nl": "Liveweergave"
+      },
+      "uiComponent": null,
+      "getable": true,
+      "setable": false
     },
     "locked": {
       "type": "boolean",
@@ -6811,7 +9619,8 @@
       },
       "getable": true,
       "setable": false,
-      "uiComponent": "sensor"
+      "uiComponent": "sensor",
+      "icon": "/assets/condition/icon.svg"
     },
     "weather_location": {
       "type": "string",
@@ -6831,7 +9640,8 @@
       },
       "getable": true,
       "setable": false,
-      "uiComponent": "sensor"
+      "uiComponent": "sensor",
+      "icon": "/assets/location/icon.svg"
     }
   }
 }

@@ -49,15 +49,37 @@ class Light extends Homey.Device {
 
   async initLight() {
     this.registerCapabilityListener("onoff", (value) => {
-      return this.homey.app.api.setLightOn(this.getData(), value);
+      if (this.homey.app.isV1Available()) {
+        return this.homey.app.api.setLightOn(this.getData(), value);
+      } else if (this.homey.app.isV2Available()) {
+        return this.homey.app.apiV2.setLight(this.getData().id, { isLightForceEnabled: value });
+      }
     });
 
     this.registerCapabilityListener("dim", (value) => {
-      return this.homey.app.api.setLightLevel(this.getData(), this.translateLedLevel(value, true));
+      if (this.homey.app.isV1Available()) {
+        return this.homey.app.api.setLightLevel(this.getData(), this.translateLedLevel(value, true));
+      } else if (this.homey.app.isV2Available()) {
+        return this.homey.app.apiV2.setLight(this.getData().id, {
+          lightDeviceSettings: { ledLevel: this.translateLedLevel(value, true) }
+        });
+      }
     });
 
     this.registerCapabilityListener("light_mode_unifi", (value) => {
-      return this.homey.app.api.setLightMode(this.getData(), value);
+      if (this.homey.app.isV1Available()) {
+        return this.homey.app.api.setLightMode(this.getData(), value);
+      } else if (this.homey.app.isV2Available()) {
+        let lightModeSettings = {};
+        if (value === "motion") {
+          lightModeSettings = { mode: "motion", enableAt: "fulltime" };
+        } else if (value === "dark") {
+          lightModeSettings = { mode: "motion", enableAt: "dark" };
+        } else {
+          lightModeSettings = { mode: value, enableAt: "dark" };
+        }
+        return this.homey.app.apiV2.setLight(this.getData().id, { lightModeSettings });
+      }
     });
 
     await this._createMissingCapabilities();
@@ -65,7 +87,10 @@ class Light extends Homey.Device {
   }
 
   async waitForBootstrap() {
-    if (typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null) {
+    const v1Ready = typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null;
+    const v2Ready = this.homey.app.isV2Available();
+
+    if (v1Ready || v2Ready) {
       await this.initLight();
     } else {
       this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
@@ -85,21 +110,35 @@ class Light extends Homey.Device {
   }
 
   async _initLightData() {
-    const bootstrapData = this.homey.app.api.getBootstrap();
-    if (bootstrapData) {
-      bootstrapData.lights.forEach((light) => {
-        if (light.id === this.getData().id) {
-          if (this.hasCapability('onoff')) {
-            this.setCapabilityValue('onoff', light.isLightOn);
-          }
-          if (this.hasCapability('dim')) {
-            this.setCapabilityValue('dim', this.translateLedLevel(light.lightDeviceSettings.ledLevel, false));
-          }
-          if (this.hasCapability('light_mode_unifi')) {
-            this.setCapabilityValue('light_mode_unifi', this.translateLightMode(light.lightModeSettings));
-          }
-        }
-      });
+    let light = null;
+
+    // Try V1 bootstrap first
+    if (this.homey.app.isV1Available()) {
+      const bootstrapData = this.homey.app.api.getBootstrap();
+      if (bootstrapData && bootstrapData.lights) {
+        light = bootstrapData.lights.find(l => l.id === this.getData().id);
+      }
+    }
+
+    // Fall back to V2 API
+    if (!light && this.homey.app.isV2Available()) {
+      try {
+        light = await this.homey.app.apiV2.getLight(this.getData().id);
+      } catch (e) {
+        this.homey.app.debug(`V2 getLight failed for ${this.getData().id}: ${e}`);
+      }
+    }
+
+    if (light) {
+      if (this.hasCapability('onoff')) {
+        this.setCapabilityValue('onoff', light.isLightOn);
+      }
+      if (this.hasCapability('dim') && light.lightDeviceSettings) {
+        this.setCapabilityValue('dim', this.translateLedLevel(light.lightDeviceSettings.ledLevel, false));
+      }
+      if (this.hasCapability('light_mode_unifi') && light.lightModeSettings) {
+        this.setCapabilityValue('light_mode_unifi', this.translateLightMode(light.lightModeSettings));
+      }
     }
   }
 

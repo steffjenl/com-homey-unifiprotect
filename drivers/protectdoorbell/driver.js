@@ -23,8 +23,10 @@ class UniFiDoorbellDriver extends Homey.Driver {
             return args.audio_type === 'any' || args.audio_type === state.audio_detection_type;
         });
         this._deviceFingerprintIdentifiedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_FINGERPRINT_IDENTIFIED);
+        this._deviceFingerprintUnknownTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_FINGERPRINT_UNKNOWN);
         this._deviceDoorAccessTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOOR_ACCESS);
         this._deviceNFCCardScannedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_NFC_CARD_SCANNED);
+        this._deviceNFCUnknownCardScannedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_NFC_UNKNOWN_CARD_SCANNED);
         //
         this.homey.app.debug('UniFiDoorbell Driver has been initialized');
     }
@@ -37,12 +39,24 @@ class UniFiDoorbellDriver extends Homey.Driver {
         });
 
         session.setHandler("list_devices", async function (data) {
-            return Object.values(await homey.app.api.getDoorbells()).map(camera => {
-                return {
-                    data: {id: String(camera.id)},
+            try {
+                let doorbells;
+                if (homey.app.isV1Available()) {
+                    doorbells = await homey.app.api.getDoorbells();
+                } else if (homey.app.isV2Available()) {
+                    doorbells = await homey.app.apiV2.getDoorbells();
+                } else {
+                    homey.app.debug('[protectdoorbell] No API available for listing doorbells');
+                    return [];
+                }
+                return Object.values(doorbells).map((camera) => ({
+                    data: { id: String(camera.id) },
                     name: camera.name,
-                };
-            });
+                }));
+            } catch (error) {
+                homey.app.debug('[protectdoorbell] list_devices error: ' + error);
+                return [];
+            }
         });
     }
 
@@ -58,6 +72,15 @@ class UniFiDoorbellDriver extends Homey.Driver {
 
             if (payload.hasOwnProperty('micVolume')) {
                 camera.onMicVolume(payload.micVolume);
+            }
+
+            if (payload.hasOwnProperty('speakerSettings')) {
+                if (payload.speakerSettings.hasOwnProperty('ringVolume')) {
+                    camera.onRingVolume(payload.speakerSettings.ringVolume);
+                }
+                if (payload.speakerSettings.hasOwnProperty('speakerVolume')) {
+                    camera.onSpeakerVolume(payload.speakerSettings.speakerVolume);
+                }
             }
 
             if (payload.hasOwnProperty('isConnected')) {

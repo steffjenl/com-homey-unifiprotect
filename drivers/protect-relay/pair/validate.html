@@ -1,0 +1,46 @@
+<body>
+<div class="field row">
+  <span data-i18n="pair.validate.instruction"></span>
+</div>
+
+<div class="field row">
+  <label class="homey-form-label" for="relay-pair-mode" data-i18n="pair.validate.relay.mode_label"></label>
+  <select id="relay-pair-mode" class="homey-form-input">
+    <option value="auto" data-i18n="pair.validate.relay.mode_auto"></option>
+    <option value="force_garagedoor" data-i18n="pair.validate.relay.mode_force_garagedoor"></option>
+    <option value="force_relay" data-i18n="pair.validate.relay.mode_force_relay"></option>
+  </select>
+</div>
+
+<div class="field row">
+  <button id="relay-pair-continue" type="button" class="homey-button-primary-full" data-i18n="pair.validate.relay.continue"></button>
+</div>
+
+<script type="text/javascript">
+  Homey.setTitle(__('pair.validate.title'));
+  const modeSelect = document.getElementById('relay-pair-mode');
+  const continueButton = document.getElementById('relay-pair-continue');
+
+  continueButton.addEventListener('click', function () {
+    Homey.showLoadingOverlay();
+    const selectedMode = modeSelect ? modeSelect.value : 'auto';
+
+    Homey.emit('set_pair_mode', selectedMode)
+      .then(function () {
+        return Homey.emit('validate', null);
+      })
+      .then(function (result) {
+        if (result === 'ok') {
+          Homey.showView('list_devices');
+        } else {
+          Homey.hideLoadingOverlay();
+          Homey.setNavigationClose();
+        }
+      })
+      .catch(function (error) {
+        Homey.hideLoadingOverlay();
+        return Homey.alert(error);
+      });
+  });
+</script>
+</body>

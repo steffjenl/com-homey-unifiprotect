@@ -283,5 +283,68 @@
   },
   "1.9.1": {
     "en": "Add weather device to get the current weather"
+  },
+  "1.9.2": {
+    "en": "Add test sound flow action for Chimes"
+  },
+  "1.9.3": {
+    "en": "Fix: Alarm action card not working"
+  },
+  "1.9.4": {
+    "en": "Fix smartDetectons"
+  },
+  "1.9.5": {
+    "en": "Fix endless loop driver search and broken sendTestTone to chime."
+  },
+  "1.9.6": {
+    "en": "Add G4 Entry debug information"
+  },
+  "1.9.7": {
+    "en": "Fix UniFi Chime Volume and Doorbell"
+  },
+  "1.9.8": {
+    "en": "Fix: Hub Keypad"
+  },
+  "1.9.9": {
+    "en": "Fix: Fingerprint unknown event and moved snapshot camera setting from app settings to device settings."
+  },
+  "1.9.10": {
+    "en": "Fix: demuxer h265"
+  },
+  "1.9.11": {
+    "en": "Feature: Add support for relay"
+  },
+  "1.9.12": {
+    "en": "Feature: Relay fase 2"
+  },
+  "1.10.0": {
+    "en": "feat: add Access Intercom and AI Port device support with audio detection triggers"
+  },
+  "1.10.1": {
+    "en": "Add USL-FOB device"
+  },
+  "1.10.2": {
+    "en": "Fix crash after boot"
+  },
+  "1.10.3": {
+    "en": "feat: add multi-language support for FOB button events and improve event handling"
+  },
+  "1.10.4": {
+    "en": "fix: prevent websocket payload crashes, harden weather polling, and improve NVR alarm state handling for disabled arm mode"
+  },
+  "1.10.5": {
+    "en": "fix: add support for new Protect v2 alarm arm/disarm profile endpoints with fallback to legacy v1 arm API"
+  },
+  "1.10.6": {
+    "en": "fix: sync NVR alarm state from websocket event/externalArmProfile messages for armed and disarmed updates"
+  },
+  "1.10.7": {
+    "en": "fix: resolve v2 alarm profile ID via GET /api/v2/alarms/profiles instead of bootstrap armProfileId to fix 404 on arm/disarm"
+  },
+  "1.10.8": {
+    "en": "fix: update snapshot trigger method and improve error handling in device.js"
+  },
+  "1.10.9": {
+    "en": "feat(websocket): implement exponential backoff for reconnection attempts"
   }
 }

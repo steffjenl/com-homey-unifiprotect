@@ -7,6 +7,8 @@ class NVRAlarmDevice extends Homey.Device {
 
   async onInit() {
     this.homey.app.debug('[NVRAlarmDevice] initializing');
+    this._isActive = true;
+    this._bootstrapTimer = null;
     await this._createMissingCapabilities();
     await this.waitForBootstrap();
   }
@@ -25,17 +27,73 @@ class NVRAlarmDevice extends Homey.Device {
 
   async onDeleted() {
     this.homey.app.debug('[NVRAlarmDevice] deleted');
+    this._isActive = false;
+    if (this._bootstrapTimer) {
+      this.homey.clearTimeout(this._bootstrapTimer);
+      this._bootstrapTimer = null;
+    }
+  }
+
+  async onUninit() {
+    this._isActive = false;
+    if (this._bootstrapTimer && this.homey && typeof this.homey.clearTimeout === 'function') {
+      this.homey.clearTimeout(this._bootstrapTimer);
+      this._bootstrapTimer = null;
+    }
   }
 
   async waitForBootstrap() {
-    if (
-      typeof this.homey.app.api.getLastUpdateId() !== 'undefined'
-      && this.homey.app.api.getLastUpdateId() !== null
-    ) {
+    if (!this._isActive || !this.homey || !this.homey.app || !this.homey.app.api) {
+      return;
+    }
+
+    const v1Ready = typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null;
+    const v2Ready = this.homey.app.isV2Available();
+
+    if (v1Ready || v2Ready) {
       await this.initDevice();
     } else {
-      this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
+      this._bootstrapTimer = this.homey.setTimeout(() => {
+        this._bootstrapTimer = null;
+        this.waitForBootstrap().catch((error) => this.error(`[NVRAlarmDevice] waitForBootstrap retry error: ${error.message}`));
+      }, 250);
     }
+  }
+
+  _toIsAway(armState, context) {
+    if (typeof armState === 'boolean') {
+      return armState === true;
+    }
+
+    if (!armState || typeof armState !== 'object') {
+      return false;
+    }
+
+    if (typeof armState.status !== 'undefined') {
+      const status = String(armState.status).toLowerCase();
+      if (status === 'breach' || status === 'armed') {
+        return true;
+      }
+      if (status === 'disabled') {
+        this.homey.app.debug(`[NVRAlarmDevice] armMode.status disabled (${context}), treating as disarmed`);
+        return false;
+      }
+      if (status === 'disarmed') {
+        return false;
+      }
+      this.homey.app.debug(`[NVRAlarmDevice] unknown armMode.status "${status}" (${context}), treating as disarmed`);
+      return false;
+    }
+
+    if (typeof armState.isEnabled !== 'undefined') {
+      return armState.isEnabled === true;
+    }
+
+    if (typeof armState.isAway !== 'undefined') {
+      return armState.isAway === true;
+    }
+
+    return false;
   }
 
   async initDevice() {
@@ -68,19 +126,16 @@ class NVRAlarmDevice extends Homey.Device {
       const armState = await this.homey.app.api.getNvrArmState();
       this.homey.app.debug(`[NVRAlarmDevice] arm state: ${JSON.stringify(armState)}`);
 
-      // Primary shape from bootstrap nvr.armMode: { status: 'armed'|'disarmed', armProfileId, ... }
-      let isAway = false;
-      if (typeof armState.status !== 'undefined') {
-        isAway = armState.status === 'armed';
-      } else if (typeof armState.isEnabled !== 'undefined') {
-        isAway = armState.isEnabled === true;
-      } else if (typeof armState.isAway !== 'undefined') {
-        isAway = armState.isAway === true;
-      }
+      // Primary shape from bootstrap nvr.armMode: { status: 'armed'|'disarmed'|'disabled', armProfileId, ... }
+      const isAway = this._toIsAway(armState, 'bootstrap');
 
       await this._applyAlarmState(isAway, false);
     } catch (error) {
-      this.error(`[NVRAlarmDevice] getNvrArmState failed, falling back to bootstrap nvr.isAway: ${error.message}`);
+      if (error && error.message === 'NVR arm state not available in bootstrap') {
+        this.homey.app.debug('[NVRAlarmDevice] getNvrArmState unavailable in bootstrap, skipping initial arm state sync');
+      } else {
+        this.error(`[NVRAlarmDevice] getNvrArmState failed, falling back to bootstrap nvr.isAway: ${error.message}`);
+      }
       const bootstrap = this.homey.app.api.getBootstrap();
       if (bootstrap && bootstrap.nvr) {
         const isAway = bootstrap.nvr.isAway === true;
@@ -92,18 +147,23 @@ class NVRAlarmDevice extends Homey.Device {
 
   /**
    * Called when the NVR arm state changes (from websocket NVR update).
-   * Accepts either a boolean (legacy isAway) or an armMode object { status: 'armed'|'disarmed' }.
+   * Accepts either a boolean (legacy isAway) or an armMode object { status: 'armed'|'disarmed'|'breach' }.
    * @param {boolean|object} armStateOrIsAway
    */
   async onAlarmStateChanged(armStateOrIsAway) {
     this.homey.app.debug(`[NVRAlarmDevice] onAlarmStateChanged: ${JSON.stringify(armStateOrIsAway)}`);
-    let isAway;
+
     if (typeof armStateOrIsAway === 'object' && armStateOrIsAway !== null) {
-      isAway = armStateOrIsAway.status === 'armed';
+      if (armStateOrIsAway.status === 'breach') {
+        await this._applyBreachState(true);
+        return;
+      }
+      const isAway = this._toIsAway(armStateOrIsAway, 'websocket');
+      await this._applyAlarmState(isAway, true);
     } else {
-      isAway = armStateOrIsAway === true;
+      const isAway = this._toIsAway(armStateOrIsAway, 'legacy');
+      await this._applyAlarmState(isAway, true);
     }
-    await this._applyAlarmState(isAway, true);
   }
 
   /**
@@ -118,7 +178,11 @@ class NVRAlarmDevice extends Homey.Device {
 
       if (currentState !== homeyAlarmState) {
         await this.setCapabilityValue('homealarm_state', homeyAlarmState);
-        await this.setCapabilityValue('alarm_generic', isAway);
+
+        // Reset alarm_generic when disarmed (clears any active breach)
+        if (!isAway) {
+          await this.setCapabilityValue('alarm_generic', false);
+        }
 
         if (triggerFlows) {
           const stateLabel = isAway ? 'armed' : 'disarmed';
@@ -145,6 +209,40 @@ class NVRAlarmDevice extends Homey.Device {
       }
     } catch (error) {
       this.error(`[NVRAlarmDevice] _applyAlarmState error: ${error.message}`);
+    }
+  }
+
+  /**
+   * Apply a breach state: homealarm_state stays 'armed', alarm_generic is set to true,
+   * and the breach flow trigger fires.
+   * @param {boolean} triggerFlows
+   */
+  async _applyBreachState(triggerFlows) {
+    try {
+      this.homey.app.debug('[NVRAlarmDevice] _applyBreachState');
+
+      // Ensure homealarm_state reflects armed (NVR is still armed during breach)
+      if (this.getCapabilityValue('homealarm_state') !== 'armed') {
+        await this.setCapabilityValue('homealarm_state', 'armed');
+      }
+
+      await this.setCapabilityValue('alarm_generic', true);
+
+      if (triggerFlows) {
+        // Trigger: state changed (with 'breach' as state token)
+        this.driver.homey.flow
+          .getDeviceTriggerCard(UfvConstants.EVENT_NVR_ALARM_STATE_CHANGED)
+          .trigger(this, { state: 'breach' })
+          .catch((err) => this.error(err));
+
+        // Trigger: breach
+        this.driver.homey.flow
+          .getDeviceTriggerCard(UfvConstants.EVENT_NVR_ALARM_BREACH)
+          .trigger(this)
+          .catch((err) => this.error(err));
+      }
+    } catch (error) {
+      this.error(`[NVRAlarmDevice] _applyBreachState error: ${error.message}`);
     }
   }
 

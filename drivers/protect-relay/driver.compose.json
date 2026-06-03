@@ -1,0 +1,45 @@
+{
+  "id": "protect-relay",
+  "class": "socket",
+  "capabilities": [
+    "onoff"
+  ],
+  "name": {
+    "en": "Relay",
+    "nl": "Relais",
+    "de": "Relais",
+    "fr": "Relais",
+    "it": "Relay",
+    "sv": "Relay",
+    "no": "Relay",
+    "es": "Relay",
+    "da": "Relay",
+    "ru": "Реле",
+    "pl": "Przekaźnik",
+    "ko": "릴레이"
+  },
+  "images": {
+    "large": "drivers/protect-relay/assets/images/large.png",
+    "small": "drivers/protect-relay/assets/images/small.png",
+    "xlarge": "drivers/protect-relay/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "platforms": ["local"],
+  "connectivity": ["cloud"]
+}
+

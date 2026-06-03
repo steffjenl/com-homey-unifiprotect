@@ -84,6 +84,23 @@
         "pl": "Alarm rozbrojony (tryb nieobecności wyłączony)",
         "ko": "알람 해제됨 (외출 모드 비활성화)"
       }
+    },
+    {
+      "id": "ufp_nvr_alarm_breach",
+      "title": {
+        "en": "Alarm breached (intrusion detected)",
+        "nl": "Alarm geschonden (inbraak gedetecteerd)",
+        "de": "Alarm ausgelöst (Eindringen erkannt)",
+        "fr": "Alarme déclenchée (intrusion détectée)",
+        "it": "Allarme violato (intrusione rilevata)",
+        "sv": "Larm utlöst (intrång upptäckt)",
+        "no": "Alarm brutt (innbrudd oppdaget)",
+        "es": "Alarma activada (intrusión detectada)",
+        "da": "Alarm brudt (indbrud registreret)",
+        "ru": "Тревога сработала (обнаружено вторжение)",
+        "pl": "Alarm naruszony (wykryto włamanie)",
+        "ko": "알람 침해됨 (침입 감지됨)"
+      }
     }
   ]
 }

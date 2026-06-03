@@ -338,7 +338,7 @@
     "security",
     "video"
   ],
-  "version": "1.9.1",
+  "version": "1.10.9",
   "compatibility": ">=12.6.0",
   "author": {
     "name": "MonkeySoft",
@@ -400,6 +400,10 @@
     "getLastProtectV2WebsocketMessageTime": {
       "method": "GET",
       "path": "/getLastProtectV2WebsocketMessageTime"
+    },
+    "testV2ApiKey": {
+      "method": "POST",
+      "path": "/testV2ApiKey"
     }
   }
 }

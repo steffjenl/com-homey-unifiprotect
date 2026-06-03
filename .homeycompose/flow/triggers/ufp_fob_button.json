@@ -1,0 +1,70 @@
+{
+  "id": "ufp_fob_button",
+  "title": {
+    "en": "A FOB button event was detected",
+    "nl": "Een FOB-knopgebeurtenis is gedetecteerd"
+  },
+  "tokens": [
+    {
+      "name": "ufp_fob_device_id",
+      "type": "string",
+      "title": {
+        "en": "FOB device ID",
+        "nl": "FOB apparaat-ID"
+      },
+      "example": {
+        "en": "65f0ab12cd34ef56ab78cd90",
+        "nl": "65f0ab12cd34ef56ab78cd90"
+      }
+    },
+    {
+      "name": "ufp_fob_sensor_name",
+      "type": "string",
+      "title": {
+        "en": "FOB name",
+        "nl": "FOB naam"
+      },
+      "example": {
+        "en": "Main gate FOB",
+        "nl": "Hoofdpoort FOB"
+      }
+    },
+    {
+      "name": "ufp_fob_button",
+      "type": "string",
+      "title": {
+        "en": "Button",
+        "nl": "Knop"
+      },
+      "example": {
+        "en": "arm",
+        "nl": "arm"
+      }
+    },
+    {
+      "name": "ufp_fob_press_type",
+      "type": "string",
+      "title": {
+        "en": "Press type",
+        "nl": "Druktype"
+      },
+      "example": {
+        "en": "press",
+        "nl": "press"
+      }
+    },
+    {
+      "name": "ufp_fob_timestamp",
+      "type": "number",
+      "title": {
+        "en": "Timestamp",
+        "nl": "Tijdstempel"
+      },
+      "example": {
+        "en": "1716587400000",
+        "nl": "1716587400000"
+      }
+    }
+  ]
+}
+

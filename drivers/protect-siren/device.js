@@ -57,7 +57,10 @@ class Siren extends Homey.Device {
     }
 
     async waitForBootstrap() {
-        if (typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null) {
+        const v1Ready = typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null;
+        const v2Ready = this.homey.app.isV2Available();
+
+        if (v1Ready || v2Ready) {
             await this.initSiren();
         } else {
             this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);

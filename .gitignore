@@ -7,6 +7,11 @@ yarn.lock
 /.homeybuild/
 /history.txt
 /.ai/
-/.DS_Store
+.DS_Store
 
 
+/tools/protect-v1-debug/output/
+/tools/protect-v1-debug/.env
+/specs/example-bootstra.json
+/specs/example-websocket.json
+tools/.DS_Store

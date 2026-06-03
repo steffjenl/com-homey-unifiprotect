@@ -19,7 +19,6 @@
 <div id="protect" class="tabcontent">
     <!-- Instruction -->
     <p data-i18n="settings.instruction"></p>
-    <p>Please read first the instructions and create a separate user for UniFi Network</p>
 
     <!-- NVR -->
     <fieldset class="homey-form-fieldset">
@@ -52,31 +51,39 @@
         <!-- Password -->
         <div class="field row">
             <label class="homey-form-label" for="txt_password" data-i18n="settings.password"></label>
-            <input class="homey-form-input" id="txt_password" type="password" value=""/>
+            <div class="password-wrapper">
+                <input class="homey-form-input" id="txt_password" type="password" value=""/>
+                <button type="button" class="toggle-password" data-target="txt_password" aria-label="Toggle password visibility">
+                    <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-off-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
         </div>
+    </fieldset>
+
+    <!-- V2 API Key (new) -->
+    <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend" data-i18n="settings.protectV2ApiKeySection"></legend>
 
         <!-- API-Key -->
         <div class="field row">
             <label class="homey-form-label" for="txt_protectV2ApiKey" data-i18n="settings.protectV2ApiKey"></label>
-            <input class="homey-form-input" id="txt_protectV2ApiKey" type="text" value=""/>
+            <div class="password-wrapper">
+                <input class="homey-form-input" id="txt_protectV2ApiKey" type="password" value=""/>
+                <button type="button" class="toggle-password" data-target="txt_protectV2ApiKey" aria-label="Toggle API key visibility">
+                    <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-off-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
         </div>
         <p>
-            <em>Only required if you want to test the new V2 connection.</em>
+            <em data-i18n="settings.protectV2ApiKeyDescription"></em>
         </p>
     </fieldset>
 
     <!-- Settings -->
     <fieldset class="homey-form-fieldset">
         <legend class="homey-form-legend" data-i18n="settings.settings"></legend>
-
-        <!-- useCameraSnapshot -->
-        <div class="field row">
-            <label class="homey-form-checkbox">
-                <input class="homey-form-checkbox-input" id="txt_useCameraSnapshot" type="checkbox" value="true">
-                <span class="homey-form-checkbox-checkmark"></span>
-                <span class="homey-form-checkbox-text"><span data-i18n="settings.useCameraSnapshot"></span></span>
-            </label>
-        </div>
 
         <!-- ignoreEventsNfcFingerprint -->
         <div class="field row">
@@ -119,7 +126,13 @@
         <!-- API-Key -->
         <div class="field row">
             <label class="homey-form-label" for="txt_accessApiKey" data-i18n="settings.accessApiKey"></label>
-            <input class="homey-form-input" id="txt_accessApiKey" type="text" value=""/>
+            <div class="password-wrapper">
+                <input class="homey-form-input" id="txt_accessApiKey" type="password" value=""/>
+                <button type="button" class="toggle-password" data-target="txt_accessApiKey" aria-label="Toggle API key visibility">
+                    <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-off-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
         </div>
     </fieldset>
 
@@ -134,30 +147,44 @@
     <!-- Title -->
     <legend class="homey-form-legend" data-i18n="settings.status"></legend>
 
-    <p><span data-i18n="settings.status">Status</span>: <span id="unifi_status"
-                                                              style="font-weight: bold;">Unknown</span>
-    </p>
-    <p><span data-i18n="settings.websocket.status">Protect V1 Realtime Status</span>: <span id="unifi_websocket_status"
-                                                                                            style="font-weight: bold;">Unknown</span>
-    </p>
-    <p><span data-i18n="settings.websocket.at">Protect V1 Last update at</span>: <span id="unifi_websocket_at"
-                                                                                       style="font-weight: bold;">Unknown</span>
-    </p>
-    <p><span data-i18n="settings.protectV2Websocket.status">Protect V2 Realtime Status</span>: <span
-            id="unifi_protectV2_websocket_status"
-            style="font-weight: bold;">Unknown</span>
-    </p>
-    <p><span data-i18n="settings.protectV2Websocket.at">Protect V2 Last update at</span>: <span
-            id="unifi_protectV2_websocket_at"
-            style="font-weight: bold;">Unknown</span>
-    </p>
-    <p><span data-i18n="settings.accessWebsocket.status">Access Realtime Status</span>: <span
+    <!-- Protect V1 -->
+    <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend" data-i18n="settings.protectV1Section"></legend>
+        <p><span data-i18n="settings.status"></span>: <span id="unifi_status"
+                                      style="font-weight: bold;">Unknown</span>
+        </p>
+        <p><span data-i18n="settings.realtimeStatus"></span>: <span id="unifi_websocket_status"
+                                               style="font-weight: bold;">Unknown</span>
+        </p>
+        <p><span data-i18n="settings.lastUpdateAt"></span>: <span id="unifi_websocket_at"
+                                              style="font-weight: bold;">Unknown</span>
+        </p>
+    </fieldset>
+
+    <!-- Protect V2 -->
+    <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend" data-i18n="settings.protectV2ApiKeySection"></legend>
+        <p><span data-i18n="settings.realtimeStatus"></span>: <span
+                id="unifi_protectV2_websocket_status"
+                style="font-weight: bold;">Unknown</span>
+        </p>
+        <p><span data-i18n="settings.lastUpdateAt"></span>: <span
+                id="unifi_protectV2_websocket_at"
+                style="font-weight: bold;">Unknown</span>
+        </p>
+    </fieldset>
+
+    <!-- Access -->
+    <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend">Access</legend>
+        <p><span data-i18n="settings.accessWebsocket.status">Access Realtime Status</span>: <span
             id="unifi_access_websocket_status"
             style="font-weight: bold;">Unknown</span>
     </p>
     <p><span data-i18n="settings.accessWebsocket.at">Access Last update at</span>: <span id="unifi_access_websocket_at"
                                                                                          style="font-weight: bold;">Unknown</span>
     </p>
+    </fieldset>
 </div>
 
 <script type="text/javascript">
@@ -167,7 +194,6 @@
     const txtPassword = document.getElementById('txt_password');
     const txtAccessApiKey = document.getElementById('txt_accessApiKey');
     const txtProtectV2ApiKey = document.getElementById('txt_protectV2ApiKey');
-    const txtuseCameraSnapshot = document.getElementById('txt_useCameraSnapshot');
     const txtIgnoreEventsNfcFingerprint = document.getElementById('txt_ignoreEventsNfcFingerprint');
     const txtIgnoreEventsDoorbell = document.getElementById('txt_ignoreEventsDoorbell');
     const txtsaveLogToPersistentStorage = document.getElementById('txt_saveLogToPersistentStorage');
@@ -222,7 +248,6 @@
             Homey.get('ufp:settings', (error, settings) => {
                 if (error) return Homey.alert(error);
                 if (settings) {
-                    txtuseCameraSnapshot.checked = settings.useCameraSnapshot;
                     txtIgnoreEventsNfcFingerprint.value = settings.ignoreEventsNfcFingerprint || 5;
                     txtIgnoreEventsDoorbell.value = settings.ignoreEventsDoorbell || 5;
                     txtsaveLogToPersistentStorage.checked = settings.saveLogToPersistentStorage;
@@ -264,7 +289,6 @@
             });
 
             const settings = {
-                'useCameraSnapshot': (!!txtuseCameraSnapshot.checked),
                 'ignoreEventsNfcFingerprint': parseInt(txtIgnoreEventsNfcFingerprint.value) || 5,
                 'ignoreEventsDoorbell': parseInt(txtIgnoreEventsDoorbell.value) || 5,
                 'saveLogToPersistentStorage': (!!txtsaveLogToPersistentStorage.checked)
@@ -292,7 +316,8 @@
                 if (err) return Homey.alert(err);
                 if (response) {
                     if (response.status === 'success') {
-                        Homey.alert(Homey.__('settings.test_status.success'), 'info');
+                        var msg = response.message || Homey.__('settings.test_status.success');
+                        Homey.alert(msg, 'info');
                     } else {
                         Homey.alert(Homey.__('settings.test_status.failure'), 'error');
                     }
@@ -305,32 +330,24 @@
         });
 
         btnApply.addEventListener('click', e => {
-            if (txtuseCameraSnapshot.checked) {
-                Homey.confirm(Homey.__('settings.useCameraSnapshotInstruction'), 'info', (err, confirmed) => {
-                    if (err) return Homey.alert(err);
-                    if (confirmed) {
-                        saveSettings();
-                    }
-                });
-            } else {
-                saveSettings();
-            }
+            saveSettings();
         });
 
         btnAccessApply.addEventListener('click', e => {
-            if (txtuseCameraSnapshot.checked) {
-                Homey.confirm(Homey.__('settings.useCameraSnapshotInstruction'), 'info', (err, confirmed) => {
-                    if (err) return Homey.alert(err);
-                    if (confirmed) {
-                        saveSettings();
-                    }
-                });
-            } else {
-                saveSettings();
-            }
+            saveSettings();
         });
 
         readSettings();
+
+        document.querySelectorAll('.toggle-password').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var input = document.getElementById(btn.getAttribute('data-target'));
+                var isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                btn.querySelector('.eye-icon').style.display = isPassword ? 'none' : '';
+                btn.querySelector('.eye-off-icon').style.display = isPassword ? '' : 'none';
+            });
+        });
 
         document.getElementById("defaultOpen").click();
 

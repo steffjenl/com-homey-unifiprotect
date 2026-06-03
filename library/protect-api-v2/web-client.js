@@ -1,4 +1,7 @@
+'use strict';
+
 const BaseClass = require('../baseclass');
+const UfvConstants = require('../constants');
 const https = require('node:https');
 
 class WebClient extends BaseClass {
@@ -10,13 +13,25 @@ class WebClient extends BaseClass {
         this._apiToken = null;
     }
 
+    getIntegrationPrefix() {
+        return `${UfvConstants.PROTECT_V2_API_BASE_PATH}/${UfvConstants.PROTECT_V2_API_VERSION}`;
+    }
+
+    buildApiPath(resource = '', params = null) {
+        const normalizedResource = String(resource || '').replace(/^\/+/, '');
+        const path = normalizedResource
+            ? `${this.getIntegrationPrefix()}/${normalizedResource}`
+            : this.getIntegrationPrefix();
+        return `${path}${this.toQueryString(params)}`;
+    }
+
     async get(resource, params = {}) {
         return new Promise((resolve, reject) => {
             const options = {
                 method: 'GET',
                 hostname: this._serverHost,
                 port: this._serverPort,
-                path: `/proxy/protect/integration/v1/${resource}${this.toQueryString(params)}`,
+                path: this.buildApiPath(resource, params),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                     Accept: '*/*',
@@ -48,6 +63,49 @@ class WebClient extends BaseClass {
             req.end();
         });
     }
+    async post(resource, payload = {}) {
+        return new Promise((resolve, reject) => {
+            const body = JSON.stringify(payload);
+
+            const options = {
+                method: 'POST',
+                hostname: this._serverHost,
+                port: this._serverPort,
+                path: this.buildApiPath(resource),
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Content-Length': Buffer.byteLength(body),
+                    Accept: '*/*',
+                    'X-API-KEY': `${this._apiToken}`,
+                },
+                maxRedirects: 20,
+                rejectUnauthorized: false,
+                keepAlive: true,
+            };
+
+            const req = https.request(options, res => {
+                res.setEncoding('utf8');
+                const data = [];
+
+                res.on('data', chunk => data.push(chunk));
+                res.on('end', () => {
+                    if (res.statusCode === 403) {
+                        return reject(new Error(`Homey user has no permission to perform this action. Please check the user's role.`));
+                    }
+
+                    if (res.statusCode !== 200 && res.statusCode !== 201 && res.statusCode !== 204) {
+                        return reject(new Error(`Failed to POST to url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+                    }
+
+                    return resolve(data.join(''));
+                });
+            });
+
+            req.on('error', error => reject(error));
+            req.write(body);
+            req.end();
+        });
+    }
     async put(resource, payload = {}) {
         return new Promise((resolve, reject) => {
             const body = JSON.stringify(payload);
@@ -58,7 +116,7 @@ class WebClient extends BaseClass {
                 method: 'PUT',
                 hostname: this._serverHost,
                 port: this._serverPort,
-                path: `/proxy/protect/integration/v1/${resource}${this.toQueryString(params)}`,
+                path: this.buildApiPath(resource, params),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                     'Content-Length': Buffer.byteLength(body),
@@ -103,7 +161,7 @@ class WebClient extends BaseClass {
                 method: 'PATCH',
                 hostname: this._serverHost,
                 port: this._serverPort,
-                path: `/proxy/protect/integration/v1/${resource}${this.toQueryString(params)}`,
+                path: this.buildApiPath(resource, params),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                     'Content-Length': Buffer.byteLength(body),
@@ -146,7 +204,7 @@ class WebClient extends BaseClass {
                 method: 'DELETE',
                 hostname: this._serverHost,
                 port: this._serverPort,
-                path: `/proxy/protect/integration/v1/${resource}`,
+                path: this.buildApiPath(resource),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                     Accept: '*/*',

@@ -1,0 +1,50 @@
+{
+  "id": "protect-horn-speaker",
+  "class": "speaker",
+  "capabilities": [
+    "onoff",
+    "volume_set"
+  ],
+  "name": {
+    "en": "Horn Speaker",
+    "nl": "Horn Speaker",
+    "de": "Horn Speaker",
+    "fr": "Horn Speaker",
+    "it": "Horn Speaker",
+    "sv": "Horn Speaker",
+    "no": "Horn Speaker",
+    "es": "Horn Speaker",
+    "da": "Horn Speaker",
+    "ru": "Horn Speaker",
+    "pl": "Horn Speaker",
+    "ko": "Horn Speaker"
+  },
+  "images": {
+    "xlarge": "drivers/protect-horn-speaker/assets/images/xlarge.png",
+    "large": "drivers/protect-horn-speaker/assets/images/large.png",
+    "small": "drivers/protect-horn-speaker/assets/images/small.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [
+    "cloud"
+  ]
+}
+

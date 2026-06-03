@@ -1,0 +1,39 @@
+[
+  {
+    "type": "dropdown",
+    "id": "ufp:relay_status_source",
+    "label": {
+      "en": "Garage status source",
+      "nl": "Bron voor garagestatus"
+    },
+    "hint": {
+      "en": "Choose how open/closed status is derived for garage relay outputs. Auto tries relay input first and falls back to relay output state.",
+      "nl": "Kies hoe open/dicht status wordt bepaald voor garage-relaisuitgangen. Auto probeert eerst relay-input en valt daarna terug op relay-uitgangsstatus."
+    },
+    "value": "auto",
+    "values": [
+      {
+        "id": "auto",
+        "label": {
+          "en": "Auto (input first, output fallback)",
+          "nl": "Auto (eerst input, dan output)"
+        }
+      },
+      {
+        "id": "input",
+        "label": {
+          "en": "Input only",
+          "nl": "Alleen input"
+        }
+      },
+      {
+        "id": "output",
+        "label": {
+          "en": "Output only",
+          "nl": "Alleen output"
+        }
+      }
+    ]
+  }
+]
+

@@ -76,6 +76,18 @@
         "en": "xxxxxx",
         "nl": "xxxxxx"
       }
+    },
+    {
+      "name": "ufp_nfc_card_scanned_nfc_id",
+      "type": "string",
+      "title": {
+        "en": "NFC ID",
+        "nl": "NFC ID"
+      },
+      "example": {
+        "en": "01234AA2A12345",
+        "nl": "01234AA2A12345"
+      }
     }
   ]
 }

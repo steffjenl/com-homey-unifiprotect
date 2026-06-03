@@ -42,14 +42,18 @@ class AppAccess extends BaseClass {
     const _setDoorTempLockingRule = this.homey.flow.getActionCard('ufv_set_reader_door_locking_rule');
     _setDoorTempLockingRule.registerRunListener(async (args, state) => {
       if (typeof args.device.getData().id !== 'undefined') {
-        return this.homey.app.accessApi.setTempDoorLockingRule(args.device.getData().id, args.type, args.interval);
+        const intervalSeconds = args.interval * 60;
+        this.homey.app.debug(`[AppAccess] setTempDoorLockingRule door type=${args.type} interval=${args.interval}min (${intervalSeconds}s)`);
+        return this.homey.app.accessApi.setTempDoorLockingRule(args.device.getData().id, args.type, intervalSeconds);
       }
       return Promise.resolve(true);
     });
     const _setGarageDoorTempLockingRule = this.homey.flow.getActionCard('ufv_set_reader_garagedoor_locking_rule');
     _setGarageDoorTempLockingRule.registerRunListener(async (args, state) => {
       if (typeof args.device.getData().id !== 'undefined') {
-        return this.homey.app.accessApi.setTempDoorLockingRule(args.device.getData().id, args.type, args.interval);
+        const intervalSeconds = args.interval * 60;
+        this.homey.app.debug(`[AppAccess] setTempDoorLockingRule garagedoor type=${args.type} interval=${args.interval}min (${intervalSeconds}s)`);
+        return this.homey.app.accessApi.setTempDoorLockingRule(args.device.getData().id, args.type, intervalSeconds);
       }
       return Promise.resolve(true);
     });
@@ -67,6 +71,14 @@ class AppAccess extends BaseClass {
       }
       return Promise.resolve(true);
     });
+
+    // Device trigger: keypad / PIN used
+    this._deviceAccessKeypaddUsedTrigger = this.homey.flow.getDeviceTriggerCard('ufv_device_access_keypad_used');
+    this._deviceAccessGarageDoorKeypaddUsedTrigger = this.homey.flow.getDeviceTriggerCard('ufv_device_access_garagedoor_keypad_used');
+    this._deviceAccessKeypaddGrantedTrigger = this.homey.flow.getDeviceTriggerCard('ufv_device_access_keypad_granted');
+    this._deviceAccessKeypaddDeniedTrigger = this.homey.flow.getDeviceTriggerCard('ufv_device_access_keypad_denied');
+    this._deviceAccessGarageDoorKeypaddGrantedTrigger = this.homey.flow.getDeviceTriggerCard('ufv_device_access_garagedoor_keypad_granted');
+    this._deviceAccessGarageDoorKeypaddDeniedTrigger = this.homey.flow.getDeviceTriggerCard('ufv_device_access_garagedoor_keypad_denied');
 
   }
 

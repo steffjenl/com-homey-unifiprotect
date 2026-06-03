@@ -1,0 +1,10 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Live View",
+    "nl": "Liveweergave"
+  },
+  "uiComponent": null,
+  "getable": true,
+  "setable": false
+}

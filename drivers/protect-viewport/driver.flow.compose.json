@@ -1,0 +1,49 @@
+{
+  "actions": [
+    {
+      "id": "ufp_set_viewport_liveview",
+      "title": {
+        "en": "Set Viewport Liveview",
+        "nl": "Stel Viewport Liveview in",
+        "de": "Viewport-Liveview einstellen",
+        "fr": "Définir la vue en direct du viewport",
+        "it": "Imposta la visualizzazione live del viewport",
+        "sv": "Ställ in viewport livevisning",
+        "no": "Angi viewport live-visning",
+        "es": "Establecer vista en vivo del viewport",
+        "da": "Indstil viewport live-visning",
+        "ru": "Установить прямой эфир viewport",
+        "pl": "Ustaw widok na żywo viewportu",
+        "ko": "뷰포트 라이브뷰 설정"
+      },
+      "titleFormatted": {
+        "en": "Set Viewport to liveview [[liveview_id]]",
+        "nl": "Stel Viewport in op liveview [[liveview_id]]",
+        "de": "Viewport auf Liveview [[liveview_id]] einstellen",
+        "fr": "Définir le viewport sur la vue en direct [[liveview_id]]",
+        "it": "Imposta il viewport sulla visualizzazione live [[liveview_id]]",
+        "sv": "Ställ in viewport på livevisning [[liveview_id]]",
+        "no": "Sett viewport til live-visning [[liveview_id]]",
+        "es": "Establecer viewport en vista en vivo [[liveview_id]]",
+        "da": "Indstil viewport til live-visning [[liveview_id]]",
+        "ru": "Установить viewport на прямой эфир [[liveview_id]]",
+        "pl": "Ustaw viewport na widok na żywo [[liveview_id]]",
+        "ko": "뷰포트를 라이브뷰 [[liveview_id]]로 설정"
+      },
+      "hint": {
+        "en": "Enter the liveview ID from the UniFi Protect NVR",
+        "nl": "Voer het liveview ID in van de UniFi Protect NVR"
+      },
+      "args": [
+        {
+          "type": "text",
+          "name": "liveview_id",
+          "placeholder": {
+            "en": "Liveview ID (e.g. 68f0885c0245f403e42ca91a)",
+            "nl": "Liveview ID (bijv. 68f0885c0245f403e42ca91a)"
+          }
+        }
+      ]
+    }
+  ]
+}

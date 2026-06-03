@@ -1,0 +1,46 @@
+{
+  "id": "ufp_fob_press_type_is",
+  "title": {
+    "en": "FOB press type is [[press_type]]",
+    "nl": "FOB-druktype is [[press_type]]"
+  },
+  "titleFormatted": {
+    "en": "FOB press type is [[press_type]]",
+    "nl": "FOB-druktype is [[press_type]]"
+  },
+  "args": [
+    {
+      "type": "dropdown",
+      "name": "press_type",
+      "title": {
+        "en": "Press type",
+        "nl": "Druktype"
+      },
+      "values": [
+        {
+          "id": "press",
+          "title": {
+            "en": "Press",
+            "nl": "Drukken"
+          }
+        },
+        {
+          "id": "longPress",
+          "title": {
+            "en": "Long press",
+            "nl": "Lang indrukken"
+          }
+        },
+        {
+          "id": "doublePress",
+          "title": {
+            "en": "Double press",
+            "nl": "Dubbel drukken"
+          }
+        }
+      ]
+    }
+  ]
+}
+
+

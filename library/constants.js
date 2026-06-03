@@ -36,8 +36,21 @@ module.exports.ACTION_SET_DEVICE_PTZ_HOME = 'ufv_set_device_camera_ptz_home';
 module.exports.ACTION_SET_DEVICE_PTZ_PRESET = 'ufv_set_device_camera_ptz_preset';
 module.exports.ACTION_SET_DEVICE_SET_COLOR_NIGHT_VISION = 'ufv_set_device_camera_set_color_night_vision';
 module.exports.ACTION_SET_DEVICE_SET_AUTO_TRACKING = 'ufv_set_device_camera_set_auto_tracking';
+module.exports.ACTION_SET_DEVICE_CAMERA_FACE_DETECTION = 'ufv_set_device_camera_face_detection';
+module.exports.ACTION_SET_DEVICE_DOORBELL_FACE_DETECTION = 'ufv_set_device_doorbell_face_detection';
 module.exports.ACTION_SET_DEVICE_TEST_RINGTONE = 'ufv_set_device_doorbell_test_ringtone';
 module.exports.ACTION_SET_DEVICE_TEST_SIREN = 'ufv_set_device_doorbell_test_siren';
+module.exports.ACTION_SET_DEVICE_TEST_CHIME_TONE = 'ufv_set_device_chime_test_tone';
+module.exports.ACTION_SET_DEVICE_DOORBELL_RING_VOLUME = 'ufp_set_device_doorbell_ring_volume';
+module.exports.ACTION_SET_DEVICE_DOORBELL_SPEAKER_VOLUME = 'ufp_set_device_doorbell_speaker_volume';
+module.exports.ACTION_SET_DEVICE_DOORBELL_CHIME_VOLUME = 'ufp_set_device_doorbell_chime_volume';
+module.exports.ACTION_PULSE_DEVICE_RELAY = 'ufp_pulse_device_relay';
+module.exports.CONDITION_DEVICE_RELAY_IS_OPEN = 'ufp_device_relay_is_open';
+module.exports.CONDITION_DEVICE_RELAY_IS_CLOSED = 'ufp_device_relay_is_closed';
+module.exports.CONDITION_DEVICE_GARAGE_IS_OPEN = 'ufp_device_garage_is_open';
+module.exports.CONDITION_DEVICE_GARAGE_IS_CLOSED = 'ufp_device_garage_is_closed';
+module.exports.CONDITION_FOB_BUTTON_IS = 'ufp_fob_button_is';
+module.exports.CONDITION_FOB_PRESS_TYPE_IS = 'ufp_fob_press_type_is';
 
 module.exports.EVENT_CONNECTION_KEEPALIVE = 'ufv_event_connection_keepalive';
 module.exports.EVENT_CONNECTION_ERROR = 'ufv_event_connection_error';
@@ -83,15 +96,53 @@ module.exports.EVENT_DEVICE_DOORBELL_SMART_DETECTION_LICENSEPLATE = 'ufp_device_
 module.exports.EVENT_DEVICE_DOORBELL_SMART_DETECTION_FACE = 'ufp_device_doorbell_smart_detection_face';
 module.exports.EVENT_FINGERPRINT_IDENTIFIED = 'ufp_fingerprint_identified';
 module.exports.EVENT_DEVICE_FINGERPRINT_IDENTIFIED = 'ufp_device_fingerprint_identified';
+module.exports.EVENT_FINGERPRINT_UNKNOWN = 'ufp_fingerprint_unknown';
+module.exports.EVENT_DEVICE_FINGERPRINT_UNKNOWN = 'ufp_device_fingerprint_unknown';
 module.exports.EVENT_DOOR_ACCESS = 'ufp_door_access';
 module.exports.EVENT_DEVICE_DOOR_ACCESS = 'ufp_device_door_access';
 module.exports.EVENT_NFC_CARD_SCANNED = 'ufp_nfc_card_scanned';
 module.exports.EVENT_DEVICE_NFC_CARD_SCANNED = 'ufp_device_nfc_card_scanned';
+module.exports.EVENT_NFC_UNKNOWN_CARD_SCANNED = 'ufp_nfc_unknown_card_scanned';
+module.exports.EVENT_DEVICE_NFC_UNKNOWN_CARD_SCANNED = 'ufp_device_nfc_unknown_card_scanned';
+module.exports.EVENT_DEVICE_RELAY_STATE_CHANGED = 'ufp_device_relay_state_changed';
+module.exports.EVENT_DEVICE_RELAY_TURNED_ON = 'ufp_device_relay_turned_on';
+module.exports.EVENT_DEVICE_RELAY_TURNED_OFF = 'ufp_device_relay_turned_off';
+
+// FOB button events (internal routing)
+module.exports.EVENT_FOB_BUTTON = 'ufp_fob_button';
+module.exports.EVENT_FOB_BUTTON_DEVICE = 'ufp_fob_button_device';
+module.exports.EVENT_DEVICE_FOB_BUTTON = 'ufp_device_fob_button';
+module.exports.EVENT_DEVICE_FOB_BUTTON_PRESS = 'ufp_device_fob_button_press';
+module.exports.EVENT_DEVICE_FOB_BUTTON_LONG_PRESS = 'ufp_device_fob_button_long_press';
+module.exports.EVENT_DEVICE_FOB_BUTTON_DOUBLE_PRESS = 'ufp_device_fob_button_double_press';
+// Per-button device trigger cards
+module.exports.EVENT_DEVICE_FOB_BUTTON_ARM = 'ufp_device_fob_button_arm';
+module.exports.EVENT_DEVICE_FOB_BUTTON_DISARM = 'ufp_device_fob_button_disarm';
+module.exports.EVENT_DEVICE_FOB_BUTTON_PANIC = 'ufp_device_fob_button_panic';
+module.exports.EVENT_DEVICE_FOB_BUTTON_NIGHT = 'ufp_device_fob_button_night';
+module.exports.EVENT_DEVICE_FOB_BUTTON_LEFT = 'ufp_device_fob_button_left';
+module.exports.EVENT_DEVICE_FOB_BUTTON_RIGHT = 'ufp_device_fob_button_right';
+module.exports.FOB_EVENT_TYPE = 'fob.button';
+module.exports.FOB_BUTTONS = ['arm', 'disarm', 'panic', 'night', 'left', 'right'];
+module.exports.FOB_PRESS_TYPES = ['press', 'longPress', 'doublePress'];
+
+// UniFi Access — keypad / PIN access
+module.exports.EVENT_ACCESS_KEYPAD_USED = 'ufv_access_keypad_used';
+module.exports.EVENT_DEVICE_ACCESS_KEYPAD_USED = 'ufv_device_access_keypad_used';
+module.exports.EVENT_DEVICE_ACCESS_GARAGEDOOR_KEYPAD_USED = 'ufv_device_access_garagedoor_keypad_used';
+module.exports.EVENT_DEVICE_ACCESS_KEYPAD_GRANTED = 'ufv_device_access_keypad_granted';
+module.exports.EVENT_DEVICE_ACCESS_KEYPAD_DENIED = 'ufv_device_access_keypad_denied';
+module.exports.EVENT_DEVICE_ACCESS_GARAGEDOOR_KEYPAD_GRANTED = 'ufv_device_access_garagedoor_keypad_granted';
+module.exports.EVENT_DEVICE_ACCESS_GARAGEDOOR_KEYPAD_DENIED = 'ufv_device_access_garagedoor_keypad_denied';
+// Known credential_provider values that indicate keypad/PIN usage (discovered via live hardware logging)
+// Comparison is done case-insensitively (events emit 'PIN_CODE' uppercase)
+module.exports.ACCESS_KEYPAD_CREDENTIAL_PROVIDERS = ['pin_code', 'keypad', 'pin'];
 
 // NVR Alarm Manager
 module.exports.EVENT_NVR_ALARM_STATE_CHANGED = 'ufp_nvr_alarm_state_changed';
 module.exports.EVENT_NVR_ALARM_ARMED = 'ufp_nvr_alarm_armed';
 module.exports.EVENT_NVR_ALARM_DISARMED = 'ufp_nvr_alarm_disarmed';
+module.exports.EVENT_NVR_ALARM_BREACH = 'ufp_nvr_alarm_breach';
 
 // Weather
 module.exports.EVENT_WEATHER_UPDATED = 'ufp_weather_updated';
@@ -173,3 +224,7 @@ module.exports.PROTECT_MQTT_TOPIC = 'unifi/protect';
 module.exports.PROTECT_NVR_UNIFIOS_REFRESH_INTERVAL = 10;
 
 module.exports.PROTECT_SENSOR_MOTION_TIMER_WAIT_IN_SEC = 10 * 1000;
+
+module.exports.PROTECT_V2_API_BASE_PATH = '/proxy/protect/integration';
+module.exports.PROTECT_V2_API_VERSION = 'v1';
+

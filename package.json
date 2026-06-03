@@ -2,13 +2,16 @@
   "name": "com.ubnt.unifiprotect",
   "version": "1.5.0",
   "main": "app.js",
+  "scripts": {
+    "test:fob-pipeline": "node tools/fob-pipeline-smoke.js"
+  },
   "devDependencies": {
     "@tsconfig/node12": "^12.1.4",
     "@types/homey": "npm:homey-apps-sdk-v3-types@^0.3.9",
-    "@types/node": "^20.5.0",
-    "eslint": "^7.32.0",
+    "@types/node": "^24.0.0",
+    "eslint": "^10.2.0",
     "eslint-config-athom": "^3.1.3",
-    "homey": "^3.9.4"
+    "homey": "^4.2.0"
   },
   "dependencies": {
     "homey-log": "^2.1.0",

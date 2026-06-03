@@ -1,0 +1,18 @@
+{
+  "name": "protect-v1-debug",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Standalone UniFi Protect V1 debug collector",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node src/self-test.js"
+  },
+  "engines": {
+    "node": ">=12.16.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ws": "^8.18.0"
+  }
+}

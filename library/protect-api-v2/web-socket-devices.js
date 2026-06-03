@@ -8,6 +8,12 @@ class ProtectWebSocket extends BaseClass {
     super(...props);
     this.loggedInStatus = 'Unknown';
     this.lastWebsocketMessage = null;
+    this._isDisconnectRequested = false;
+    this._reconnectTimeout = null;
+    this._reconnectMinDelayMs = 10000;
+    this._reconnectMaxDelayMs = 300000;
+    this._reconnectJitterRatio = 0.2;
+    this._reconnectAttempt = 0;
   }
 
   heartbeat() {
@@ -16,9 +22,49 @@ class ProtectWebSocket extends BaseClass {
 
     if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
       this.pingTimeout = this.homey.setInterval(() => {
-        this._eventListener.ping();
+        try {
+          if (this._eventListener && this._eventListener.readyState === WebSocketEvents.OPEN) {
+            this._eventListener.ping();
+          }
+        } catch (error) {
+          this.homey.app.log('[V2 Devices WS] heartbeat ping failed: ' + error);
+        }
       }, 30000);
     }
+  }
+
+  _clearReconnectTimeout() {
+    if (this._reconnectTimeout) {
+      this.homey.clearTimeout(this._reconnectTimeout);
+      this._reconnectTimeout = null;
+    }
+  }
+
+  _scheduleReconnect() {
+    if (this._isDisconnectRequested || this._reconnectTimeout) {
+      return;
+    }
+
+    const baseReconnectDelayMs = Math.min(
+      this._reconnectMinDelayMs * Math.pow(2, this._reconnectAttempt),
+      this._reconnectMaxDelayMs,
+    );
+    const jitterRangeMs = Math.floor(baseReconnectDelayMs * this._reconnectJitterRatio);
+    const jitterOffsetMs = jitterRangeMs > 0
+      ? Math.floor((Math.random() * ((jitterRangeMs * 2) + 1)) - jitterRangeMs)
+      : 0;
+    const reconnectDelayMs = Math.min(
+      this._reconnectMaxDelayMs,
+      Math.max(this._reconnectMinDelayMs, baseReconnectDelayMs + jitterOffsetMs),
+    );
+    const reconnectAttempt = this._reconnectAttempt + 1;
+    this.homey.app.log('[V2 Devices WS] WebSocket disconnected, reconnect attempt #' + reconnectAttempt + ' in ' + (reconnectDelayMs / 1000) + 's');
+
+    this._reconnectAttempt += 1;
+    this._reconnectTimeout = this.homey.setTimeout(() => {
+      this._reconnectTimeout = null;
+      this.reconnectNotificationsListener();
+    }, reconnectDelayMs);
   }
 
   isWebsocketConnected() {
@@ -35,9 +81,9 @@ class ProtectWebSocket extends BaseClass {
   }
 
   notificationsUrl() {
-
-      // https://YOUR_CONSOLE_IP/proxy/protect/integration/v1/subscribe/devices
-    return `wss://${this.homey.app.apiV2.webclient._serverHost}:${this.homey.app.apiV2.webclient._serverPort}/proxy/protect/integration/v1/subscribe/devices`;
+    const webclient = this.homey.app.apiV2.webclient;
+    const path = webclient.buildApiPath('subscribe/devices');
+    return `wss://${webclient._serverHost}:${webclient._serverPort}${path}`;
   }
 
   launchNotificationsListener() {
@@ -50,6 +96,7 @@ class ProtectWebSocket extends BaseClass {
     this.homey.app.log(`Update listener: ${this.notificationsUrl()}`);
 
     try {
+      this._isDisconnectRequested = false;
       this.loggedInStatus = 'Connecting';
 
       const _ws = new WebSocketEvents(this.notificationsUrl(), {
@@ -73,6 +120,8 @@ class ProtectWebSocket extends BaseClass {
       this._eventListener.on('open', (event) => {
         this.homey.app.log(`${this.homey.app.apiV2.webclient._serverHost}: Connected to the UniFi realtime update events API.`);
         this.loggedInStatus = 'Connected';
+        this._reconnectAttempt = 0;
+        this._clearReconnectTimeout();
         this.heartbeat();
       });
 
@@ -84,8 +133,9 @@ class ProtectWebSocket extends BaseClass {
         // terminate and cleanup websocket connection and timers
         delete this._eventListener;
         this._eventListenerConfigured = false;
-        this.homey.clearTimeout(this.pingTimeout);
+        this.homey.clearInterval(this.pingTimeout);
         this.loggedInStatus = 'Disconnected';
+        this._scheduleReconnect();
       });
 
       this._eventListener.on('error', (error) => {
@@ -107,6 +157,11 @@ class ProtectWebSocket extends BaseClass {
 
   disconnectEventListener() {
     return new Promise((resolve, reject) => {
+      this._isDisconnectRequested = true;
+      this._reconnectAttempt = 0;
+      this._clearReconnectTimeout();
+      this.homey.clearInterval(this.pingTimeout);
+
       if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
         this.homey.app.log('Called terminate websocket');
         this._eventListener.close();
@@ -119,10 +174,14 @@ class ProtectWebSocket extends BaseClass {
 
   reconnectNotificationsListener() {
     this.homey.app.log('Called reconnectUpdatesListener');
+    this._isDisconnectRequested = false;
     this.disconnectEventListener().then((res) => {
+      this._isDisconnectRequested = false;
       this.launchNotificationsListener();
       this.configureNotificationsListener(this);
-    }).catch();
+    }).catch((error) => {
+      this.homey.error(error);
+    });
   }
 
   /*  */
@@ -147,7 +206,109 @@ class ProtectWebSocket extends BaseClass {
 
       this.lastWebsocketMessage = this.homey.app.toLocalTime(new Date()).toISOString().slice(0, 16);
 
-      this.homey.app.log('Websocket Devices event received: ' + JSON.stringify(eventData));
+      this.homey.app.debug('Websocket V2 Devices event received: ' + JSON.stringify(eventData));
+
+      if (!eventData || !eventData.item || !eventData.item.modelKey) {
+        return;
+      }
+
+      const payload = eventData.item;
+      const modelKey = payload.modelKey;
+      const deviceId = payload.id;
+
+      this.homey.app.debug('[V2 Devices WS] ' + modelKey + ' ' + deviceId + ' ' + eventData.type);
+
+      try {
+        if (modelKey === 'camera') {
+          const driverCamera = this.homey.drivers.getDriver('protectcamera');
+          const deviceCamera = driverCamera.getUnifiDeviceById(deviceId);
+          if (deviceCamera) {
+            driverCamera.onParseWebsocketMessage(deviceCamera, payload);
+          }
+
+          const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
+          const deviceDoorbell = driverDoorbell.getUnifiDeviceById(deviceId);
+          if (deviceDoorbell) {
+            driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload);
+          }
+        } else if (modelKey === 'light') {
+          const driver = this.homey.drivers.getDriver('protectlight');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'relay') {
+          const driver = this.homey.drivers.getDriver('protect-relay');
+          const devices = driver.getUnifiDevicesByRelayId(deviceId);
+          devices.forEach((device) => {
+            driver.onParseWebsocketMessage(device, payload);
+          });
+        } else if (modelKey === 'sensor') {
+          const driver = this.homey.drivers.getDriver('protectsensor');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'chime') {
+          const driver = this.homey.drivers.getDriver('protectchime');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'viewer') {
+          const driver = this.homey.drivers.getDriver('protect-viewport');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'speaker') {
+          const driver = this.homey.drivers.getDriver('protect-horn-speaker');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'fob') {
+          const driver = this.homey.drivers.getDriver('protect-fob');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'aiport') {
+          const driver = this.homey.drivers.getDriver('protect-ai-port');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'siren') {
+          const driver = this.homey.drivers.getDriver('protect-siren');
+          const device = driver.getUnifiDeviceById(deviceId);
+          if (device) {
+            driver.onParseWebsocketMessage(device, payload);
+          }
+        } else if (modelKey === 'nvr') {
+          try {
+            const alarmDriver = this.homey.drivers.getDriver('protect-nvr-alarm');
+            const alarmDevice = alarmDriver.getNVRAlarmDevice();
+            if (alarmDevice) {
+              alarmDriver.onParseWebsocketMessage(alarmDevice, payload);
+            }
+          } catch (e) {
+            // driver may not be installed
+          }
+
+          try {
+            const unifiOsDriver = this.homey.drivers.getDriver('unifi-os');
+            const unifiOsDevice = unifiOsDriver.getUnifiDeviceById('unifi-os-controller');
+            if (unifiOsDevice) {
+              unifiOsDriver.onParseWebsocketMessage(unifiOsDevice, payload);
+            }
+          } catch (e) {
+            // driver may not be installed
+          }
+        }
+      } catch (e) {
+        this.homey.app.debug('[V2 Devices WS] dispatch error: ' + e);
+      }
 
     });
     this._eventListenerConfigured = true;

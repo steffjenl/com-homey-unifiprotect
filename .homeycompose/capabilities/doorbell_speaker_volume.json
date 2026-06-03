@@ -1,0 +1,24 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Speaker volume",
+    "nl": "Luidsprekersvolume",
+    "de": "Lautsprecherlautstärke",
+    "fr": "Volume haut-parleur",
+    "it": "Volume altoparlante",
+    "sv": "Högtalarvolym",
+    "no": "Høyttaler volum",
+    "es": "Volumen del altavoz",
+    "da": "Højttalerlydstyrke",
+    "ru": "Громкость динамика",
+    "pl": "Głośność głośnika",
+    "ko": "스피커 볼륨"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "slider",
+  "min": 0,
+  "max": 100,
+  "step": 1,
+  "icon": "/assets/microphone.svg"
+}

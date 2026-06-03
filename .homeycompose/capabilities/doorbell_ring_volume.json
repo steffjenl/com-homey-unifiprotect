@@ -1,0 +1,24 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Ring volume",
+    "nl": "Belvolume",
+    "de": "Klingelvolumen",
+    "fr": "Volume sonnerie",
+    "it": "Volume suoneria",
+    "sv": "Ringvolym",
+    "no": "Ringevolum",
+    "es": "Volumen de timbre",
+    "da": "Ringelydstyrke",
+    "ru": "Громкость звонка",
+    "pl": "Głośność dzwonka",
+    "ko": "벨소리 볼륨"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "slider",
+  "min": 0,
+  "max": 100,
+  "step": 1,
+  "icon": "/assets/microphone.svg"
+}

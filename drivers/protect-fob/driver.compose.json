@@ -1,0 +1,58 @@
+{
+  "id": "protect-fob",
+  "class": "sensor",
+  "capabilities": [
+    "measure_battery",
+    "alarm_battery"
+  ],
+  "energy": {
+    "batteries": [
+      "CR2032"
+    ]
+  },
+  "name": {
+    "en": "FOB",
+    "nl": "FOB",
+    "de": "FOB",
+    "fr": "FOB",
+    "it": "FOB",
+    "sv": "FOB",
+    "no": "FOB",
+    "es": "FOB",
+    "da": "FOB",
+    "ru": "FOB",
+    "pl": "FOB",
+    "ko": "FOB"
+  },
+  "images": {
+    "xlarge": "drivers/protect-fob/assets/images/xlarge.png",
+    "large": "drivers/protect-fob/assets/images/large.png",
+    "small": "drivers/protect-fob/assets/images/small.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [
+    "cloud"
+  ]
+}
+
+
+
+

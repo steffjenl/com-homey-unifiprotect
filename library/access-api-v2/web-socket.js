@@ -2,12 +2,19 @@
 
 const WebSocket = require('ws');
 const BaseClass = require('./base-class');
+const { ACCESS_KEYPAD_CREDENTIAL_PROVIDERS } = require('../constants');
 
 class AccessWebSocket extends BaseClass {
   constructor(...props) {
     super(...props);
     this.loggedInStatus = 'Unknown';
     this.lastWebsocketMessage = null;
+    this._isDisconnectRequested = false;
+    this._reconnectTimeout = null;
+    this._reconnectMinDelayMs = 10000;
+    this._reconnectMaxDelayMs = 300000;
+    this._reconnectJitterRatio = 0.2;
+    this._reconnectAttempt = 0;
   }
 
   heartbeat() {
@@ -16,9 +23,49 @@ class AccessWebSocket extends BaseClass {
 
     if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
       this.pingTimeout = this.homey.setInterval(() => {
-        this._eventListener.ping();
+        try {
+          if (this._eventListener && this._eventListener.readyState === WebSocket.OPEN) {
+            this._eventListener.ping();
+          }
+        } catch (error) {
+          this.homey.app.log('[AccessWS] heartbeat ping failed: ' + error);
+        }
       }, 30000);
     }
+  }
+
+  _clearReconnectTimeout() {
+    if (this._reconnectTimeout) {
+      this.homey.clearTimeout(this._reconnectTimeout);
+      this._reconnectTimeout = null;
+    }
+  }
+
+  _scheduleReconnect() {
+    if (this._isDisconnectRequested || this._reconnectTimeout) {
+      return;
+    }
+
+    const baseReconnectDelayMs = Math.min(
+      this._reconnectMinDelayMs * Math.pow(2, this._reconnectAttempt),
+      this._reconnectMaxDelayMs,
+    );
+    const jitterRangeMs = Math.floor(baseReconnectDelayMs * this._reconnectJitterRatio);
+    const jitterOffsetMs = jitterRangeMs > 0
+      ? Math.floor((Math.random() * ((jitterRangeMs * 2) + 1)) - jitterRangeMs)
+      : 0;
+    const reconnectDelayMs = Math.min(
+      this._reconnectMaxDelayMs,
+      Math.max(this._reconnectMinDelayMs, baseReconnectDelayMs + jitterOffsetMs),
+    );
+    const reconnectAttempt = this._reconnectAttempt + 1;
+    this.homey.app.log('[AccessWS] WebSocket disconnected, reconnect attempt #' + reconnectAttempt + ' in ' + (reconnectDelayMs / 1000) + 's');
+
+    this._reconnectAttempt += 1;
+    this._reconnectTimeout = this.homey.setTimeout(() => {
+      this._reconnectTimeout = null;
+      this.reconnectNotificationsListener();
+    }, reconnectDelayMs);
   }
 
   isWebsocketConnected() {
@@ -49,6 +96,7 @@ class AccessWebSocket extends BaseClass {
     this.homey.app.log(`Update listener: ${this.notificationsUrl()}`);
 
     try {
+      this._isDisconnectRequested = false;
       this.loggedInStatus = 'Connecting';
 
       const _ws = new WebSocket(this.notificationsUrl(), {
@@ -72,6 +120,8 @@ class AccessWebSocket extends BaseClass {
       this._eventListener.on('open', (event) => {
         this.homey.app.log(`${this.homey.app.accessApi.webclient._serverHost}: Connected to the UniFi realtime update events API.`);
         this.loggedInStatus = 'Connected';
+        this._reconnectAttempt = 0;
+        this._clearReconnectTimeout();
         this.heartbeat();
       });
 
@@ -83,8 +133,9 @@ class AccessWebSocket extends BaseClass {
         // terminate and cleanup websocket connection and timers
         delete this._eventListener;
         this._eventListenerConfigured = false;
-        this.homey.clearTimeout(this.pingTimeout);
+        this.homey.clearInterval(this.pingTimeout);
         this.loggedInStatus = 'Disconnected';
+        this._scheduleReconnect();
       });
 
       this._eventListener.on('error', (error) => {
@@ -106,6 +157,11 @@ class AccessWebSocket extends BaseClass {
 
   disconnectEventListener() {
     return new Promise((resolve, reject) => {
+      this._isDisconnectRequested = true;
+      this._reconnectAttempt = 0;
+      this._clearReconnectTimeout();
+      this.homey.clearInterval(this.pingTimeout);
+
       if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
         this.homey.app.log('Called terminate websocket');
         this._eventListener.close();
@@ -118,10 +174,14 @@ class AccessWebSocket extends BaseClass {
 
   reconnectNotificationsListener() {
     this.homey.app.log('Called reconnectUpdatesListener');
+    this._isDisconnectRequested = false;
     this.disconnectEventListener().then((res) => {
+      this._isDisconnectRequested = false;
       this.launchNotificationsListener();
       this.configureNotificationsListener(this);
-    }).catch();
+    }).catch((error) => {
+      this.homey.error(error);
+    });
   }
 
   /*  */
@@ -139,10 +199,6 @@ class AccessWebSocket extends BaseClass {
     }
 
     if (jsonData.event === 'access.logs.insights.add') {
-      return false;
-    }
-
-    if (jsonData.event === 'access.logs.add') {
       return false;
     }
 
@@ -222,12 +278,72 @@ class AccessWebSocket extends BaseClass {
         if (deviceGarageDoor) {
           driverGarageDoor.onParseWebsocketMessage(deviceGarageDoor, eventData.data);
         }
+
+        const driverIntercom = this.homey.drivers.getDriver('access-intercom');
+        const deviceIntercom = driverIntercom.getUnifiDeviceById(eventData.data.id);
+        if (deviceIntercom) {
+          driverIntercom.onParseWebsocketMessage(deviceIntercom, eventData.data);
+        }
+      } else if (eventData.event === 'access.logs.add') {
+        this.homey.app.debug(`[AccessWS] access.logs.add received: ${JSON.stringify(eventData)}`);
+        this._dispatchAccessLogEvent(eventData).catch((err) => this.homey.app.debug(`[AccessWS] _dispatchAccessLogEvent error: ${err}`));
       } else {
         // this.homey.app.log('Websocket unhandled event received: ' + JSON.stringify(eventData));
       }
     });
     this._eventListenerConfigured = true;
     return true;
+  }
+
+  async _dispatchAccessLogEvent(eventData) {
+    // Bug fixes vs original: use _source (not source), use event_object_id for MAC, compare case-insensitively
+    const source = eventData.data && eventData.data._source;
+    if (!source) return;
+
+    const hubMac = eventData.event_object_id;
+    const credentialProvider = source.authentication && source.authentication.credential_provider;
+    const actor = source.actor && source.actor.display_name;
+    const result = source.event && source.event.result;
+
+    if (!hubMac || !credentialProvider) return;
+    if (!ACCESS_KEYPAD_CREDENTIAL_PROVIDERS.includes(credentialProvider.toLowerCase())) return;
+
+    this.homey.app.debug(`[AccessWS] access.logs.add hubMac=${hubMac} credential=${credentialProvider} actor=${actor} result=${result}`);
+
+    // Resolve hub MAC → door UUID via the Access REST API.
+    // access.logs.add events identify the door by hub MAC (event_object_id), but Homey devices
+    // are keyed by door location UUID (from getDoors). The devices endpoint returns hub objects
+    // with a `mac` field and a `location_id` field pointing to the door UUID.
+    let doorId;
+    try {
+      const hubs = await this.homey.app.accessApi.getHubs();
+      const hub = hubs.find((h) => String(h.mac || '').toLowerCase() === hubMac.toLowerCase());
+      if (!hub) {
+        this.homey.app.debug(`[AccessWS] access.logs.add: no hub found for hubMac=${hubMac}`);
+        return;
+      }
+      if (!hub.location_id) {
+        this.homey.app.debug(`[AccessWS] access.logs.add: hub found but missing location_id for hubMac=${hubMac}`);
+        return;
+      }
+      doorId = String(hub.location_id);
+    } catch (err) {
+      this.homey.app.debug(`[AccessWS] access.logs.add getHubs failed: ${err}`);
+      return;
+    }
+
+    const driverDoor = this.homey.drivers.getDriver('access-door');
+    const deviceDoor = driverDoor.getUnifiDeviceById(doorId);
+    if (deviceDoor) {
+      driverDoor.onAccessLogKeypaddEvent(deviceDoor, { credentialProvider, actor: actor || '', result: result || '' });
+      return;
+    }
+
+    const driverGarageDoor = this.homey.drivers.getDriver('access-garagedoor');
+    const deviceGarageDoor = driverGarageDoor.getUnifiDeviceById(doorId);
+    if (deviceGarageDoor) {
+      driverGarageDoor.onAccessLogKeypaddEvent(deviceGarageDoor, { credentialProvider, actor: actor || '', result: result || '' });
+    }
   }
 
 }

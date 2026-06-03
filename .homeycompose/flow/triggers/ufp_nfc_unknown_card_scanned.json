@@ -1,0 +1,33 @@
+{
+  "id": "ufp_nfc_unknown_card_scanned",
+  "title": {
+    "en": "An unknown NFC card was scanned",
+    "nl": "Een onbekende NFC kaart is gescand"
+  },
+  "tokens": [
+    {
+      "name": "ufp_nfc_unknown_card_scanned_camera",
+      "type": "string",
+      "title": {
+        "en": "Camera",
+        "nl": "Camera"
+      },
+      "example": {
+        "en": "Doorbell",
+        "nl": "Deurbel"
+      }
+    },
+    {
+      "name": "ufp_nfc_unknown_card_scanned_nfc_id",
+      "type": "string",
+      "title": {
+        "en": "NFC ID",
+        "nl": "NFC ID"
+      },
+      "example": {
+        "en": "01234AA2A12345",
+        "nl": "01234AA2A12345"
+      }
+    }
+  ]
+}
