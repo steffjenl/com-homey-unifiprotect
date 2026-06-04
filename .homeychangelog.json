@@ -352,5 +352,8 @@
   },
   "1.10.11": {
     "en": "clear RTSP URL warning when a valid URL is provided"
+  },
+  "1.11.0": {
+    "en": "convert promise chains to async/await for improved readability and error handling"
   }
 }
