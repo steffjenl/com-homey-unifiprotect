@@ -196,10 +196,13 @@ class Sensor extends Homey.Device {
         }
     }
 
-    refreshSensorData() {
-        this.homey.app.api.getBootstrapInfo().then(() => {
-            this._initSensorData();
-        }).catch(error => this.homey.app.debug(error));
+    async refreshSensorData() {
+        try {
+            await this.homey.app.api.getBootstrapInfo();
+            await this._initSensorData();
+        } catch (error) {
+            this.homey.app.debug(error);
+        }
     }
 
     onMotionStart() {

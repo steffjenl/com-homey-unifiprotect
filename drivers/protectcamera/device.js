@@ -302,7 +302,7 @@ class Camera extends Homey.Device {
     }
   }
 
-  onNFCCardScanned(payload, actionType = null, eventId = null) {
+  async onNFCCardScanned(payload, actionType = null, eventId = null) {
     this.homey.app.debug(`[Camera] onNFCCardScanned ${JSON.stringify(payload)}`);
     const lastNFCCardScannedAt = this.getCapabilityValue('last_nfc_card_scanned_at');
     if (typeof payload === 'undefined'
@@ -319,7 +319,8 @@ class Camera extends Homey.Device {
     const ulpId = payload.metadata.nfc.ulpId || null;
     const nfcId = payload.metadata.nfc.nfcId || null;
     if (ulpId) {
-      this.homey.app.api.getCloudUserById(ulpId).then((user) => {
+      try {
+        const user = await this.homey.app.api.getCloudUserById(ulpId);
         const email = user && user.email !== '' ? user.email : null;
         const person = user ? (email || user.username) : '';
         const firstName = user ? user.first_name : '';
@@ -334,7 +335,9 @@ class Camera extends Homey.Device {
           ufp_nfc_card_scanned_card_id: nfcId,
           ufp_nfc_card_scanned_nfc_id: nfcId,
         }).catch(this.error);
-      }).catch(this.error);
+      } catch (error) {
+        this.error(error);
+      }
     } else {
       this.homey.app._nfcUnknownCardScannedTrigger.trigger({
         ufp_nfc_unknown_card_scanned_camera: this.getName(),
@@ -344,7 +347,7 @@ class Camera extends Homey.Device {
     return true;
   }
 
-  onFingerprintIdentified(payload, actionType = null, eventId = null) {
+  async onFingerprintIdentified(payload, actionType = null, eventId = null) {
     this.homey.app.debug(`[Camera] onFingerprintIdentified ${JSON.stringify(payload)}`);
     const lastFingerprintIdentifiedAt = this.getCapabilityValue('last_fingerprint_identified_at');
     if (typeof payload === 'undefined'
@@ -360,7 +363,8 @@ class Camera extends Homey.Device {
     this.setCapabilityValue('last_fingerprint_identified_at', payload.start).catch(this.error);
     const ulpId = payload.metadata.fingerprint.ulpId || null;
     if (ulpId) {
-      this.homey.app.api.getCloudUserById(ulpId).then((user) => {
+      try {
+        const user = await this.homey.app.api.getCloudUserById(ulpId);
         const email = user && user.email !== '' ? user.email : null;
         const person = user ? (email || user.username) : '';
         const firstName = user ? user.first_name : '';
@@ -373,7 +377,9 @@ class Camera extends Homey.Device {
           ufp_fingerprint_identified_last_name: lastName,
           ufp_fingerprint_identified_user_unique_id: uniqueId,
         }).catch(this.error);
-      }).catch(this.error);
+      } catch (error) {
+        this.error(error);
+      }
     } else {
       // Unknown fingerprint (ulpId is null) — fire unknown fingerprint trigger
       this.homey.app.debug('[Camera] Fingerprint event has no ulpId, firing unknown fingerprint trigger');
@@ -510,10 +516,12 @@ class Camera extends Homey.Device {
       }
 
       if (this.homey.app.isV1Available()) {
-        await this.homey.app.api.getStreamUrl(this.getData()).then(((rtspUrl) => {
-          this.log(`RTSP URL for camera ${this.getName()}: ${rtspUrl}`);
-          this.rtspUrl = rtspUrl;
-        })).catch(this.error);
+        try {
+          this.rtspUrl = await this.homey.app.api.getStreamUrl(this.getData());
+          this.log(`RTSP URL for camera ${this.getName()}: ${this.rtspUrl}`);
+        } catch (error) {
+          this.error(error);
+        }
       } else if (this.homey.app.isV2Available()) {
         try {
           const streams = await this.homey.app.apiV2.getRtspsStream(this.getData().id, ['high']);
@@ -526,7 +534,7 @@ class Camera extends Homey.Device {
         }
       }
 
-      if (this.rtspUrl === undefined || this.rtspUrl === null || this.rtspUrl === '') {
+      if (!this.rtspUrl) {
         this.setWarning(this.homey.__('warnings.no_rtsp_url'));
         this.homey.app.debug(`No RTSP URL available for camera ${this.getName()}.`);
       } else {
@@ -566,11 +574,11 @@ class Camera extends Homey.Device {
       }
 
       if (!snapshotUrl && this.homey.app.isV1Available()) {
-        await this.homey.app.api.createSnapshotUrl(this.getData())
-          .then((url) => {
-            snapshotUrl = url;
-          })
-          .catch(this.error.bind(this, 'Could not create snapshot URL.'));
+        try {
+          snapshotUrl = await this.homey.app.api.createSnapshotUrl(this.getData());
+        } catch (error) {
+          this.error('Could not create snapshot URL.', error);
+        }
         headers['Cookie'] = this.homey.app.api.getProxyCookieToken();
       } else if (!snapshotUrl && this.homey.app.isV2Available()) {
         snapshotUrl = this.homey.app.apiV2.getSnapshotUrl(this.getData().id);
@@ -600,14 +608,17 @@ class Camera extends Homey.Device {
         return this.rtspUrl || '';
       };
 
-      getStreamUrl().then((rtspUrl) => {
+      try {
+        const rtspUrl = await getStreamUrl();
         this.homey.app._snapshotTrigger.trigger({
           ufv_snapshot_token: this._snapshotImage,
           ufv_snapshot_camera: this.getName(),
           ufv_snapshot_snapshot_url: this._snapshotImage.cloudUrl || '',
           ufv_snapshot_stream_url: rtspUrl,
         }).catch(this.error);
-      }).catch(this.error);
+      } catch (error) {
+        this.error(error);
+      }
     }
 
     this.cloudUrl = this._snapshotImage.cloudUrl;
