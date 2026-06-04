@@ -349,5 +349,8 @@
   },
   "1.10.10": {
     "en": "Fix Audio Smart Detections and new icons"
+  },
+  "1.10.11": {
+    "en": "clear RTSP URL warning when a valid URL is provided"
   }
 }
