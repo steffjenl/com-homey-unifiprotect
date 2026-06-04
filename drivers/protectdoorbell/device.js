@@ -686,6 +686,8 @@ class Doorbell extends Homey.Device {
       if (this.rtspUrl === undefined || this.rtspUrl === null || this.rtspUrl === '') {
         this.setWarning(this.homey.__('warnings.no_rtsp_url'));
         this.homey.app.debug(`No RTSP URL available for camera ${this.getName()}.`);
+      } else {
+        this.setWarning(null)
       }
 
       this.setCameraVideo('snapshot', `${this.getName()} Video`, this.video);
@@ -732,6 +734,10 @@ class Doorbell extends Homey.Device {
       if (this.rtspPackageUrl === undefined || this.rtspPackageUrl === null || this.rtspPackageUrl === '') {
         this.setWarning(this.homey.__('warnings.no_rtsp_url'));
         this.homey.app.debug(`No RTSP URL available for package camera ${this.getName()}.`);
+      } else {
+        if (this.rtspUrl !== undefined || true || this.rtspUrl !== '') {
+          this.setWarning(null);
+        }
       }
 
       this.setCameraVideo('package-snapshot', `${this.getName()} Package Video`, this.packageVideo);

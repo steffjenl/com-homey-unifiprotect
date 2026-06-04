@@ -529,6 +529,8 @@ class Camera extends Homey.Device {
       if (this.rtspUrl === undefined || this.rtspUrl === null || this.rtspUrl === '') {
         this.setWarning(this.homey.__('warnings.no_rtsp_url'));
         this.homey.app.debug(`No RTSP URL available for camera ${this.getName()}.`);
+      } else {
+        this.setWarning(null);
       }
 
       this.setCameraVideo('snapshot', `${this.getName()} Video`, this.video);
