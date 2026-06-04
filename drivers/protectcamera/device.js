@@ -526,6 +526,11 @@ class Camera extends Homey.Device {
         }
       }
 
+      if (this.rtspUrl === undefined || this.rtspUrl === null || this.rtspUrl === '') {
+        this.setWarning(this.homey.__('warnings.no_rtsp_url'));
+        this.homey.app.debug(`No RTSP URL available for camera ${this.getName()}.`);
+      }
+
       this.setCameraVideo('snapshot', `${this.getName()} Video`, this.video);
     } catch (err) {
       this.error('Error creating camera:', err);
@@ -550,11 +555,11 @@ class Camera extends Homey.Device {
       if (this.settings.useCameraSnapshot) {
         const directUrl = `https://${ipAddress}/snap.jpeg`;
         // Check if the direct snapshot URL is available before using it
-        const headRes = await fetch(directUrl, { method: 'HEAD', agent }).catch(() => null);
+        const headRes = await fetch(directUrl, { method: 'GET', agent }).catch(() => null);
         if (headRes && headRes.ok) {
           snapshotUrl = directUrl;
         } else {
-          this.homey.app.debug(`[CameraDevice] Direct snapshot URL not available for ${this.getName()}, falling back to API.`);
+          this.homey.app.debug(`[CameraDevice] Direct snapshot URL not available for ${this.getName()}, falling back to API. ${directUrl}`);
         }
       }
 
@@ -597,7 +602,7 @@ class Camera extends Homey.Device {
         this.homey.app._snapshotTrigger.trigger({
           ufv_snapshot_token: this._snapshotImage,
           ufv_snapshot_camera: this.getName(),
-          ufv_snapshot_snapshot_url: '',
+          ufv_snapshot_snapshot_url: this._snapshotImage.cloudUrl || '',
           ufv_snapshot_stream_url: rtspUrl,
         }).catch(this.error);
       }).catch(this.error);

@@ -297,7 +297,7 @@ class Doorbell extends Homey.Device {
       }
 
       // Package camera
-      if (doorbell.featureFlags && doorbell.featureFlags.hasPackageCamera) {
+      if ((doorbell.featureFlags && doorbell.featureFlags.hasPackageCamera) || doorbell.hasPackageCamera) {
         await this._createSnapshotPackageImage();
       }
     }
@@ -683,6 +683,11 @@ class Doorbell extends Homey.Device {
         }
       }
 
+      if (this.rtspUrl === undefined || this.rtspUrl === null || this.rtspUrl === '') {
+        this.setWarning(this.homey.__('warnings.no_rtsp_url'));
+        this.homey.app.debug(`No RTSP URL available for camera ${this.getName()}.`);
+      }
+
       this.setCameraVideo('snapshot', `${this.getName()} Video`, this.video);
 
       // Package camera
@@ -724,6 +729,11 @@ class Doorbell extends Homey.Device {
         }
       }
 
+      if (this.rtspPackageUrl === undefined || this.rtspPackageUrl === null || this.rtspPackageUrl === '') {
+        this.setWarning(this.homey.__('warnings.no_rtsp_url'));
+        this.homey.app.debug(`No RTSP URL available for package camera ${this.getName()}.`);
+      }
+
       this.setCameraVideo('package-snapshot', `${this.getName()} Package Video`, this.packageVideo);
     } catch (err) {
       this.error('Error creating camera:', err);
@@ -749,7 +759,7 @@ class Doorbell extends Homey.Device {
       if (this.settings.useCameraSnapshot) {
         const directUrl = `https://${ipAddress}/snap.jpeg`;
         // Check if the direct snapshot URL is available before using it
-        const headRes = await fetch(directUrl, { method: 'HEAD', agent }).catch(() => null);
+        const headRes = await fetch(directUrl, { method: 'GET', agent }).catch(() => null);
         if (headRes && headRes.ok) {
           snapshotUrl = directUrl;
         } else {
@@ -796,7 +806,7 @@ class Doorbell extends Homey.Device {
         this.homey.app._snapshotTrigger.trigger({
           ufv_snapshot_token: this._snapshotImage,
           ufv_snapshot_camera: this.getName(),
-          ufv_snapshot_snapshot_url: '',
+          ufv_snapshot_snapshot_url: this._snapshotImage.cloudUrl || '',
           ufv_snapshot_stream_url: rtspUrl,
         }).catch(this.error);
       }).catch(this.error);
@@ -828,7 +838,7 @@ class Doorbell extends Homey.Device {
         if (this.settings.useCameraSnapshot) {
           const directUrl = `https://${ipAddress}/snap_2.jpeg`;
           // Check if the direct package snapshot URL is available before using it
-          const headRes = await fetch(directUrl, { method: 'HEAD', agent }).catch(() => null);
+          const headRes = await fetch(directUrl, { method: 'GET', agent }).catch(() => null);
           if (headRes && headRes.ok) {
             snapshotUrl = directUrl;
           } else {
@@ -879,7 +889,7 @@ class Doorbell extends Homey.Device {
           this.homey.app._packageSnapshotTrigger.trigger({
             ufv_snapshot_token: this._snapshotPackageImage,
             ufv_snapshot_camera: this.getName(),
-            ufv_snapshot_snapshot_url: '',
+            ufv_snapshot_snapshot_url: this._snapshotPackageImage.cloudUrl || '',
             ufv_snapshot_stream_url: rtspUrl,
           });
         }).catch(this.error);
