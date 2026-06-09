@@ -45,6 +45,29 @@ class ProtectAPI extends BaseClass {
         return this._bootstrap;
     }
 
+    _compactBootstrapPayload(payload) {
+        if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+            return payload;
+        }
+
+        const compactPayload = Object.assign({}, payload);
+
+        // Bootstrap event history can become very large and is not read by this app.
+        if (Array.isArray(compactPayload.events)) {
+            compactPayload.events = [];
+        }
+
+        // Keep only fields used by getUsers/getUsernameById.
+        if (Array.isArray(compactPayload.users)) {
+            compactPayload.users = compactPayload.users.map((user) => ({
+                id: user.id,
+                localUsername: user.localUsername,
+            }));
+        }
+
+        return compactPayload;
+    }
+
     getNvrName() {
         if (typeof this._bootstrap.nvr.name !== 'undefined' && this._bootstrap.nvr.name !== null) {
             return this._bootstrap.nvr.name;
@@ -225,16 +248,17 @@ class ProtectAPI extends BaseClass {
             this.webclient.get('bootstrap')
                 .then(response => {
                     const result = JSON.parse(response);
+                    const compactResult = this._compactBootstrapPayload(result);
                     this.homey.log('Bootstrap info obtained.');
 
-                    if (result) {
+                    if (compactResult) {
                         this.homey.log('Setting bootstrap info...');
-                        this._bootstrap = result;
+                        this._bootstrap = compactResult;
 
-                        if (result.cameras) {
+                        if (compactResult.cameras) {
                             this.homey.log('Setting API key...');
-                            this._rtspPort = result.nvr.ports.rtsp;
-                            this._lastUpdateId = result.lastUpdateId;
+                            this._rtspPort = compactResult.nvr.ports.rtsp;
+                            this._lastUpdateId = compactResult.lastUpdateId;
 
                             if (this.ws.isWebsocketConnected() === false) {
                                 this.homey.log('Connecting to websocket...');
@@ -243,7 +267,7 @@ class ProtectAPI extends BaseClass {
                             }
                         }
 
-                        return resolve(result);
+                        return resolve(compactResult);
                     } else {
                         return reject(new Error('Error obtaining bootstrap info.'));
                     }

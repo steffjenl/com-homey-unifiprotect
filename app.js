@@ -3,24 +3,19 @@
 'use strict';
 
 const Homey = require('homey');
-const {Log} = require('homey-log');
 const ProtectAPI = require('./library/protectapi');
-const AppAccess = require('./library/app-access');
 const AppProtect = require('./library/app-protect');
-const AccessAPI = require('./library/access-api-v2/access-api');
-const ProtectAPIV2 = require('./library/protect-api-v2/protect-api');
 const FobHandler = require('./library/fob-handler');
 const FobActionMapper = require('./library/action-mapper');
 const SpeakerService = require('./library/speaker-service');
 //
-const { stat, createWriteFile, existsSync, mkdirSync, rmSync, unlinkSync, readdirSync, statSync, readFileSync, openSync, readSync, closeSync, writeFileSync, writeFile } = require("fs");
+const { stat, existsSync, unlinkSync, writeFile } = require('fs');
 
 class UniFiProtect extends Homey.App {
     /**
      * onInit is called when the app is initialized.
      */
     async onInit() {
-        this.homeyLog = new Log({homey: this.homey});
         this.debuggedIn = false;
         this.nvrIp = null;
         this.nvrPort = null;
@@ -36,13 +31,9 @@ class UniFiProtect extends Homey.App {
         this.api.setHomeyObject(this.homey);
         this.appProtect = new AppProtect();
         this.appProtect.setHomeyObject(this.homey);
-        this.apiV2 = new ProtectAPIV2();
-        this.apiV2.setHomeyObject(this.homey);
-        //
-        this.accessApi = new AccessAPI();
-        this.accessApi.setHomeyObject(this.homey);
-        this.appAccess = new AppAccess();
-        this.appAccess.setHomeyObject(this.homey);
+        this.apiV2 = null;
+        this.accessApi = null;
+        this.appAccess = null;
 
         this.speakerService = new SpeakerService();
         this.speakerService.setHomeyObject(this.homey);
@@ -59,7 +50,6 @@ class UniFiProtect extends Homey.App {
         this.fobActionMapper.setHomeyObject(this.homey);
 
         await this.appProtect.onInit();
-        await this.appAccess.onInit();
 
         // Register snapshot image token
         this.appProtect._registerSnapshotToken();
@@ -82,10 +72,12 @@ class UniFiProtect extends Homey.App {
         }
 
         if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
+            await this._initAccessStack();
             this.appAccess.loginToAccess().catch(this.error);
         }
 
         if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
+            this._initProtectV2Stack();
             this.appProtect.loginToProtectV2().catch(this.error);
         }
 
@@ -118,33 +110,96 @@ class UniFiProtect extends Homey.App {
             return returnDevices;
         });
 
+        this._startMemoryLogging();
+
         this.debug('UniFiProtect has been initialized');
     }
 
     // FIXED: Extracted settings change handler so it can be unregistered
-    _handleSettingsChange(key) {
-        if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {
-            this.appProtect._appLogin();
-        }
-        if (key === 'ufp:settings') {
-            const settings = this.homey.settings.get('ufp:settings');
-            this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
-            this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
-        }
-        if (key === 'ufp:tokens') {
-            const tokens = this.homey.settings.get('ufp:tokens');
-            if (tokens) {
-                this.accessApiKey = tokens.accessApiKey;
-                this.protectV2ApiKey = tokens.protectV2ApiKey;
+    async _handleSettingsChange(key) {
+        try {
+            if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {
+                this.appProtect._appLogin();
             }
+            if (key === 'ufp:settings') {
+                const settings = this.homey.settings.get('ufp:settings');
+                this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
+                this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
+            }
+            if (key === 'ufp:tokens') {
+                const tokens = this.homey.settings.get('ufp:tokens');
+                if (tokens) {
+                    this.accessApiKey = tokens.accessApiKey;
+                    this.protectV2ApiKey = tokens.protectV2ApiKey;
+                }
 
-            if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
-                this.appAccess.loginToAccess().catch(this.error);
-            }
+                if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
+                    await this._initAccessStack();
+                    this.appAccess.loginToAccess().catch(this.error);
+                }
 
-            if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
-                this.appProtect.loginToProtectV2().catch(this.error);
+                if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
+                    this._initProtectV2Stack();
+                    this.appProtect.loginToProtectV2().catch(this.error);
+                }
             }
+        } catch (error) {
+            this.error(error);
+        }
+    }
+
+    _initProtectV2Stack() {
+        if (this.apiV2) {
+            return;
+        }
+
+        const ProtectAPIV2 = require('./library/protect-api-v2/protect-api');
+        this.apiV2 = new ProtectAPIV2();
+        this.apiV2.setHomeyObject(this.homey);
+        this.homey.app.debug('[App] Initialized Protect V2 stack lazily');
+    }
+
+    async _initAccessStack() {
+        if (!this.accessApi) {
+            const AccessAPI = require('./library/access-api-v2/access-api');
+            this.accessApi = new AccessAPI();
+            this.accessApi.setHomeyObject(this.homey);
+        }
+
+        if (!this.appAccess) {
+            const AppAccess = require('./library/app-access');
+            this.appAccess = new AppAccess();
+            this.appAccess.setHomeyObject(this.homey);
+            await this.appAccess.onInit();
+            this.homey.app.debug('[App] Initialized Access stack lazily');
+        }
+    }
+
+    _startMemoryLogging() {
+        if (Homey.env.DEBUG !== 'true') {
+            return;
+        }
+
+        if (this._memoryLogInterval) {
+            this.homey.clearInterval(this._memoryLogInterval);
+            this._memoryLogInterval = null;
+        }
+
+        this._logMemoryUsage();
+        this._memoryLogInterval = this.homey.setInterval(() => {
+            this._logMemoryUsage();
+        }, 30 * 60 * 1000);
+    }
+
+    _logMemoryUsage() {
+        try {
+            const usage = process.memoryUsage();
+            const toMb = (value) => (value / (1024 * 1024)).toFixed(1);
+            this.debug(
+                `[memory] rss=${toMb(usage.rss)}MB heapUsed=${toMb(usage.heapUsed)}MB heapTotal=${toMb(usage.heapTotal)}MB external=${toMb(usage.external)}MB`,
+            );
+        } catch (error) {
+            this.error(error);
         }
     }
 
@@ -184,13 +239,20 @@ class UniFiProtect extends Homey.App {
             this.homey.clearInterval(this.appAccess._checkWebSocketConnectionInterval);
             this.appAccess._checkWebSocketConnectionInterval = null;
         }
+
+        if (this._memoryLogInterval) {
+            this.homey.clearInterval(this._memoryLogInterval);
+            this._memoryLogInterval = null;
+        }
     }
 
     onParseWebsocketMessage(payload) {
         if (payload.hasOwnProperty('type')) {
 
             if (payload.type === 'doorAccess') {
-                this.appAccess.onDoorAccess(payload);
+                if (this.appAccess && typeof this.appAccess.onDoorAccess === 'function') {
+                    this.appAccess.onDoorAccess(payload);
+                }
             }
 
         }

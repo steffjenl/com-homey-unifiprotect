@@ -664,16 +664,20 @@ class AppProtect extends BaseClass {
                 if (
                     tokens && typeof tokens.protectV2ApiKey !== 'undefined'
                     && tokens.protectV2ApiKey !== ''
-                    && !this.homey.app.apiV2.websocket.isWebsocketConnected()
                 ) {
-                    this.homey.app.appProtect.loginToProtectV2().catch(this.error);
+                    this.homey.app._initProtectV2Stack();
+                    if (!this.homey.app.apiV2.websocket.isWebsocketConnected()) {
+                        this.homey.app.appProtect.loginToProtectV2().catch(this.error);
+                    }
                 }
 
                 if (
                     tokens && typeof tokens.accessApiKey !== 'undefined'
                     && tokens.accessApiKey !== ''
                 ) {
-                    this.homey.app.appAccess.loginToAccess().catch(this.error);
+                    this.homey.app._initAccessStack()
+                        .then(() => this.homey.app.appAccess.loginToAccess())
+                        .catch(this.error);
                 }
             } catch (error) {
                 this.homey.error(`${JSON.stringify(error)}`);

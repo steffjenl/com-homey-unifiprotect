@@ -14,10 +14,7 @@
     "homey": "^4.2.0"
   },
   "dependencies": {
-    "homey-log": "^2.1.0",
-    "node-fetch": "^2.7.0",
-    "ws": "^8.18.0",
-    "zlib": "^1.0.5"
+    "ws": "^8.18.0"
   },
   "extends": [
     "plugin:homey-app/recommended"

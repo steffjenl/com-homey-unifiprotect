@@ -1,9 +1,53 @@
 'use strict';
 
 const Homey = require('homey');
-const fetch = require('node-fetch');
 const https = require('https');
 const SmartDetectionMixin = require('../../library/SmartDetectionMixin');
+
+function isHttpsUrlReachable(url, agent) {
+  return new Promise((resolve) => {
+    const request = https.request(url, { method: 'HEAD', agent }, (response) => {
+      const statusCode = response.statusCode || 0;
+      response.resume();
+      resolve(statusCode >= 200 && statusCode < 300);
+    });
+
+    request.on('error', () => resolve(false));
+    request.setTimeout(5000, () => {
+      request.destroy();
+      resolve(false);
+    });
+    request.end();
+  });
+}
+
+function pipeHttpsUrlToStream(url, agent, headers, stream) {
+  return new Promise((resolve, reject) => {
+    const request = https.request(url, {
+      method: 'GET',
+      agent,
+      headers: headers || {},
+    }, (response) => {
+      const statusCode = response.statusCode || 0;
+      if (statusCode < 200 || statusCode >= 300) {
+        response.resume();
+        reject(new Error('Could not fetch snapshot image.'));
+        return;
+      }
+
+      response.on('error', reject);
+      stream.on('error', reject);
+      response.pipe(stream);
+      resolve(stream);
+    });
+
+    request.on('error', reject);
+    request.setTimeout(10000, () => {
+      request.destroy(new Error('Snapshot request timeout.'));
+    });
+    request.end();
+  });
+}
 
 class Doorbell extends Homey.Device {
   /**
@@ -777,8 +821,8 @@ class Doorbell extends Homey.Device {
       if (this.settings.useCameraSnapshot) {
         const directUrl = `https://${ipAddress}/snap.jpeg`;
         // Check if the direct snapshot URL is available before using it
-        const headRes = await fetch(directUrl, { method: 'GET', agent }).catch(() => null);
-        if (headRes && headRes.ok) {
+        const directUrlAvailable = await isHttpsUrlReachable(directUrl, agent);
+        if (directUrlAvailable) {
           snapshotUrl = directUrl;
         } else {
           this.homey.app.debug(`[DoorbellDevice] Direct snapshot URL not available for ${this.getName()}, falling back to API.`);
@@ -803,13 +847,7 @@ class Doorbell extends Homey.Device {
       }
 
       // Fetch image
-      const res = await fetch(snapshotUrl, {
-        agent,
-        headers,
-      });
-      if (!res.ok) throw new Error('Could not fetch snapshot image.');
-
-      return res.body.pipe(stream);
+      return pipeHttpsUrlToStream(snapshotUrl, agent, headers, stream);
     });
 
     if (triggerFlow) {
@@ -859,8 +897,8 @@ class Doorbell extends Homey.Device {
         if (this.settings.useCameraSnapshot) {
           const directUrl = `https://${ipAddress}/snap_2.jpeg`;
           // Check if the direct package snapshot URL is available before using it
-          const headRes = await fetch(directUrl, { method: 'GET', agent }).catch(() => null);
-          if (headRes && headRes.ok) {
+          const directUrlAvailable = await isHttpsUrlReachable(directUrl, agent);
+          if (directUrlAvailable) {
             snapshotUrl = directUrl;
           } else {
             this.homey.app.debug(`[DoorbellDevice] Direct package snapshot URL not available for ${this.getName()}, falling back to API.`);
@@ -887,16 +925,9 @@ class Doorbell extends Homey.Device {
         }
 
         // Fetch image
-        const res = await fetch(snapshotUrl, {
-          agent,
-          headers,
+        return pipeHttpsUrlToStream(snapshotUrl, agent, headers, stream).catch((error) => {
+          reject(error.message || 'Could not fetch snapshot image.');
         });
-        if (!res.ok) {
-          reject('Could not fetch snapshot image.');
-          return;
-        }
-
-        return res.body.pipe(stream);
       });
 
       if (triggerFlow) {
