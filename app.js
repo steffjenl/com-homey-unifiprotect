@@ -64,32 +64,9 @@ class UniFiProtect extends Homey.App {
         // Register snapshot image token
         this.appProtect._registerSnapshotToken();
 
-        // Subscribe to credentials updates
-        this.homey.settings.on('set', (key) => {
-            if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {
-                this.appProtect._appLogin();
-            }
-            if (key === 'ufp:settings') {
-                const settings = this.homey.settings.get('ufp:settings');
-                this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
-                this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
-            }
-            if (key === 'ufp:tokens') {
-                const tokens = this.homey.settings.get('ufp:tokens');
-                if (tokens) {
-                    this.accessApiKey = tokens.accessApiKey;
-                    this.protectV2ApiKey = tokens.protectV2ApiKey;
-                }
-
-                if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
-                    this.appAccess.loginToAccess().catch(this.error);
-                }
-
-                if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
-                    this.appProtect.loginToProtectV2().catch(this.error);
-                }
-            }
-        });
+        // Subscribe to credentials updates - FIXED: Store bound method for removal on uninit
+        this._onSettingsChanged = this._handleSettingsChange.bind(this);
+        this.homey.settings.on('set', this._onSettingsChanged);
 
         // set settings
         const settings = this.homey.settings.get('ufp:settings');
@@ -144,6 +121,33 @@ class UniFiProtect extends Homey.App {
         this.debug('UniFiProtect has been initialized');
     }
 
+    // FIXED: Extracted settings change handler so it can be unregistered
+    _handleSettingsChange(key) {
+        if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {
+            this.appProtect._appLogin();
+        }
+        if (key === 'ufp:settings') {
+            const settings = this.homey.settings.get('ufp:settings');
+            this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
+            this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
+        }
+        if (key === 'ufp:tokens') {
+            const tokens = this.homey.settings.get('ufp:tokens');
+            if (tokens) {
+                this.accessApiKey = tokens.accessApiKey;
+                this.protectV2ApiKey = tokens.protectV2ApiKey;
+            }
+
+            if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
+                this.appAccess.loginToAccess().catch(this.error);
+            }
+
+            if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
+                this.appProtect.loginToProtectV2().catch(this.error);
+            }
+        }
+    }
+
     /**
      * Convert a Homey time to a local time
      * @param {Date} homeyTime
@@ -157,6 +161,29 @@ class UniFiProtect extends Homey.App {
 
     getUnixTimestamp() {
         return Math.floor(Date.now());
+    }
+
+    // FIXED: Added onUninit to clean up event listeners and intervals to prevent memory leaks
+    async onUninit() {
+        this.debug('UniFiProtect app is uninitialized, cleaning up...');
+
+        // Remove settings event listener to prevent duplicate listeners on app restart
+        if (this._onSettingsChanged) {
+            this.homey.settings.removeListener('set', this._onSettingsChanged);
+            this._onSettingsChanged = null;
+        }
+
+        // Clear refresh auth tokens interval
+        if (this.appProtect && this.appProtect._refreshAuthTokensInterval) {
+            this.homey.clearInterval(this.appProtect._refreshAuthTokensInterval);
+            this.appProtect._refreshAuthTokensInterval = null;
+        }
+
+        // Clear access websocket check interval
+        if (this.appAccess && this.appAccess._checkWebSocketConnectionInterval) {
+            this.homey.clearInterval(this.appAccess._checkWebSocketConnectionInterval);
+            this.appAccess._checkWebSocketConnectionInterval = null;
+        }
     }
 
     onParseWebsocketMessage(payload) {

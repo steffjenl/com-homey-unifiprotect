@@ -634,7 +634,14 @@ class AppProtect extends BaseClass {
     }
 
     async refreshAuthTokens() {
-        const refreshAuthTokens = this.homey.setInterval(() => {
+        // Clear any existing interval to prevent duplicates on app restart
+        if (this._refreshAuthTokensInterval) {
+            this.homey.clearInterval(this._refreshAuthTokensInterval);
+            this._refreshAuthTokensInterval = null;
+        }
+
+        // Store the interval handle on instance so it can be cleared later
+        this._refreshAuthTokensInterval = this.homey.setInterval(() => {
             try {
                 this.homey.app.debug('Refreshing auth tokens');
 
