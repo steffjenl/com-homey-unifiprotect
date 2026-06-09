@@ -25,7 +25,7 @@ class WebClient extends BaseClass {
         return `${path}${this.toQueryString(params)}`;
     }
 
-    async get(resource, params = {}) {
+    async get(resource, params = {}, isBinary = false) {
         return new Promise((resolve, reject) => {
             const options = {
                 method: 'GET',
@@ -34,7 +34,7 @@ class WebClient extends BaseClass {
                 path: this.buildApiPath(resource, params),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
-                    Accept: '*/*',
+                    Accept: isBinary ? '*/*' : 'application/json',
                     'X-API-KEY': `${this._apiToken}`,
                 },
                 maxRedirects: 20,
@@ -53,6 +53,10 @@ class WebClient extends BaseClass {
 
                     if (res.statusCode !== 200) {
                         return reject(new Error(`Failed to GET url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+                    }
+
+                    if (isBinary) {
+                        return resolve(Buffer.concat(data));
                     }
 
                     return resolve(data.join(''));

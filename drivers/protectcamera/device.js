@@ -1,13 +1,39 @@
 'use strict';
 
 const Homey = require('homey');
+const http = require('http');
 const https = require('https');
 const SmartDetectionMixin = require('../../library/SmartDetectionMixin');
 
-function isHttpsUrlReachable(url, agent) {
+function requestByUrl(url, options, onResponse) {
+  const parsedUrl = new URL(url);
+  const isHttps = parsedUrl.protocol === 'https:';
+  const transport = isHttps ? https : http;
+  const requestOptions = {
+    protocol: parsedUrl.protocol,
+    hostname: parsedUrl.hostname,
+    port: parsedUrl.port || (isHttps ? 443 : 80),
+    path: `${parsedUrl.pathname}${parsedUrl.search}`,
+    method: options.method || 'GET',
+    headers: options.headers || {},
+  };
+
+  if (isHttps && options.agent) {
+    requestOptions.agent = options.agent;
+  }
+
+  return transport.request(requestOptions, onResponse);
+}
+
+function isUrlReachable(url, agent) {
   return new Promise((resolve) => {
-    const request = https.request(url, { method: 'HEAD', agent }, (response) => {
+    const request = requestByUrl(url, { method: 'GET', agent }, (response) => {
       const statusCode = response.statusCode || 0;
+      if (statusCode >= 300 && statusCode < 400 && response.headers.location) {
+        response.resume();
+        resolve(true);
+        return;
+      }
       response.resume();
       resolve(statusCode >= 200 && statusCode < 300);
     });
@@ -21,13 +47,44 @@ function isHttpsUrlReachable(url, agent) {
   });
 }
 
+function requestWithRedirects(url, agent, headers, redirectCount, callback) {
+  const request = requestByUrl(url, {
+    method: 'GET',
+    agent,
+    headers: headers || {},
+  }, (response) => {
+    const statusCode = response.statusCode || 0;
+    if (statusCode >= 300 && statusCode < 400 && response.headers.location) {
+      if (redirectCount >= 5) {
+        response.resume();
+        callback(new Error('Could not fetch snapshot image. Too many redirects.'));
+        return;
+      }
+
+      const nextUrl = new URL(response.headers.location, url).toString();
+      response.resume();
+      requestWithRedirects(nextUrl, agent, headers, redirectCount + 1, callback);
+      return;
+    }
+
+    callback(null, response);
+  });
+
+  request.on('error', (error) => callback(error));
+  request.setTimeout(10000, () => {
+    request.destroy(new Error('Snapshot request timeout.'));
+  });
+  request.end();
+}
+
 function pipeHttpsUrlToStream(url, agent, headers, stream) {
   return new Promise((resolve, reject) => {
-    const request = https.request(url, {
-      method: 'GET',
-      agent,
-      headers: headers || {},
-    }, (response) => {
+    requestWithRedirects(url, agent, headers, 0, (requestError, response) => {
+      if (requestError) {
+        reject(requestError);
+        return;
+      }
+
       const statusCode = response.statusCode || 0;
       if (statusCode < 200 || statusCode >= 300) {
         response.resume();
@@ -40,12 +97,6 @@ function pipeHttpsUrlToStream(url, agent, headers, stream) {
       response.pipe(stream);
       resolve(stream);
     });
-
-    request.on('error', reject);
-    request.setTimeout(10000, () => {
-      request.destroy(new Error('Snapshot request timeout.'));
-    });
-    request.end();
   });
 }
 
@@ -598,44 +649,46 @@ class Camera extends Homey.Device {
     const ipAddress = this.getCapabilityValue('ip_address');
 
     this._snapshotImage.setStream(async (stream) => {
-      let snapshotUrl = null;
-      const headers = {};
+      try {
+        const agent = new https.Agent({
+          rejectUnauthorized: false, // rejectUnauthorized: false is intentional — NVR uses self-signed TLS
+          keepAlive: false,
+        });
 
-      const agent = new https.Agent({
-        rejectUnauthorized: false, // rejectUnauthorized: false is intentional — NVR uses self-signed TLS
-        keepAlive: false,
-      });
-
-      if (this.settings.useCameraSnapshot) {
-        const directUrl = `https://${ipAddress}/snap.jpeg`;
-        // Check if the direct snapshot URL is available before using it
-        const directUrlAvailable = await isHttpsUrlReachable(directUrl, agent);
-        if (directUrlAvailable) {
-          snapshotUrl = directUrl;
-        } else {
-          this.homey.app.debug(`[CameraDevice] Direct snapshot URL not available for ${this.getName()}, falling back to API. ${directUrl}`);
+        if (this.settings.useCameraSnapshot) {
+          const directUrl = `https://${ipAddress}/snap.jpeg`;
+          try {
+            const directUrlAvailable = await isUrlReachable(directUrl, agent);
+            if (directUrlAvailable) {
+              try {
+                return pipeHttpsUrlToStream(directUrl, agent, {}, stream);
+              } catch (directError) {
+                this.homey.app.debug(`[CameraDevice] Direct snapshot stream failed for ${this.getName()}, falling back to API: ${directError.message}`);
+              }
+            }
+            this.homey.app.debug(`[CameraDevice] Direct snapshot URL not available for ${this.getName()}, falling back to API.`);
+          } catch (error) {
+            this.homey.app.debug(`[CameraDevice] Direct snapshot fetch failed for ${this.getName()}, falling back to API: ${error.message}`);
+          }
         }
-      }
 
-      if (!snapshotUrl && this.homey.app.isV1Available()) {
-        try {
-          snapshotUrl = await this.homey.app.api.createSnapshotUrl(this.getData());
-        } catch (error) {
-          this.error('Could not create snapshot URL.', error);
+        if (this.homey.app.isV1Available()) {
+          const snapshotBuffer = await this.homey.app.api.snapshot(this.getData().id);
+          stream.end(snapshotBuffer);
+          return stream;
         }
-        headers['Cookie'] = this.homey.app.api.getProxyCookieToken();
-      } else if (!snapshotUrl && this.homey.app.isV2Available()) {
-        snapshotUrl = this.homey.app.apiV2.getSnapshotUrl(this.getData().id);
-        const v2Headers = this.homey.app.apiV2.getSnapshotHeaders();
-        Object.assign(headers, v2Headers);
-      }
 
-      if (!snapshotUrl) {
-        throw new Error('Invalid snapshot url.');
-      }
+        if (this.homey.app.isV2Available()) {
+          const snapshotBuffer = await this.homey.app.apiV2.getSnapshot(this.getData().id);
+          stream.end(snapshotBuffer);
+          return stream;
+        }
 
-      // Fetch image
-      return pipeHttpsUrlToStream(snapshotUrl, agent, headers, stream);
+        throw new Error('No API available for snapshot retrieval.');
+      } catch (error) {
+        this.homey.app.debug(`[CameraDevice] Snapshot retrieval failed for ${this.getName()}: ${error.message}`);
+        throw error;
+      }
     });
 
     if (triggerFlow) {

@@ -79,7 +79,7 @@ const SmartDetectionMixin = {
       return;
     }
 
-    this.homey.app.debug('[SmartDetection] onSmartDetection ' + JSON.stringify(event));
+    this.homey.app.debug('[SmartDetection] onSmartDetection id=' + eventId + ' action=' + actionType + ' types=' + ((event.detectionTypes || []).join(',')));
 
     if (!event.detectionTypes || event.detectionTypes.length === 0) {
       this.homey.app.debug('[SmartDetection] still empty types [' + eventId + '] - skipping');
@@ -175,7 +175,7 @@ const SmartDetectionMixin = {
       return;
     }
 
-    this.homey.app.debug(`[AudioDetection] onAudioDetection ${JSON.stringify(event)}`);
+    this.homey.app.debug(`[AudioDetection] onAudioDetection id=${eventId} action=${actionType} types=${(event.detectionTypes || []).join(',')}`);
 
     const score = typeof event.detectionScore === 'number' ? event.detectionScore : 0;
     const audioDetectTypes = event.detectionTypes;

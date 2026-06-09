@@ -355,5 +355,8 @@
   },
   "1.11.0": {
     "en": "convert promise chains to async/await for improved readability and error handling"
+  },
+  "1.11.1": {
+    "en": "fix: restore stable camera/doorbell snapshot retrieval and reduce runtime memory usage with lighter module loading"
   }
 }

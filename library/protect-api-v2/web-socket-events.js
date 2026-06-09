@@ -206,8 +206,6 @@ class ProtectWebSocket extends BaseClass {
 
             this.lastWebsocketMessage = this.homey.app.toLocalTime(new Date()).toISOString().slice(0, 16);
 
-            this.homey.app.debug('[V2 Events WS] ' + JSON.stringify(eventData));
-
             if (!eventData || !eventData.item || !eventData.item.device) {
                 return;
             }
@@ -216,6 +214,7 @@ class ProtectWebSocket extends BaseClass {
             const deviceId = item.device;
             const eventType = eventData.type; // 'add' or 'update'
             const itemType = item.type; // 'ring', 'motion', 'smartDetectZone', etc.
+            this.homey.app.debug(`[V2 Events WS] type=${eventType} itemType=${itemType} device=${deviceId}`);
 
             try {
                 const driverCamera = this.homey.drivers.getDriver('protectcamera');

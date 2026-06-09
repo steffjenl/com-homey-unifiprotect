@@ -393,6 +393,23 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    packageSnapshot(id, widthInPixels = 1920) {
+        return new Promise((resolve, reject) => {
+            if (!id) reject(new Error('Invalid camera identifier.'));
+
+            const params = {
+                accessKey: this.webclient.getApiKey(),
+                w: widthInPixels,
+                force: true,
+                ext: '.jpg'
+            };
+
+            return this.webclient.download(`cameras/${id}/package-snapshot`, params)
+                .then(buffer => resolve(buffer))
+                .catch(error => reject(new Error(`Error obtaining package snapshot buffer: ${error}`)));
+        });
+    }
+
     createSnapshotUrl(camera, widthInPixels = 1920, useCameraSnapshotUrl = false) {
         return new Promise((resolve, reject) => {
             if (!this.webclient.getServerHost()) reject(new Error('Invalid host.'));
