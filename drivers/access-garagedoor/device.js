@@ -18,18 +18,24 @@ module.exports = class MyDevice extends Homey.Device {
     this.log('Access Garagedoor has been initialized');
     this.registerCapabilityListener('garagedoor_closed', async (value) => {
       this.log('Unlocking the door');
-      this.driver.ready().then(() => {
+      try {
+        await this.driver.ready();
         this.driver.triggerGarageDoorOpened(this, {}, {});
-      }).catch(this.error);
+      } catch (error) {
+        this.error(error);
+      }
       return this.homey.app.accessApi.setDoorUnLock(this.getData().id);
     });
-    this.homey.app.accessApi.getDoor(this.getData().id).then((device) => {
+    try {
+      const device = await this.homey.app.accessApi.getDoor(this.getData().id);
       if (device) {
         if (typeof device.data.door_position_status !== 'undefined') {
           this.setCapabilityValue('garagedoor_closed', device.data.door_position_status !== 'open').catch(this.error);
         }
       }
-    });
+    } catch (error) {
+      this.error(error);
+    }
   }
 
   /**
@@ -71,18 +77,19 @@ module.exports = class MyDevice extends Homey.Device {
     // this.setCapabilityValue('garagedoor_closed', value);
   }
 
-  onDoorChange(value) {
+  async onDoorChange(value) {
     const oldValue = this.getCapabilityValue('garagedoor_closed');
     this.setCapabilityValue('garagedoor_closed', !value).catch(this.error);
     if (oldValue !== value) return;
-    if (value) {
-      this.driver.ready().then(() => {
+    try {
+      await this.driver.ready();
+      if (value) {
         this.driver.triggerGarageDoorOpened(this, {}, {});
-      }).catch(this.error);
-    } else {
-      this.driver.ready().then(() => {
+      } else {
         this.driver.triggerGarageDoorClosed(this, {}, {});
-      }).catch(this.error);
+      }
+    } catch (error) {
+      this.error(error);
     }
   }
 

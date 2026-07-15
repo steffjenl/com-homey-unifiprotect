@@ -133,5 +133,9 @@
             "Disconnected": "Disconnected",
             "Initialized": "Initializing"
         }
+    },
+    "warnings": {
+        "unifi_access": "Warning: UniFi Access features are in early beta. Use with caution and report any issues to the developer.",
+        "no_rtsp_url": "Warning: No RTSP URL available for this camera. Please Enable 'Share Livestream' -> 'Enable Secure RTSPS Output' in the camera settings in UniFi Protect to use livestream features."
     }
 }

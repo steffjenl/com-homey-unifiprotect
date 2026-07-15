@@ -634,7 +634,14 @@ class AppProtect extends BaseClass {
     }
 
     async refreshAuthTokens() {
-        const refreshAuthTokens = this.homey.setInterval(() => {
+        // Clear any existing interval to prevent duplicates on app restart
+        if (this._refreshAuthTokensInterval) {
+            this.homey.clearInterval(this._refreshAuthTokensInterval);
+            this._refreshAuthTokensInterval = null;
+        }
+
+        // Store the interval handle on instance so it can be cleared later
+        this._refreshAuthTokensInterval = this.homey.setInterval(() => {
             try {
                 this.homey.app.debug('Refreshing auth tokens');
 
@@ -657,16 +664,20 @@ class AppProtect extends BaseClass {
                 if (
                     tokens && typeof tokens.protectV2ApiKey !== 'undefined'
                     && tokens.protectV2ApiKey !== ''
-                    && !this.homey.app.apiV2.websocket.isWebsocketConnected()
                 ) {
-                    this.homey.app.appProtect.loginToProtectV2().catch(this.error);
+                    this.homey.app._initProtectV2Stack();
+                    if (!this.homey.app.apiV2.websocket.isWebsocketConnected()) {
+                        this.homey.app.appProtect.loginToProtectV2().catch(this.error);
+                    }
                 }
 
                 if (
                     tokens && typeof tokens.accessApiKey !== 'undefined'
                     && tokens.accessApiKey !== ''
                 ) {
-                    this.homey.app.appAccess.loginToAccess().catch(this.error);
+                    this.homey.app._initAccessStack()
+                        .then(() => this.homey.app.appAccess.loginToAccess())
+                        .catch(this.error);
                 }
             } catch (error) {
                 this.homey.error(`${JSON.stringify(error)}`);

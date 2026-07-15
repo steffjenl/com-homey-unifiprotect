@@ -253,15 +253,14 @@ class NVRAlarmDevice extends Homey.Device {
    */
   async setNvrAwayMode(isAway) {
     this.homey.app.debug(`[NVRAlarmDevice] setNvrAwayMode: ${isAway}`);
-    return this.homey.app.api.setNvrAwayMode(isAway)
-      .then(() => {
-        this.homey.app.debug('[NVRAlarmDevice] setNvrAwayMode success');
-        return this._applyAlarmState(isAway, true);
-      })
-      .catch((error) => {
-        this.error(`[NVRAlarmDevice] setNvrAwayMode error: ${error.message}`);
-        return Promise.reject(error);
-      });
+    try {
+      await this.homey.app.api.setNvrAwayMode(isAway);
+      this.homey.app.debug('[NVRAlarmDevice] setNvrAwayMode success');
+      return this._applyAlarmState(isAway, true);
+    } catch (error) {
+      this.error(`[NVRAlarmDevice] setNvrAwayMode error: ${error.message}`);
+      return Promise.reject(error);
+    }
   }
 
 }

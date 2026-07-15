@@ -115,17 +115,17 @@ class UniFiDoorbellDriver extends Homey.Driver {
 
             if (payload.hasOwnProperty('type') && payload.type === 'fingerprintIdentified') {
                 this.homey.app.debug('fingerprintIdentified ' + JSON.stringify(payload));
-                camera.onFingerprintIdentified(payload, actionType, eventId);
+                camera.onFingerprintIdentified(payload, actionType, eventId).catch(this.error);
             }
 
             if (payload.hasOwnProperty('type') && payload.type === 'nfcCardScanned') {
                 this.homey.app.debug('nfcCardScanned ' + JSON.stringify(payload));
-                camera.onNFCCardScanned(payload, actionType, eventId);
+                camera.onNFCCardScanned(payload, actionType, eventId).catch(this.error);
             }
 
             if (payload.hasOwnProperty('type') && payload.type === 'doorAccess') {
                 this.homey.app.debug('doorAccess ' + JSON.stringify(payload));
-                camera.onDoorAccess(payload, actionType, eventId);
+                camera.onDoorAccess(payload, actionType, eventId).catch(this.error);
             }
 
             if (payload.hasOwnProperty('type') && payload.type === 'ring') {

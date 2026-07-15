@@ -3,7 +3,8 @@
   "version": "1.5.0",
   "main": "app.js",
   "scripts": {
-    "test:fob-pipeline": "node tools/fob-pipeline-smoke.js"
+    "test:fob-pipeline": "node tools/fob-pipeline-smoke.js",
+    "test:sensor-events": "node tools/sensor-event-smoke.js"
   },
   "devDependencies": {
     "@tsconfig/node12": "^12.1.4",
@@ -14,10 +15,7 @@
     "homey": "^4.2.0"
   },
   "dependencies": {
-    "homey-log": "^2.1.0",
-    "node-fetch": "^2.7.0",
-    "ws": "^8.18.0",
-    "zlib": "^1.0.5"
+    "ws": "^8.18.0"
   },
   "extends": [
     "plugin:homey-app/recommended"

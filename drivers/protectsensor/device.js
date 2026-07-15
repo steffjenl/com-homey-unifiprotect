@@ -3,6 +3,22 @@
 const Homey = require('homey');
 const UfvConstants = require('../../library/constants');
 
+// UP-AirQuality reports continuous readings under sensor.airQuality (bootstrap) /
+// payload.airQuality (websocket update), keyed by metric name. Confirmed against a real
+// device bootstrap capture - this is NOT documented in the official v2 OpenAPI spec (only
+// available via the v1 legacy bootstrap/websocket this app already uses), but is reliable.
+// All map to Homey *system* capabilities except measure_pm4 (no PM4.0 tier in Homey's set).
+const AIR_QUALITY_METRIC_CAPABILITIES = {
+    aqi: 'measure_aqi',
+    voc: 'measure_tvoc_index',
+    tvoc: 'measure_tvoc',
+    co2: 'measure_co2',
+    pm1p0: 'measure_pm1',
+    pm2p5: 'measure_pm25',
+    pm4p0: 'measure_pm4',
+    pm10p0: 'measure_pm10',
+};
+
 class Sensor extends Homey.Device {
 
     motion_timer_id = -1;
@@ -101,7 +117,13 @@ class Sensor extends Homey.Device {
                         }
                     }
 
-                    if (typeof sensor.stats.humidity !== 'undefined' && typeof sensor.stats.humidity.value !== 'undefined' && sensor.stats.humidity.value !== null)
+                    // UP-AirQuality doesn't populate sensor.stats.humidity (stays null) - it
+                    // reports humidity under sensor.airQuality.humidity instead. Fall back to
+                    // that so this device still gets measure_humidity/measure_temperature.
+                    const airQuality = sensor.airQuality;
+
+                    if ((typeof sensor.stats.humidity !== 'undefined' && typeof sensor.stats.humidity.value !== 'undefined' && sensor.stats.humidity.value !== null)
+                        || (airQuality && airQuality.humidity && typeof airQuality.humidity.value !== 'undefined' && airQuality.humidity.value !== null))
                     {
                         if (!this.hasCapability('measure_humidity')) {
                             await this.addCapability('measure_humidity');
@@ -114,7 +136,8 @@ class Sensor extends Homey.Device {
                         }
                     }
 
-                    if (typeof sensor.stats.temperature !== 'undefined' && typeof sensor.stats.temperature.value !== 'undefined' && sensor.stats.temperature.value !== null)
+                    if ((typeof sensor.stats.temperature !== 'undefined' && typeof sensor.stats.temperature.value !== 'undefined' && sensor.stats.temperature.value !== null)
+                        || (airQuality && airQuality.temperature && typeof airQuality.temperature.value !== 'undefined' && airQuality.temperature.value !== null))
                     {
                         if (!this.hasCapability('measure_temperature')) {
                             await this.addCapability('measure_temperature');
@@ -130,7 +153,7 @@ class Sensor extends Homey.Device {
                     if (typeof sensor.motionSettings !== 'undefined' && sensor.motionSettings.isEnabled) {
                         // alarm_motion
                         if (!this.hasCapability('alarm_motion')) {
-                            await this.addç('alarm_motion');
+                            await this.addCapability('alarm_motion');
                             this.homey.app.debug(`created capability alarm_motion for ${this.getName()}`);
                         }
                         if (!this.hasCapability('last_motion_at')) {
@@ -164,9 +187,115 @@ class Sensor extends Homey.Device {
                         }
                     }
 
-                    if (!this.hasCapability('alarm_contact')) {
-                        await this.addCapability('alarm_contact');
-                        this.homey.app.debug(`created capability alarm_contact for ${this.getName()}`);
+                    // UP-AirQuality has no contact switch hardware (sensor.isOpened stays null) -
+                    // don't offer alarm_contact for it.
+                    if (sensor.type !== 'UP-AirQuality') {
+                        if (!this.hasCapability('alarm_contact')) {
+                            await this.addCapability('alarm_contact');
+                            this.homey.app.debug(`created capability alarm_contact for ${this.getName()}`);
+                        }
+                    } else if (this.hasCapability('alarm_contact')) {
+                        await this.removeCapability('alarm_contact');
+                        this.homey.app.debug(`removed capability alarm_contact for ${this.getName()}`);
+                    }
+
+                    // Smoke + CO alarm sensor (sensor.alarmSettings, added in API v7.1.87)
+                    if (typeof sensor.alarmSettings !== 'undefined' && sensor.alarmSettings.isEnabled) {
+                        if (!this.hasCapability('alarm_smoke')) {
+                            await this.addCapability('alarm_smoke');
+                            this.homey.app.debug(`created capability alarm_smoke for ${this.getName()}`);
+                        }
+                        if (!this.hasCapability('alarm_co')) {
+                            await this.addCapability('alarm_co');
+                            this.homey.app.debug(`created capability alarm_co for ${this.getName()}`);
+                        }
+                    } else {
+                        if (this.hasCapability('alarm_smoke')) {
+                            await this.removeCapability('alarm_smoke');
+                            this.homey.app.debug(`removed capability alarm_smoke for ${this.getName()}`);
+                        }
+                        if (this.hasCapability('alarm_co')) {
+                            await this.removeCapability('alarm_co');
+                            this.homey.app.debug(`removed capability alarm_co for ${this.getName()}`);
+                        }
+                    }
+
+                    // Glass break sensor (sensor.glassBreakSettings, added in API v7.1.87)
+                    if (typeof sensor.glassBreakSettings !== 'undefined' && sensor.glassBreakSettings.isEnabled) {
+                        if (!this.hasCapability('alarm_glassbreak')) {
+                            await this.addCapability('alarm_glassbreak');
+                            this.homey.app.debug(`created capability alarm_glassbreak for ${this.getName()}`);
+                        }
+                    } else {
+                        if (this.hasCapability('alarm_glassbreak')) {
+                            await this.removeCapability('alarm_glassbreak');
+                            this.homey.app.debug(`removed capability alarm_glassbreak for ${this.getName()}`);
+                        }
+                    }
+
+                    // UP-AirQuality has no tamper switch (sensor.tamperingDetectedAt stays null,
+                    // no sensorTamperEvent for this hardware) - don't offer alarm_tamper for it.
+                    if (sensor.type !== 'UP-AirQuality') {
+                        if (!this.hasCapability('alarm_tamper')) {
+                            await this.addCapability('alarm_tamper');
+                            this.homey.app.debug(`created capability alarm_tamper for ${this.getName()}`);
+                        }
+                    } else if (this.hasCapability('alarm_tamper')) {
+                        await this.removeCapability('alarm_tamper');
+                        this.homey.app.debug(`removed capability alarm_tamper for ${this.getName()}`);
+                    }
+
+                    // UP-AirQuality: continuous AQI/CO2/VOC/TVOC/PM readings, confirmed present
+                    // in sensor.airQuality on a real device (undocumented in the official v2
+                    // OpenAPI spec, only available via the v1 legacy bootstrap/websocket this
+                    // app already uses). Gated on presence so plain motion/contact sensors -
+                    // which don't have this key at all - stay untouched.
+                    for (const [metric, capability] of Object.entries(AIR_QUALITY_METRIC_CAPABILITIES)) {
+                        const hasValue = airQuality && airQuality[metric]
+                            && typeof airQuality[metric].value !== 'undefined' && airQuality[metric].value !== null;
+                        if (hasValue) {
+                            if (!this.hasCapability(capability)) {
+                                await this.addCapability(capability);
+                                this.homey.app.debug(`created capability ${capability} for ${this.getName()}`);
+                            }
+                        } else if (this.hasCapability(capability)) {
+                            await this.removeCapability(capability);
+                            this.homey.app.debug(`removed capability ${capability} for ${this.getName()}`);
+                        }
+                    }
+
+                    // Vape detection (UP-AirQuality). airQuality.vape is present structurally
+                    // even when vape alerting is disabled in settings, so gate on presence here
+                    // (same idiom as the metrics above); onVapeDetected also lazily adds it as a
+                    // fallback in case a vape event ever arrives for a sensor we didn't detect
+                    // this on at bootstrap time.
+                    if (airQuality && typeof airQuality.vape !== 'undefined') {
+                        if (!this.hasCapability('alarm_vape')) {
+                            await this.addCapability('alarm_vape');
+                            this.homey.app.debug(`created capability alarm_vape for ${this.getName()}`);
+                        }
+                    } else if (this.hasCapability('alarm_vape')) {
+                        await this.removeCapability('alarm_vape');
+                        this.homey.app.debug(`removed capability alarm_vape for ${this.getName()}`);
+                    }
+
+                    // Battery status is reported for every sensor (sensor.batteryStatus);
+                    // percentage stays null on wired/PoE units like UP-AirQuality, so only add
+                    // measure_battery when a real percentage is reported.
+                    if (typeof sensor.batteryStatus !== 'undefined' && sensor.batteryStatus !== null) {
+                        if (!this.hasCapability('alarm_battery')) {
+                            await this.addCapability('alarm_battery');
+                            this.homey.app.debug(`created capability alarm_battery for ${this.getName()}`);
+                        }
+                        if (typeof sensor.batteryStatus.percentage !== 'undefined' && sensor.batteryStatus.percentage !== null) {
+                            if (!this.hasCapability('measure_battery')) {
+                                await this.addCapability('measure_battery');
+                                this.homey.app.debug(`created capability measure_battery for ${this.getName()}`);
+                            }
+                        } else if (this.hasCapability('measure_battery')) {
+                            await this.removeCapability('measure_battery');
+                            this.homey.app.debug(`removed capability measure_battery for ${this.getName()}`);
+                        }
                     }
 
                 }
@@ -179,11 +308,21 @@ class Sensor extends Homey.Device {
         if (bootstrapData) {
             bootstrapData.sensors.forEach((sensor) => {
                 if (sensor.id === this.getData().id) {
+                    const airQuality = sensor.airQuality;
+
+                    // Prefer sensor.stats (generic Sensor), fall back to sensor.airQuality
+                    // (UP-AirQuality reports humidity/temperature there instead).
                     if (this.hasCapability('measure_humidity')) {
-                        this.setCapabilityValue('measure_humidity', sensor.stats.humidity.value);
+                        const value = (sensor.stats.humidity && sensor.stats.humidity.value !== null)
+                            ? sensor.stats.humidity.value
+                            : (airQuality && airQuality.humidity ? airQuality.humidity.value : null);
+                        this.setCapabilityValue('measure_humidity', value);
                     }
                     if (this.hasCapability('measure_temperature')) {
-                        this.setCapabilityValue('measure_temperature', sensor.stats.temperature.value);
+                        const value = (sensor.stats.temperature && sensor.stats.temperature.value !== null)
+                            ? sensor.stats.temperature.value
+                            : (airQuality && airQuality.temperature ? airQuality.temperature.value : null);
+                        this.setCapabilityValue('measure_temperature', value);
                     }
                     if (this.hasCapability('measure_luminance')) {
                         this.setCapabilityValue('measure_luminance', sensor.stats.light.value);
@@ -191,15 +330,42 @@ class Sensor extends Homey.Device {
                     if (this.hasCapability('alarm_contact')) {
                         this.setCapabilityValue('alarm_contact', sensor.isOpened);
                     }
+
+                    for (const [metric, capability] of Object.entries(AIR_QUALITY_METRIC_CAPABILITIES)) {
+                        if (this.hasCapability(capability) && airQuality && airQuality[metric]) {
+                            this.setCapabilityValue(capability, airQuality[metric].value);
+                        }
+                    }
+
+                    if (this.hasCapability('alarm_battery') && sensor.batteryStatus) {
+                        this.setCapabilityValue('alarm_battery', !!sensor.batteryStatus.isLow);
+                    }
+                    if (this.hasCapability('measure_battery') && sensor.batteryStatus) {
+                        this.setCapabilityValue('measure_battery', sensor.batteryStatus.percentage);
+                    }
+
+                    // Continuous smoke/CO state (sensor.smokeStatus), complements the discrete
+                    // sensorAlarmEvent handled in onSensorAlarm.
+                    if (sensor.smokeStatus) {
+                        if (this.hasCapability('alarm_smoke')) {
+                            this.setCapabilityValue('alarm_smoke', !!sensor.smokeStatus.smokeAlarm);
+                        }
+                        if (this.hasCapability('alarm_co')) {
+                            this.setCapabilityValue('alarm_co', !!sensor.smokeStatus.coAlarm);
+                        }
+                    }
                 }
             });
         }
     }
 
-    refreshSensorData() {
-        this.homey.app.api.getBootstrapInfo().then(() => {
-            this._initSensorData();
-        }).catch(error => this.homey.app.debug(error));
+    async refreshSensorData() {
+        try {
+            await this.homey.app.api.getBootstrapInfo();
+            await this._initSensorData();
+        } catch (error) {
+            this.homey.app.debug(error);
+        }
     }
 
     onMotionStart() {
@@ -258,6 +424,61 @@ class Sensor extends Homey.Device {
         }
     }
 
+    /**
+     * Continuous UP-AirQuality reading update (payload.airQuality on the device-state
+     * websocket, v1 or v2). Reuses onHumidityChange/onTemperatureChange for the two metrics
+     * this device reports outside of sensor.stats.
+     */
+    onAirQualityChange(airQuality) {
+        this.homey.app.debug('onAirQualityChange');
+        if (!airQuality) {
+            return;
+        }
+
+        for (const [metric, capability] of Object.entries(AIR_QUALITY_METRIC_CAPABILITIES)) {
+            if (this.hasCapability(capability) && airQuality[metric] && typeof airQuality[metric].value !== 'undefined' && airQuality[metric].value !== null) {
+                this.setCapabilityValue(capability, airQuality[metric].value).catch(this.error);
+            }
+        }
+
+        if (airQuality.humidity && typeof airQuality.humidity.value !== 'undefined' && airQuality.humidity.value !== null) {
+            this.onHumidityChange(airQuality.humidity.value);
+        }
+        if (airQuality.temperature && typeof airQuality.temperature.value !== 'undefined' && airQuality.temperature.value !== null) {
+            this.onTemperatureChange(airQuality.temperature.value);
+        }
+    }
+
+    onBatteryStatusChange(batteryStatus) {
+        this.homey.app.debug('onBatteryStatusChange');
+        if (!batteryStatus) {
+            return;
+        }
+        if (this.hasCapability('alarm_battery')) {
+            this.setCapabilityValue('alarm_battery', !!batteryStatus.isLow).catch(this.error);
+        }
+        if (this.hasCapability('measure_battery') && typeof batteryStatus.percentage !== 'undefined' && batteryStatus.percentage !== null) {
+            this.setCapabilityValue('measure_battery', batteryStatus.percentage).catch(this.error);
+        }
+    }
+
+    /**
+     * Continuous smoke/CO state (payload.smokeStatus), complements the discrete
+     * sensorAlarmEvent handled in onSensorAlarm.
+     */
+    onSmokeStatusChange(smokeStatus) {
+        this.homey.app.debug('onSmokeStatusChange');
+        if (!smokeStatus) {
+            return;
+        }
+        if (this.hasCapability('alarm_smoke')) {
+            this.setCapabilityValue('alarm_smoke', !!smokeStatus.smokeAlarm).catch(this.error);
+        }
+        if (this.hasCapability('alarm_co')) {
+            this.setCapabilityValue('alarm_co', !!smokeStatus.coAlarm).catch(this.error);
+        }
+    }
+
     onLedLevelChange(ledLevel) {
         this.homey.app.debug('onLedLevelChange');
         if (this.hasCapability('dim')) {
@@ -311,6 +532,87 @@ class Sensor extends Homey.Device {
             } else {
                 return 1;
             }
+        }
+    }
+
+    async _ensureCapability(capability) {
+        if (!this.hasCapability(capability)) {
+            try {
+                await this.addCapability(capability);
+                this.homey.app.debug(`created capability ${capability} for ${this.getName()}`);
+            } catch (error) {
+                this.homey.app.debug(`failed to add capability ${capability} for ${this.getName()}: ${error}`);
+            }
+        }
+    }
+
+    /**
+     * Vape detected/cleared (sensorVapeEvent, UP-AirQuality). Lazily creates alarm_vape
+     * since bootstrap gives no way to know a sensor supports vape detection up front.
+     */
+    async onVapeDetected(eventType, start, end) {
+        await this._ensureCapability('alarm_vape');
+        if (eventType === 'add') {
+            this.homey.app.debug(`vape detected on ${this.getName()}`);
+            this.setCapabilityValue('alarm_vape', true).catch(this.error);
+        } else if (eventType === 'update' && end) {
+            this.setCapabilityValue('alarm_vape', false).catch(this.error);
+        }
+    }
+
+    /**
+     * A metric (AQI/CO2/VOC/TVOC/PM/temperature/humidity/light) went in or out of its
+     * configured range (sensorExtremeValueEvent). This is event-driven only, fired on
+     * threshold crossing - it is NOT a continuous feed like measure_temperature is via the
+     * device-state websocket. See specs/unifi-protect-api-notes.md.
+     */
+    async onExtremeValue(metric, value, status) {
+        const numericValue = value !== null && value !== undefined ? parseFloat(value) : null;
+        if (numericValue === null || Number.isNaN(numericValue)) {
+            return;
+        }
+
+        const capability = AIR_QUALITY_METRIC_CAPABILITIES[metric];
+        if (!capability) {
+            // 'vape' extreme-value crossings are covered by alarm_vape (onVapeDetected);
+            // temperature/humidity/light are already handled via the device-state websocket.
+            return;
+        }
+
+        await this._ensureCapability(capability);
+        this.setCapabilityValue(capability, numericValue).catch(this.error);
+    }
+
+    /**
+     * Sensor alarm state started/ended (sensorAlarmEvent): smoke, CO, glassBreak, tamper.
+     * short/cut/sensorButtonPress have no capability mapping (yet).
+     */
+    async onSensorAlarm(alarmType, eventType, end) {
+        const alarmCapabilityMap = {
+            smoke: 'alarm_smoke',
+            CO: 'alarm_co',
+            glassBreak: 'alarm_glassbreak',
+            tamper: 'alarm_tamper',
+        };
+
+        const capability = alarmCapabilityMap[alarmType];
+        if (!capability) {
+            return;
+        }
+
+        await this._ensureCapability(capability);
+        const isActive = eventType === 'add' || !end;
+        this.setCapabilityValue(capability, isActive).catch(this.error);
+    }
+
+    async onTamperDetected() {
+        await this._ensureCapability('alarm_tamper');
+        this.setCapabilityValue('alarm_tamper', true).catch(this.error);
+    }
+
+    onBatteryLow() {
+        if (this.hasCapability('alarm_battery')) {
+            this.setCapabilityValue('alarm_battery', true).catch(this.error);
         }
     }
 

@@ -346,5 +346,20 @@
   },
   "1.10.9": {
     "en": "feat(websocket): implement exponential backoff for reconnection attempts"
+  },
+  "1.10.10": {
+    "en": "Fix Audio Smart Detections and new icons"
+  },
+  "1.10.11": {
+    "en": "clear RTSP URL warning when a valid URL is provided"
+  },
+  "1.11.0": {
+    "en": "convert promise chains to async/await for improved readability and error handling"
+  },
+  "1.11.1": {
+    "en": "fix: restore stable camera/doorbell snapshot retrieval and reduce runtime memory usage with lighter module loading"
+  },
+  "1.11.2": {
+    "en": "Add extra sensors for air sensor (alpha!)"
   }
 }

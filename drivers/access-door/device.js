@@ -10,7 +10,7 @@ module.exports = class MyDevice extends Homey.Device {
   async onInit() {
     this.log('Access Door has been initialized');
     this.registerCapabilityListener('locked', async (value) => {
-      console.log('Setting Door Locked to', value);
+      this.homey.app.debug(`[AccessDoorDevice] Setting Door Locked to ${value}`);
       if (value) {
         this.log('Locking the door');
         return this.homey.app.accessApi.setTempDoorLockingRule(this.getData().id, 'lock_now');
@@ -19,7 +19,8 @@ module.exports = class MyDevice extends Homey.Device {
       return this.homey.app.accessApi.setDoorUnLock(this.getData().id);
 
     });
-    this.homey.app.accessApi.getDoor(this.getData().id).then((device) => {
+    try {
+      const device = await this.homey.app.accessApi.getDoor(this.getData().id);
       if (device) {
         if (typeof device.data.door_lock_relay_status !== 'undefined') {
           this.setCapabilityValue('locked', device.data.door_lock_relay_status !== 'locked').catch(this.error);
@@ -28,7 +29,9 @@ module.exports = class MyDevice extends Homey.Device {
           this.setCapabilityValue('alarm_contact', device.data.door_position_status === 'open').catch(this.error);
         }
       }
-    });
+    } catch (error) {
+      this.error(error);
+    }
   }
 
   /**

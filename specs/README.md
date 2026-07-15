@@ -38,5 +38,5 @@ Official SDK documentation:
 
 - Specs are updated as part of the **Definition of Done** (see [AGENTS.md](../AGENTS.md)).
 - Outdated specs are worse than no specs — keep them honest.
-- Last reviewed: March 2026 (aligned with Homey SDK v3 docs)
+- Last reviewed: July 2026 (spec bumped to UniFi Protect API v7.1.87; aligned with Homey SDK v3 docs)
 

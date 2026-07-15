@@ -9,8 +9,20 @@
     "measure_humidity",
     "measure_temperature",
     "measure_luminance",
-    "alarm_contact"
+    "alarm_contact",
+    "alarm_smoke",
+    "alarm_co",
+    "alarm_glassbreak",
+    "alarm_tamper",
+    "alarm_battery",
+    "measure_battery"
   ],
+  "energy": {
+    "batteries": [
+      "CR123A",
+      "INTERNAL"
+    ]
+  },
   "name": {
     "en": "Sensor",
     "de": "Sensor",

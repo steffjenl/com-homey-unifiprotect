@@ -1,0 +1,15 @@
+{
+  "type": "number",
+  "title": {
+    "en": "PM4.0",
+    "nl": "PM4.0"
+  },
+  "units": {
+    "en": "µg/m³"
+  },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "insights": true,
+  "decimals": 0
+}

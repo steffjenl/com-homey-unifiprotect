@@ -141,7 +141,14 @@ class AppAccess extends BaseClass {
   }
 
     async checkWebSocketConnection() {
-        const checkWebSocketConnection = this.homey.setInterval(() => {
+        // Clear any existing interval to prevent duplicates on app restart
+        if (this._checkWebSocketConnectionInterval) {
+            this.homey.clearInterval(this._checkWebSocketConnectionInterval);
+            this._checkWebSocketConnectionInterval = null;
+        }
+
+        // Store the interval handle on instance so it can be cleared later
+        this._checkWebSocketConnectionInterval = this.homey.setInterval(() => {
             try {
                 this.homey.app.debug('Reconnect Access WebSocket if not connected...');
 

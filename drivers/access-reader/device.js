@@ -10,7 +10,7 @@ module.exports = class Reader extends Homey.Device {
   async onInit() {
     this.log('Access Reader has been initialized');
     this.registerCapabilityListener('reader_nfc_enabled', async (value) => {
-      console.log('Setting NFC to', value);
+      this.homey.app.debug(`[AccessReaderDevice] Setting NFC to ${value}`);
       return this.homey.app.accessApi.setReaderNFC(this.getData().id, value);
     });
     this.registerCapabilityListener('reader_wave_enabled', async (value) => {
@@ -26,7 +26,8 @@ module.exports = class Reader extends Homey.Device {
       return this.homey.app.accessApi.setReaderMobileTap(this.getData().id, value);
     });
     //
-    this.homey.app.accessApi.getDevice(this.getData().id).then((device) => {
+    try {
+      const device = await this.homey.app.accessApi.getDevice(this.getData().id);
       if (device) {
         if (typeof device.data.access_methods !== 'undefined') {
           if (typeof device.data.access_methods.nfc !== 'undefined') {
@@ -46,7 +47,9 @@ module.exports = class Reader extends Homey.Device {
           }
         }
       }
-    });
+    } catch (error) {
+      this.error(error);
+    }
   }
 
   /**

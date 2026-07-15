@@ -1,7 +1,10 @@
 # UniFi Protect API Notes
 
-Source: Official API documentation in `.ai/unifi-protect-api-v2/`.  
-**API version: 6.2.88** — Base URL: `https://YOUR_CONSOLE_IP/proxy/protect/integration`
+Source: Official API documentation in `.ai/unifi-protect-api-v2/`, cross-checked against
+`specs/protect-integration-v2-openapi.json`.  
+**API version: 7.1.87** — Base URL: `https://YOUR_CONSOLE_IP/proxy/protect/integration`
+(the spec also documents a `https://api.ui.com/v1/connector/consoles/{consoleId}/proxy/protect/integration`
+cloud-connector server variant; this app only uses the local console URL)
 
 ---
 
@@ -249,6 +252,139 @@ and
 ```
 
 3) **External alarm profile update** (`modelKey: externalArmProfile`) with `payload.state` (`armed`/`disarmed`).
+
+---
+
+## Sensor Alarm & Extreme-Value Events (new in 7.1.87)
+
+As of API v7.1.87 the `sensor` device schema and its event set grew several security/alarm
+features. Diffed against the previously checked-in v7.1.69 spec, the **only** real additions are
+Sensor-related; no REST paths were added or removed (54 paths, identical set, both versions).
+
+### New `sensor` schema fields
+
+| Field | Type | Notes |
+|---|---|---|
+| `glassBreakSettings` | `{isEnabled, sensitivity, sensitivityWhenArmed}` | Glass-break detection config |
+| `alarmSettings` | `{isEnabled}` | Smoke + CO alarm sensor toggle |
+| `scheduleMode` | `"always" \| "when_armed"` | Applies to both glass-break and motion detection |
+| `armProfileIds` | `string[] \| null` | Restricts `when_armed` detection to specific arm profiles |
+| `hasCustomSensitivityWhenArmed` | `boolean` | Use `sensitivityWhenArmed` values while armed |
+
+> ⚠️ `sensorStats` (the official v2 OpenAPI `stats.{light,humidity,temperature}` schema returned
+> for every sensor) is **unchanged** — it still has no AQI/CO2/VOC/PM field, documented or
+> otherwise. **However**, a real UP-AirQuality bootstrap capture confirms continuous readings
+> for these metrics *do* exist — just outside that schema, under `sensor.airQuality` (see
+> below). That field is undocumented in the official OpenAPI spec; it's only confirmed present
+> via the **v1 legacy bootstrap/websocket** (`library/protectapi.js`, `library/websocket.js`),
+> which this app already runs as its primary/fallback API path. It's unconfirmed whether it's
+> also present on the v2 `/v1/sensors/{id}` REST response or the v2 `/v1/subscribe/devices`
+> websocket for this device.
+
+### UP-AirQuality continuous readings (`sensor.airQuality`, v1 legacy only, confirmed on real hardware)
+
+Real bootstrap capture (`GET bootstrap`, API v1) for a UP-AirQuality unit (`type:
+"UP-AirQuality"`, `modelKey: "sensor"` - same collection as every other Sensor) includes:
+
+```json
+"airQuality": {
+  "aqi": {"value": 0, "status": "neutral"},
+  "vape": {"value": 0, "status": "neutral"},
+  "tvoc": {"value": 11.6, "status": "neutral"},
+  "pm1p0": {"value": 0, "status": "neutral"},
+  "pm2p5": {"value": 0, "status": "neutral"},
+  "pm4p0": {"value": 0, "status": "neutral"},
+  "pm10p0": {"value": 0, "status": "neutral"},
+  "humidity": {"value": 40.2, "status": "neutral"},
+  "temperature": {"value": 28.07, "status": "neutral"},
+  "voc": {"value": 74, "status": "neutral"},
+  "co2": {"value": 494, "status": "neutral"}
+}
+```
+
+Refreshed at `airQualitySettings.readingInterval` seconds (15s by default) - this is a genuine
+live feed, not event-only. Note `sensor.stats.{humidity,temperature}` stay `null` on this device;
+`sensor.airQuality.{humidity,temperature}` is the real source for those two on UP-AirQuality.
+`sensor.airQuality.vape` is a 0-100 index (separate from the `alarm_vape`/`sensorVapeEvent`
+boolean detection signal) - not currently mapped to a Homey capability (no system "vape index"
+capability exists).
+
+Also present on the same device object:
+- `sensor.smokeStatus`: `{smokeAlarm, coAlarm, batteryLow, smokeSensorFault, coSensorFault,
+  endOfLife, enabled, ready, testing, smokeValue, coValue, batteryVoltage, ...}` - continuous
+  smoke/CO alarm state, complements the discrete `sensorAlarmEvent`.
+- `sensor.batteryStatus`: `{percentage, isLow, modelKey: "sensorBatteryStatus"}` - present on
+  every sensor; `percentage` stays `null` on wired/PoE units like UP-AirQuality.
+- `sensor.airQualitySettings`: per-metric enable + threshold config (`aqiSettings`,
+  `tvocSettings`, `pm1p0Settings`, ..., `vapeSettings.{isEnabled,lowThreshold,highThreshold}`,
+  `vapeSensitivitySettings`, `ringLedMetric` (`0`=CO2, `1`=AQI), `readingInterval`,
+  `nightModeEnabled`/`nightModeStartTime`/`nightModeEndTime`).
+
+All of the above are consumed in `drivers/protectsensor/device.js` via
+`onAirQualityChange`/`onBatteryStatusChange`/`onSmokeStatusChange` (live updates, routed from
+`payload.airQuality`/`batteryStatus`/`smokeStatus` in `driver.js::onParseWebsocketMessage`) and
+in `_createMissingCapabilities`/`_initSensorData` (bootstrap).
+
+**Confirmed against a real captured websocket stream** (v1 `modelKey: "sensor"` update packets,
+UP-AirQuality unit, `readingInterval: 1`s in that capture):
+- `payload: {"airQuality": {...}, "nvrMac": "..."}` - `airQuality` updates arrive **alone**,
+  never bundled with a `stats` key. So the theoretical risk previously noted here (`library/
+  websocket.js`'s `shouldProcessEvent()` drops any sensor `update` packet whose payload contains
+  a `stats` key, `if (updatePacket.payload.stats) return false;` - added to filter noisy camera
+  video-stats updates) does not materialize in practice for this device.
+- `airQualitySettings` changes push live as their own `payload: {"airQualitySettings": {...}}`
+  packet - not currently consumed (capability gating only re-evaluates from a fresh full
+  bootstrap fetch, same as every other settings-driven capability in this driver, e.g.
+  `motionSettings`), so a live settings change (e.g. enabling vape alerting) only takes effect on
+  next reconnect/bootstrap refresh, not instantly. Consistent with existing behavior elsewhere in
+  this driver, not a regression.
+- Battery/wireless sensors (unrelated to UP-AirQuality) confirm `payload.batteryStatus` arrives
+  standalone too: `{"percentage": 96, "isLow": false, "modelKey": "sensorBatteryStatus"}`,
+  exactly matching `onBatteryStatusChange`'s expected shape.
+
+### New/extended events (`/v1/subscribe/events`)
+
+| `item.type` | Schema | Payload | Meaning |
+|---|---|---|---|
+| `sensorVape` | `sensorVapeEvent` | `{id, modelKey, type, start, end, device}` | Sensor detected vape (UP-AirQuality) |
+| `sensorAlarm` | `sensorAlarmEvent` | `+ metadata.alarmType.text` | Alarm state started/ended. `alarmType.text` enum extended to: `smoke`, `CO`, `glassBreak`, `sensorButtonPress`, `tamper`, `short`, `cut` (previously only `smoke`/`CO`/`sensorButtonPress`) |
+| `sensorExtremeValues` | `sensorExtremeValueEvent` | `+ metadata.sensorType.text`, `metadata.sensorValue.text`, `metadata.status.text` | A metric went in/out of its configured range. `sensorType.text` enum extended with UP-AirQuality metrics: `aqi`, `vape`, `tvoc`, `pm1p0`, `pm2p5`, `pm4p0`, `pm10p0`, `co2`, `voc` (previously only `temperature`/`light`/`humidity`) |
+| `sensorTamper` | `sensorTamperEvent` | `{id, modelKey, type, start, end, device}` | Tamper detected |
+| `sensorBatteryLow` | `sensorBatteryLowEvent` | `{id, modelKey, type, start, end, device}` | Battery low |
+
+None of these are currently routed by `library/protect-api-v2/web-socket-events.js` — that file
+today only dispatches camera/doorbell `itemType`s (`ring`, `motion`, `smartDetectZone`,
+`smartAudioDetect`). Sensor event routing was added to support the UP-AirQuality ("Vape
+Detection & Air Quality Sensor") device — see `drivers/protectsensor/device.js`
+(`onVapeDetected`, `onExtremeValue`, `onSensorAlarm`).
+
+### Metric → Homey capability mapping
+
+Same mapping used for both the continuous `sensor.airQuality.<metric>.value` (bootstrap/live) and
+the discrete `sensorExtremeValues.metadata.sensorType.text` event - see
+`AIR_QUALITY_METRIC_CAPABILITIES` in `drivers/protectsensor/device.js`. Almost all map to
+existing Homey **system** capabilities (`node_modules/homey-lib/assets/capability/capabilities/`)
+- only `measure_pm4` is custom since Homey has no PM4.0 tier:
+
+| metric key | Homey capability | System or custom |
+|---|---|---|
+| `aqi` | `measure_aqi` | system |
+| `co2` | `measure_co2` | system |
+| `voc` | `measure_tvoc_index` | system (unitless VOC index, matches Ubiquiti's 1-500 range) |
+| `tvoc` | `measure_tvoc` | system (µg/m³ concentration) |
+| `pm1p0` | `measure_pm1` | system |
+| `pm2p5` | `measure_pm25` | system |
+| `pm4p0` | `measure_pm4` | **custom** (`.homeycompose/capabilities/measure_pm4.json`) |
+| `pm10p0` | `measure_pm10` | system |
+| `vape` | *(no numeric capability; `alarm_vape` is sourced from `sensorVapeEvent` instead)* | — |
+
+`sensorAlarmEvent.metadata.alarmType.text` → capability: `smoke`→`alarm_smoke` (system),
+`CO`→`alarm_co` (system), `tamper`→`alarm_tamper` (system), `glassBreak`→`alarm_glassbreak`
+(**custom**, no system equivalent). `sensorButtonPress`/`short`/`cut` have no capability mapping
+yet. `sensorVapeEvent` → `alarm_vape` (**custom**). `alarm_smoke`/`alarm_co` are also kept live
+from the continuous `sensor.smokeStatus.{smokeAlarm,coAlarm}` (see above), not just the discrete
+event. `sensor.batteryStatus.isLow`/`.percentage` → `alarm_battery`/`measure_battery` (both
+system), present on every sensor (not just UP-AirQuality).
 
 ---
 
