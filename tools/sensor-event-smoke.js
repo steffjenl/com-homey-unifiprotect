@@ -51,10 +51,102 @@ function createFakeSensorDevice() {
   return device;
 }
 
+// Structurally identical to a real UP-AirQuality bootstrap capture (id/mac/host scrubbed),
+// used to verify _createMissingCapabilities/_initSensorData against real field shapes rather
+// than hand-guessed ones.
+const AIRQUALITY_BOOTSTRAP_SENSOR = {
+  id: 'airquality-1',
+  type: 'UP-AirQuality',
+  name: 'UP Air Living',
+  modelKey: 'sensor',
+  isOpened: null,
+  motionSettings: { isEnabled: false, sensitivity: 100, sensitivityWhenArmed: 50 },
+  alarmSettings: { isEnabled: false },
+  glassBreakSettings: { isEnabled: false, sensitivity: 25, sensitivityWhenArmed: 50 },
+  stats: {
+    light: { value: null, status: 'unknown' },
+    humidity: { value: null, status: 'unknown' },
+    temperature: { value: null, status: 'unknown' },
+  },
+  airQuality: {
+    aqi: { value: 0, status: 'neutral' },
+    vape: { value: 0, status: 'neutral' },
+    tvoc: { value: 11.6, status: 'neutral' },
+    pm1p0: { value: 0, status: 'neutral' },
+    pm2p5: { value: 0, status: 'neutral' },
+    pm4p0: { value: 0, status: 'neutral' },
+    pm10p0: { value: 0, status: 'neutral' },
+    humidity: { value: 40.2, status: 'neutral' },
+    temperature: { value: 28.07, status: 'neutral' },
+    voc: { value: 74, status: 'neutral' },
+    co2: { value: 494, status: 'neutral' },
+  },
+  smokeStatus: {
+    enabled: false, smokeAlarm: false, coAlarm: false, batteryLow: false,
+  },
+  batteryStatus: { percentage: null, isLow: false, modelKey: 'sensorBatteryStatus' },
+};
+
+function createFakeBootstrapDevice(sensor) {
+  const device = createFakeSensorDevice();
+  device.getData = () => ({ id: sensor.id });
+  device.getClass = () => 'sensor';
+  device.setClass = async () => {};
+  device.homey.app.api = { getBootstrap: () => ({ sensors: [sensor] }) };
+  return device;
+}
+
 function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
   }
+}
+
+async function runBootstrapFixtureTest() {
+  const sensor = JSON.parse(JSON.stringify(AIRQUALITY_BOOTSTRAP_SENSOR));
+  const device = createFakeBootstrapDevice(sensor);
+
+  await device._createMissingCapabilities();
+
+  // sensor.stats.{humidity,temperature} are null on UP-AirQuality - must fall back to
+  // sensor.airQuality.{humidity,temperature} instead of staying absent.
+  assert(device.hasCapability('measure_humidity'), 'expected measure_humidity via airQuality fallback');
+  assert(device.hasCapability('measure_temperature'), 'expected measure_temperature via airQuality fallback');
+  assert(!device.hasCapability('measure_luminance'), 'stats.light is null - measure_luminance must not be added');
+
+  for (const capability of ['measure_aqi', 'measure_co2', 'measure_tvoc_index', 'measure_tvoc', 'measure_pm1', 'measure_pm25', 'measure_pm4', 'measure_pm10', 'alarm_vape']) {
+    assert(device.hasCapability(capability), `expected ${capability} to be created from sensor.airQuality`);
+  }
+
+  // alarmSettings.isEnabled=false in this capture -> smoke/CO alarm not applicable yet
+  assert(!device.hasCapability('alarm_smoke'), 'alarmSettings.isEnabled=false - alarm_smoke must not be added');
+  assert(!device.hasCapability('alarm_co'), 'alarmSettings.isEnabled=false - alarm_co must not be added');
+
+  // batteryStatus is present (wired/PoE, percentage null) -> alarm_battery yes, measure_battery no
+  assert(device.hasCapability('alarm_battery'), 'expected alarm_battery from sensor.batteryStatus');
+  assert(!device.hasCapability('measure_battery'), 'batteryStatus.percentage=null - measure_battery must not be added');
+
+  await device._initSensorData();
+  assert(device.capabilityValues.measure_humidity === 40.2, 'expected measure_humidity=40.2 from airQuality fallback');
+  assert(device.capabilityValues.measure_temperature === 28.07, 'expected measure_temperature=28.07 from airQuality fallback');
+  assert(device.capabilityValues.measure_co2 === 494, 'expected measure_co2=494');
+  assert(device.capabilityValues.measure_tvoc_index === 74, 'expected measure_tvoc_index=74 (voc metric)');
+  assert(device.capabilityValues.measure_tvoc === 11.6, 'expected measure_tvoc=11.6 (tvoc metric)');
+  assert(device.capabilityValues.alarm_battery === false, 'expected alarm_battery=false from batteryStatus.isLow');
+
+  // Live update: a later websocket payload bumps CO2 and reports battery/smoke state
+  device.onAirQualityChange({ co2: { value: 550, status: 'neutral' } });
+  assert(device.capabilityValues.measure_co2 === 550, 'expected measure_co2=550 after live update');
+
+  device.onBatteryStatusChange({ isLow: true, percentage: null });
+  assert(device.capabilityValues.alarm_battery === true, 'expected alarm_battery=true after live update');
+
+  // alarm_smoke/alarm_co were never created (feature disabled) - a smokeStatus update must be a no-op
+  device.onSmokeStatusChange({ smokeAlarm: true, coAlarm: false });
+  assert(!device.hasCapability('alarm_smoke'), 'onSmokeStatusChange must not create a capability that bootstrap gating disabled');
+
+  // eslint-disable-next-line no-console
+  console.log('Bootstrap fixture smoke test passed', JSON.stringify(device.capabilityValues));
 }
 
 async function run() {
@@ -112,6 +204,8 @@ async function run() {
 
   // eslint-disable-next-line no-console
   console.log('Sensor event smoke test passed', JSON.stringify(device.capabilityValues));
+
+  await runBootstrapFixtureTest();
 }
 
 run().catch((error) => {

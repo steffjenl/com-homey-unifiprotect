@@ -13,8 +13,16 @@
     "alarm_smoke",
     "alarm_co",
     "alarm_glassbreak",
-    "alarm_tamper"
+    "alarm_tamper",
+    "alarm_battery",
+    "measure_battery"
   ],
+  "energy": {
+    "batteries": [
+      "CR123A",
+      "INTERNAL"
+    ]
+  },
   "name": {
     "en": "Sensor",
     "de": "Sensor",

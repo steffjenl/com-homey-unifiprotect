@@ -339,7 +339,7 @@
     "security",
     "video"
   ],
-  "version": "1.11.1",
+  "version": "1.11.2",
   "compatibility": ">=12.6.0",
   "author": {
     "name": "MonkeySoft",
@@ -7023,6 +7023,20 @@
           {
             "type": "text",
             "name": "liveview_id",
+            "title": {
+              "en": "Liveview ID",
+              "nl": "Liveview ID",
+              "de": "Liveview-ID",
+              "fr": "ID de vue en direct",
+              "it": "ID visualizzazione live",
+              "sv": "Livevisnings-ID",
+              "no": "Live-visnings-ID",
+              "es": "ID de vista en vivo",
+              "da": "Live-visnings-ID",
+              "ru": "Идентификатор прямого эфира",
+              "pl": "Identyfikator widoku na żywo",
+              "ko": "라이브뷰 ID"
+            },
             "placeholder": {
               "en": "Liveview ID (e.g. 68f0885c0245f403e42ca91a)",
               "nl": "Liveview ID (bijv. 68f0885c0245f403e42ca91a)"
@@ -8834,8 +8848,16 @@
         "alarm_smoke",
         "alarm_co",
         "alarm_glassbreak",
-        "alarm_tamper"
+        "alarm_tamper",
+        "alarm_battery",
+        "measure_battery"
       ],
+      "energy": {
+        "batteries": [
+          "CR123A",
+          "INTERNAL"
+        ]
+      },
       "name": {
         "en": "Sensor",
         "de": "Sensor",

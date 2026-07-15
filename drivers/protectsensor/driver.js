@@ -58,6 +58,20 @@ class UniFiSensorDriver extends Homey.Driver {
                 sensor.onMotionDetected(payload.motionDetectedAt, payload.isMotionDetected);
             }
 
+            // UP-AirQuality: continuous readings + battery/smoke status, not documented in the
+            // official v2 OpenAPI spec but confirmed present on real device bootstrap/updates.
+            if (payload.hasOwnProperty('airQuality')) {
+                sensor.onAirQualityChange(payload.airQuality);
+            }
+
+            if (payload.hasOwnProperty('batteryStatus')) {
+                sensor.onBatteryStatusChange(payload.batteryStatus);
+            }
+
+            if (payload.hasOwnProperty('smokeStatus')) {
+                sensor.onSmokeStatusChange(payload.smokeStatus);
+            }
+
             sensor.refreshSensorData();
         }
     }
