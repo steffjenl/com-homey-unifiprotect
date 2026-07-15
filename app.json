@@ -8830,7 +8830,11 @@
         "measure_humidity",
         "measure_temperature",
         "measure_luminance",
-        "alarm_contact"
+        "alarm_contact",
+        "alarm_smoke",
+        "alarm_co",
+        "alarm_glassbreak",
+        "alarm_tamper"
       ],
       "name": {
         "en": "Sensor",
@@ -9037,6 +9041,28 @@
     }
   },
   "capabilities": {
+    "alarm_glassbreak": {
+      "type": "boolean",
+      "title": {
+        "en": "Glass break",
+        "nl": "Glasbreuk"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true
+    },
+    "alarm_vape": {
+      "type": "boolean",
+      "title": {
+        "en": "Vape detected",
+        "nl": "Vape gedetecteerd"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true
+    },
     "camera_connection_status": {
       "type": "boolean",
       "title": {
@@ -9423,6 +9449,21 @@
       "setable": true,
       "uiComponent": "toggle",
       "uiQuickAction": true
+    },
+    "measure_pm4": {
+      "type": "number",
+      "title": {
+        "en": "PM4.0",
+        "nl": "PM4.0"
+      },
+      "units": {
+        "en": "µg/m³"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "decimals": 0
     },
     "nvr_cpu_load": {
       "type": "number",

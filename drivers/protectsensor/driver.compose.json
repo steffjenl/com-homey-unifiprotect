@@ -9,7 +9,11 @@
     "measure_humidity",
     "measure_temperature",
     "measure_luminance",
-    "alarm_contact"
+    "alarm_contact",
+    "alarm_smoke",
+    "alarm_co",
+    "alarm_glassbreak",
+    "alarm_tamper"
   ],
   "name": {
     "en": "Sensor",

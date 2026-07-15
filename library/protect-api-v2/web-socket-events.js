@@ -221,6 +221,8 @@ class ProtectWebSocket extends BaseClass {
                 const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
                 const deviceCamera = driverCamera.getUnifiDeviceById(deviceId);
                 const deviceDoorbell = driverDoorbell.getUnifiDeviceById(deviceId);
+                const driverSensor = this.homey.drivers.getDriver('protectsensor');
+                const deviceSensor = driverSensor.getUnifiDeviceById(deviceId);
 
                 // Ring event (doorbell)
                 if (itemType === 'ring' && eventType === 'add') {
@@ -285,6 +287,52 @@ class ProtectWebSocket extends BaseClass {
                     }
                     if (deviceDoorbell) {
                         deviceDoorbell.onAudioDetection(payload, eventType, item.id);
+                    }
+                }
+
+                // Sensor vape detection event (e.g. UP-AirQuality)
+                if (itemType === 'sensorVape') {
+                    this.homey.app.debug('[V2] vape detected on ' + deviceId);
+                    if (deviceSensor) {
+                        deviceSensor.onVapeDetected(eventType, item.start, item.end || null);
+                    }
+                }
+
+                // Sensor extreme-value event (metric went in/out of configured range,
+                // e.g. AQI/CO2/VOC/TVOC/PM on UP-AirQuality). Event-driven only - not a
+                // continuous feed, see specs/unifi-protect-api-notes.md.
+                if (itemType === 'sensorExtremeValues' && item.metadata && item.metadata.sensorType) {
+                    const metric = item.metadata.sensorType.text;
+                    const value = item.metadata.sensorValue ? item.metadata.sensorValue.text : null;
+                    const status = item.metadata.status ? item.metadata.status.text : null;
+                    this.homey.app.debug(`[V2] extreme value ${metric}=${value} (${status}) on ${deviceId}`);
+                    if (deviceSensor) {
+                        deviceSensor.onExtremeValue(metric, value, status);
+                    }
+                }
+
+                // Sensor alarm event (smoke/CO/glassBreak/tamper/short/cut)
+                if (itemType === 'sensorAlarm' && item.metadata && item.metadata.alarmType) {
+                    const alarmType = item.metadata.alarmType.text;
+                    this.homey.app.debug(`[V2] sensor alarm ${alarmType} (${eventType}) on ${deviceId}`);
+                    if (deviceSensor) {
+                        deviceSensor.onSensorAlarm(alarmType, eventType, item.end || null);
+                    }
+                }
+
+                // Sensor tamper event
+                if (itemType === 'sensorTamper' && eventType === 'add') {
+                    this.homey.app.debug('[V2] tamper detected on ' + deviceId);
+                    if (deviceSensor) {
+                        deviceSensor.onTamperDetected(item.start, item.end || null);
+                    }
+                }
+
+                // Sensor battery low event
+                if (itemType === 'sensorBatteryLow' && eventType === 'add') {
+                    this.homey.app.debug('[V2] battery low on ' + deviceId);
+                    if (deviceSensor) {
+                        deviceSensor.onBatteryLow();
                     }
                 }
 

@@ -130,7 +130,7 @@ class Sensor extends Homey.Device {
                     if (typeof sensor.motionSettings !== 'undefined' && sensor.motionSettings.isEnabled) {
                         // alarm_motion
                         if (!this.hasCapability('alarm_motion')) {
-                            await this.addç('alarm_motion');
+                            await this.addCapability('alarm_motion');
                             this.homey.app.debug(`created capability alarm_motion for ${this.getName()}`);
                         }
                         if (!this.hasCapability('last_motion_at')) {
@@ -168,6 +168,50 @@ class Sensor extends Homey.Device {
                         await this.addCapability('alarm_contact');
                         this.homey.app.debug(`created capability alarm_contact for ${this.getName()}`);
                     }
+
+                    // Smoke + CO alarm sensor (sensor.alarmSettings, added in API v7.1.87)
+                    if (typeof sensor.alarmSettings !== 'undefined' && sensor.alarmSettings.isEnabled) {
+                        if (!this.hasCapability('alarm_smoke')) {
+                            await this.addCapability('alarm_smoke');
+                            this.homey.app.debug(`created capability alarm_smoke for ${this.getName()}`);
+                        }
+                        if (!this.hasCapability('alarm_co')) {
+                            await this.addCapability('alarm_co');
+                            this.homey.app.debug(`created capability alarm_co for ${this.getName()}`);
+                        }
+                    } else {
+                        if (this.hasCapability('alarm_smoke')) {
+                            await this.removeCapability('alarm_smoke');
+                            this.homey.app.debug(`removed capability alarm_smoke for ${this.getName()}`);
+                        }
+                        if (this.hasCapability('alarm_co')) {
+                            await this.removeCapability('alarm_co');
+                            this.homey.app.debug(`removed capability alarm_co for ${this.getName()}`);
+                        }
+                    }
+
+                    // Glass break sensor (sensor.glassBreakSettings, added in API v7.1.87)
+                    if (typeof sensor.glassBreakSettings !== 'undefined' && sensor.glassBreakSettings.isEnabled) {
+                        if (!this.hasCapability('alarm_glassbreak')) {
+                            await this.addCapability('alarm_glassbreak');
+                            this.homey.app.debug(`created capability alarm_glassbreak for ${this.getName()}`);
+                        }
+                    } else {
+                        if (this.hasCapability('alarm_glassbreak')) {
+                            await this.removeCapability('alarm_glassbreak');
+                            this.homey.app.debug(`removed capability alarm_glassbreak for ${this.getName()}`);
+                        }
+                    }
+
+                    if (!this.hasCapability('alarm_tamper')) {
+                        await this.addCapability('alarm_tamper');
+                        this.homey.app.debug(`created capability alarm_tamper for ${this.getName()}`);
+                    }
+
+                    // Vape/AQI/CO2/VOC/PM capabilities (UP-AirQuality) cannot be detected from
+                    // bootstrap - they are only ever reported via events (see onVapeDetected /
+                    // onExtremeValue), so they are added lazily on first observed event instead
+                    // of here, to avoid cluttering plain motion/contact sensors.
 
                 }
             }
@@ -314,6 +358,101 @@ class Sensor extends Homey.Device {
             } else {
                 return 1;
             }
+        }
+    }
+
+    async _ensureCapability(capability) {
+        if (!this.hasCapability(capability)) {
+            try {
+                await this.addCapability(capability);
+                this.homey.app.debug(`created capability ${capability} for ${this.getName()}`);
+            } catch (error) {
+                this.homey.app.debug(`failed to add capability ${capability} for ${this.getName()}: ${error}`);
+            }
+        }
+    }
+
+    /**
+     * Vape detected/cleared (sensorVapeEvent, UP-AirQuality). Lazily creates alarm_vape
+     * since bootstrap gives no way to know a sensor supports vape detection up front.
+     */
+    async onVapeDetected(eventType, start, end) {
+        await this._ensureCapability('alarm_vape');
+        if (eventType === 'add') {
+            this.homey.app.debug(`vape detected on ${this.getName()}`);
+            this.setCapabilityValue('alarm_vape', true).catch(this.error);
+        } else if (eventType === 'update' && end) {
+            this.setCapabilityValue('alarm_vape', false).catch(this.error);
+        }
+    }
+
+    /**
+     * A metric (AQI/CO2/VOC/TVOC/PM/temperature/humidity/light) went in or out of its
+     * configured range (sensorExtremeValueEvent). This is event-driven only, fired on
+     * threshold crossing - it is NOT a continuous feed like measure_temperature is via the
+     * device-state websocket. See specs/unifi-protect-api-notes.md.
+     */
+    async onExtremeValue(metric, value, status) {
+        const numericValue = value !== null && value !== undefined ? parseFloat(value) : null;
+        if (numericValue === null || Number.isNaN(numericValue)) {
+            return;
+        }
+
+        // All of these are Homey *system* capabilities except measure_pm4 (no PM4.0 tier
+        // exists in Homey's system capability set, so that one is custom - see
+        // .homeycompose/capabilities/measure_pm4.json).
+        const metricCapabilityMap = {
+            aqi: 'measure_aqi',
+            voc: 'measure_tvoc_index',
+            tvoc: 'measure_tvoc',
+            co2: 'measure_co2',
+            pm1p0: 'measure_pm1',
+            pm2p5: 'measure_pm25',
+            pm4p0: 'measure_pm4',
+            pm10p0: 'measure_pm10',
+        };
+
+        const capability = metricCapabilityMap[metric];
+        if (!capability) {
+            // 'vape' extreme-value crossings are covered by alarm_vape (onVapeDetected);
+            // temperature/humidity/light are already handled via the device-state websocket.
+            return;
+        }
+
+        await this._ensureCapability(capability);
+        this.setCapabilityValue(capability, numericValue).catch(this.error);
+    }
+
+    /**
+     * Sensor alarm state started/ended (sensorAlarmEvent): smoke, CO, glassBreak, tamper.
+     * short/cut/sensorButtonPress have no capability mapping (yet).
+     */
+    async onSensorAlarm(alarmType, eventType, end) {
+        const alarmCapabilityMap = {
+            smoke: 'alarm_smoke',
+            CO: 'alarm_co',
+            glassBreak: 'alarm_glassbreak',
+            tamper: 'alarm_tamper',
+        };
+
+        const capability = alarmCapabilityMap[alarmType];
+        if (!capability) {
+            return;
+        }
+
+        await this._ensureCapability(capability);
+        const isActive = eventType === 'add' || !end;
+        this.setCapabilityValue(capability, isActive).catch(this.error);
+    }
+
+    async onTamperDetected() {
+        await this._ensureCapability('alarm_tamper');
+        this.setCapabilityValue('alarm_tamper', true).catch(this.error);
+    }
+
+    onBatteryLow() {
+        if (this.hasCapability('alarm_battery')) {
+            this.setCapabilityValue('alarm_battery', true).catch(this.error);
         }
     }
 

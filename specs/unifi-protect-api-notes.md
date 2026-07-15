@@ -1,7 +1,10 @@
 # UniFi Protect API Notes
 
-Source: Official API documentation in `.ai/unifi-protect-api-v2/`.  
-**API version: 6.2.88** — Base URL: `https://YOUR_CONSOLE_IP/proxy/protect/integration`
+Source: Official API documentation in `.ai/unifi-protect-api-v2/`, cross-checked against
+`specs/protect-integration-v2-openapi.json`.  
+**API version: 7.1.87** — Base URL: `https://YOUR_CONSOLE_IP/proxy/protect/integration`
+(the spec also documents a `https://api.ui.com/v1/connector/consoles/{consoleId}/proxy/protect/integration`
+cloud-connector server variant; this app only uses the local console URL)
 
 ---
 
@@ -249,6 +252,66 @@ and
 ```
 
 3) **External alarm profile update** (`modelKey: externalArmProfile`) with `payload.state` (`armed`/`disarmed`).
+
+---
+
+## Sensor Alarm & Extreme-Value Events (new in 7.1.87)
+
+As of API v7.1.87 the `sensor` device schema and its event set grew several security/alarm
+features. Diffed against the previously checked-in v7.1.69 spec, the **only** real additions are
+Sensor-related; no REST paths were added or removed (54 paths, identical set, both versions).
+
+### New `sensor` schema fields
+
+| Field | Type | Notes |
+|---|---|---|
+| `glassBreakSettings` | `{isEnabled, sensitivity, sensitivityWhenArmed}` | Glass-break detection config |
+| `alarmSettings` | `{isEnabled}` | Smoke + CO alarm sensor toggle |
+| `scheduleMode` | `"always" \| "when_armed"` | Applies to both glass-break and motion detection |
+| `armProfileIds` | `string[] \| null` | Restricts `when_armed` detection to specific arm profiles |
+| `hasCustomSensitivityWhenArmed` | `boolean` | Use `sensitivityWhenArmed` values while armed |
+
+> ⚠️ `sensorStats` (the `stats.{light,humidity,temperature}` object returned for every sensor)
+> is **unchanged** — there is still no continuous AQI/CO2/VOC/PM polling field. Those metrics are
+> only available via the discrete events below (fired on threshold crossing / detection), not as
+> a live feed.
+
+### New/extended events (`/v1/subscribe/events`)
+
+| `item.type` | Schema | Payload | Meaning |
+|---|---|---|---|
+| `sensorVape` | `sensorVapeEvent` | `{id, modelKey, type, start, end, device}` | Sensor detected vape (UP-AirQuality) |
+| `sensorAlarm` | `sensorAlarmEvent` | `+ metadata.alarmType.text` | Alarm state started/ended. `alarmType.text` enum extended to: `smoke`, `CO`, `glassBreak`, `sensorButtonPress`, `tamper`, `short`, `cut` (previously only `smoke`/`CO`/`sensorButtonPress`) |
+| `sensorExtremeValues` | `sensorExtremeValueEvent` | `+ metadata.sensorType.text`, `metadata.sensorValue.text`, `metadata.status.text` | A metric went in/out of its configured range. `sensorType.text` enum extended with UP-AirQuality metrics: `aqi`, `vape`, `tvoc`, `pm1p0`, `pm2p5`, `pm4p0`, `pm10p0`, `co2`, `voc` (previously only `temperature`/`light`/`humidity`) |
+| `sensorTamper` | `sensorTamperEvent` | `{id, modelKey, type, start, end, device}` | Tamper detected |
+| `sensorBatteryLow` | `sensorBatteryLowEvent` | `{id, modelKey, type, start, end, device}` | Battery low |
+
+None of these are currently routed by `library/protect-api-v2/web-socket-events.js` — that file
+today only dispatches camera/doorbell `itemType`s (`ring`, `motion`, `smartDetectZone`,
+`smartAudioDetect`). Sensor event routing was added to support the UP-AirQuality ("Vape
+Detection & Air Quality Sensor") device — see `drivers/protectsensor/device.js`
+(`onVapeDetected`, `onExtremeValue`, `onSensorAlarm`).
+
+### `sensorExtremeValues` metric → Homey capability mapping
+
+Almost all map to existing Homey **system** capabilities (`node_modules/homey-lib/assets/capability/capabilities/`) - only `measure_pm4` is custom since Homey has no PM4.0 tier:
+
+| `sensorType.text` | Homey capability | System or custom |
+|---|---|---|
+| `aqi` | `measure_aqi` | system |
+| `co2` | `measure_co2` | system |
+| `voc` | `measure_tvoc_index` | system (unitless VOC index, matches Ubiquiti's 1-500 range) |
+| `tvoc` | `measure_tvoc` | system (µg/m³ concentration) |
+| `pm1p0` | `measure_pm1` | system |
+| `pm2p5` | `measure_pm25` | system |
+| `pm4p0` | `measure_pm4` | **custom** (`.homeycompose/capabilities/measure_pm4.json`) |
+| `pm10p0` | `measure_pm10` | system |
+| `vape` | *(covered by `alarm_vape` via `sensorVapeEvent`, not this event)* | — |
+
+`sensorAlarmEvent.metadata.alarmType.text` → capability: `smoke`→`alarm_smoke` (system),
+`CO`→`alarm_co` (system), `tamper`→`alarm_tamper` (system), `glassBreak`→`alarm_glassbreak`
+(**custom**, no system equivalent). `sensorButtonPress`/`short`/`cut` have no capability mapping
+yet. `sensorVapeEvent` → `alarm_vape` (**custom**).
 
 ---
 
