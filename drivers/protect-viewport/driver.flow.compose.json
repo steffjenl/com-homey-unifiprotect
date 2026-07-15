@@ -38,6 +38,20 @@
         {
           "type": "text",
           "name": "liveview_id",
+          "title": {
+            "en": "Liveview ID",
+            "nl": "Liveview ID",
+            "de": "Liveview-ID",
+            "fr": "ID de vue en direct",
+            "it": "ID visualizzazione live",
+            "sv": "Livevisnings-ID",
+            "no": "Live-visnings-ID",
+            "es": "ID de vista en vivo",
+            "da": "Live-visnings-ID",
+            "ru": "Идентификатор прямого эфира",
+            "pl": "Identyfikator widoku na żywo",
+            "ko": "라이브뷰 ID"
+          },
           "placeholder": {
             "en": "Liveview ID (e.g. 68f0885c0245f403e42ca91a)",
             "nl": "Liveview ID (bijv. 68f0885c0245f403e42ca91a)"
