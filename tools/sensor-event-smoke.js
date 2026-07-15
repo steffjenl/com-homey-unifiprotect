@@ -122,6 +122,10 @@ async function runBootstrapFixtureTest() {
   assert(!device.hasCapability('alarm_smoke'), 'alarmSettings.isEnabled=false - alarm_smoke must not be added');
   assert(!device.hasCapability('alarm_co'), 'alarmSettings.isEnabled=false - alarm_co must not be added');
 
+  // UP-AirQuality has no contact switch or tamper switch hardware - never offer these
+  assert(!device.hasCapability('alarm_contact'), 'UP-AirQuality has no contact switch - alarm_contact must not be added');
+  assert(!device.hasCapability('alarm_tamper'), 'UP-AirQuality has no tamper switch - alarm_tamper must not be added');
+
   // batteryStatus is present (wired/PoE, percentage null) -> alarm_battery yes, measure_battery no
   assert(device.hasCapability('alarm_battery'), 'expected alarm_battery from sensor.batteryStatus');
   assert(!device.hasCapability('measure_battery'), 'batteryStatus.percentage=null - measure_battery must not be added');
@@ -147,6 +151,35 @@ async function runBootstrapFixtureTest() {
 
   // eslint-disable-next-line no-console
   console.log('Bootstrap fixture smoke test passed', JSON.stringify(device.capabilityValues));
+}
+
+// Regression guard: a plain contact/motion Sensor (not UP-AirQuality) must keep getting
+// alarm_contact/alarm_tamper - the type-based gating above must not affect other sensors.
+async function runPlainSensorFixtureTest() {
+  const sensor = {
+    id: 'plain-sensor-1',
+    type: 'UP Sensor',
+    isOpened: false,
+    stats: {
+      light: { value: null, status: 'unknown' },
+      humidity: { value: null, status: 'unknown' },
+      temperature: { value: null, status: 'unknown' },
+    },
+    motionSettings: { isEnabled: false },
+    alarmSettings: { isEnabled: false },
+    glassBreakSettings: { isEnabled: false },
+  };
+  const device = createFakeBootstrapDevice(sensor);
+
+  await device._createMissingCapabilities();
+  assert(device.hasCapability('alarm_contact'), 'plain Sensor must still get alarm_contact');
+  assert(device.hasCapability('alarm_tamper'), 'plain Sensor must still get alarm_tamper');
+  for (const capability of ['measure_aqi', 'measure_co2', 'measure_tvoc', 'alarm_vape']) {
+    assert(!device.hasCapability(capability), `plain Sensor without sensor.airQuality must not get ${capability}`);
+  }
+
+  // eslint-disable-next-line no-console
+  console.log('Plain sensor fixture smoke test passed', JSON.stringify([...device.capabilities]));
 }
 
 async function run() {
@@ -206,6 +239,7 @@ async function run() {
   console.log('Sensor event smoke test passed', JSON.stringify(device.capabilityValues));
 
   await runBootstrapFixtureTest();
+  await runPlainSensorFixtureTest();
 }
 
 run().catch((error) => {

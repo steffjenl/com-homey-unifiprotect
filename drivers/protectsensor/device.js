@@ -187,9 +187,16 @@ class Sensor extends Homey.Device {
                         }
                     }
 
-                    if (!this.hasCapability('alarm_contact')) {
-                        await this.addCapability('alarm_contact');
-                        this.homey.app.debug(`created capability alarm_contact for ${this.getName()}`);
+                    // UP-AirQuality has no contact switch hardware (sensor.isOpened stays null) -
+                    // don't offer alarm_contact for it.
+                    if (sensor.type !== 'UP-AirQuality') {
+                        if (!this.hasCapability('alarm_contact')) {
+                            await this.addCapability('alarm_contact');
+                            this.homey.app.debug(`created capability alarm_contact for ${this.getName()}`);
+                        }
+                    } else if (this.hasCapability('alarm_contact')) {
+                        await this.removeCapability('alarm_contact');
+                        this.homey.app.debug(`removed capability alarm_contact for ${this.getName()}`);
                     }
 
                     // Smoke + CO alarm sensor (sensor.alarmSettings, added in API v7.1.87)
@@ -226,9 +233,16 @@ class Sensor extends Homey.Device {
                         }
                     }
 
-                    if (!this.hasCapability('alarm_tamper')) {
-                        await this.addCapability('alarm_tamper');
-                        this.homey.app.debug(`created capability alarm_tamper for ${this.getName()}`);
+                    // UP-AirQuality has no tamper switch (sensor.tamperingDetectedAt stays null,
+                    // no sensorTamperEvent for this hardware) - don't offer alarm_tamper for it.
+                    if (sensor.type !== 'UP-AirQuality') {
+                        if (!this.hasCapability('alarm_tamper')) {
+                            await this.addCapability('alarm_tamper');
+                            this.homey.app.debug(`created capability alarm_tamper for ${this.getName()}`);
+                        }
+                    } else if (this.hasCapability('alarm_tamper')) {
+                        await this.removeCapability('alarm_tamper');
+                        this.homey.app.debug(`removed capability alarm_tamper for ${this.getName()}`);
                     }
 
                     // UP-AirQuality: continuous AQI/CO2/VOC/TVOC/PM readings, confirmed present
