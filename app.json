@@ -6918,6 +6918,82 @@
         ]
       },
       {
+        "id": "ufp_nvr_alarm_arm",
+        "title": {
+          "en": "Arm NVR alarm",
+          "nl": "NVR-alarm inschakelen",
+          "de": "NVR-Alarm aktivieren",
+          "fr": "Activer l'alarme NVR",
+          "it": "Attiva allarme NVR",
+          "sv": "Aktivera NVR-larm",
+          "no": "Aktiver NVR-alarm",
+          "es": "Activar alarma NVR",
+          "da": "Aktiver NVR-alarm",
+          "ru": "Включить тревогу NVR",
+          "pl": "Uzbrój alarm NVR",
+          "ko": "NVR 알람 활성화"
+        },
+        "titleFormatted": {
+          "en": "Arm NVR alarm",
+          "nl": "NVR-alarm inschakelen",
+          "de": "NVR-Alarm aktivieren",
+          "fr": "Activer l'alarme NVR",
+          "it": "Attiva allarme NVR",
+          "sv": "Aktivera NVR-larm",
+          "no": "Aktiver NVR-alarm",
+          "es": "Activar alarma NVR",
+          "da": "Aktiver NVR-alarm",
+          "ru": "Включить тревогу NVR",
+          "pl": "Uzbrój alarm NVR",
+          "ko": "NVR 알람 활성화"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-nvr-alarm"
+          }
+        ]
+      },
+      {
+        "id": "ufp_nvr_alarm_disarm",
+        "title": {
+          "en": "Disarm NVR alarm",
+          "nl": "NVR-alarm uitschakelen",
+          "de": "NVR-Alarm deaktivieren",
+          "fr": "Désactiver l'alarme NVR",
+          "it": "Disattiva allarme NVR",
+          "sv": "Avaktivera NVR-larm",
+          "no": "Deaktiver NVR-alarm",
+          "es": "Desactivar alarma NVR",
+          "da": "Deaktiver NVR-alarm",
+          "ru": "Отключить тревогу NVR",
+          "pl": "Rozbrój alarm NVR",
+          "ko": "NVR 알람 비활성화"
+        },
+        "titleFormatted": {
+          "en": "Disarm NVR alarm",
+          "nl": "NVR-alarm uitschakelen",
+          "de": "NVR-Alarm deaktivieren",
+          "fr": "Désactiver l'alarme NVR",
+          "it": "Disattiva allarme NVR",
+          "sv": "Avaktivera NVR-larm",
+          "no": "Deaktiver NVR-alarm",
+          "es": "Desactivar alarma NVR",
+          "da": "Deaktiver NVR-alarm",
+          "ru": "Отключить тревогу NVR",
+          "pl": "Rozbrój alarm NVR",
+          "ko": "NVR 알람 비활성화"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-nvr-alarm"
+          }
+        ]
+      },
+      {
         "id": "ufp_pulse_device_relay",
         "title": {
           "en": "Pulse relay",

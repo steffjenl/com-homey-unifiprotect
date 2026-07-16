@@ -1,11 +1,34 @@
 'use strict';
 
 const Homey = require('homey');
+const UfvConstants = require('../../library/constants');
 
 class NVRAlarmDriver extends Homey.Driver {
 
   async onInit() {
     this.homey.app.debug('[NVRAlarmDriver] initialized');
+
+    const actionArmNvrAlarm = this.homey.flow.getActionCard(UfvConstants.ACTION_ARM_NVR_ALARM);
+    actionArmNvrAlarm.registerRunListener(async (args) => {
+      if (args.device && typeof args.device.setNvrAwayMode === 'function') {
+        this.homey.app.debug('[NVRAlarmDriver] arm action triggered');
+        await args.device.setNvrAwayMode(true);
+        return Promise.resolve(true);
+      }
+
+      return Promise.reject(new Error('No NVR alarm device found'));
+    });
+
+    const actionDisarmNvrAlarm = this.homey.flow.getActionCard(UfvConstants.ACTION_DISARM_NVR_ALARM);
+    actionDisarmNvrAlarm.registerRunListener(async (args) => {
+      if (args.device && typeof args.device.setNvrAwayMode === 'function') {
+        this.homey.app.debug('[NVRAlarmDriver] disarm action triggered');
+        await args.device.setNvrAwayMode(false);
+        return Promise.resolve(true);
+      }
+
+      return Promise.reject(new Error('No NVR alarm device found'));
+    });
   }
 
   onPair(session) {
