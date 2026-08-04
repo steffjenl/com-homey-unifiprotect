@@ -5,8 +5,8 @@
     "nl": "Zet deurbel status geluid"
   },
   "titleFormatted": {
-    "en": "Set doorbell status sound [[device]] [[enabled]]",
-    "nl": "Zet deurbel status geluid [[device]] [[enabled]]"
+    "en": "Set doorbell status sound [[enabled]]",
+    "nl": "Zet deurbel status geluid [[enabled]]"
   },
   "args": [
     {
@@ -16,7 +16,7 @@
       },
       "name": "device",
       "type": "device",
-      "$filter": "driver_id=protectdoorbell"
+      "filter": "driver_id=protectdoorbell"
     },
     {
       "type": "checkbox",

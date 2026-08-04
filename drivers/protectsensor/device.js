@@ -280,21 +280,32 @@ class Sensor extends Homey.Device {
                     }
 
                     // Battery status is reported for every sensor (sensor.batteryStatus);
-                    // percentage stays null on wired/PoE units like UP-AirQuality, so only add
-                    // measure_battery when a real percentage is reported.
+                    // percentage stays null on wired/PoE units like UP-AirQuality. Only one of
+                    // measure_battery / alarm_battery may be active at a time (Homey best
+                    // practice forbids showing both), so prefer measure_battery when a real
+                    // percentage is reported and fall back to alarm_battery otherwise.
                     if (typeof sensor.batteryStatus !== 'undefined' && sensor.batteryStatus !== null) {
-                        if (!this.hasCapability('alarm_battery')) {
-                            await this.addCapability('alarm_battery');
-                            this.homey.app.debug(`created capability alarm_battery for ${this.getName()}`);
-                        }
-                        if (typeof sensor.batteryStatus.percentage !== 'undefined' && sensor.batteryStatus.percentage !== null) {
+                        const hasPercentage = typeof sensor.batteryStatus.percentage !== 'undefined'
+                            && sensor.batteryStatus.percentage !== null;
+
+                        if (hasPercentage) {
                             if (!this.hasCapability('measure_battery')) {
                                 await this.addCapability('measure_battery');
                                 this.homey.app.debug(`created capability measure_battery for ${this.getName()}`);
                             }
-                        } else if (this.hasCapability('measure_battery')) {
-                            await this.removeCapability('measure_battery');
-                            this.homey.app.debug(`removed capability measure_battery for ${this.getName()}`);
+                            if (this.hasCapability('alarm_battery')) {
+                                await this.removeCapability('alarm_battery');
+                                this.homey.app.debug(`removed capability alarm_battery for ${this.getName()}`);
+                            }
+                        } else {
+                            if (!this.hasCapability('alarm_battery')) {
+                                await this.addCapability('alarm_battery');
+                                this.homey.app.debug(`created capability alarm_battery for ${this.getName()}`);
+                            }
+                            if (this.hasCapability('measure_battery')) {
+                                await this.removeCapability('measure_battery');
+                                this.homey.app.debug(`removed capability measure_battery for ${this.getName()}`);
+                            }
                         }
                     }
 

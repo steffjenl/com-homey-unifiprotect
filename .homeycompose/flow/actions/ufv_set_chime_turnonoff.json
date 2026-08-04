@@ -5,7 +5,7 @@
     "nl": "Zet deurbell aan of uit"
   },
   "titleFormatted": {
-    "en": "Set chime [[device]] [[enabled]] with volume [[volume]]"
+    "en": "Set chime [[enabled]] with volume [[volume]]"
   },
   "args": [
     {
@@ -14,7 +14,7 @@
       },
       "name": "device",
       "type": "device",
-      "$filter": "driver_id=protectchime&capabilities=onoff|volume_set"
+      "filter": "driver_id=protectchime&capabilities=onoff|volume_set"
     },
     {
       "type": "checkbox",

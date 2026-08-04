@@ -24,21 +24,21 @@
       "values": [
         {
           "id": "never",
-          "label": {
+          "title": {
             "en": "Don't record",
             "nl": "Niet opnemen"
           }
         },
         {
           "id": "always",
-          "label": {
+          "title": {
             "en": "Always record",
             "nl": "Altijd opnemen"
           }
         },
         {
           "id": "detections",
-          "label": {
+          "title": {
             "en": "Record only motion",
             "nl": "Alleen beweging opnemen"
           }

@@ -5,14 +5,14 @@
     "nl": "Stel Night Vision in"
   },
   "titleFormatted": {
-    "en": "Set Night Vision mode [[nightvision_mode]] for [[device]]"
+    "en": "Set Night Vision mode [[nightvision_mode]]"
   },
   "args": [
     {
       "title": "Camera",
       "name": "device",
       "type": "device",
-      "$filter": "driver_id=protectdoorbell|protectcamera"
+      "filter": "driver_id=protectdoorbell|protectcamera"
     },
     {
       "title": "Night Vision",

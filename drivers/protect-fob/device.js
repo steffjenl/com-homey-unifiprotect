@@ -45,8 +45,8 @@ class ProtectFobDevice extends Homey.Device {
       await this.addCapability('measure_battery');
     }
 
-    if (!this.hasCapability('alarm_battery')) {
-      await this.addCapability('alarm_battery');
+    if (this.hasCapability('alarm_battery')) {
+      await this.removeCapability('alarm_battery');
     }
   }
 
@@ -77,17 +77,10 @@ class ProtectFobDevice extends Homey.Device {
       const percentage = wirelessBattery && typeof wirelessBattery.percentage !== 'undefined'
         ? wirelessBattery.percentage
         : (batteryStatus && typeof batteryStatus.percentage !== 'undefined' ? batteryStatus.percentage : null);
-      const isLow = wirelessBattery && typeof wirelessBattery.isLow !== 'undefined'
-        ? wirelessBattery.isLow
-        : (batteryStatus && typeof batteryStatus.isLow !== 'undefined' ? batteryStatus.isLow : null);
 
       if (percentage !== null && this.hasCapability('measure_battery')) {
         const normalized = Math.max(0, Math.min(100, Number(percentage)));
         await this.setCapabilityValue('measure_battery', normalized);
-      }
-
-      if (isLow !== null && this.hasCapability('alarm_battery')) {
-        await this.setCapabilityValue('alarm_battery', isLow === true);
       }
     } catch (error) {
       this.error(error);

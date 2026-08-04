@@ -5,14 +5,14 @@
     "nl": "Stel LCD bericht in"
   },
   "titleFormatted": {
-    "en": "Set LCD message [[message]] for [[device]]"
+    "en": "Set LCD message [[message]]"
   },
   "args": [
     {
       "title": "Doorbell",
       "name": "device",
       "type": "device",
-      "$filter": "driver_id=protectdoorbell"
+      "filter": "driver_id=protectdoorbell"
     },
     {
       "title": "Message",

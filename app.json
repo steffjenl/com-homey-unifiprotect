@@ -5864,8 +5864,8 @@
           "nl": "Zet camera status LED"
         },
         "titleFormatted": {
-          "en": "Set camera status LED [[device]] [[enabled]]",
-          "nl": "Zet camera status LED [[device]] [[enabled]]"
+          "en": "Set camera status LED [[enabled]]",
+          "nl": "Zet camera status LED [[enabled]]"
         },
         "args": [
           {
@@ -5874,7 +5874,8 @@
               "nl": "Camera"
             },
             "name": "device",
-            "type": "device"
+            "type": "device",
+            "filter": "driver_id=protectcamera"
           },
           {
             "type": "checkbox",
@@ -5893,7 +5894,7 @@
           "nl": "Zet deurbell aan of uit"
         },
         "titleFormatted": {
-          "en": "Set chime [[device]] [[enabled]] with volume [[volume]]"
+          "en": "Set chime [[enabled]] with volume [[volume]]"
         },
         "args": [
           {
@@ -5901,7 +5902,8 @@
               "en": "Chime"
             },
             "name": "device",
-            "type": "device"
+            "type": "device",
+            "filter": "driver_id=protectchime&capabilities=onoff|volume_set"
           },
           {
             "type": "checkbox",
@@ -5931,8 +5933,8 @@
           "nl": "Zet deurbel status LED"
         },
         "titleFormatted": {
-          "en": "Set doorbell status LED [[device]] [[enabled]]",
-          "nl": "Zet deurbel status LED [[device]] [[enabled]]"
+          "en": "Set doorbell status LED [[enabled]]",
+          "nl": "Zet deurbel status LED [[enabled]]"
         },
         "args": [
           {
@@ -5941,7 +5943,8 @@
               "nl": "Deurbel"
             },
             "name": "device",
-            "type": "device"
+            "type": "device",
+            "filter": "driver_id=protectdoorbell"
           },
           {
             "type": "checkbox",
@@ -5960,8 +5963,8 @@
           "nl": "Zet deurbel status geluid"
         },
         "titleFormatted": {
-          "en": "Set doorbell status sound [[device]] [[enabled]]",
-          "nl": "Zet deurbel status geluid [[device]] [[enabled]]"
+          "en": "Set doorbell status sound [[enabled]]",
+          "nl": "Zet deurbel status geluid [[enabled]]"
         },
         "args": [
           {
@@ -5970,7 +5973,8 @@
               "nl": "Deurbel"
             },
             "name": "device",
-            "type": "device"
+            "type": "device",
+            "filter": "driver_id=protectdoorbell"
           },
           {
             "type": "checkbox",
@@ -5989,13 +5993,14 @@
           "nl": "Stel LCD bericht in"
         },
         "titleFormatted": {
-          "en": "Set LCD message [[message]] for [[device]]"
+          "en": "Set LCD message [[message]]"
         },
         "args": [
           {
             "title": "Doorbell",
             "name": "device",
-            "type": "device"
+            "type": "device",
+            "filter": "driver_id=protectdoorbell"
           },
           {
             "title": "Message",
@@ -6012,13 +6017,14 @@
           "nl": "Stel Night Vision in"
         },
         "titleFormatted": {
-          "en": "Set Night Vision mode [[nightvision_mode]] for [[device]]"
+          "en": "Set Night Vision mode [[nightvision_mode]]"
         },
         "args": [
           {
             "title": "Camera",
             "name": "device",
-            "type": "device"
+            "type": "device",
+            "filter": "driver_id=protectdoorbell|protectcamera"
           },
           {
             "title": "Night Vision",
@@ -6097,21 +6103,21 @@
             "values": [
               {
                 "id": "never",
-                "label": {
+                "title": {
                   "en": "Don't record",
                   "nl": "Niet opnemen"
                 }
               },
               {
                 "id": "always",
-                "label": {
+                "title": {
                   "en": "Always record",
                   "nl": "Altijd opnemen"
                 }
               },
               {
                 "id": "detections",
-                "label": {
+                "title": {
                   "en": "Record only motion",
                   "nl": "Alleen beweging opnemen"
                 }
@@ -6127,13 +6133,14 @@
           "nl": "Stel opnamemodus in"
         },
         "titleFormatted": {
-          "en": "Set recording mode [[recording_mode]] for [[device]]"
+          "en": "Set recording mode [[recording_mode]]"
         },
         "args": [
           {
             "title": "Camera",
             "name": "device",
-            "type": "device"
+            "type": "device",
+            "filter": "driver_id=protectdoorbell|protectcamera"
           },
           {
             "title": "Recording mode",
@@ -6142,21 +6149,21 @@
             "values": [
               {
                 "id": "never",
-                "label": {
+                "title": {
                   "en": "Don't record",
                   "nl": "Niet opnemen"
                 }
               },
               {
                 "id": "always",
-                "label": {
+                "title": {
                   "en": "Always record",
                   "nl": "Altijd opnemen"
                 }
               },
               {
                 "id": "detections",
-                "label": {
+                "title": {
                   "en": "Record only motion",
                   "nl": "Alleen beweging opnemen"
                 }
@@ -6209,7 +6216,7 @@
           "nl": "Maak een momentopname"
         },
         "titleFormatted": {
-          "en": "Take a snapshot from [[device]] with an width from [[width]]"
+          "en": "Take a snapshot with an width from [[width]]"
         },
         "args": [
           {
@@ -6217,7 +6224,8 @@
               "en": "Camera"
             },
             "name": "device",
-            "type": "device"
+            "type": "device",
+            "filter": "driver_id=protectdoorbell|protectcamera"
           },
           {
             "title": {
@@ -8069,8 +8077,7 @@
       "id": "protect-fob",
       "class": "sensor",
       "capabilities": [
-        "measure_battery",
-        "alarm_battery"
+        "measure_battery"
       ],
       "energy": {
         "batteries": [

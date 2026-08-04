@@ -5,8 +5,8 @@
     "nl": "Zet camera status LED"
   },
   "titleFormatted": {
-    "en": "Set camera status LED [[device]] [[enabled]]",
-    "nl": "Zet camera status LED [[device]] [[enabled]]"
+    "en": "Set camera status LED [[enabled]]",
+    "nl": "Zet camera status LED [[enabled]]"
   },
   "args": [
     {
@@ -16,7 +16,7 @@
       },
       "name": "device",
       "type": "device",
-      "$filter": "driver_id=protectcamera"
+      "filter": "driver_id=protectcamera"
     },
     {
       "type": "checkbox",
