@@ -361,5 +361,8 @@
   },
   "1.11.2": {
     "en": "Add extra sensors for air sensor (alpha!)"
+  },
+  "1.11.3": {
+    "en": "Fix some issues from Homey Review"
   }
 }
