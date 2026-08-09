@@ -358,11 +358,18 @@ class ProtectAPI extends BaseClass {
     }
 
     getDoorbells() {
+        const DOORBELL_MODEL_HINTS = ['Doorbell', 'G6 Pro Entry', 'G6 Entry', 'G4 Doorbell'];
+
+        const isDoorbellCam = (cam) =>
+            cam.featureFlags?.isDoorbell === true ||
+            cam.featureFlags?.hasChime === true ||
+            DOORBELL_MODEL_HINTS.some(hint => cam.type?.includes(hint) || cam.marketName?.includes(hint));
+
         return new Promise((resolve, reject) => {
             this.webclient.get('cameras')
                 .then(response => {
                     let result = JSON.parse(response);
-                    result = result.filter(obj => obj.featureFlags.isDoorbell === true);
+                    result = result.filter(isDoorbellCam);
                     if (result) {
                         return resolve(result);
                     } else {
