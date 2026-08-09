@@ -752,7 +752,7 @@ class Doorbell extends Homey.Device {
       // Create the video object
       this.video = await this.homey.videos.createVideoRTSP({
         allowInvalidCertificates: true,
-        demuxer: 'h265',
+        demuxer: 'h264',
       });
 
       // Register the video url listener
