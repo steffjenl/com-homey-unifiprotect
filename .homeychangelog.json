@@ -364,5 +364,8 @@
   },
   "1.11.3": {
     "en": "Fix some issues from Homey Review"
+  },
+  "1.11.4": {
+    "en": "Fix: Encoding on Apple devices "
   }
 }
