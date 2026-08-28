@@ -1,13 +1,15 @@
 'use strict';
 
 const Homey = require('homey');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
-module.exports = class MyDevice extends Homey.Device {
+class MyDevice extends Homey.Device {
 
   /**
      * onInit is called when the device is initialized.
      */
   async onInit() {
+    this._startConnectionMonitoring('access');
     if (this.hasCapability('alarm_garagedoor_open')) {
       await this.removeCapability('alarm_garagedoor_open');
     }
@@ -93,4 +95,8 @@ module.exports = class MyDevice extends Homey.Device {
     }
   }
 
-};
+}
+
+Object.assign(MyDevice.prototype, ConnectionMonitorMixin);
+
+module.exports = MyDevice;

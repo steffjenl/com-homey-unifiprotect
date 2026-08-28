@@ -2,12 +2,14 @@
 
 const Homey = require('homey');
 const UfvConstants = require('../../library/constants');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 class Chime extends Homey.Device {
   /**
    * onInit is called when the device is initialized.
    */
   async onInit() {
+    this._startConnectionMonitoring('v2');
     await this.waitForBootstrap();
     this.homey.app.debug('UnifiChime Device has been initialized');
   }
@@ -103,5 +105,7 @@ class Chime extends Homey.Device {
     }
   }
 }
+
+Object.assign(Chime.prototype, ConnectionMonitorMixin);
 
 module.exports = Chime;

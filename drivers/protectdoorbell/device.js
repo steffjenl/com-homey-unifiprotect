@@ -4,6 +4,7 @@ const Homey = require('homey');
 const http = require('http');
 const https = require('https');
 const SmartDetectionMixin = require('../../library/SmartDetectionMixin');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 function requestByUrl(url, options, onResponse) {
   const parsedUrl = new URL(url);
@@ -105,6 +106,7 @@ class Doorbell extends Homey.Device {
      * onInit is called when the device is initialized.
      */
   async onInit() {
+    this._startConnectionMonitoring('v2');
     this.device = this;
     this.cloudUrl = null;
     this.cloudUrlPackage = null;
@@ -1013,5 +1015,7 @@ class Doorbell extends Homey.Device {
   }
 
 }
+
+Object.assign(Doorbell.prototype, ConnectionMonitorMixin);
 
 module.exports = Doorbell;

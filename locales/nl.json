@@ -231,5 +231,14 @@
             "blizzard": "Sneeuwstorm",
             "not_available": "N.v.t."
         }
+    },
+    "msg": {
+        "controller_unreachable": "Controller onbereikbaar. Controleer het IP-adres in de instellingen.",
+        "repair_controller_unreachable": "Werk het controller IP-adres bij en probeer opnieuw."
+    },
+    "notification": {
+        "controller_error_title": "UniFi Protect Controller Onbereikbaar",
+        "controller_error_body": "Controller op {ip}:{port} reageert niet. Controleer je netwerk- en IP-configuratie.",
+        "repair_action": "Instellingen openen"
     }
 }

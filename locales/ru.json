@@ -225,5 +225,14 @@
             "Disconnected": "Отключено",
             "Initialized": "Инициализация"
         }
+    },
+    "msg": {
+        "controller_unreachable": "Контроллер недоступен. Проверьте IP-адрес в настройках.",
+        "repair_controller_unreachable": "Обновите IP-адрес контроллера и попробуйте снова."
+    },
+    "notification": {
+        "controller_error_title": "Контроллер UniFi Protect недоступен",
+        "controller_error_body": "Контроллер на {ip}:{port} не отвечает. Проверьте сеть и настройки IP.",
+        "repair_action": "Открыть настройки"
     }
 }

@@ -20,7 +20,9 @@
   Homey.showLoadingOverlay();
 
   Homey.emit("validate", null).then(function (result) {
-    if (result === 'ok') {
+    if (result === 'ok:repair') {
+      Homey.done();
+    } else if (result === 'ok') {
       Homey.showView('list_devices');
     } else {
       showNotConfigured(result);

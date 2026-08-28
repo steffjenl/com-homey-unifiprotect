@@ -2,10 +2,12 @@
 
 const Homey = require('homey');
 const UfvConstants = require('../../library/constants');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 class WeatherDevice extends Homey.Device {
 
   async onInit() {
+    this._startConnectionMonitoring('v2');
     this.homey.app.debug('[WeatherDevice] initializing');
     this._isActive = true;
     this._bootstrapTimer = null;
@@ -190,6 +192,8 @@ class WeatherDevice extends Homey.Device {
   }
 
 }
+
+Object.assign(WeatherDevice.prototype, ConnectionMonitorMixin);
 
 module.exports = WeatherDevice;
 

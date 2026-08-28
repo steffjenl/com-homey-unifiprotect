@@ -2,12 +2,14 @@
 
 const Homey = require('homey');
 const UfvConstants = require('../../library/constants');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 class Siren extends Homey.Device {
     /**
      * onInit is called when the device is initialized.
      */
     async onInit() {
+    this._startConnectionMonitoring('v2');
         await this.waitForBootstrap();
         this.homey.app.debug('UniFiSiren Device has been initialized');
     }
@@ -93,5 +95,7 @@ class Siren extends Homey.Device {
         }
     }
 }
+
+Object.assign(Siren.prototype, ConnectionMonitorMixin);
 
 module.exports = Siren;

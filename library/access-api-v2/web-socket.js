@@ -122,6 +122,7 @@ class AccessWebSocket extends BaseClass {
         this.loggedInStatus = 'Connected';
         this._reconnectAttempt = 0;
         this._clearReconnectTimeout();
+        this.homey.app.accessApi.emit('access-connection-change', {state: 'connected', host: this.homey.app.accessApi.webclient._serverHost, port: this.homey.app.accessApi.webclient._serverPort});
         this.heartbeat();
       });
 
@@ -135,6 +136,7 @@ class AccessWebSocket extends BaseClass {
         this._eventListenerConfigured = false;
         this.homey.clearInterval(this.pingTimeout);
         this.loggedInStatus = 'Disconnected';
+        this.homey.app.accessApi.emit('access-connection-change', {state: 'disconnected', host: this.homey.app.accessApi.webclient._serverHost, port: this.homey.app.accessApi.webclient._serverPort});
         this._scheduleReconnect();
       });
 
@@ -142,7 +144,8 @@ class AccessWebSocket extends BaseClass {
         this.homey.app.log(error);
         // If we're closing before fully established it's because we're shutting down the API - ignore it.
         if (error.message !== 'WebSocket was closed before the connection was established') {
-          this.homey.app.log(this.homey.app.accessApi.webclient._serverHost, +': ' + error);
+          this.homey.app.log(`${this.homey.app.accessApi.webclient._serverHost}: ${error}`);
+          this.homey.emit('access-connection-error', {error, host: this.homey.app.accessApi.webclient._serverHost, port: this.homey.app.accessApi.webclient._serverPort});
         }
 
         this.loggedInStatus = error.message;

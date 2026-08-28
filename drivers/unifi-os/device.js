@@ -1,13 +1,15 @@
 'use strict';
 
 const Homey = require('homey');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
-module.exports = class UniFiOSDevice extends Homey.Device {
+class UniFiOSDevice extends Homey.Device {
 
   /**
    * onInit is called when the device is initialized.
    */
   async onInit() {
+    this._startConnectionMonitoring('v2');
     await this._createMissingCapabilities();
     this.log('UniFiOSDevice has been initialized');
   }
@@ -99,4 +101,8 @@ module.exports = class UniFiOSDevice extends Homey.Device {
     }
   }
 
-};
+}
+
+Object.assign(UniFiOSDevice.prototype, ConnectionMonitorMixin);
+
+module.exports = UniFiOSDevice;

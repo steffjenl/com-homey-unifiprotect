@@ -1,0 +1,181 @@
+<body>
+  <style>
+    .repair-container {
+      padding: 14px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      box-sizing: border-box;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .repair-title {
+      font-size: 1.15em;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #111;
+    }
+    .repair-status {
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 0.9em;
+      line-height: 1.4;
+    }
+    .status-ok {
+      background-color: #e6f7ec;
+      color: #1b6d34;
+      border: 1px solid #b7ebc7;
+    }
+    .status-error {
+      background-color: #fdeeee;
+      color: #a81c1c;
+      border: 1px solid #f9c6c6;
+    }
+    .status-loading {
+      background-color: #f0f7fb;
+      color: #12658c;
+      border: 1px solid #cce5f3;
+    }
+    .form-group {
+      margin-bottom: 12px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.85em;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #333;
+    }
+    .form-input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95em;
+      box-sizing: border-box;
+    }
+    .button-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .btn-primary {
+      flex: 1;
+      padding: 10px 14px;
+      background-color: #007aff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95em;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-primary:disabled {
+      background-color: #a0c9f7;
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      padding: 10px 16px;
+      background-color: #e5e5ea;
+      color: #333;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95em;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+
+  <div class="repair-container">
+    <div class="repair-title" id="device-title">UniFi Repair</div>
+    <div id="status-box" class="repair-status status-loading">Checking connection...</div>
+
+    <div class="form-group">
+      <label class="form-label" for="txt_host">Controller IP / Host</label>
+      <input type="text" id="txt_host" class="form-input" placeholder="192.168.1.1" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="txt_port">Port</label>
+      <input type="text" id="txt_port" class="form-input" value="443" />
+    </div>
+
+    <div class="form-group" id="group_token">
+      <label class="form-label" for="txt_token">API Key / Token (optional)</label>
+      <input type="password" id="txt_token" class="form-input" placeholder="Keep current or enter new" />
+    </div>
+
+    <div class="button-row">
+      <button type="button" class="btn-primary" id="btn-save">Save & Reconnect</button>
+      <button type="button" class="btn-secondary" id="btn-done">Done</button>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    Homey.setTitle(__('pair.validate.title'));
+
+    var statusBox = document.getElementById('status-box');
+    var txtHost = document.getElementById('txt_host');
+    var txtPort = document.getElementById('txt_port');
+    var txtToken = document.getElementById('txt_token');
+    var btnSave = document.getElementById('btn-save');
+    var btnDone = document.getElementById('btn-done');
+    var deviceTitle = document.getElementById('device-title');
+
+    Homey.emit('get_repair_data', null).then(function(data) {
+      if (data) {
+        if (data.deviceName) {
+          deviceTitle.textContent = data.deviceName + ' - Repair';
+        }
+        if (data.host) txtHost.value = data.host;
+        if (data.port) txtPort.value = data.port;
+        if (data.apiKey) txtToken.value = data.apiKey;
+
+        if (data.connected) {
+          statusBox.className = 'repair-status status-ok';
+          statusBox.textContent = 'Controller is currently connected and reachable.';
+        } else {
+          statusBox.className = 'repair-status status-error';
+          statusBox.textContent = 'Controller unreachable (' + (data.status || 'Disconnected') + '). Check or update IP address below.';
+        }
+      }
+    }).catch(function(err) {
+      statusBox.className = 'repair-status status-error';
+      statusBox.textContent = 'Status: ' + (err.message || err);
+    });
+
+    btnSave.addEventListener('click', function() {
+      var host = txtHost.value.trim();
+      var port = txtPort.value.trim() || '443';
+      var token = txtToken.value.trim();
+
+      if (!host) {
+        statusBox.className = 'repair-status status-error';
+        statusBox.textContent = 'Please enter an IP address or hostname.';
+        return;
+      }
+
+      statusBox.className = 'repair-status status-loading';
+      statusBox.textContent = 'Connecting to ' + host + ':' + port + '...';
+      btnSave.disabled = true;
+
+      Homey.emit('save_repair_data', { host: host, port: port, token: token }).then(function(res) {
+        btnSave.disabled = false;
+        if (res && res.status === 'ok') {
+          statusBox.className = 'repair-status status-ok';
+          statusBox.textContent = 'Connection restored successfully!';
+        } else {
+          statusBox.className = 'repair-status status-error';
+          statusBox.textContent = 'Connection failed: ' + (res && res.error ? res.error : 'Could not reach controller.');
+        }
+      }).catch(function(err) {
+        btnSave.disabled = false;
+        statusBox.className = 'repair-status status-error';
+        statusBox.textContent = 'Error: ' + (err.message || err);
+      });
+    });
+
+    btnDone.addEventListener('click', function() {
+      Homey.done();
+    });
+  </script>
+</body>

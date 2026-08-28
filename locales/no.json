@@ -225,5 +225,14 @@
             "Disconnected": "Frakoblet",
             "Initialized": "Starter"
         }
+    },
+    "msg": {
+        "controller_unreachable": "Kontrolleren er utilgjengelig. Sjekk IP-adressen i innstillingene.",
+        "repair_controller_unreachable": "Oppdater kontrollerens IP-adresse og prøv igjen."
+    },
+    "notification": {
+        "controller_error_title": "UniFi Protect-kontroller utilgjengelig",
+        "controller_error_body": "Kontrolleren på {ip}:{port} svarer ikke. Sjekk nettverket og IP-konfigurasjonen.",
+        "repair_action": "Åpne innstillinger"
     }
 }

@@ -122,6 +122,7 @@ class ProtectWebSocket extends BaseClass {
         this.loggedInStatus = 'Connected';
         this._reconnectAttempt = 0;
         this._clearReconnectTimeout();
+        this.homey.app.apiV2.emit('protectv2-connection-change', {state: 'connected', host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort});
         this.heartbeat();
       });
 
@@ -135,6 +136,7 @@ class ProtectWebSocket extends BaseClass {
         this._eventListenerConfigured = false;
         this.homey.clearInterval(this.pingTimeout);
         this.loggedInStatus = 'Disconnected';
+        this.homey.app.apiV2.emit('protectv2-connection-change', {state: 'disconnected', host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort});
         this._scheduleReconnect();
       });
 
@@ -142,7 +144,8 @@ class ProtectWebSocket extends BaseClass {
         this.homey.app.log(error);
         // If we're closing before fully established it's because we're shutting down the API - ignore it.
         if (error.message !== 'WebSocket was closed before the connection was established') {
-          this.homey.app.log(this.homey.app.apiV2.webclient._serverHost, +': ' + error);
+          this.homey.app.log(`${this.homey.app.apiV2.webclient._serverHost}: ${error}`);
+          this.homey.emit('protectv2-connection-error', {error, host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort});
         }
 
         this.loggedInStatus = error.message;

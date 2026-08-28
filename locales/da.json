@@ -225,5 +225,14 @@
             "Disconnected": "Forbindelsen afbrudt",
             "Initialized": "Starter"
         }
+    },
+    "msg": {
+        "controller_unreachable": "Styreenheden er ikke tilgængelig. Tjek IP-adressen i indstillingerne.",
+        "repair_controller_unreachable": "Opdater styreenhedens IP-adresse og prøv igen."
+    },
+    "notification": {
+        "controller_error_title": "UniFi Protect-styreenhed ikke tilgængelig",
+        "controller_error_body": "Styreenheden på {ip}:{port} svarer ikke. Tjek dit netværk og IP-konfiguration.",
+        "repair_action": "Åbn indstillinger"
     }
 }

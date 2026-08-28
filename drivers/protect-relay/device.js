@@ -1,9 +1,11 @@
 'use strict';
 
 const Homey = require('homey');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 class Relay extends Homey.Device {
   async onInit() {
+    this._startConnectionMonitoring('v2');
     await this.waitForBootstrap();
     this.homey.app.debug('[RelayDevice] UniFiRelay Device has been initialized');
   }
@@ -317,6 +319,8 @@ class Relay extends Homey.Device {
     return !this.isRelayStatusOpen();
   }
 }
+
+Object.assign(Relay.prototype, ConnectionMonitorMixin);
 
 module.exports = Relay;
 

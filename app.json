@@ -7832,6 +7832,11 @@
           "template": "add_devices"
         }
       ],
+      "repair": [
+        {
+          "id": "validate"
+        }
+      ],
       "id": "access-door"
     },
     {
@@ -7880,6 +7885,11 @@
           "template": "add_devices"
         }
       ],
+      "repair": [
+        {
+          "id": "validate"
+        }
+      ],
       "id": "access-garagedoor"
     },
     {
@@ -7924,6 +7934,11 @@
         {
           "id": "add_devices",
           "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "validate"
         }
       ],
       "id": "access-hub"
@@ -7974,6 +7989,11 @@
         {
           "id": "add_devices",
           "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "validate"
         }
       ]
     },
@@ -8026,6 +8046,11 @@
           "template": "add_devices"
         }
       ],
+      "repair": [
+        {
+          "id": "validate"
+        }
+      ],
       "id": "access-reader"
     },
     {
@@ -8068,6 +8093,11 @@
         {
           "id": "add_devices",
           "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "validate"
         }
       ],
       "platforms": [
@@ -8123,6 +8153,11 @@
           "template": "add_devices"
         }
       ],
+      "repair": [
+        {
+          "id": "validate"
+        }
+      ],
       "platforms": [
         "local"
       ],
@@ -8170,6 +8205,11 @@
         {
           "id": "add_devices",
           "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "validate"
         }
       ],
       "platforms": [
@@ -8279,6 +8319,11 @@
           "id": "add_devices",
           "template": "add_devices"
         }
+      ],
+      "repair": [
+        {
+          "id": "validate"
+        }
       ]
     },
     {
@@ -8320,6 +8365,11 @@
         {
           "id": "add_devices",
           "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "validate"
         }
       ],
       "platforms": [
@@ -8407,6 +8457,11 @@
           "template": "add_devices"
         }
       ],
+      "repair": [
+        {
+          "id": "validate"
+        }
+      ],
       "platforms": [
         "local"
       ],
@@ -8454,6 +8509,11 @@
         {
           "id": "add_devices",
           "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "validate"
         }
       ],
       "platforms": [
@@ -8560,6 +8620,11 @@
           "template": "add_devices"
         }
       ],
+      "repair": [
+        {
+          "id": "validate"
+        }
+      ],
       "settings": [
         {
           "id": "pollInterval",
@@ -8634,6 +8699,11 @@
         {
           "id": "add_devices",
           "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "validate"
         }
       ],
       "platforms": [
@@ -8738,6 +8808,11 @@
           "template": "add_devices"
         }
       ],
+      "repair": [
+        {
+          "id": "validate"
+        }
+      ],
       "platforms": [
         "local"
       ],
@@ -8796,6 +8871,11 @@
         {
           "id": "add_devices",
           "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "validate"
         }
       ],
       "platforms": [
@@ -8925,6 +9005,11 @@
           "template": "add_devices"
         }
       ],
+      "repair": [
+        {
+          "id": "validate"
+        }
+      ],
       "platforms": [
         "local"
       ],
@@ -8988,6 +9073,11 @@
         {
           "id": "add_devices",
           "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "validate"
         }
       ],
       "platforms": [
@@ -9063,6 +9153,11 @@
         {
           "id": "add_devices",
           "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "validate"
         }
       ],
       "id": "unifi-os"

@@ -1,13 +1,15 @@
 'use strict';
 
 const Homey = require('homey');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
-module.exports = class Hub extends Homey.Device {
+class Hub extends Homey.Device {
 
   /**
      * onInit is called when the device is initialized.
      */
   async onInit() {
+    this._startConnectionMonitoring('access');
     this.log('Access Hub has been initialized');
   }
 
@@ -50,4 +52,8 @@ module.exports = class Hub extends Homey.Device {
     // this.setCapabilityValue('locked', value);
   }
 
-};
+}
+
+Object.assign(Hub.prototype, ConnectionMonitorMixin);
+
+module.exports = Hub;

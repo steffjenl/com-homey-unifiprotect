@@ -1,9 +1,11 @@
 'use strict';
 
 const Homey = require('homey');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 class IntercomDevice extends Homey.Device {
   async onInit() {
+    this._startConnectionMonitoring('access');
     this.log('Access Intercom Device has been initialized');
 
     this.registerCapabilityListener('locked', async (value) => {
@@ -45,5 +47,7 @@ class IntercomDevice extends Homey.Device {
     this.driver.triggerBellPressed(this);
   }
 }
+
+Object.assign(IntercomDevice.prototype, ConnectionMonitorMixin);
 
 module.exports = IntercomDevice;

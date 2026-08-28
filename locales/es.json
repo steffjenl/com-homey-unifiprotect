@@ -231,5 +231,14 @@
             "Disconnected": "Desconectado",
             "Initialized": "Iniciando"
         }
+    },
+    "msg": {
+        "controller_unreachable": "Controlador inaccesible. Verifique la dirección IP en la configuración.",
+        "repair_controller_unreachable": "Actualice la dirección IP del controlador e intente de nuevo."
+    },
+    "notification": {
+        "controller_error_title": "Controlador UniFi Protect inaccesible",
+        "controller_error_body": "El controlador en {ip}:{port} no responde. Verifique su red y configuración de IP.",
+        "repair_action": "Abrir configuración"
     }
 }

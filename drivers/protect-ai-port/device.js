@@ -1,9 +1,11 @@
 'use strict';
 
 const Homey = require('homey');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 class AiPortDevice extends Homey.Device {
   async onInit() {
+    this._startConnectionMonitoring('v2');
     this.homey.app.debug('[AiPortDevice] UniFiAiPort Device has been initialized');
     await this._initAiPortData();
   }
@@ -45,5 +47,7 @@ class AiPortDevice extends Homey.Device {
     }
   }
 }
+
+Object.assign(AiPortDevice.prototype, ConnectionMonitorMixin);
 
 module.exports = AiPortDevice;

@@ -10,7 +10,60 @@ class AppProtect extends BaseClass {
 
     async onInit() {
         this.homey.app.debug('AppProtect onInit');
+        this._notificationDebounceTimeout = null;
+        this._lastNotificationTimestamp = 0;
+        this._setupConnectionMonitoring();
         await this.registerFlowAndActionCards();
+    }
+
+    _setupConnectionMonitoring() {
+        if (this.homey.app.apiV2) {
+            this.homey.app.apiV2.on('protectv2-connection-error', (details) => {
+                this._handleConnectionError('v2', details);
+            });
+            this.homey.app.apiV2.on('protectv2-connection-change', (details) => {
+                if (details.state === 'connected') {
+                    if (this._notificationDebounceTimeout) {
+                        this.homey.clearTimeout(this._notificationDebounceTimeout);
+                        this._notificationDebounceTimeout = null;
+                    }
+                }
+            });
+        }
+        if (this.homey.app.api) {
+            this.homey.app.api.on('protectv1-connection-error', (details) => {
+                this._handleConnectionError('v1', details);
+            });
+        }
+    }
+
+    _handleConnectionError(apiType, details) {
+        if (this._notificationDebounceTimeout) {
+            return;
+        }
+
+        // Debounce notification by 20 seconds
+        this._notificationDebounceTimeout = this.homey.setTimeout(() => {
+            this._notificationDebounceTimeout = null;
+
+            // Only notify at most once per 10 minutes to avoid spamming
+            const now = Date.now();
+            if (now - this._lastNotificationTimestamp < 600000) {
+                return;
+            }
+            this._lastNotificationTimestamp = now;
+
+            const host = details.host || 'unknown';
+            const port = details.port || (apiType === 'v2' ? '443' : '443');
+
+            try {
+                this.homey.notifications.createNotification({
+                    excerpt: this.homey.__('notification.controller_error_body', { ip: host, port: String(port) }),
+                }).catch(this.error);
+            } catch (err) {
+                this.homey.app.debug('[AppProtect] Failed to create notification: ' + err);
+            }
+        }, 20000);
     }
 
     async registerFlowAndActionCards() {

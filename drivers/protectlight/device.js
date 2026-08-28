@@ -2,12 +2,14 @@
 
 const Homey = require('homey');
 const UfvConstants = require('../../library/constants');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 class Light extends Homey.Device {
   /**
    * onInit is called when the device is initialized.
    */
   async onInit() {
+    this._startConnectionMonitoring('v2');
     await this.waitForBootstrap();
     this.homey.app.debug('UnifiLight Device has been initialized');
   }
@@ -258,5 +260,7 @@ class Light extends Homey.Device {
     }
   }
 }
+
+Object.assign(Light.prototype, ConnectionMonitorMixin);
 
 module.exports = Light;

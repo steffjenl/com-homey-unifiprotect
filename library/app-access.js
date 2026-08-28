@@ -6,7 +6,53 @@ class AppAccess extends BaseClass {
 
   async onInit() {
     this.homey.app.debug('AppAccess onInit');
+    this._notificationDebounceTimeout = null;
+    this._lastNotificationTimestamp = 0;
+    this._setupConnectionMonitoring();
     await this.registerFlowAndActionCards();
+  }
+
+  _setupConnectionMonitoring() {
+    if (this.homey.app.accessApi) {
+      this.homey.app.accessApi.on('access-connection-error', (details) => {
+        this._handleConnectionError(details);
+      });
+      this.homey.app.accessApi.on('access-connection-change', (details) => {
+        if (details.state === 'connected') {
+          if (this._notificationDebounceTimeout) {
+            this.homey.clearTimeout(this._notificationDebounceTimeout);
+            this._notificationDebounceTimeout = null;
+          }
+        }
+      });
+    }
+  }
+
+  _handleConnectionError(details) {
+    if (this._notificationDebounceTimeout) {
+      return;
+    }
+
+    this._notificationDebounceTimeout = this.homey.setTimeout(() => {
+      this._notificationDebounceTimeout = null;
+
+      const now = Date.now();
+      if (now - this._lastNotificationTimestamp < 600000) {
+        return;
+      }
+      this._lastNotificationTimestamp = now;
+
+      const host = details.host || 'unknown';
+      const port = details.port || '443';
+
+      try {
+        this.homey.notifications.createNotification({
+          excerpt: this.homey.__('notification.controller_error_body', { ip: host, port: String(port) }),
+        }).catch(this.error);
+      } catch (err) {
+        this.homey.app.debug('[AppAccess] Failed to create notification: ' + err);
+      }
+    }, 20000);
   }
 
   async registerFlowAndActionCards() {

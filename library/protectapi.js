@@ -225,6 +225,7 @@ class ProtectAPI extends BaseClass {
                     // Connected
                     this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connected');
                     this.loggedInStatus = 'Connected';
+                    this.emit('protectv1-connection-change', { state: 'connected', host, port });
                     //
                     return resolve('Logged in...');
                 });
@@ -233,6 +234,8 @@ class ProtectAPI extends BaseClass {
             req.on('error', error => {
                 this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
                 this.loggedInStatus = 'Disconnected';
+                this.emit('protectv1-connection-error', { error, host, port });
+                this.emit('protectv1-connection-change', { state: 'disconnected', host, port });
                 return reject(error);
             });
 

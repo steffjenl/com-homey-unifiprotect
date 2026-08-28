@@ -2,6 +2,7 @@
 
 const Homey = require('homey');
 const UfvConstants = require('../../library/constants');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 // UP-AirQuality reports continuous readings under sensor.airQuality (bootstrap) /
 // payload.airQuality (websocket update), keyed by metric name. Confirmed against a real
@@ -27,6 +28,7 @@ class Sensor extends Homey.Device {
      * onInit is called when the device is initialized.
      */
     async onInit() {
+        this._startConnectionMonitoring('v2');
         await this.waitForBootstrap();
         this.homey.app.debug('UnifiSensor Device has been initialized');
     }
@@ -652,5 +654,7 @@ class Sensor extends Homey.Device {
         }
     }
 }
+
+Object.assign(Sensor.prototype, ConnectionMonitorMixin);
 
 module.exports = Sensor;

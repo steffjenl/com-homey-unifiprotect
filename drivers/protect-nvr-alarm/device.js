@@ -2,10 +2,12 @@
 
 const Homey = require('homey');
 const UfvConstants = require('../../library/constants');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 class NVRAlarmDevice extends Homey.Device {
 
   async onInit() {
+    this._startConnectionMonitoring('v2');
     this.homey.app.debug('[NVRAlarmDevice] initializing');
     this._isActive = true;
     this._bootstrapTimer = null;
@@ -264,5 +266,7 @@ class NVRAlarmDevice extends Homey.Device {
   }
 
 }
+
+Object.assign(NVRAlarmDevice.prototype, ConnectionMonitorMixin);
 
 module.exports = NVRAlarmDevice;

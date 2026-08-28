@@ -415,6 +415,48 @@ class UniFiProtect extends Homey.App {
         return this.apiV2 && this.apiV2.webclient && this.apiV2.webclient._apiToken;
     }
 
+    /**
+     * Check if a specific controller API is currently reachable
+     * @param {string} apiType - 'v1', 'v2', or 'access'
+     * @returns {boolean}
+     */
+    isControllerReachable(apiType) {
+        if (apiType === 'v2') {
+            return this.apiV2 && this.apiV2.websocket && this.apiV2.websocket.isWebsocketConnected();
+        }
+        if (apiType === 'v1') {
+            return this.api && this.api.ws && this.api.ws.isWebsocketConnected();
+        }
+        if (apiType === 'access') {
+            return this.accessApi && this.accessApi.websocket && this.accessApi.websocket.isWebsocketConnected();
+        }
+        return false;
+    }
+
+    /**
+     * Get overall connection status across all configured APIs
+     * @returns {object} status object with states for v1, v2, access
+     */
+    getConnectionStatus() {
+        return {
+            v1: {
+                configured: !!this.isV1Available(),
+                connected: this.isControllerReachable('v1'),
+                status: this.api ? this.api.loggedInStatus : 'Not initialized',
+            },
+            v2: {
+                configured: !!this.isV2Available(),
+                connected: this.isControllerReachable('v2'),
+                status: this.apiV2 && this.apiV2.websocket ? this.apiV2.websocket.loggedInStatus : 'Not initialized',
+            },
+            access: {
+                configured: !!(this.accessApi && this.accessApi.webclient && this.accessApi.webclient._apiToken),
+                connected: this.isControllerReachable('access'),
+                status: this.accessApi && this.accessApi.websocket ? this.accessApi.websocket.loggedInStatus : 'Not initialized',
+            },
+        };
+    }
+
     async debug() {
         const logFile = '/userdata/application-log.log';
         if (Homey.env.DEBUG === 'true') {

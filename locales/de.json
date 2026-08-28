@@ -231,5 +231,14 @@
             "Disconnected": "Getrennt",
             "Initialized": "Wird gestartet"
         }
+    },
+    "msg": {
+        "controller_unreachable": "Controller nicht erreichbar. Überprüfen Sie die IP-Adresse in den Einstellungen.",
+        "repair_controller_unreachable": "Aktualisieren Sie die Controller-IP-Adresse und versuchen Sie es erneut."
+    },
+    "notification": {
+        "controller_error_title": "UniFi Protect Controller nicht erreichbar",
+        "controller_error_body": "Controller unter {ip}:{port} antwortet nicht. Überprüfen Sie Ihre Netzwerk- und IP-Konfiguration.",
+        "repair_action": "Einstellungen öffnen"
     }
 }

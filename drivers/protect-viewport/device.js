@@ -1,9 +1,11 @@
 'use strict';
 
 const Homey = require('homey');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 class ViewportDevice extends Homey.Device {
   async onInit() {
+    this._startConnectionMonitoring('v2');
     this.homey.app.debug('[ViewportDevice] UniFiViewport Device has been initialized');
     await this._initViewportData();
   }
@@ -44,5 +46,7 @@ class ViewportDevice extends Homey.Device {
     }
   }
 }
+
+Object.assign(ViewportDevice.prototype, ConnectionMonitorMixin);
 
 module.exports = ViewportDevice;

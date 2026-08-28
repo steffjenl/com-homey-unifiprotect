@@ -1,9 +1,11 @@
 'use strict';
 
 const Homey = require('homey');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 class ProtectHornSpeakerDevice extends Homey.Device {
   async onInit() {
+    this._startConnectionMonitoring('v2');
     await this.waitForBootstrap();
     this.homey.app.debug('[ProtectHornSpeakerDevice] initialized');
   }
@@ -106,6 +108,8 @@ class ProtectHornSpeakerDevice extends Homey.Device {
     }
   }
 }
+
+Object.assign(ProtectHornSpeakerDevice.prototype, ConnectionMonitorMixin);
 
 module.exports = ProtectHornSpeakerDevice;
 

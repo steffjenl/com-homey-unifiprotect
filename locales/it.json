@@ -225,5 +225,14 @@
             "Disconnected": "Disconnesso",
             "Initialized": "Avvio in corso"
         }
+    },
+    "msg": {
+        "controller_unreachable": "Controller non raggiungibile. Verifica l'indirizzo IP nelle impostazioni.",
+        "repair_controller_unreachable": "Aggiorna l'indirizzo IP del controller e riprova."
+    },
+    "notification": {
+        "controller_error_title": "Controller UniFi Protect non raggiungibile",
+        "controller_error_body": "Il controller su {ip}:{port} non risponde. Verifica la tua rete e configurazione IP.",
+        "repair_action": "Apri impostazioni"
     }
 }

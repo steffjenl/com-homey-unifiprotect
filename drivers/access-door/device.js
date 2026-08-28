@@ -1,13 +1,15 @@
 'use strict';
 
 const Homey = require('homey');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
-module.exports = class MyDevice extends Homey.Device {
+class MyDevice extends Homey.Device {
 
   /**
      * onInit is called when the device is initialized.
      */
   async onInit() {
+    this._startConnectionMonitoring('access');
     this.log('Access Door has been initialized');
     this.registerCapabilityListener('locked', async (value) => {
       this.homey.app.debug(`[AccessDoorDevice] Setting Door Locked to ${value}`);
@@ -77,4 +79,8 @@ module.exports = class MyDevice extends Homey.Device {
     this.setCapabilityValue('alarm_contact', value).catch(this.error);
   }
 
-};
+}
+
+Object.assign(MyDevice.prototype, ConnectionMonitorMixin);
+
+module.exports = MyDevice;

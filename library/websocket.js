@@ -83,6 +83,7 @@ class ProtectWebSocket extends BaseClass {
         this.homey.app.debug(`${this.homey.app.api.getNvrName()}: Connected to the UniFi realtime update events API.`);
         this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Connected');
         this.loggedInStatus = 'Connected';
+        this.homey.app.api.emit('protectv1-connection-change', {state: 'connected', host: this.homey.app.api.getHost()});
         this.heartbeat();
       });
 
@@ -97,13 +98,15 @@ class ProtectWebSocket extends BaseClass {
         this.homey.clearTimeout(this.pingTimeout);
         this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Disconnected');
         this.loggedInStatus = 'Disconnected';
+        this.homey.app.api.emit('protectv1-connection-change', {state: 'disconnected', host: this.homey.app.api.getHost()});
       });
 
       this._eventListener.on('error', (error) => {
         this.homey.app.debug(error);
         // If we're closing before fully established it's because we're shutting down the API - ignore it.
         if (error.message !== 'WebSocket was closed before the connection was established') {
-          this.homey.app.debug(this.homey.app.api.getHost(), +': ' + error);
+          this.homey.app.debug(`${this.homey.app.api.getHost()}: ${error}`);
+          this.homey.emit('protectv1-connection-error', {error, host: this.homey.app.api.getHost()});
         }
 
         this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, error.message);

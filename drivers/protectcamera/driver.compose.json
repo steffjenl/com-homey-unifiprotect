@@ -48,6 +48,11 @@
       "template": "add_devices"
     }
   ],
+  "repair": [
+    {
+      "id": "validate"
+    }
+  ],
   "platforms": ["local"],
   "connectivity": ["cloud"]
 }

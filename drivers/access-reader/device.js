@@ -1,13 +1,15 @@
 'use strict';
 
 const Homey = require('homey');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
-module.exports = class Reader extends Homey.Device {
+class Reader extends Homey.Device {
 
   /**
      * onInit is called when the device is initialized.
      */
   async onInit() {
+    this._startConnectionMonitoring('access');
     this.log('Access Reader has been initialized');
     this.registerCapabilityListener('reader_nfc_enabled', async (value) => {
       this.homey.app.debug(`[AccessReaderDevice] Setting NFC to ${value}`);
@@ -107,4 +109,8 @@ module.exports = class Reader extends Homey.Device {
     this.setCapabilityValue('reader_mobile-tap_enabled', value);
   }
 
-};
+}
+
+Object.assign(Reader.prototype, ConnectionMonitorMixin);
+
+module.exports = Reader;

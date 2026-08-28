@@ -225,5 +225,14 @@
             "Disconnected": "Frånkopplad",
             "Initialized": "Startar"
         }
+    },
+    "msg": {
+        "controller_unreachable": "Kontrollenheten kan inte nås. Kontrollera IP-adressen i inställningarna.",
+        "repair_controller_unreachable": "Uppdatera kontrollenhetens IP-adress och försök igen."
+    },
+    "notification": {
+        "controller_error_title": "UniFi Protect-kontrollenhet kan inte nås",
+        "controller_error_body": "Kontrollenheten på {ip}:{port} svarar inte. Kontrollera nätverket och IP-konfigurationen.",
+        "repair_action": "Öppna inställningar"
     }
 }

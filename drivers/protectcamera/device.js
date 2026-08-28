@@ -4,6 +4,7 @@ const Homey = require('homey');
 const http = require('http');
 const https = require('https');
 const SmartDetectionMixin = require('../../library/SmartDetectionMixin');
+const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 function requestByUrl(url, options, onResponse) {
   const parsedUrl = new URL(url);
@@ -105,6 +106,7 @@ class Camera extends Homey.Device {
      * onInit is called when the device is initialized.
      */
   async onInit() {
+    this._startConnectionMonitoring('v2');
     this.device = this;
     this.cloudUrl = null;
 
@@ -719,5 +721,7 @@ class Camera extends Homey.Device {
   }
 
 }
+
+Object.assign(Camera.prototype, SmartDetectionMixin, ConnectionMonitorMixin);
 
 module.exports = Camera;
