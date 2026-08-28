@@ -5,9 +5,20 @@
     <link rel="stylesheet" type="text/css" href="settings.css">
     <script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
     <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+    <script type="text/javascript" src="wizard.js"></script>
 </head>
 
 <body>
+<!-- Setup wizard, shown automatically when nothing is configured yet -->
+<div id="wizard" class="wizard" style="display: none;">
+    <div class="wizard-header">
+        <h2 id="wizard_title"></h2>
+        <span class="wizard-progress" id="wizard_progress"></span>
+    </div>
+    <div class="wizard-body" id="wizard_body"></div>
+    <div class="wizard-nav" id="wizard_nav"></div>
+</div>
+
 <!-- Tab links -->
 <div class="tab">
     <button class="tablinks" onclick="setPage(event, 'protect')" id="defaultOpen"><span
@@ -239,6 +250,13 @@
                                                                                          style="font-weight: bold;">Unknown</span>
     </p>
     </fieldset>
+
+    <!-- Setup wizard -->
+    <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend" data-i18n="settings.wizard.title"></legend>
+        <p><em data-i18n="settings.wizard.restartHint"></em></p>
+        <button id="btn_restart_wizard" class="homey-button-primary-full" data-i18n="settings.wizard.restart"></button>
+    </fieldset>
 </div>
 
 <script type="text/javascript">
@@ -261,6 +279,7 @@
     const btnV2Test = document.getElementById('btn_v2_test');
     const btnAccessApply = document.getElementById('btn_AccessApply');
     const btnAccessTest = document.getElementById('btn_access_test');
+    const btnRestartWizard = document.getElementById('btn_restart_wizard');
 
     function onHomeyReady(Homey) {
         const readSettings = () => {
@@ -498,9 +517,16 @@
             });
         });
 
+        btnRestartWizard.addEventListener('click', e => {
+            UfpWizard.restart();
+        });
+
         document.getElementById("defaultOpen").click();
 
         Homey.ready();
+
+        // Opens itself only when no connection is configured and the wizard was never finished
+        UfpWizard.init(Homey, {onClose: readSettings});
 
         const updateStatusField = (err, data) => {
             if (err) {

@@ -35,7 +35,7 @@ class UniFiDoorbellDriver extends Homey.Driver {
         const homey = this.homey;
         session.setHandler("validate", async function (data) {
             const nvrip = homey.settings.get('ufp:nvrip') || homey.app.getV2Connection().host;
-            return (nvrip ? 'ok' : 'nok');
+            return (nvrip ? 'ok' : 'nok:protect');
         });
 
         session.setHandler("list_devices", async function (data) {

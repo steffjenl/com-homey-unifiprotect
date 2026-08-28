@@ -24,7 +24,7 @@ class AccessIntercomeDriver extends Homey.Driver {
       const { host } = homey.app.getAccessConnection();
       const tokens = homey.settings.get('ufp:tokens');
       if (!host || !tokens || typeof tokens.accessApiKey === 'undefined') {
-        return 'nok';
+        return 'nok:access';
       }
       return 'ok';
     });

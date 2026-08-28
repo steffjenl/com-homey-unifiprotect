@@ -30,7 +30,7 @@ class UniFiCameraDriver extends Homey.Driver {
     const { homey } = this;
     session.setHandler('validate', async (data) => {
       const nvrip = homey.settings.get('ufp:nvrip') || homey.app.getV2Connection().host;
-      return (nvrip ? 'ok' : 'nok');
+      return (nvrip ? 'ok' : 'nok:protect');
     });
 
     session.setHandler('list_devices', async (data) => {

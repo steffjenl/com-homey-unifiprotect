@@ -1,6 +1,9 @@
 <body>
-<div class="field row">
-  <span data-i18n="pair.validate.instruction"></span>
+<div id="not-configured" style="display: none;">
+  <h2 id="nc-title" style="margin: 0 0 8px; font-size: 1.1em;"></h2>
+  <p id="nc-body" style="margin: 0 0 12px;"></p>
+  <p id="nc-steps" style="margin: 0 0 12px;"></p>
+  <p id="nc-guide" style="margin: 0; font-size: 0.9em; color: #666; word-break: break-all;"></p>
 </div>
 
 <div class="field row">
@@ -18,6 +21,15 @@
 
 <script type="text/javascript">
   Homey.setTitle(__('pair.validate.title'));
+
+  function showNotConfigured(result) {
+    var reason = (typeof result === 'string' && result.indexOf(':') > -1) ? result.split(':')[1] : 'protect';
+    document.getElementById('nc-title').textContent = __('pair.validate.notConfigured.title');
+    document.getElementById('nc-body').textContent = __('pair.validate.notConfigured.' + reason);
+    document.getElementById('nc-steps').textContent = __('pair.validate.notConfigured.steps');
+    document.getElementById('nc-guide').textContent = __('pair.validate.notConfigured.guide');
+    document.getElementById('not-configured').style.display = 'block';
+  }
   const modeSelect = document.getElementById('relay-pair-mode');
   const continueButton = document.getElementById('relay-pair-continue');
 
@@ -33,6 +45,7 @@
         if (result === 'ok') {
           Homey.showView('list_devices');
         } else {
+          showNotConfigured(result);
           Homey.hideLoadingOverlay();
           Homey.setNavigationClose();
         }

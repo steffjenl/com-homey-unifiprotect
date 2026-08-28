@@ -10,6 +10,13 @@
                 "mode_force_garagedoor": "Wymuś klasę bramy garażowej",
                 "mode_force_relay": "Wymuś klasę przekaźnika",
                 "continue": "Kontynuuj"
+            },
+            "notConfigured": {
+                "title": "App is not configured yet",
+                "protect": "The UniFi Protect connection has not been set up yet. Open the app settings and enter the IP address of your UniFi console plus a Protect V2 API key or a local username and password.",
+                "access": "The UniFi Access connection has not been set up yet. Open the app settings and enter the IP address of your UniFi console plus a UniFi Access API key.",
+                "steps": "Go to Homey → Apps → UniFi Protect → Settings. The setup wizard starts automatically as long as nothing is configured, and guides you step by step.",
+                "guide": "Setup guide: https://github.com/steffjenl/com-ubnt-unifiprotect/blob/develop/wiki/setup-guide.md"
             }
         },
         "login": {
@@ -57,6 +64,86 @@
         "accessWebsocket": {
             "status": "Status Access w czasie rzeczywistym",
             "at": "Ostatnia aktualizacja Access o"
+        },
+        "wizard": {
+            "title": "Setup wizard",
+            "progress": "Step",
+            "guide": "Open the full setup guide",
+            "start": "Start",
+            "next": "Next",
+            "back": "Back",
+            "skip": "Skip for now",
+            "cancel": "Cancel",
+            "restart": "Restart setup wizard",
+            "restartHint": "Reopens the wizard with your current settings filled in. Nothing is deleted.",
+            "welcome": {
+                "title": "Welcome",
+                "body": "This wizard connects Homey to your UniFi console. Keep the UniFi web interface open in another tab — you will need it to create an account or API key. Nothing is saved until the last step."
+            },
+            "choose": {
+                "title": "Choose a connection",
+                "body": "Pick one or more connections. You can always add the others later on the tabs.",
+                "error": "Select at least one connection to continue.",
+                "v2": "Protect V2 API key (recommended)",
+                "v2desc": "Modern REST API with realtime events, using an integration API key.",
+                "v1": "Protect V1 username/password",
+                "v1desc": "Local UniFi OS account. Needed for the NVR Alarm Manager and some older devices.",
+                "access": "UniFi Access API key",
+                "accessdesc": "Only needed for UniFi Access doors, readers, intercoms and hubs."
+            },
+            "server": {
+                "title": "UniFi console",
+                "body": "Enter the local IP address of your UniFi console, for example 192.168.1.1. The default ports are filled in automatically.",
+                "ip": "IP address",
+                "advanced": "Use custom ports",
+                "v1port": "Protect V1 port",
+                "v2port": "Protect V2 port",
+                "accessport": "Access port",
+                "error": "Enter the IP address of your UniFi console."
+            },
+            "v1": {
+                "title": "Protect V1 — local user",
+                "intro": "Create a dedicated local UniFi OS account for Homey. Do not use your personal admin account.",
+                "s1": "Open https://__ip__ in your browser and log in as administrator.",
+                "s2": "Go to UniFi OS → Users → Admins.",
+                "s3": "Click Add Admin and enable 'Restrict to local access only'.",
+                "s4": "Give the account access to UniFi Protect, with at least the Limited Admin role.",
+                "s5": "Click Add, then enter the username and password below.",
+                "error": "Enter both a username and a password."
+            },
+            "v2": {
+                "title": "Protect V2 — API key",
+                "intro": "Create an integration API key in UniFi Protect.",
+                "s1": "Open https://__ip__ in your browser and log in.",
+                "s2": "Open UniFi Protect and go to Settings (gear icon, bottom left).",
+                "s3": "Choose Integrations → Local Access.",
+                "s4": "Click Add New Integration and name it 'Homey'.",
+                "s5": "Copy the API key — it is shown only once — and paste it below.",
+                "error": "Enter the API key."
+            },
+            "access": {
+                "title": "UniFi Access — API key",
+                "intro": "Create an integration API key in UniFi Access.",
+                "s1": "Open https://__ip__ in your browser and log in.",
+                "s2": "Open UniFi Access and go to Settings → Integrations → Local Access.",
+                "s3": "Click Add New Integration and name it 'Homey'.",
+                "s4": "Copy the API key — it is shown only once — and paste it below.",
+                "error": "Enter the API key."
+            },
+            "test": {
+                "run": "Test connection",
+                "busy": "Testing…",
+                "ok": "Connection successful.",
+                "fail": "Connection failed. Check the details, or continue and fix it later."
+            },
+            "summary": {
+                "title": "Ready to save",
+                "body": "These connections will be saved:",
+                "tested": "tested",
+                "untested": "not tested",
+                "finish": "Save and finish",
+                "saved": "Setup complete. The app is connecting now."
+            }
         }
     },
     "events": {

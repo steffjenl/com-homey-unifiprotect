@@ -211,3 +211,171 @@ button:hover {
     background: rgba(230, 167, 0, 0.1);
     font-size: 0.9em;
 }
+
+/* Setup wizard */
+.wizard {
+    border: 1px solid #ccc;
+    padding: 12px;
+}
+
+.wizard-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 1px solid #dbdbdb;
+    margin-bottom: 12px;
+}
+
+.wizard-header h2 {
+    margin: 0 0 8px;
+    font-size: 1.1em;
+}
+
+.wizard-progress {
+    color: #666;
+    font-size: 0.85em;
+}
+
+.wizard-step-title {
+    margin: 0 0 4px;
+    font-size: 1em;
+}
+
+.wizard-guide {
+    display: inline-block;
+    margin: 8px 0;
+    color: #159EDA;
+}
+
+.wizard-steps {
+    margin: 8px 0 12px;
+    padding-left: 20px;
+}
+
+.wizard-steps li {
+    margin-bottom: 4px;
+}
+
+.wizard-choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.wizard-choice.selected {
+    border-color: #159EDA;
+    background: rgba(21, 158, 218, 0.08);
+}
+
+.wizard-choice-input {
+    margin-top: 2px;
+}
+
+.wizard-choice-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.wizard-choice-title {
+    font-weight: bold;
+}
+
+.wizard-choice-desc {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.wizard-advanced {
+    display: block;
+    margin: 12px 0 4px;
+}
+
+.wizard-test {
+    margin-top: 12px;
+}
+
+.wizard-test-result {
+    margin-top: 8px;
+    font-size: 0.9em;
+}
+
+.wizard-test-result.ok {
+    color: darkgreen;
+}
+
+.wizard-test-result.fail {
+    color: darkred;
+}
+
+.wizard-test-result.busy {
+    color: orange;
+}
+
+.wizard-summary {
+    margin: 8px 0 12px;
+    padding-left: 20px;
+}
+
+.wizard-error {
+    margin-top: 12px;
+    padding: 8px 10px;
+    border-left: 3px solid #e6a700;
+    background: rgba(230, 167, 0, 0.1);
+    font-size: 0.9em;
+}
+
+.wizard-nav {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    border-top: 1px solid #dbdbdb;
+    padding-top: 12px;
+}
+
+.wizard-nav .wizard-button {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #dbdbdb;
+    cursor: pointer;
+}
+
+.wizard-nav .wizard-button.primary {
+    background-color: #159EDA;
+    border-color: #159EDA;
+    color: white;
+}
+
+.wizard-nav .wizard-button.ghost {
+    background: none;
+    color: #666;
+}
+
+/* The global button:hover turns every button green, which is wrong inside the wizard */
+.wizard-nav .wizard-button:hover {
+    background-color: #cfcfcf;
+}
+
+.wizard-nav .wizard-button.primary:hover {
+    background-color: #1287bb;
+}
+
+.wizard-nav .wizard-button.ghost:hover {
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+.wizard-nav .wizard-button[disabled] {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.wizard .wizard-test-button:hover {
+    background-color: #1287bb;
+}

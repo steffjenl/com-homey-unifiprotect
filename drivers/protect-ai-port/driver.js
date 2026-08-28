@@ -12,7 +12,7 @@ class UniFiAiPortDriver extends Homey.Driver {
 
     session.setHandler('validate', async function () {
       const nvrip = homey.settings.get('ufp:nvrip') || homey.app.getV2Connection().host;
-      return (nvrip ? 'ok' : 'nok');
+      return (nvrip ? 'ok' : 'nok:protect');
     });
 
     session.setHandler('list_devices', async function () {

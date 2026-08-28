@@ -10,6 +10,13 @@
                 "mode_force_garagedoor": "Forceer Garagedeur-klasse",
                 "mode_force_relay": "Forceer Relais-klasse",
                 "continue": "Doorgaan"
+            },
+            "notConfigured": {
+                "title": "App is nog niet ingesteld",
+                "protect": "De verbinding met UniFi Protect is nog niet ingesteld. Open de app-instellingen en vul het IP-adres van je UniFi console in, plus een Protect V2 API-sleutel of een lokale gebruikersnaam en wachtwoord.",
+                "access": "De verbinding met UniFi Access is nog niet ingesteld. Open de app-instellingen en vul het IP-adres van je UniFi console in, plus een UniFi Access API-sleutel.",
+                "steps": "Ga naar Homey → Apps → UniFi Protect → Instellingen. Zolang er niets is ingesteld start de setup-wizard daar automatisch en loodst hij je stap voor stap door de instellingen.",
+                "guide": "Handleiding: https://github.com/steffjenl/com-ubnt-unifiprotect/blob/develop/wiki/setup-guide.md"
             }
         },
         "login": {
@@ -57,6 +64,86 @@
         "accessWebsocket": {
             "status": "Access realtime status",
             "at": "Access laatste update om"
+        },
+        "wizard": {
+            "title": "Setup-wizard",
+            "progress": "Stap",
+            "guide": "Open de volledige handleiding",
+            "start": "Starten",
+            "next": "Volgende",
+            "back": "Vorige",
+            "skip": "Nu overslaan",
+            "cancel": "Annuleren",
+            "restart": "Setup-wizard opnieuw starten",
+            "restartHint": "Opent de wizard opnieuw met je huidige instellingen ingevuld. Er wordt niets verwijderd.",
+            "welcome": {
+                "title": "Welkom",
+                "body": "Deze wizard verbindt Homey met je UniFi console. Houd de UniFi-webinterface bij de hand — je hebt hem nodig om een account of API-sleutel aan te maken. Er wordt pas in de laatste stap iets opgeslagen."
+            },
+            "choose": {
+                "title": "Kies een verbinding",
+                "body": "Kies één of meer verbindingen. De rest kun je later altijd via de tabbladen toevoegen.",
+                "error": "Kies minstens één verbinding om verder te gaan.",
+                "v2": "Protect V2 API-sleutel (aanbevolen)",
+                "v2desc": "Moderne REST API met realtime gebeurtenissen, via een integratie-API-sleutel.",
+                "v1": "Protect V1 gebruikersnaam/wachtwoord",
+                "v1desc": "Lokaal UniFi OS-account. Nodig voor de NVR Alarm Manager en enkele oudere apparaten.",
+                "access": "UniFi Access API-sleutel",
+                "accessdesc": "Alleen nodig voor UniFi Access deuren, lezers, intercoms en hubs."
+            },
+            "server": {
+                "title": "UniFi console",
+                "body": "Vul het lokale IP-adres van je UniFi console in, bijvoorbeeld 192.168.1.1. De standaardpoorten worden automatisch ingevuld.",
+                "ip": "IP-adres",
+                "advanced": "Afwijkende poorten gebruiken",
+                "v1port": "Protect V1-poort",
+                "v2port": "Protect V2-poort",
+                "accessport": "Access-poort",
+                "error": "Vul het IP-adres van je UniFi console in."
+            },
+            "v1": {
+                "title": "Protect V1 — lokale gebruiker",
+                "intro": "Maak een apart lokaal UniFi OS-account aan voor Homey. Gebruik niet je eigen adminaccount.",
+                "s1": "Open https://__ip__ in je browser en log in als beheerder.",
+                "s2": "Ga naar UniFi OS → Users → Admins.",
+                "s3": "Klik op Add Admin en zet 'Restrict to local access only' aan.",
+                "s4": "Geef het account toegang tot UniFi Protect, met minimaal de rol Limited Admin.",
+                "s5": "Klik op Add en vul de gebruikersnaam en het wachtwoord hieronder in.",
+                "error": "Vul zowel een gebruikersnaam als een wachtwoord in."
+            },
+            "v2": {
+                "title": "Protect V2 — API-sleutel",
+                "intro": "Maak een integratie-API-sleutel aan in UniFi Protect.",
+                "s1": "Open https://__ip__ in je browser en log in.",
+                "s2": "Open UniFi Protect en ga naar Settings (tandwiel, linksonder).",
+                "s3": "Kies Integrations → Local Access.",
+                "s4": "Klik op Add New Integration en noem hem 'Homey'.",
+                "s5": "Kopieer de API-sleutel — die wordt maar één keer getoond — en plak hem hieronder.",
+                "error": "Vul de API-sleutel in."
+            },
+            "access": {
+                "title": "UniFi Access — API-sleutel",
+                "intro": "Maak een integratie-API-sleutel aan in UniFi Access.",
+                "s1": "Open https://__ip__ in je browser en log in.",
+                "s2": "Open UniFi Access en ga naar Settings → Integrations → Local Access.",
+                "s3": "Klik op Add New Integration en noem hem 'Homey'.",
+                "s4": "Kopieer de API-sleutel — die wordt maar één keer getoond — en plak hem hieronder.",
+                "error": "Vul de API-sleutel in."
+            },
+            "test": {
+                "run": "Verbinding testen",
+                "busy": "Bezig met testen…",
+                "ok": "Verbinding gelukt.",
+                "fail": "Verbinding mislukt. Controleer de gegevens, of ga verder en pas het later aan."
+            },
+            "summary": {
+                "title": "Klaar om op te slaan",
+                "body": "Deze verbindingen worden opgeslagen:",
+                "tested": "getest",
+                "untested": "niet getest",
+                "finish": "Opslaan en afronden",
+                "saved": "Instellen voltooid. De app maakt nu verbinding."
+            }
         }
     },
     "events": {
@@ -83,7 +170,7 @@
     "status": {
         "connection": {
             "Connected": "Verbonden",
-            "Connecting": "Bezig met verbinden...",
+            "Connecting...": "Bezig met verbinden...",
             "Disconnected": "Verbinding verbroken",
             "Initialized": "Bezig met starten"
         }
