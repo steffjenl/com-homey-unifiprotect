@@ -367,5 +367,8 @@
   },
   "1.11.4": {
     "en": "Fix: Encoding on Apple devices "
+  },
+  "1.12.0": {
+    "en": "Added installation wizard, rtsp stream detection, support for cloud API and more "
   }
 }
