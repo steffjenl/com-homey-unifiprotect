@@ -4,6 +4,34 @@ const https = require('https');
 const ProtectWebClient = require('./library/webclient');
 const UfvConstants = require('./library/constants');
 
+function buildProtectV2TestOptions(body) {
+    const cloudEnabled = body.cloudEnabled === true;
+    const integrationPath = `${UfvConstants.PROTECT_V2_API_BASE_PATH}/${UfvConstants.PROTECT_V2_API_VERSION}/cameras`;
+
+    if (cloudEnabled) {
+        const consoleId = String(body.consoleId || '').trim();
+        if (!consoleId) {
+            throw new Error('Console ID is required when using the UniFi Cloud API.');
+        }
+
+        return {
+            hostname: 'api.ui.com',
+            port: 443,
+            path: `/v1/connector/consoles/${encodeURIComponent(consoleId)}${integrationPath}`,
+        };
+    }
+
+    if (!body.host) {
+        throw new Error('Protect V2 IP address is required.');
+    }
+
+    return {
+        hostname: body.host,
+        port: body.port || 443,
+        path: integrationPath,
+    };
+}
+
 module.exports = {
     async getStatus({homey, query}) {
         // Return status based on which API is available
@@ -35,6 +63,9 @@ module.exports = {
     async getProtectV2WebsocketStatus({homey, query}) {
         const tokens = homey.settings.get('ufp:tokens');
         if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
+            if (homey.app.isProtectCloudApiEnabled && homey.app.isProtectCloudApiEnabled()) {
+                return 'Disabled (Cloud API)';
+            }
             return homey.app.apiV2.websocket.isWebsocketConnected() ? 'Connected' : 'Unknown';
         } else {
             return 'No API Key found';
@@ -125,11 +156,19 @@ module.exports = {
     async testV2ApiKey({homey, body}) {
         try {
             return new Promise((resolve, reject) => {
+                let testOptions;
+                try {
+                    testOptions = buildProtectV2TestOptions(body);
+                } catch (error) {
+                    reject(error);
+                    return;
+                }
+
                 const options = {
                     method: 'GET',
-                    hostname: body.host,
-                    port: body.port || 443,
-                    path: `${UfvConstants.PROTECT_V2_API_BASE_PATH}/${UfvConstants.PROTECT_V2_API_VERSION}/cameras`,
+                    hostname: testOptions.hostname,
+                    port: testOptions.port,
+                    path: testOptions.path,
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8',
                         Accept: '*/*',

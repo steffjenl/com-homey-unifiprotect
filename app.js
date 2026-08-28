@@ -158,6 +158,18 @@ class UniFiProtect extends Homey.App {
         };
     }
 
+    getProtectCloudConnection() {
+        const config = this.homey.settings.get('ufp:protectCloudApi') || {};
+        return {
+            enabled: config.enabled === true,
+            consoleId: config.consoleId || '',
+        };
+    }
+
+    isProtectCloudApiEnabled() {
+        return this.getProtectCloudConnection().enabled;
+    }
+
     /**
      * Host and port used by the Access API, falling back to the V1 address when unset.
      */
@@ -197,7 +209,7 @@ class UniFiProtect extends Homey.App {
                     this.appProtect.loginToProtectV2().catch(this.error);
                 }
             }
-            if (key === 'ufp:v2nvr') {
+            if (key === 'ufp:v2nvr' || key === 'ufp:protectCloudApi') {
                 const tokens = this.homey.settings.get('ufp:tokens');
                 if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
                     this._initProtectV2Stack();

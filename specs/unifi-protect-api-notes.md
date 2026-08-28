@@ -1,10 +1,13 @@
 # UniFi Protect API Notes
 
-Source: Official API documentation in `.ai/unifi-protect-api-v2/`, cross-checked against
-`specs/protect-integration-v2-openapi.json`.  
-**API version: 7.1.87** — Base URL: `https://YOUR_CONSOLE_IP/proxy/protect/integration`
-(the spec also documents a `https://api.ui.com/v1/connector/consoles/{consoleId}/proxy/protect/integration`
-cloud-connector server variant; this app only uses the local console URL)
+Source: Official API documentation, cross-checked against
+`specs/protect-integration-v2-openapi.json` downloaded from
+`https://developer.ui.com/protect/v7.2.105/openapi.json`.  
+**API version: v7.2.105 spec** — Local base URL: `https://YOUR_CONSOLE_IP/proxy/protect/integration`.
+Cloud connector base URL: `https://api.ui.com/v1/connector/consoles/{consoleId}/proxy/protect/integration`.
+
+Local and cloud Protect V2 expose the same REST endpoint set. The app treats cloud as REST-only:
+WebSocket/realtime device and event updates remain local-only until a supported cloud realtime path is adopted.
 
 ---
 
@@ -13,8 +16,9 @@ cloud-connector server variant; this app only uses the local console URL)
 ### v2 Integration API (API Key)
 1. Generate key in UniFi Console → Protect → Settings → Integrations → Add New Integration
 2. All requests include header: `X-API-KEY: <apiKey>`
-3. All WebSocket connections include same header
-4. Keys are long-lived — no expiry, manual revocation only
+3. Local WebSocket connections include same header
+4. Cloud REST requests use the same header through `api.ui.com` and require the UniFi console ID
+5. Keys are long-lived — no expiry, manual revocation only
 
 ### v1 Legacy (Cookie)
 1. `POST /api/auth/login` with `{username, password}`
@@ -47,7 +51,8 @@ cloud-connector server variant; this app only uses the local console URL)
 
 ## Official REST Endpoints (v2)
 
-All paths relative to `https://<NVR_IP>:443/proxy/protect/integration`.
+All paths are relative to either `https://<NVR_IP>:443/proxy/protect/integration` or
+`https://api.ui.com/v1/connector/consoles/{consoleId}/proxy/protect/integration`.
 
 ### Meta
 | Method | Path | Description |
@@ -72,8 +77,7 @@ All paths relative to `https://<NVR_IP>:443/proxy/protect/integration`.
 |--------|------|-------------|
 | `POST` | `/v1/cameras/{id}/ptz/patrol/start/{slot}` | Start PTZ patrol |
 | `POST` | `/v1/cameras/{id}/ptz/patrol/stop` | Stop PTZ patrol |
-| `POST` | `/v1/cameras/{id}/ptz/goto/{slot}` | Go to PTZ preset |
-| `POST` | `/v1/cameras/{id}/ptz/home` | Go to PTZ home |
+| `POST` | `/v1/cameras/{id}/ptz/goto/{slot}` | Go to PTZ preset (`-1` is home) |
 
 ### Sensors
 | Method | Path | Description |
@@ -81,6 +85,45 @@ All paths relative to `https://<NVR_IP>:443/proxy/protect/integration`.
 | `GET` | `/v1/sensors` | Get all sensors |
 | `GET` | `/v1/sensors/{id}` | Get sensor details |
 | `PATCH` | `/v1/sensors/{id}` | Patch sensor settings |
+
+### Sirens
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/sirens` | Get all sirens |
+| `GET` | `/v1/sirens/{id}` | Get siren details |
+| `PATCH` | `/v1/sirens/{id}` | Patch siren settings |
+| `POST` | `/v1/sirens/{id}/play` | Activate siren |
+| `POST` | `/v1/sirens/{id}/stop` | Stop siren |
+| `POST` | `/v1/sirens/{id}/test-sound` | Test siren sound |
+
+### Speakers
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/speakers` | Get all speakers |
+| `GET` | `/v1/speakers/{id}` | Get speaker details |
+| `PATCH` | `/v1/speakers/{id}` | Patch speaker settings |
+| `POST` | `/v1/speakers/{id}/test-sound` | Test speaker sound |
+
+### Fobs
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/fobs` | Get all fobs |
+| `GET` | `/v1/fobs/{id}` | Get fob details |
+| `PATCH` | `/v1/fobs/{id}` | Patch fob settings |
+
+### Bridges and Alarm Hubs
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/bridges` | Get all bridges |
+| `GET` | `/v1/bridges/{id}` | Get bridge details |
+| `PATCH` | `/v1/bridges/{id}` | Patch bridge settings |
+| `GET` | `/v1/link-stations` | Get all link stations |
+| `GET` | `/v1/link-stations/{id}` | Get link station details |
+| `PATCH` | `/v1/link-stations/{id}` | Patch link station settings |
+| `GET` | `/v1/alarm-hubs` | Get all alarm hubs |
+| `GET` | `/v1/alarm-hubs/{id}` | Get alarm hub details |
+| `PATCH` | `/v1/alarm-hubs/{id}` | Patch alarm hub settings |
+| `POST` | `/v1/alarm-hubs/{id}/outputs/{outputId}/trigger` | Trigger alarm hub output |
 
 ### NVR
 | Method | Path | Description |

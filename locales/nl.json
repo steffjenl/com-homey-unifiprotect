@@ -65,6 +65,10 @@
         "saveLogToPersistentStorage": "Log opslaan in permanente opslag",
         "protectV2ApiKeySection": "Protect V2 API-sleutel (Beta)",
         "protectV2ApiKeyDescription": "Beta: verbinden met een V2 API-sleutel. Werkt volledig los van de V1-inloggegevens.",
+        "protectV2CloudApiSection": "Protect V2 Cloud API",
+        "protectV2CloudEnabled": "Gebruik UniFi Cloud API",
+        "protectV2CloudConsoleId": "Console ID",
+        "protectV2CloudDisclaimer": "Cloud API gebruikt in deze app alleen REST. WebSockets en realtime apparaat-/eventupdates werken niet in cloudmodus.",
         "protectV2Instruction": "Verbind met UniFi Protect via een V2 API-sleutel. Deze verbinding stel je los van de V1-inloggegevens in.",
         "protectV1Section": "Protect V1 (gebruikersnaam/wachtwoord)",
         "realtimeStatus": "Realtime status",
@@ -127,7 +131,10 @@
                 "s3": "Kies Integrations → Local Access.",
                 "s4": "Klik op Add New Integration en noem hem 'Homey'.",
                 "s5": "Kopieer de API-sleutel — die wordt maar één keer getoond — en plak hem hieronder.",
-                "error": "Vul de API-sleutel in."
+                "cloud": "Gebruik UniFi Cloud API",
+                "consoleId": "Console ID",
+                "error": "Vul de API-sleutel in.",
+                "cloudError": "Vul de Console ID in wanneer je de Cloud API gebruikt."
             },
             "access": {
                 "title": "UniFi Access — API-sleutel",

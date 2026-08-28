@@ -11,9 +11,36 @@ class WebClient extends BaseClass {
         this._serverHost = null;
         this._serverPort = 443;
         this._apiToken = null;
+        this._cloudEnabled = false;
+        this._consoleId = '';
+    }
+
+    setSettings(host, port, apiToken, options = {}) {
+        this._serverHost = host;
+        this._serverPort = port;
+        this._apiToken = apiToken;
+        this._cloudEnabled = !!options.cloudEnabled;
+        this._consoleId = options.consoleId || '';
+    }
+
+    isCloudEnabled() {
+        return this._cloudEnabled === true;
+    }
+
+    getRequestHost() {
+        return this.isCloudEnabled() ? 'api.ui.com' : this._serverHost;
+    }
+
+    getRequestPort() {
+        return this.isCloudEnabled() ? 443 : this._serverPort;
     }
 
     getIntegrationPrefix() {
+        if (this.isCloudEnabled()) {
+            return `/v1/connector/consoles/${encodeURIComponent(this._consoleId)}`
+                + `${UfvConstants.PROTECT_V2_API_BASE_PATH}/${UfvConstants.PROTECT_V2_API_VERSION}`;
+        }
+
         return `${UfvConstants.PROTECT_V2_API_BASE_PATH}/${UfvConstants.PROTECT_V2_API_VERSION}`;
     }
 
@@ -29,8 +56,8 @@ class WebClient extends BaseClass {
         return new Promise((resolve, reject) => {
             const options = {
                 method: 'GET',
-                hostname: this._serverHost,
-                port: this._serverPort,
+                hostname: this.getRequestHost(),
+                port: this.getRequestPort(),
                 path: this.buildApiPath(resource, params),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
@@ -73,8 +100,8 @@ class WebClient extends BaseClass {
 
             const options = {
                 method: 'POST',
-                hostname: this._serverHost,
-                port: this._serverPort,
+                hostname: this.getRequestHost(),
+                port: this.getRequestPort(),
                 path: this.buildApiPath(resource),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
@@ -118,8 +145,8 @@ class WebClient extends BaseClass {
 
             const options = {
                 method: 'PUT',
-                hostname: this._serverHost,
-                port: this._serverPort,
+                hostname: this.getRequestHost(),
+                port: this.getRequestPort(),
                 path: this.buildApiPath(resource, params),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
@@ -163,8 +190,8 @@ class WebClient extends BaseClass {
 
             const options = {
                 method: 'PATCH',
-                hostname: this._serverHost,
-                port: this._serverPort,
+                hostname: this.getRequestHost(),
+                port: this.getRequestPort(),
                 path: this.buildApiPath(resource, params),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
@@ -206,8 +233,8 @@ class WebClient extends BaseClass {
         return new Promise((resolve, reject) => {
             const options = {
                 method: 'DELETE',
-                hostname: this._serverHost,
-                port: this._serverPort,
+                hostname: this.getRequestHost(),
+                port: this.getRequestPort(),
                 path: this.buildApiPath(resource),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',

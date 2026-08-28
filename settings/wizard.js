@@ -281,6 +281,30 @@
                 state.tested.v2 = null;
                 clearTestResult();
             }));
+
+            const cloudToggleRow = node('label', 'homey-form-checkbox wizard-advanced');
+            const cloudToggle = node('input', 'homey-form-checkbox-input');
+            cloudToggle.type = 'checkbox';
+            cloudToggle.checked = !!state.cloudEnabled;
+            cloudToggleRow.appendChild(cloudToggle);
+            cloudToggleRow.appendChild(node('span', 'homey-form-checkbox-checkmark'));
+            cloudToggleRow.appendChild(node('span', 'homey-form-checkbox-text', t('v2.cloud')));
+            fields.appendChild(cloudToggleRow);
+
+            const cloudConsoleIdField = textField(t('v2.consoleId'), state.cloudConsoleId, 'text', (value) => {
+                state.cloudConsoleId = value.trim();
+                state.tested.v2 = null;
+                clearTestResult();
+            });
+            cloudConsoleIdField.style.display = state.cloudEnabled ? '' : 'none';
+            fields.appendChild(cloudConsoleIdField);
+
+            cloudToggle.addEventListener('change', () => {
+                state.cloudEnabled = cloudToggle.checked;
+                state.tested.v2 = null;
+                clearTestResult();
+                cloudConsoleIdField.style.display = cloudToggle.checked ? '' : 'none';
+            });
         } else {
             fields.appendChild(textField(homey.__('settings.accessApiKey'), state.accesskey, 'password', (value) => {
                 state.accesskey = value.trim();
@@ -316,7 +340,9 @@
             return (state.username && state.password) ? null : t('v1.error');
         }
         if (step === 'v2') {
-            return state.v2key ? null : t('v2.error');
+            if (!state.v2key) return t('v2.error');
+            if (state.cloudEnabled && !state.cloudConsoleId) return t('v2.cloudError');
+            return null;
         }
         if (step === 'access') {
             return state.accesskey ? null : t('access.error');
@@ -417,6 +443,7 @@
         }
         if (state.selected.v2) {
             writes.push(setSetting('ufp:v2nvr', {nvrip: state.ip, nvrport: state.v2port || DEFAULT_PORT.v2}));
+            writes.push(setSetting('ufp:protectCloudApi', {enabled: !!state.cloudEnabled, consoleId: state.cloudConsoleId || ''}));
         }
         if (state.selected.access) {
             writes.push(setSetting('ufp:accessnvr', {nvrip: state.ip, nvrport: state.accessport || DEFAULT_PORT.access}));
@@ -444,6 +471,7 @@
             getSetting('ufp:nvrport'),
             getSetting('ufp:credentials'),
             getSetting('ufp:v2nvr'),
+            getSetting('ufp:protectCloudApi'),
             getSetting('ufp:accessnvr'),
             getSetting('ufp:tokens'),
             getSetting('ufp:wizard'),
@@ -452,9 +480,10 @@
             const nvrport = values[1];
             const credentials = values[2] || {};
             const v2nvr = values[3] || {};
-            const accessnvr = values[4] || {};
-            const tokens = values[5] || {};
-            const wizard = values[6] || {};
+            const protectCloud = values[4] || {};
+            const accessnvr = values[5] || {};
+            const tokens = values[6] || {};
+            const wizard = values[7] || {};
 
             state = {
                 ip: nvrip || v2nvr.nvrip || accessnvr.nvrip || '',
@@ -466,6 +495,8 @@
                 password: credentials.password || '',
                 v2key: tokens.protectV2ApiKey || '',
                 accesskey: tokens.accessApiKey || '',
+                cloudEnabled: !!protectCloud.enabled,
+                cloudConsoleId: protectCloud.consoleId || '',
                 selected: {
                     v1: !!(credentials.username && credentials.password),
                     v2: !!tokens.protectV2ApiKey,

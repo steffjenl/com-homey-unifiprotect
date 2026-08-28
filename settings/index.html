@@ -135,6 +135,25 @@
     </fieldset>
 
     <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend" data-i18n="settings.protectV2CloudApiSection"></legend>
+
+        <div class="field row">
+            <label class="homey-form-checkbox">
+                <input class="homey-form-checkbox-input" id="txt_protectV2CloudEnabled" type="checkbox" value="true">
+                <span class="homey-form-checkbox-checkmark"></span>
+                <span class="homey-form-checkbox-text"><span data-i18n="settings.protectV2CloudEnabled"></span></span>
+            </label>
+        </div>
+
+        <div class="field row">
+            <label class="homey-form-label" for="txt_protectV2CloudConsoleId" data-i18n="settings.protectV2CloudConsoleId"></label>
+            <input class="homey-form-input" id="txt_protectV2CloudConsoleId" type="text" value=""/>
+        </div>
+
+        <p class="warning-box" data-i18n="settings.protectV2CloudDisclaimer"></p>
+    </fieldset>
+
+    <fieldset class="homey-form-fieldset">
         <legend class="homey-form-legend" data-i18n="settings.protectV2ApiKeySection"></legend>
 
         <!-- API-Key -->
@@ -270,6 +289,8 @@
     const txtAccessNvrPort = document.getElementById('txt_accessnvrport');
     const txtAccessApiKey = document.getElementById('txt_accessApiKey');
     const txtProtectV2ApiKey = document.getElementById('txt_protectV2ApiKey');
+    const txtProtectV2CloudEnabled = document.getElementById('txt_protectV2CloudEnabled');
+    const txtProtectV2CloudConsoleId = document.getElementById('txt_protectV2CloudConsoleId');
     const txtIgnoreEventsNfcFingerprint = document.getElementById('txt_ignoreEventsNfcFingerprint');
     const txtIgnoreEventsDoorbell = document.getElementById('txt_ignoreEventsDoorbell');
     const txtsaveLogToPersistentStorage = document.getElementById('txt_saveLogToPersistentStorage');
@@ -322,6 +343,18 @@
                     txtAccessNvrPort.value = accessnvr.nvrport ? accessnvr.nvrport : '12445';
                 } else {
                     console.warn('[SETTINGS] Could not read Access server details.');
+                }
+            });
+
+            Homey.get('ufp:protectCloudApi', (error, cloudApi) => {
+                if (error) return Homey.alert(error);
+
+                if (cloudApi) {
+                    txtProtectV2CloudEnabled.checked = cloudApi.enabled === true;
+                    txtProtectV2CloudConsoleId.value = cloudApi.consoleId ? cloudApi.consoleId : '';
+                } else {
+                    txtProtectV2CloudEnabled.checked = false;
+                    txtProtectV2CloudConsoleId.value = '';
                 }
             });
 
@@ -417,6 +450,16 @@
                 console.log('[SETTINGS] Protect V2 server details saved.');
             });
 
+            const cloudApi = {
+                'enabled': (!!txtProtectV2CloudEnabled.checked),
+                'consoleId': txtProtectV2CloudConsoleId.value.trim()
+            };
+
+            Homey.set('ufp:protectCloudApi', cloudApi, (error, result) => {
+                if (error) return Homey.alert(error);
+                console.log('[SETTINGS] Protect V2 Cloud API settings saved.');
+            });
+
             saveTokens({'protectV2ApiKey': txtProtectV2ApiKey.value});
 
             Homey.alert(Homey.__('settings.saved'), 'info');
@@ -465,7 +508,9 @@
             const settings = {
                 'host': txtV2NvrIp.value,
                 'port': txtV2NvrPort.value,
-                'protectV2ApiKey': txtProtectV2ApiKey.value
+                'protectV2ApiKey': txtProtectV2ApiKey.value,
+                'cloudEnabled': (!!txtProtectV2CloudEnabled.checked),
+                'consoleId': txtProtectV2CloudConsoleId.value.trim()
             };
 
             Homey.api("POST", "/testV2ApiKey", settings, showTestResult);

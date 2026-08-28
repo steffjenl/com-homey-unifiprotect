@@ -65,6 +65,10 @@
         "saveLogToPersistentStorage": "영구 저장소에 로그 저장",
         "protectV2ApiKeySection": "Protect V2 API 키 (베타)",
         "protectV2ApiKeyDescription": "베타: V2 API 키로 연결합니다. V1 자격 증명과 완전히 독립적으로 작동합니다.",
+        "protectV2CloudApiSection": "Protect V2 Cloud API",
+        "protectV2CloudEnabled": "Use UniFi Cloud API",
+        "protectV2CloudConsoleId": "Console ID",
+        "protectV2CloudDisclaimer": "Cloud API uses REST only in this app. WebSockets and realtime device/event updates do not work in cloud mode.",
         "protectV2Instruction": "V2 API 키로 UniFi Protect에 연결합니다. 이 연결은 V1 자격 증명과 별도로 구성됩니다.",
         "protectV1Section": "Protect V1 (사용자 이름/비밀번호)",
         "realtimeStatus": "실시간 상태",
@@ -127,7 +131,10 @@
                 "s3": "Choose Integrations → Local Access.",
                 "s4": "Click Add New Integration and name it 'Homey'.",
                 "s5": "Copy the API key — it is shown only once — and paste it below.",
-                "error": "Enter the API key."
+                "cloud": "Use UniFi Cloud API",
+                "consoleId": "Console ID",
+                "error": "Enter the API key.",
+                "cloudError": "Enter the Console ID when using the Cloud API."
             },
             "access": {
                 "title": "UniFi Access — API key",

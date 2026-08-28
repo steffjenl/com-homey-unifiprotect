@@ -83,10 +83,15 @@ class ProtectWebSocket extends BaseClass {
   notificationsUrl() {
     const webclient = this.homey.app.apiV2.webclient;
     const path = webclient.buildApiPath('subscribe/devices');
-    return `wss://${webclient._serverHost}:${webclient._serverPort}${path}`;
+    return `wss://${webclient.getRequestHost()}:${webclient.getRequestPort()}${path}`;
   }
 
   launchNotificationsListener() {
+    if (this.homey.app.apiV2.webclient.isCloudEnabled()) {
+      this.loggedInStatus = 'Disabled (Cloud API)';
+      this.homey.app.debug('[V2 Devices WS] Cloud API mode enabled; websocket listener not started.');
+      return false;
+    }
 
     // If we already have a listener, we're already all set.
     if (this._eventListener) {
@@ -177,6 +182,12 @@ class ProtectWebSocket extends BaseClass {
 
   reconnectNotificationsListener() {
     this.homey.app.log('Called reconnectUpdatesListener');
+    if (this.homey.app.apiV2.webclient.isCloudEnabled()) {
+      this._isDisconnectRequested = true;
+      this.disconnectEventListener().catch((error) => this.homey.error(error));
+      this.loggedInStatus = 'Disabled (Cloud API)';
+      return;
+    }
     this._isDisconnectRequested = false;
     this.disconnectEventListener().then((res) => {
       this._isDisconnectRequested = false;

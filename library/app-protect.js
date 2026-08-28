@@ -290,7 +290,8 @@ class AppProtect extends BaseClass {
                 const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
                 if (device) {
                     this.homey.app.debug(`Found device ${device.getName()}`);
-                    return this.homey.app.api.setPatrolStop(device.getData()).catch(this.error);
+                    const api = this._getProtectV2ApiOrNull() || this.homey.app.api;
+                    return api.setPatrolStop(device.getData()).catch(this.error);
                 }
             }
             return Promise.reject(new Error('No device found'));
@@ -304,7 +305,8 @@ class AppProtect extends BaseClass {
                 const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
                 if (device) {
                     this.homey.app.debug(`Found device ${device.getName()}`);
-                    return this.homey.app.api.setPatrolStart(device.getData(), args.presentId).catch(this.error);
+                    const api = this._getProtectV2ApiOrNull() || this.homey.app.api;
+                    return api.setPatrolStart(device.getData(), args.presentId).catch(this.error);
                 }
             }
             return Promise.reject(new Error('No device found'));
@@ -318,7 +320,8 @@ class AppProtect extends BaseClass {
                 const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
                 if (device) {
                     this.homey.app.debug(`Found device ${device.getName()}`);
-                    return this.homey.app.api.setPTZHome(device.getData()).catch(this.error);
+                    const api = this._getProtectV2ApiOrNull() || this.homey.app.api;
+                    return api.setPTZHome(device.getData()).catch(this.error);
                 }
             }
             return Promise.reject(new Error('No device found'));
@@ -332,7 +335,8 @@ class AppProtect extends BaseClass {
                 const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
                 if (device) {
                     this.homey.app.debug(`Found device ${device.getName()}`);
-                    return this.homey.app.api.setPTZPreset(device.getData(), args.presentId).catch(this.error);
+                    const api = this._getProtectV2ApiOrNull() || this.homey.app.api;
+                    return api.setPTZPreset(device.getData(), args.presentId).catch(this.error);
                 }
             }
             return Promise.reject(new Error('No device found'));
@@ -551,11 +555,27 @@ class AppProtect extends BaseClass {
 
     }
 
+    _getProtectV2ApiOrNull() {
+        const tokens = this.homey.settings.get('ufp:tokens') || {};
+        if (!tokens.protectV2ApiKey) {
+            return null;
+        }
+
+        this.homey.app._initProtectV2Stack();
+        return this.homey.app.apiV2;
+    }
+
     async loginToProtectV2() {
         // Validate Protect V2 address, this is configured separately from the V1 settings
         const {host, port} = this.homey.app.getV2Connection();
-        if (!host) {
+        const cloud = this.homey.app.getProtectCloudConnection();
+        if (!cloud.enabled && !host) {
             this.log('Protect V2 IP address not set.');
+            return;
+        }
+
+        if (cloud.enabled && !cloud.consoleId) {
+            this.log('Protect V2 Cloud API console ID not set.');
             return;
         }
 
@@ -571,7 +591,20 @@ class AppProtect extends BaseClass {
             return;
         }
 
-        this.homey.app.apiV2.setSettings(host, port, tokens.protectV2ApiKey);
+        this.homey.app.apiV2.setSettings(host, port, tokens.protectV2ApiKey, {
+            cloudEnabled: cloud.enabled,
+            consoleId: cloud.consoleId,
+        });
+
+        if (cloud.enabled) {
+            this.homey.app.apiV2.websocket.disconnectEventListener().catch(this.error);
+            this.homey.app.apiV2.websocketDevices.disconnectEventListener().catch(this.error);
+            this.homey.app.apiV2.websocket.loggedInStatus = 'Disabled (Cloud API)';
+            this.homey.app.apiV2.websocketDevices.loggedInStatus = 'Disabled (Cloud API)';
+            this.homey.app.debug('[Protect V2] Cloud API enabled; realtime websocket listeners are disabled.');
+            this.homey.app.apiV2.loggedInStatus = 'Connected';
+            return;
+        }
 
         this.homey.app.apiV2.websocket.reconnectNotificationsListener();
         this.homey.app.apiV2.websocketDevices.reconnectNotificationsListener();

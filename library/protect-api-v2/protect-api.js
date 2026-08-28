@@ -12,10 +12,8 @@ class ProtectAPI extends BaseClass {
 
     }
 
-    setSettings(host, port, apiToken) {
-        this.webclient._serverHost = host;
-        this.webclient._serverPort = port;
-        this.webclient._apiToken = apiToken;
+    setSettings(host, port, apiToken, options = {}) {
+        this.webclient.setSettings(host, port, apiToken, options);
     }
 
     setHomeyObject(homey) {
@@ -384,6 +382,39 @@ class ProtectAPI extends BaseClass {
                     }
                 })
                 .catch(error => reject(error));
+        });
+    }
+
+    // Camera PTZ
+    async setPatrolStop(camera) {
+        return new Promise((resolve, reject) => {
+            this.webclient.post(`cameras/${camera.id}/ptz/patrol/stop`, {})
+                .then(() => resolve('setPatrolStop successfully set.'))
+                .catch(error => reject(new Error(`Error setting setPatrolStop: ${error}`)));
+        });
+    }
+
+    async setPatrolStart(camera, slot) {
+        return new Promise((resolve, reject) => {
+            this.webclient.post(`cameras/${camera.id}/ptz/patrol/start/${String(slot)}`, {})
+                .then(() => resolve('setPatrolStart successfully set.'))
+                .catch(error => reject(new Error(`Error setting setPatrolStart: ${error}`)));
+        });
+    }
+
+    async setPTZHome(camera) {
+        return new Promise((resolve, reject) => {
+            this.webclient.post(`cameras/${camera.id}/ptz/goto/-1`, {})
+                .then(() => resolve('setPTZHome successfully set.'))
+                .catch(error => reject(new Error(`Error setting setPTZHome: ${error}`)));
+        });
+    }
+
+    async setPTZPreset(camera, slot) {
+        return new Promise((resolve, reject) => {
+            this.webclient.post(`cameras/${camera.id}/ptz/goto/${String(slot - 1)}`, {})
+                .then(() => resolve('setPTZPreset successfully set.'))
+                .catch(error => reject(new Error(`Error setting setPTZPreset: ${error}`)));
         });
     }
 

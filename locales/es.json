@@ -65,6 +65,10 @@
         "saveLogToPersistentStorage": "Guardar registro en almacenamiento persistente",
         "protectV2ApiKeySection": "Clave API Protect V2 (Beta)",
         "protectV2ApiKeyDescription": "Beta: conectar con una clave API V2. Funciona de forma totalmente independiente de las credenciales V1.",
+        "protectV2CloudApiSection": "Protect V2 Cloud API",
+        "protectV2CloudEnabled": "Use UniFi Cloud API",
+        "protectV2CloudConsoleId": "Console ID",
+        "protectV2CloudDisclaimer": "Cloud API uses REST only in this app. WebSockets and realtime device/event updates do not work in cloud mode.",
         "protectV2Instruction": "Conéctese a UniFi Protect con una clave API V2. Esta conexión se configura de forma independiente de las credenciales V1.",
         "protectV1Section": "Protect V1 (Usuario/Contraseña)",
         "realtimeStatus": "Estado en tiempo real",
@@ -127,7 +131,10 @@
                 "s3": "Choose Integrations → Local Access.",
                 "s4": "Click Add New Integration and name it 'Homey'.",
                 "s5": "Copy the API key — it is shown only once — and paste it below.",
-                "error": "Enter the API key."
+                "cloud": "Use UniFi Cloud API",
+                "consoleId": "Console ID",
+                "error": "Enter the API key.",
+                "cloudError": "Enter the Console ID when using the Cloud API."
             },
             "access": {
                 "title": "UniFi Access — API key",
