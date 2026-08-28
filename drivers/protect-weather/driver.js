@@ -12,12 +12,12 @@ class WeatherDriver extends Homey.Driver {
     const { homey } = this;
 
     session.setHandler('validate', async () => {
-      const nvrip = homey.settings.get('ufp:nvrip');
+      const nvrip = homey.settings.get('ufp:nvrip') || homey.app.getV2Connection().host;
       return (nvrip ? 'ok' : 'nok');
     });
 
     session.setHandler('list_devices', async () => {
-      const nvrip = homey.settings.get('ufp:nvrip');
+      const nvrip = homey.settings.get('ufp:nvrip') || homey.app.getV2Connection().host;
       const name = nvrip ? `UniFi Protect Weather (${nvrip})` : 'UniFi Protect Weather';
       return [
         {

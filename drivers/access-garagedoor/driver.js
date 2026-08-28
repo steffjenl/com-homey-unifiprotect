@@ -16,9 +16,9 @@ module.exports = class MyDriver extends Homey.Driver {
     onPair(session) {
         const {homey} = this;
         session.setHandler('validate', async (data) => {
-            const nvrip = homey.settings.get('ufp:nvrip');
+            const {host} = homey.app.getAccessConnection();
             const tokens = homey.settings.get('ufp:tokens');
-            if (!nvrip || !tokens || typeof tokens.accessApiKey === 'undefined') {
+            if (!host || !tokens || typeof tokens.accessApiKey === 'undefined') {
                 return 'nok';
             }
             return 'ok';

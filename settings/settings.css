@@ -203,3 +203,11 @@ button:hover {
     width: 18px;
     height: 18px;
 }
+
+.warning-box {
+    margin: 8px 0 0;
+    padding: 8px 10px;
+    border-left: 3px solid #e6a700;
+    background: rgba(230, 167, 0, 0.1);
+    font-size: 0.9em;
+}

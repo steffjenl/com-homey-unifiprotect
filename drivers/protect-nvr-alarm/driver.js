@@ -35,13 +35,13 @@ class NVRAlarmDriver extends Homey.Driver {
     const { homey } = this;
 
     session.setHandler('validate', async () => {
-      const nvrip = homey.settings.get('ufp:nvrip');
+      const nvrip = homey.settings.get('ufp:nvrip') || homey.app.getV2Connection().host;
       return (nvrip ? 'ok' : 'nok');
     });
 
     session.setHandler('list_devices', async () => {
       // The NVR Alarm Manager is a virtual device — one per NVR
-      const nvrip = homey.settings.get('ufp:nvrip');
+      const nvrip = homey.settings.get('ufp:nvrip') || homey.app.getV2Connection().host;
       const name = nvrip ? `NVR Alarm Manager (${nvrip})` : 'NVR Alarm Manager';
       return [
         {

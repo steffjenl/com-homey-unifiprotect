@@ -12,6 +12,8 @@
 <div class="tab">
     <button class="tablinks" onclick="setPage(event, 'protect')" id="defaultOpen"><span
             data-i18n="settings.tab.protect"></span></button>
+    <button class="tablinks" onclick="setPage(event, 'protectv2')"><span
+            data-i18n="settings.tab.protectV2"></span></button>
     <button class="tablinks" onclick="setPage(event, 'access')"><span data-i18n="settings.tab.access"></span></button>
     <button class="tablinks" onclick="setPage(event, 'status')"><span data-i18n="settings.tab.status"></span>
     </button>
@@ -61,26 +63,6 @@
         </div>
     </fieldset>
 
-    <!-- V2 API Key (new) -->
-    <fieldset class="homey-form-fieldset">
-        <legend class="homey-form-legend" data-i18n="settings.protectV2ApiKeySection"></legend>
-
-        <!-- API-Key -->
-        <div class="field row">
-            <label class="homey-form-label" for="txt_protectV2ApiKey" data-i18n="settings.protectV2ApiKey"></label>
-            <div class="password-wrapper">
-                <input class="homey-form-input" id="txt_protectV2ApiKey" type="password" value=""/>
-                <button type="button" class="toggle-password" data-target="txt_protectV2ApiKey" aria-label="Toggle API key visibility">
-                    <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    <svg class="eye-off-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                </button>
-            </div>
-        </div>
-        <p>
-            <em data-i18n="settings.protectV2ApiKeyDescription"></em>
-        </p>
-    </fieldset>
-
     <!-- Settings -->
     <fieldset class="homey-form-fieldset">
         <legend class="homey-form-legend" data-i18n="settings.settings"></legend>
@@ -119,7 +101,77 @@
 
     <hr/>
 </div>
+<div id="protectv2" class="tabcontent">
+    <!-- Instruction -->
+    <p data-i18n="settings.protectV2Instruction"></p>
+
+    <!-- NVR -->
+    <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend" data-i18n="settings.nvr"></legend>
+
+        <!-- IP address -->
+        <div class="field row">
+            <label class="homey-form-label" for="txt_v2nvrip" data-i18n="settings.nvrip"></label>
+            <input class="homey-form-input" id="txt_v2nvrip" type="text" value=""/>
+        </div>
+
+        <!-- Port -->
+        <div class="field row">
+            <label class="homey-form-label" for="txt_v2nvrport" data-i18n="settings.nvrport"></label>
+            <input class="homey-form-input" id="txt_v2nvrport" type="text" value="443"/>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend" data-i18n="settings.protectV2ApiKeySection"></legend>
+
+        <!-- API-Key -->
+        <div class="field row">
+            <label class="homey-form-label" for="txt_protectV2ApiKey" data-i18n="settings.protectV2ApiKey"></label>
+            <div class="password-wrapper">
+                <input class="homey-form-input" id="txt_protectV2ApiKey" type="password" value=""/>
+                <button type="button" class="toggle-password" data-target="txt_protectV2ApiKey" aria-label="Toggle API key visibility">
+                    <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-off-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
+        </div>
+        <p>
+            <em data-i18n="settings.protectV2ApiKeyDescription"></em>
+        </p>
+    </fieldset>
+
+    <!-- Apply button -->
+    <div class="field row">
+        <button id="btn_v2_test" class="homey-button-primary-full" data-i18n="settings.testConnection"></button>
+        <br/>
+        <button id="btn_v2_apply" class="homey-button-primary-full" data-i18n="settings.apply"></button>
+    </div>
+
+</div>
 <div id="access" class="tabcontent">
+    <!-- Instruction -->
+    <p data-i18n="settings.accessInstruction"></p>
+
+    <!-- Access host -->
+    <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend" data-i18n="settings.nvr"></legend>
+
+        <!-- IP address -->
+        <div class="field row">
+            <label class="homey-form-label" for="txt_accessnvrip" data-i18n="settings.nvrip"></label>
+            <input class="homey-form-input" id="txt_accessnvrip" type="text" value=""/>
+        </div>
+
+        <!-- Port -->
+        <div class="field row">
+            <label class="homey-form-label" for="txt_accessnvrport" data-i18n="settings.nvrport"></label>
+            <input class="homey-form-input" id="txt_accessnvrport" type="text" value="12445"/>
+        </div>
+
+    </fieldset>
+
     <!-- Access API Credentials -->
     <fieldset class="homey-form-fieldset">
         <legend class="homey-form-legend" data-i18n="settings.accessCredentials"></legend>
@@ -138,6 +190,8 @@
 
     <!-- Apply button -->
     <div class="field row">
+        <button id="btn_access_test" class="homey-button-primary-full" data-i18n="settings.testConnection"></button>
+        <br/>
         <button id="btn_AccessApply" class="homey-button-primary-full" data-i18n="settings.apply"></button>
     </div>
 
@@ -192,6 +246,10 @@
     const txtNvrPort = document.getElementById('txt_nvrport');
     const txtUsername = document.getElementById('txt_username');
     const txtPassword = document.getElementById('txt_password');
+    const txtV2NvrIp = document.getElementById('txt_v2nvrip');
+    const txtV2NvrPort = document.getElementById('txt_v2nvrport');
+    const txtAccessNvrIp = document.getElementById('txt_accessnvrip');
+    const txtAccessNvrPort = document.getElementById('txt_accessnvrport');
     const txtAccessApiKey = document.getElementById('txt_accessApiKey');
     const txtProtectV2ApiKey = document.getElementById('txt_protectV2ApiKey');
     const txtIgnoreEventsNfcFingerprint = document.getElementById('txt_ignoreEventsNfcFingerprint');
@@ -199,7 +257,10 @@
     const txtsaveLogToPersistentStorage = document.getElementById('txt_saveLogToPersistentStorage');
     const btnApply = document.getElementById('btn_apply');
     const btnTest = document.getElementById('btn_test');
+    const btnV2Apply = document.getElementById('btn_v2_apply');
+    const btnV2Test = document.getElementById('btn_v2_test');
     const btnAccessApply = document.getElementById('btn_AccessApply');
+    const btnAccessTest = document.getElementById('btn_access_test');
 
     function onHomeyReady(Homey) {
         const readSettings = () => {
@@ -220,6 +281,28 @@
                     txtNvrPort.value = nvrPort;
                 } else {
                     console.warn('[SETTINGS] Could not read UniFi Cloud Key Port.');
+                }
+            });
+
+            Homey.get('ufp:v2nvr', (error, v2nvr) => {
+                if (error) return Homey.alert(error);
+
+                if (v2nvr) {
+                    txtV2NvrIp.value = v2nvr.nvrip ? v2nvr.nvrip : '';
+                    txtV2NvrPort.value = v2nvr.nvrport ? v2nvr.nvrport : '443';
+                } else {
+                    console.warn('[SETTINGS] Could not read Protect V2 server details.');
+                }
+            });
+
+            Homey.get('ufp:accessnvr', (error, accessnvr) => {
+                if (error) return Homey.alert(error);
+
+                if (accessnvr) {
+                    txtAccessNvrIp.value = accessnvr.nvrip ? accessnvr.nvrip : '';
+                    txtAccessNvrPort.value = accessnvr.nvrport ? accessnvr.nvrport : '12445';
+                } else {
+                    console.warn('[SETTINGS] Could not read Access server details.');
                 }
             });
 
@@ -257,7 +340,19 @@
             });
         };
 
-        const saveSettings = () => {
+        // ufp:tokens holds both API keys, so each tab merges into the stored value
+        const saveTokens = (patch) => {
+            Homey.get('ufp:tokens', (error, tokens) => {
+                if (error) return Homey.alert(error);
+
+                Homey.set('ufp:tokens', Object.assign({}, tokens, patch), (error, result) => {
+                    if (error) return Homey.alert(error);
+                    console.log('[SETTINGS] tokens saved.');
+                });
+            });
+        };
+
+        const saveProtectSettings = () => {
             Homey.set('ufp:nvrip', txtNvrIp.value, (error, result) => {
                 if (error) return Homey.alert(error);
                 console.log('[SETTINGS] UniFi Cloud Key IP address saved.');
@@ -278,16 +373,6 @@
                 console.log('[SETTINGS] credentials saved.');
             });
 
-            const apiTokens = {
-                'accessApiKey': txtAccessApiKey.value,
-                'protectV2ApiKey': txtProtectV2ApiKey.value
-            };
-
-            Homey.set('ufp:tokens', apiTokens, (error, result) => {
-                if (error) return Homey.alert(error);
-                console.log('[SETTINGS] tokens saved.');
-            });
-
             const settings = {
                 'ignoreEventsNfcFingerprint': parseInt(txtIgnoreEventsNfcFingerprint.value) || 5,
                 'ignoreEventsDoorbell': parseInt(txtIgnoreEventsDoorbell.value) || 5,
@@ -302,27 +387,79 @@
             Homey.alert(Homey.__('settings.saved'), 'info');
         };
 
+        const saveProtectV2Settings = () => {
+            const v2nvr = {
+                'nvrip': txtV2NvrIp.value,
+                'nvrport': txtV2NvrPort.value
+            };
+
+            Homey.set('ufp:v2nvr', v2nvr, (error, result) => {
+                if (error) return Homey.alert(error);
+                console.log('[SETTINGS] Protect V2 server details saved.');
+            });
+
+            saveTokens({'protectV2ApiKey': txtProtectV2ApiKey.value});
+
+            Homey.alert(Homey.__('settings.saved'), 'info');
+        };
+
+        const saveAccessSettings = () => {
+            const accessnvr = {
+                'nvrip': txtAccessNvrIp.value,
+                'nvrport': txtAccessNvrPort.value
+            };
+
+            Homey.set('ufp:accessnvr', accessnvr, (error, result) => {
+                if (error) return Homey.alert(error);
+                console.log('[SETTINGS] Access server details saved.');
+            });
+
+            saveTokens({'accessApiKey': txtAccessApiKey.value});
+
+            Homey.alert(Homey.__('settings.saved'), 'info');
+        };
+
+        const showTestResult = (err, response) => {
+            if (err) return Homey.alert(err);
+            if (response) {
+                if (response.status === 'success') {
+                    var msg = response.message || Homey.__('settings.test_status.success');
+                    Homey.alert(msg, 'info');
+                } else {
+                    Homey.alert(Homey.__('settings.test_status.failure'), 'error');
+                }
+            }
+        };
+
         const testSettings = () => {
             const settings = {
                 'host': txtNvrIp.value,
                 'port': txtNvrPort.value,
                 'user': txtUsername.value,
-                'pass': txtPassword.value,
-                'accessApiKey': txtAccessApiKey.value,
+                'pass': txtPassword.value
+            };
+
+            Homey.api("POST", "/test", settings, showTestResult);
+        };
+
+        const testProtectV2Settings = () => {
+            const settings = {
+                'host': txtV2NvrIp.value,
+                'port': txtV2NvrPort.value,
                 'protectV2ApiKey': txtProtectV2ApiKey.value
             };
 
-            Homey.api("POST", "/test", settings, function (err, response) {
-                if (err) return Homey.alert(err);
-                if (response) {
-                    if (response.status === 'success') {
-                        var msg = response.message || Homey.__('settings.test_status.success');
-                        Homey.alert(msg, 'info');
-                    } else {
-                        Homey.alert(Homey.__('settings.test_status.failure'), 'error');
-                    }
-                }
-            });
+            Homey.api("POST", "/testV2ApiKey", settings, showTestResult);
+        };
+
+        const testAccessSettings = () => {
+            const settings = {
+                'host': txtAccessNvrIp.value,
+                'port': txtAccessNvrPort.value,
+                'accessApiKey': txtAccessApiKey.value
+            };
+
+            Homey.api("POST", "/testAccessApiKey", settings, showTestResult);
         };
 
         btnTest.addEventListener('click', e => {
@@ -330,11 +467,23 @@
         });
 
         btnApply.addEventListener('click', e => {
-            saveSettings();
+            saveProtectSettings();
+        });
+
+        btnV2Test.addEventListener('click', e => {
+            testProtectV2Settings();
+        });
+
+        btnV2Apply.addEventListener('click', e => {
+            saveProtectV2Settings();
+        });
+
+        btnAccessTest.addEventListener('click', e => {
+            testAccessSettings();
         });
 
         btnAccessApply.addEventListener('click', e => {
-            saveSettings();
+            saveAccessSettings();
         });
 
         readSettings();

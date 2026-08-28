@@ -83,15 +83,12 @@ class AppAccess extends BaseClass {
   }
 
   async loginToAccess() {
-    // Validate NVR IP address
-    const nvrip = this.homey.settings.get('ufp:nvrip');
-    if (!nvrip) {
-      this.log('NVR IP address not set.');
+    // Validate Access address, this is configured separately from the Protect V1 settings
+    const {host, port} = this.homey.app.getAccessConnection();
+    if (!host) {
+      this.log('Access IP address not set.');
       return;
     }
-
-    // Setting NVR Port when set
-    // const nvrport = this.homey.settings.get('ufp:nvrport');
 
     // Validate NVR credentials
     const tokens = this.homey.settings.get('ufp:tokens');
@@ -100,7 +97,7 @@ class AppAccess extends BaseClass {
       return;
     }
 
-    this.homey.app.accessApi.setSettings(nvrip, 12445, tokens.accessApiKey);
+    this.homey.app.accessApi.setSettings(host, port, tokens.accessApiKey);
 
     this.homey.app.accessApi.websocket.reconnectNotificationsListener();
 

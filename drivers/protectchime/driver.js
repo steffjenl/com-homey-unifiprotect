@@ -18,7 +18,7 @@ class UniFiChimeDriver extends Homey.Driver {
     onPair(session) {
         const homey = this.homey;
         session.setHandler("validate", async function (data) {
-            const nvrip = homey.settings.get('ufp:nvrip');
+            const nvrip = homey.settings.get('ufp:nvrip') || homey.app.getV2Connection().host;
             return (nvrip ? 'ok' : 'nok');
         });
 

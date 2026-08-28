@@ -117,14 +117,9 @@ module.exports = {
             }
         }
 
-        // If no V1 credentials, test V2 API key
-        if (body.protectV2ApiKey) {
-            return this.testV2ApiKey({homey, body});
-        }
-
         return {
             status: 'failure',
-            error: 'No credentials or API key provided',
+            error: 'No credentials provided',
         };
     },
     async testV2ApiKey({homey, body}) {
@@ -184,6 +179,69 @@ module.exports = {
             });
         } catch (error) {
             homey.log('testV2ApiKey error', error);
+            return {
+                status: 'failure',
+                error: error.message,
+            };
+        }
+    },
+    async testAccessApiKey({homey, body}) {
+        try {
+            return new Promise((resolve, reject) => {
+                const options = {
+                    method: 'GET',
+                    hostname: body.host,
+                    port: body.port || 12445,
+                    path: '/api/v1/developer/doors',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8',
+                        Accept: '*/*',
+                        Authorization: `Bearer ${body.accessApiKey}`,
+                    },
+                    maxRedirects: 20,
+                    rejectUnauthorized: false,
+                    timeout: 5000,
+                    keepAlive: true,
+                };
+
+                const req = https.request(options, (res) => {
+                    const data = [];
+                    res.on('data', (chunk) => data.push(chunk));
+                    res.on('end', () => {
+                        if (res.statusCode === 401) {
+                            reject(new Error('Invalid API key (401)'));
+                            return;
+                        }
+                        if (res.statusCode === 403) {
+                            reject(new Error('Invalid API key (403)'));
+                            return;
+                        }
+                        if (res.statusCode !== 200) {
+                            reject(new Error(`API key test failed (${res.statusCode})`));
+                            return;
+                        }
+                        resolve('Valid Access API key');
+                    });
+                });
+
+                req.on('error', (error) => {
+                    reject(new Error(`Access API key test failed (${error.message})`));
+                });
+
+                req.end();
+            }).then((result) => {
+                return {
+                    status: 'success',
+                    message: 'Access API key valid',
+                };
+            }).catch((error) => {
+                return {
+                    status: 'failure',
+                    error,
+                };
+            });
+        } catch (error) {
+            homey.log('testAccessApiKey error', error);
             return {
                 status: 'failure',
                 error: error.message,

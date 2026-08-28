@@ -30,6 +30,7 @@
         "settings": "Instellingen",
         "accessApiKey": "API-sleutel",
         "accessCredentials": "UniFi Access inloggegevens",
+        "accessInstruction": "Verbind met UniFi Access via een API-sleutel. Deze verbinding stel je los van de UniFi Protect-instellingen in.",
         "ignoreEventsNfcFingerprint": "Cooldown-periode tussen NFC/vingerafdruk gebeurtenissen (in seconden)",
         "ignoreEventsDoorbell": "Cooldown-periode tussen deurbel gebeurtenissen (in seconden)",
         "testConnection": "Verbinding testen",
@@ -41,13 +42,15 @@
         "protectV2Credentials": "UniFi Protect V2 inloggegevens",
         "status": "Status",
         "tab": {
-            "protect": "UniFi Protect",
-            "access": "UniFi Access",
-            "status": "Status"
+            "protect": "Protect V1",
+            "access": "Access",
+            "status": "Status",
+            "protectV2": "Protect V2 (Beta)"
         },
         "saveLogToPersistentStorage": "Log opslaan in permanente opslag",
-        "protectV2ApiKeySection": "Protect V2 API-sleutel",
-        "protectV2ApiKeyDescription": "Optioneel: verbinden met een V2 API-sleutel. Kan zelfstandig of samen met V1-inloggegevens worden gebruikt.",
+        "protectV2ApiKeySection": "Protect V2 API-sleutel (Beta)",
+        "protectV2ApiKeyDescription": "Beta: verbinden met een V2 API-sleutel. Werkt volledig los van de V1-inloggegevens.",
+        "protectV2Instruction": "Verbind met UniFi Protect via een V2 API-sleutel. Deze verbinding stel je los van de V1-inloggegevens in.",
         "protectV1Section": "Protect V1 (gebruikersnaam/wachtwoord)",
         "realtimeStatus": "Realtime status",
         "lastUpdateAt": "Laatste update om",

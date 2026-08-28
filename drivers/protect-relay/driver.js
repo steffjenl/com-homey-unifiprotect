@@ -16,7 +16,7 @@ class UniFiRelayDriver extends Homey.Driver {
     let pairMode = 'auto';
 
     session.setHandler('validate', async function () {
-      const nvrip = homey.settings.get('ufp:nvrip');
+      const nvrip = homey.settings.get('ufp:nvrip') || homey.app.getV2Connection().host;
       return (nvrip ? 'ok' : 'nok');
     });
 

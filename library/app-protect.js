@@ -499,15 +499,12 @@ class AppProtect extends BaseClass {
     }
 
     async loginToProtectV2() {
-        // Validate NVR IP address
-        const nvrip = this.homey.settings.get('ufp:nvrip');
-        if (!nvrip) {
-            this.log('NVR IP address not set.');
+        // Validate Protect V2 address, this is configured separately from the V1 settings
+        const {host, port} = this.homey.app.getV2Connection();
+        if (!host) {
+            this.log('Protect V2 IP address not set.');
             return;
         }
-
-        // Setting NVR Port when set
-        // const nvrport = this.homey.settings.get('ufp:nvrport');
 
         // Validate NVR credentials
         const tokens = this.homey.settings.get('ufp:tokens');
@@ -521,7 +518,7 @@ class AppProtect extends BaseClass {
             return;
         }
 
-        this.homey.app.apiV2.setSettings(nvrip, 443, tokens.protectV2ApiKey);
+        this.homey.app.apiV2.setSettings(host, port, tokens.protectV2ApiKey);
 
         this.homey.app.apiV2.websocket.reconnectNotificationsListener();
         this.homey.app.apiV2.websocketDevices.reconnectNotificationsListener();

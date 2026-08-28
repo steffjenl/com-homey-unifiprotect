@@ -54,6 +54,9 @@ class UniFiProtect extends Homey.App {
         // Register snapshot image token
         this.appProtect._registerSnapshotToken();
 
+        // Split the shared V1 host into dedicated V2/Access hosts, before the settings listener is attached
+        this._migrateHostSettings();
+
         // Subscribe to credentials updates - FIXED: Store bound method for removal on uninit
         this._onSettingsChanged = this._handleSettingsChange.bind(this);
         this.homey.settings.on('set', this._onSettingsChanged);
@@ -115,6 +118,57 @@ class UniFiProtect extends Homey.App {
         this.debug('UniFiProtect has been initialized');
     }
 
+    /**
+     * One-time migration: Protect V2 and Access used to reuse the V1 NVR IP address with a
+     * hardcoded port. Copy the V1 address into the dedicated settings when a token is present,
+     * so existing installations keep working after the upgrade.
+     */
+    _migrateHostSettings() {
+        const migrations = this.homey.settings.get('ufp:migrations') || {};
+        if (migrations.hostSplit) {
+            return;
+        }
+
+        const nvrip = this.homey.settings.get('ufp:nvrip');
+        const tokens = this.homey.settings.get('ufp:tokens') || {};
+
+        if (nvrip) {
+            if (tokens.protectV2ApiKey && !this.homey.settings.get('ufp:v2nvr')) {
+                this.homey.settings.set('ufp:v2nvr', {nvrip, nvrport: '443'});
+                this.debug('[App] Migrated V1 NVR IP address to the Protect V2 settings');
+            }
+
+            if (tokens.accessApiKey && !this.homey.settings.get('ufp:accessnvr')) {
+                this.homey.settings.set('ufp:accessnvr', {nvrip, nvrport: '12445'});
+                this.debug('[App] Migrated V1 NVR IP address to the Access settings');
+            }
+        }
+
+        this.homey.settings.set('ufp:migrations', Object.assign({}, migrations, {hostSplit: true}));
+    }
+
+    /**
+     * Host and port used by the Protect V2 API, falling back to the V1 address when unset.
+     */
+    getV2Connection() {
+        const config = this.homey.settings.get('ufp:v2nvr') || {};
+        return {
+            host: config.nvrip || this.homey.settings.get('ufp:nvrip'),
+            port: parseInt(config.nvrport, 10) || 443,
+        };
+    }
+
+    /**
+     * Host and port used by the Access API, falling back to the V1 address when unset.
+     */
+    getAccessConnection() {
+        const config = this.homey.settings.get('ufp:accessnvr') || {};
+        return {
+            host: config.nvrip || this.homey.settings.get('ufp:nvrip'),
+            port: parseInt(config.nvrport, 10) || 12445,
+        };
+    }
+
     // FIXED: Extracted settings change handler so it can be unregistered
     async _handleSettingsChange(key) {
         try {
@@ -141,6 +195,20 @@ class UniFiProtect extends Homey.App {
                 if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
                     this._initProtectV2Stack();
                     this.appProtect.loginToProtectV2().catch(this.error);
+                }
+            }
+            if (key === 'ufp:v2nvr') {
+                const tokens = this.homey.settings.get('ufp:tokens');
+                if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
+                    this._initProtectV2Stack();
+                    this.appProtect.loginToProtectV2().catch(this.error);
+                }
+            }
+            if (key === 'ufp:accessnvr') {
+                const tokens = this.homey.settings.get('ufp:tokens');
+                if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
+                    await this._initAccessStack();
+                    this.appAccess.loginToAccess().catch(this.error);
                 }
             }
         } catch (error) {

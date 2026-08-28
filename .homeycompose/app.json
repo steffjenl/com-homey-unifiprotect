@@ -404,6 +404,10 @@
     "testV2ApiKey": {
       "method": "POST",
       "path": "/testV2ApiKey"
+    },
+    "testAccessApiKey": {
+      "method": "POST",
+      "path": "/testAccessApiKey"
     }
   }
 }
