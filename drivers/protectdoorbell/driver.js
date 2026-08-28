@@ -2,6 +2,7 @@
 
 const Homey = require('homey');
 const UfvConstants = require("../../library/constants");
+const { GUIDE_URL, getCamerasWithoutRtsp } = require('../../library/rtsp-status');
 
 class UniFiDoorbellDriver extends Homey.Driver {
     /**
@@ -38,17 +39,20 @@ class UniFiDoorbellDriver extends Homey.Driver {
             return (nvrip ? 'ok' : 'nok:protect');
         });
 
-        session.setHandler("list_devices", async function (data) {
+        session.setHandler("check_rtsp", async (data) => {
             try {
-                let doorbells;
-                if (homey.app.isV1Available()) {
-                    doorbells = await homey.app.api.getDoorbells();
-                } else if (homey.app.isV2Available()) {
-                    doorbells = await homey.app.apiV2.getDoorbells();
-                } else {
-                    homey.app.debug('[protectdoorbell] No API available for listing doorbells');
-                    return [];
-                }
+                const doorbells = await this._listUnifiDoorbells();
+                const disabled = await getCamerasWithoutRtsp(homey.app, doorbells);
+                return { disabled: disabled, guideUrl: GUIDE_URL };
+            } catch (error) {
+                homey.app.debug('[protectdoorbell] check_rtsp error: ' + error);
+                return { disabled: [], guideUrl: GUIDE_URL };
+            }
+        });
+
+        session.setHandler("list_devices", async (data) => {
+            try {
+                const doorbells = await this._listUnifiDoorbells();
                 return Object.values(doorbells).map((camera) => ({
                     data: { id: String(camera.id) },
                     name: camera.name,
@@ -58,6 +62,20 @@ class UniFiDoorbellDriver extends Homey.Driver {
                 return [];
             }
         });
+    }
+
+    /**
+     * Fetch the doorbells from whichever Protect API is available.
+     */
+    async _listUnifiDoorbells() {
+        if (this.homey.app.isV1Available()) {
+            return this.homey.app.api.getDoorbells();
+        }
+        if (this.homey.app.isV2Available()) {
+            return this.homey.app.apiV2.getDoorbells();
+        }
+        this.homey.app.debug('[protectdoorbell] No API available for listing doorbells');
+        return [];
     }
 
     onParseWebsocketMessage(camera, payload, actionType = null, eventId = null) {

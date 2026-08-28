@@ -16,11 +16,19 @@
                 "protect": "De verbinding met UniFi Protect is nog niet ingesteld. Open de app-instellingen en vul het IP-adres van je UniFi console in, plus een Protect V2 API-sleutel of een lokale gebruikersnaam en wachtwoord.",
                 "access": "De verbinding met UniFi Access is nog niet ingesteld. Open de app-instellingen en vul het IP-adres van je UniFi console in, plus een UniFi Access API-sleutel.",
                 "steps": "Ga naar Homey → Apps → UniFi Protect → Instellingen. Zolang er niets is ingesteld start de setup-wizard daar automatisch en loodst hij je stap voor stap door de instellingen.",
-                "guide": "Handleiding: https://github.com/steffjenl/com-ubnt-unifiprotect/blob/develop/wiki/setup-guide.md"
+                "guide": "Handleiding: https://github.com/steffjenl/com-homey-unifiprotect/blob/develop/wiki/setup-guide.md"
             }
         },
         "login": {
             "title": "Inloggen"
+        },
+        "rtsp": {
+            "title": "RTSP-stream niet ingeschakeld",
+            "warning_camera": "Van de onderstaande camera's is in UniFi Protect geen RTSP(S)-stream gedeeld. Je kunt ze wel toevoegen — beweging en slimme detectie blijven werken — maar livebeeld is pas beschikbaar zodra je de stream inschakelt.",
+            "warning_doorbell": "Van de onderstaande deurbellen is in UniFi Protect geen RTSP(S)-stream gedeeld. Je kunt ze wel toevoegen — beweging, aanbellen en slimme detectie blijven werken — maar livebeeld is pas beschikbaar zodra je de stream inschakelt.",
+            "affected": "Betrokken apparaten:",
+            "guide": "Zo schakel je de stream in:",
+            "continue": "Doorgaan"
         }
     },
     "settings": {

@@ -2,6 +2,7 @@
 
 const Homey = require('homey');
 const UfvConstants = require('../../library/constants');
+const { GUIDE_URL, getCamerasWithoutRtsp } = require('../../library/rtsp-status');
 
 class UniFiCameraDriver extends Homey.Driver {
   /**
@@ -33,17 +34,20 @@ class UniFiCameraDriver extends Homey.Driver {
       return (nvrip ? 'ok' : 'nok:protect');
     });
 
+    session.setHandler('check_rtsp', async (data) => {
+      try {
+        const cameras = await this._listUnifiCameras();
+        const disabled = await getCamerasWithoutRtsp(homey.app, cameras);
+        return { disabled, guideUrl: GUIDE_URL };
+      } catch (error) {
+        homey.app.debug(`[protectcamera] check_rtsp error: ${error}`);
+        return { disabled: [], guideUrl: GUIDE_URL };
+      }
+    });
+
     session.setHandler('list_devices', async (data) => {
       try {
-        let cameras;
-        if (homey.app.isV1Available()) {
-          cameras = await homey.app.api.getCameras();
-        } else if (homey.app.isV2Available()) {
-          cameras = await homey.app.apiV2.getCamerasNonDoorbell();
-        } else {
-          homey.app.debug('[protectcamera] No API available for listing cameras');
-          return [];
-        }
+        const cameras = await this._listUnifiCameras();
         return Object.values(cameras).map((camera) => ({
           data: { id: String(camera.id) },
           name: camera.name,
@@ -53,6 +57,20 @@ class UniFiCameraDriver extends Homey.Driver {
         return [];
       }
     });
+  }
+
+  /**
+   * Fetch the cameras from whichever Protect API is available.
+   */
+  async _listUnifiCameras() {
+    if (this.homey.app.isV1Available()) {
+      return this.homey.app.api.getCameras();
+    }
+    if (this.homey.app.isV2Available()) {
+      return this.homey.app.apiV2.getCamerasNonDoorbell();
+    }
+    this.homey.app.debug('[protectcamera] No API available for listing cameras');
+    return [];
   }
 
   onParseWebsocketMessage(camera, payload, actionType = null, eventId = null) {

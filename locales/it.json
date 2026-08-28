@@ -16,11 +16,19 @@
                 "protect": "The UniFi Protect connection has not been set up yet. Open the app settings and enter the IP address of your UniFi console plus a Protect V2 API key or a local username and password.",
                 "access": "The UniFi Access connection has not been set up yet. Open the app settings and enter the IP address of your UniFi console plus a UniFi Access API key.",
                 "steps": "Go to Homey → Apps → UniFi Protect → Settings. The setup wizard starts automatically as long as nothing is configured, and guides you step by step.",
-                "guide": "Setup guide: https://github.com/steffjenl/com-ubnt-unifiprotect/blob/develop/wiki/setup-guide.md"
+                "guide": "Setup guide: https://github.com/steffjenl/com-homey-unifiprotect/blob/develop/wiki/setup-guide.md"
             }
         },
         "login": {
             "title": "Accedi"
+        },
+        "rtsp": {
+            "title": "Flusso RTSP non abilitato",
+            "warning_camera": "Per le telecamere elencate di seguito non è condiviso alcun flusso RTSP(S) in UniFi Protect. Puoi comunque aggiungerle — rilevamento del movimento e rilevamento intelligente continuano a funzionare — ma il video in diretta sarà disponibile solo dopo aver abilitato il flusso.",
+            "warning_doorbell": "Per i campanelli elencati di seguito non è condiviso alcun flusso RTSP(S) in UniFi Protect. Puoi comunque aggiungerli — movimento, suoneria e rilevamento intelligente continuano a funzionare — ma il video in diretta sarà disponibile solo dopo aver abilitato il flusso.",
+            "affected": "Dispositivi interessati:",
+            "guide": "Come abilitare il flusso:",
+            "continue": "Continua"
         }
     },
     "settings": {

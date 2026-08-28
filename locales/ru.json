@@ -16,11 +16,19 @@
                 "protect": "The UniFi Protect connection has not been set up yet. Open the app settings and enter the IP address of your UniFi console plus a Protect V2 API key or a local username and password.",
                 "access": "The UniFi Access connection has not been set up yet. Open the app settings and enter the IP address of your UniFi console plus a UniFi Access API key.",
                 "steps": "Go to Homey → Apps → UniFi Protect → Settings. The setup wizard starts automatically as long as nothing is configured, and guides you step by step.",
-                "guide": "Setup guide: https://github.com/steffjenl/com-ubnt-unifiprotect/blob/develop/wiki/setup-guide.md"
+                "guide": "Setup guide: https://github.com/steffjenl/com-homey-unifiprotect/blob/develop/wiki/setup-guide.md"
             }
         },
         "login": {
             "title": "Войти"
+        },
+        "rtsp": {
+            "title": "Поток RTSP не включён",
+            "warning_camera": "Для указанных ниже камер в UniFi Protect не предоставлен поток RTSP(S). Их всё равно можно добавить — обнаружение движения и умное обнаружение продолжат работать, — но видео в реальном времени станет доступно только после включения потока.",
+            "warning_doorbell": "Для указанных ниже дверных звонков в UniFi Protect не предоставлен поток RTSP(S). Их всё равно можно добавить — движение, звонок и умное обнаружение продолжат работать, — но видео в реальном времени станет доступно только после включения потока.",
+            "affected": "Затронутые устройства:",
+            "guide": "Как включить поток:",
+            "continue": "Продолжить"
         }
     },
     "settings": {

@@ -16,11 +16,19 @@
                 "protect": "The UniFi Protect connection has not been set up yet. Open the app settings and enter the IP address of your UniFi console plus a Protect V2 API key or a local username and password.",
                 "access": "The UniFi Access connection has not been set up yet. Open the app settings and enter the IP address of your UniFi console plus a UniFi Access API key.",
                 "steps": "Go to Homey → Apps → UniFi Protect → Settings. The setup wizard starts automatically as long as nothing is configured, and guides you step by step.",
-                "guide": "Setup guide: https://github.com/steffjenl/com-ubnt-unifiprotect/blob/develop/wiki/setup-guide.md"
+                "guide": "Setup guide: https://github.com/steffjenl/com-homey-unifiprotect/blob/develop/wiki/setup-guide.md"
             }
         },
         "login": {
             "title": "로그인"
+        },
+        "rtsp": {
+            "title": "RTSP 스트림이 활성화되지 않음",
+            "warning_camera": "아래 카메라는 UniFi Protect에서 RTSP(S) 스트림이 공유되어 있지 않습니다. 그래도 추가할 수 있으며 모션 및 스마트 감지는 계속 작동하지만, 스트림을 활성화하기 전까지 실시간 영상은 사용할 수 없습니다.",
+            "warning_doorbell": "아래 초인종은 UniFi Protect에서 RTSP(S) 스트림이 공유되어 있지 않습니다. 그래도 추가할 수 있으며 모션, 벨 울림, 스마트 감지는 계속 작동하지만, 스트림을 활성화하기 전까지 실시간 영상은 사용할 수 없습니다.",
+            "affected": "해당 기기:",
+            "guide": "스트림 활성화 방법:",
+            "continue": "계속"
         }
     },
     "settings": {

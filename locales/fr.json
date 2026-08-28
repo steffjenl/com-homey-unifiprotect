@@ -16,11 +16,19 @@
                 "protect": "The UniFi Protect connection has not been set up yet. Open the app settings and enter the IP address of your UniFi console plus a Protect V2 API key or a local username and password.",
                 "access": "The UniFi Access connection has not been set up yet. Open the app settings and enter the IP address of your UniFi console plus a UniFi Access API key.",
                 "steps": "Go to Homey → Apps → UniFi Protect → Settings. The setup wizard starts automatically as long as nothing is configured, and guides you step by step.",
-                "guide": "Setup guide: https://github.com/steffjenl/com-ubnt-unifiprotect/blob/develop/wiki/setup-guide.md"
+                "guide": "Setup guide: https://github.com/steffjenl/com-homey-unifiprotect/blob/develop/wiki/setup-guide.md"
             }
         },
         "login": {
             "title": "Connexion"
+        },
+        "rtsp": {
+            "title": "Flux RTSP non activé",
+            "warning_camera": "Aucun flux RTSP(S) n'est partagé dans UniFi Protect pour les caméras ci-dessous. Vous pouvez tout de même les ajouter — la détection de mouvement et la détection intelligente continuent de fonctionner — mais la vidéo en direct ne sera disponible qu'après activation du flux.",
+            "warning_doorbell": "Aucun flux RTSP(S) n'est partagé dans UniFi Protect pour les sonnettes ci-dessous. Vous pouvez tout de même les ajouter — mouvement, sonnerie et détection intelligente continuent de fonctionner — mais la vidéo en direct ne sera disponible qu'après activation du flux.",
+            "affected": "Appareils concernés :",
+            "guide": "Comment activer le flux :",
+            "continue": "Continuer"
         }
     },
     "settings": {

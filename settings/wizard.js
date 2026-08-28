@@ -9,7 +9,7 @@
  * logs in automatically.
  */
 (function () {
-    const GUIDE_URL = 'https://github.com/steffjenl/com-ubnt-unifiprotect/blob/develop/wiki/setup-guide.md';
+    const GUIDE_URL = 'https://github.com/steffjenl/com-homey-unifiprotect/blob/develop/wiki/setup-guide.md';
     const GUIDE_ANCHOR = {
         v1: '#1-unifi-protect--create-a-local-user-v1--legacy',
         v2: '#2-unifi-protect--create-an-integration-api-key-v2',

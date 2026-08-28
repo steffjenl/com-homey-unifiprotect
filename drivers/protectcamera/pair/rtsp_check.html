@@ -1,0 +1,56 @@
+<body>
+<div id="rtsp-warning" style="display: none;">
+  <h2 id="rtsp-title" style="margin: 0 0 8px; font-size: 1.1em;"></h2>
+  <p id="rtsp-body" style="margin: 0 0 12px;"></p>
+  <p id="rtsp-affected" style="margin: 0 0 4px; font-weight: bold;"></p>
+  <ul id="rtsp-list" style="margin: 0 0 12px 18px; padding: 0;"></ul>
+  <p style="margin: 0 0 16px; font-size: 0.9em; color: #666; word-break: break-all;">
+    <span id="rtsp-guide-label"></span>
+    <a id="rtsp-guide-link" href="#" target="_blank" rel="noopener noreferrer"></a>
+  </p>
+  <button id="rtsp-continue" type="button" class="homey-button-primary-full"></button>
+</div>
+
+<script type="text/javascript">
+  Homey.setTitle(__('pair.rtsp.title'));
+  Homey.showLoadingOverlay();
+
+  function showWarning(result) {
+    document.getElementById('rtsp-title').textContent = __('pair.rtsp.title');
+    document.getElementById('rtsp-body').textContent = __('pair.rtsp.warning_camera');
+    document.getElementById('rtsp-affected').textContent = __('pair.rtsp.affected');
+
+    var list = document.getElementById('rtsp-list');
+    result.disabled.forEach(function (camera) {
+      var item = document.createElement('li');
+      item.textContent = camera.name;
+      list.appendChild(item);
+    });
+
+    document.getElementById('rtsp-guide-label').textContent = __('pair.rtsp.guide') + ' ';
+    var link = document.getElementById('rtsp-guide-link');
+    link.textContent = result.guideUrl;
+    link.href = result.guideUrl;
+
+    var button = document.getElementById('rtsp-continue');
+    button.textContent = __('pair.rtsp.continue');
+    button.addEventListener('click', function () {
+      Homey.showView('list_devices');
+    });
+
+    document.getElementById('rtsp-warning').style.display = 'block';
+    Homey.hideLoadingOverlay();
+  }
+
+  Homey.emit('check_rtsp', null).then(function (result) {
+    if (!result || !result.disabled || result.disabled.length === 0) {
+      Homey.showView('list_devices');
+      return;
+    }
+    showWarning(result);
+  }).catch(function (error) {
+    // Never block pairing on a failed check.
+    Homey.showView('list_devices');
+  });
+</script>
+</body>

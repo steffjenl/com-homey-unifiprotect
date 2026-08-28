@@ -16,11 +16,19 @@
                 "protect": "The UniFi Protect connection has not been set up yet. Open the app settings and enter the IP address of your UniFi console plus a Protect V2 API key or a local username and password.",
                 "access": "The UniFi Access connection has not been set up yet. Open the app settings and enter the IP address of your UniFi console plus a UniFi Access API key.",
                 "steps": "Go to Homey → Apps → UniFi Protect → Settings. The setup wizard starts automatically as long as nothing is configured, and guides you step by step.",
-                "guide": "Setup guide: https://github.com/steffjenl/com-ubnt-unifiprotect/blob/develop/wiki/setup-guide.md"
+                "guide": "Setup guide: https://github.com/steffjenl/com-homey-unifiprotect/blob/develop/wiki/setup-guide.md"
             }
         },
         "login": {
             "title": "Log in"
+        },
+        "rtsp": {
+            "title": "RTSP stream not enabled",
+            "warning_camera": "The cameras below have no RTSP(S) stream shared in UniFi Protect. You can still add them — motion and smart detection keep working — but live video will not be available until you enable the stream.",
+            "warning_doorbell": "The doorbells below have no RTSP(S) stream shared in UniFi Protect. You can still add them — motion, ringing and smart detection keep working — but live video will not be available until you enable the stream.",
+            "affected": "Affected devices:",
+            "guide": "How to enable the stream:",
+            "continue": "Continue"
         }
     },
     "settings": {
@@ -226,6 +234,6 @@
     },
     "warnings": {
         "unifi_access": "Warning: UniFi Access features are in early beta. Use with caution and report any issues to the developer.",
-        "no_rtsp_url": "Warning: No RTSP URL available for this camera. Please Enable 'Share Livestream' -> 'Enable Secure RTSPS Output' in the camera settings in UniFi Protect to use livestream features."
+        "no_rtsp_url": "Warning: No RTSP URL available for this camera. Please Enable 'Share Livestream' -> 'Enable Secure RTSPS Output' in the camera settings in UniFi Protect to use livestream features. Instructions: https://github.com/steffjenl/com-homey-unifiprotect/blob/develop/wiki/rtsp-setup.md"
     }
 }

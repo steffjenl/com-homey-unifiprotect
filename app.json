@@ -8619,6 +8619,12 @@
           "id": "validate"
         },
         {
+          "id": "rtsp_check",
+          "navigation": {
+            "next": "list_devices"
+          }
+        },
+        {
           "id": "list_devices",
           "template": "list_devices",
           "navigation": {
@@ -8773,6 +8779,12 @@
       "pair": [
         {
           "id": "validate"
+        },
+        {
+          "id": "rtsp_check",
+          "navigation": {
+            "next": "list_devices"
+          }
         },
         {
           "id": "list_devices",
