@@ -376,5 +376,8 @@
   },
   "1.12.2": {
     "en": "Fixed UniFi Access Gate/Garage/Door devices firing the wrong or duplicate opened/closed events (e.g. \"opened\" firing on close); added reliable Door/Garage door opened, closed and is-open/is-closed flow cards, periodic status polling, and a websocket fix that could process the same Access event twice."
+  },
+  "1.12.3": {
+    "en": "Add siren action cards for V2"
   }
 }
