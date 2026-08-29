@@ -145,18 +145,6 @@ class Doorbell extends Homey.Device {
      * @returns {Promise<string|void>} return a custom message that will be displayed
      */
   async onSettings({ oldSettings, newSettings, changedKeys }) {
-    if (newSettings.rtspUrl && newSettings.rtspUrl !== '') {
-      this.rtspUrl = newSettings.rtspUrl;
-      this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspUrl}`);
-      this.setCameraVideo('snapshot', `${this.getName()} Video`, this.video);
-      return;
-    }
-    if (newSettings.rtspPackageUrl && newSettings.rtspPackageUrl !== '') {
-      this.rtspPackageUrl = newSettings.rtspPackageUrl;
-      this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspPackageUrl}`);
-      this.setCameraVideo('package-snapshot', `${this.getName()} Package Video`, this.packageVideo);
-      return;
-    }
     if (changedKeys.includes('useCameraSnapshot')) {
       this.settings.useCameraSnapshot = newSettings.useCameraSnapshot;
     }
@@ -764,30 +752,22 @@ class Doorbell extends Homey.Device {
         };
       });
 
-      // Get rtsp url from device settings
-      if (this.settings.rtspUrl && this.settings.rtspUrl !== '') {
-        this.rtspUrl = this.settings.rtspUrl;
-        this.log(`Using custom RTSP URL for doorbell ${this.getName()}: ${this.rtspUrl}`);
-      } else {
-
-        // get rtsp url from api
-        if (this.homey.app.isV1Available()) {
-          try {
-            this.rtspUrl = await this.homey.app.api.getStreamUrl(this.getData());
-            this.log(`RTSP URL for doorbell ${this.getName()}: ${this.rtspUrl}`);
-          } catch (error) {
-            this.error(error);
+      if (this.homey.app.isV1Available()) {
+        try {
+          this.rtspUrl = await this.homey.app.api.getStreamUrl(this.getData());
+          this.log(`RTSP URL for doorbell ${this.getName()}: ${this.rtspUrl}`);
+        } catch (error) {
+          this.error(error);
+        }
+      } else if (this.homey.app.isV2Available()) {
+        try {
+          const streams = await this.homey.app.apiV2.getRtspsStream(this.getData().id, ['high']);
+          if (streams && streams.high) {
+            this.rtspUrl = streams.high;
+            this.log(`RTSPS URL (V2) for doorbell ${this.getName()}: ${this.rtspUrl}`);
           }
-        } else if (this.homey.app.isV2Available()) {
-          try {
-            const streams = await this.homey.app.apiV2.getRtspsStream(this.getData().id, ['high']);
-            if (streams && streams.high) {
-              this.rtspUrl = streams.high;
-              this.log(`RTSPS URL (V2) for doorbell ${this.getName()}: ${this.rtspUrl}`);
-            }
-          } catch (e) {
-            this.homey.app.debug(`V2 getRtspsStream failed for ${this.getName()}: ${e}`);
-          }
+        } catch (e) {
+          this.homey.app.debug(`V2 getRtspsStream failed for ${this.getName()}: ${e}`);
         }
       }
 
@@ -814,29 +794,22 @@ class Doorbell extends Homey.Device {
         };
       });
 
-      // Get rtsp url from device settings
-      if (this.settings.rtspPackageUrl && this.settings.rtspPackageUrl !== '') {
-        this.rtspPackageUrl = this.settings.rtspPackageUrl;
-        this.log(`Using custom RTSP URL for doorbell-package ${this.getName()}: ${this.rtspPackageUrl}`);
-      } else {
-        // get rtsp url from api
-        if (this.homey.app.isV1Available()) {
-          try {
-            this.rtspPackageUrl = await this.homey.app.api.getPackageStreamUrl(this.getData());
-            this.log(`RTSP URL for doorbell-package ${this.getName()}: ${this.rtspPackageUrl}`);
-          } catch (error) {
-            this.error(error);
+      if (this.homey.app.isV1Available()) {
+        try {
+          this.rtspPackageUrl = await this.homey.app.api.getPackageStreamUrl(this.getData());
+          this.log(`RTSP URL for doorbell-package ${this.getName()}: ${this.rtspPackageUrl}`);
+        } catch (error) {
+          this.error(error);
+        }
+      } else if (this.homey.app.isV2Available()) {
+        try {
+          const streams = await this.homey.app.apiV2.getRtspsStream(this.getData().id, ['package']);
+          if (streams && streams.package) {
+            this.rtspPackageUrl = streams.package;
+            this.log(`RTSPS Package URL (V2) for doorbell-package ${this.getName()}: ${this.rtspPackageUrl}`);
           }
-        } else if (this.homey.app.isV2Available()) {
-          try {
-            const streams = await this.homey.app.apiV2.getRtspsStream(this.getData().id, ['package']);
-            if (streams && streams.package) {
-              this.rtspPackageUrl = streams.package;
-              this.log(`RTSPS Package URL (V2) for doorbell-package ${this.getName()}: ${this.rtspPackageUrl}`);
-            }
-          } catch (e) {
-            this.homey.app.debug(`V2 getRtspsStream (package) failed for ${this.getName()}: ${e}`);
-          }
+        } catch (e) {
+          this.homey.app.debug(`V2 getRtspsStream (package) failed for ${this.getName()}: ${e}`);
         }
       }
 

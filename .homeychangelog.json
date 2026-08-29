@@ -370,5 +370,8 @@
   },
   "1.12.0": {
     "en": "Added installation wizard, rtsp stream detection, support for cloud API and more "
+  },
+  "1.12.1": {
+    "en": "Removed manual RTSP URL overrides; Homey now manages online streaming."
   }
 }
