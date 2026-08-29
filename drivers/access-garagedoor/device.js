@@ -2,6 +2,8 @@
 
 const Homey = require('homey');
 const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
+const UfvConstants = require('../../library/constants');
+const { DOOR_STATE_OPEN, DOOR_STATE_CLOSED, DOOR_STATE_UNKNOWN, normalizeDoorState } = require('../../library/door-state');
 
 class MyDevice extends Homey.Device {
 
@@ -10,6 +12,7 @@ class MyDevice extends Homey.Device {
      */
   async onInit() {
     this._startConnectionMonitoring('access');
+    this._doorState = DOOR_STATE_UNKNOWN;
     if (this.hasCapability('alarm_garagedoor_open')) {
       await this.removeCapability('alarm_garagedoor_open');
     }
@@ -18,26 +21,23 @@ class MyDevice extends Homey.Device {
     }
     //
     this.log('Access Garagedoor has been initialized');
-    this.registerCapabilityListener('garagedoor_closed', async (value) => {
-      this.log('Unlocking the door');
-      try {
-        await this.driver.ready();
-        this.driver.triggerGarageDoorOpened(this, {}, {});
-      } catch (error) {
-        this.error(error);
-      }
+    this.registerCapabilityListener('garagedoor_closed', async () => {
+      // Gate/garage hubs expose a single toggle relay: there is no separate open/close
+      // action, the same unlock pulse both opens and closes the door. The physical
+      // open/closed state is reported separately via the door position sensor (dps)
+      // and is handled by onDoorChange(), not here.
+      this.log('Pulsing the door relay');
       return this.homey.app.accessApi.setDoorUnLock(this.getData().id);
     });
     try {
       const device = await this.homey.app.accessApi.getDoor(this.getData().id);
-      if (device) {
-        if (typeof device.data.door_position_status !== 'undefined') {
-          this.setCapabilityValue('garagedoor_closed', device.data.door_position_status !== 'open').catch(this.error);
-        }
+      if (device && typeof device.data.door_position_status !== 'undefined') {
+        await this._applyDoorState(normalizeDoorState(device.data.door_position_status, device.data.dps_connected));
       }
     } catch (error) {
       this.error(error);
     }
+    this._startDoorStatePolling();
   }
 
   /**
@@ -72,20 +72,75 @@ class MyDevice extends Homey.Device {
      * onDeleted is called when the user deleted the device.
      */
   async onDeleted() {
+    this._stopDoorStatePolling();
     this.log('Access Garagedoor has been deleted');
   }
 
-  onLockChange(value) {
-    // this.setCapabilityValue('garagedoor_closed', value);
+  async onUninit() {
+    this._stopDoorStatePolling();
   }
 
-  async onDoorChange(value) {
-    const oldValue = this.getCapabilityValue('garagedoor_closed');
-    this.setCapabilityValue('garagedoor_closed', !value).catch(this.error);
-    if (oldValue !== value) return;
+  _startDoorStatePolling() {
+    this._stopDoorStatePolling();
+    this._doorStatePollInterval = this.homey.setInterval(() => {
+      this.homey.app.accessApi.getDoor(this.getData().id)
+        .then((device) => {
+          if (device && typeof device.data.door_position_status !== 'undefined') {
+            return this._applyDoorState(normalizeDoorState(device.data.door_position_status, device.data.dps_connected));
+          }
+          return undefined;
+        })
+        .catch(this.error);
+    }, UfvConstants.ACCESS_DOOR_POLL_INTERVAL_MS);
+  }
+
+  _stopDoorStatePolling() {
+    if (this._doorStatePollInterval) {
+      this.homey.clearInterval(this._doorStatePollInterval);
+      this._doorStatePollInterval = null;
+    }
+  }
+
+  onLockChange(value) {
+    // Gate/garage hubs report a relay lock state here, but there is no separate
+    // "locked" capability on this device class — the open/closed state (below)
+    // is what drives the tile and the flow cards.
+  }
+
+  onDoorChange(rawDps, dpsConnected) {
+    this._applyDoorState(normalizeDoorState(rawDps, dpsConnected)).catch(this.error);
+  }
+
+  /**
+   * Apply a normalised door state, updating the capability and firing the
+   * opened/closed trigger exactly once per real transition.
+   * @param {'open'|'closed'|'unknown'} nextState
+   */
+  async _applyDoorState(nextState) {
+    if (nextState === DOOR_STATE_UNKNOWN) {
+      return;
+    }
+
+    const previous = this._doorState;
+    // Set the new state before awaiting anything so a second event arriving
+    // while setCapabilityValue() is still pending sees the up-to-date value
+    // instead of racing against this one and double-firing the trigger.
+    this._doorState = nextState;
+
+    try {
+      await this.setCapabilityValue('garagedoor_closed', nextState === DOOR_STATE_CLOSED);
+    } catch (error) {
+      this.error(error);
+    }
+
+    // Don't trigger on the first known reading, or when nothing actually changed.
+    if (previous === DOOR_STATE_UNKNOWN || previous === nextState) {
+      return;
+    }
+
     try {
       await this.driver.ready();
-      if (value) {
+      if (nextState === DOOR_STATE_OPEN) {
         this.driver.triggerGarageDoorOpened(this, {}, {});
       } else {
         this.driver.triggerGarageDoorClosed(this, {}, {});
@@ -93,6 +148,14 @@ class MyDevice extends Homey.Device {
     } catch (error) {
       this.error(error);
     }
+  }
+
+  isDoorOpen() {
+    return this._doorState === DOOR_STATE_OPEN;
+  }
+
+  isDoorClosed() {
+    return this._doorState === DOOR_STATE_CLOSED;
   }
 
 }

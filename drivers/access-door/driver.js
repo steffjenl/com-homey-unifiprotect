@@ -8,6 +8,8 @@ module.exports = class MyDriver extends Homey.Driver {
      * onInit is called when the driver is initialized.
      */
     async onInit() {
+        this._doorOpened = this.homey.flow.getDeviceTriggerCard('ufv_reader_door_opened');
+        this._doorClosed = this.homey.flow.getDeviceTriggerCard('ufv_reader_door_closed');
         this.log('Access Door Driver has been initialized');
     }
 
@@ -107,10 +109,22 @@ module.exports = class MyDriver extends Homey.Driver {
                     device.onLockChange(payload.state.lock === 'locked');
                 }
                 if (payload.state.hasOwnProperty('dps')) {
-                    device.onDoorChange(payload.state.dps === 'open');
+                    device.onDoorChange(payload.state.dps, payload.state.dps_connected);
                 }
             }
         }
+    }
+
+    triggerDoorOpened(device, tokens, state) {
+        this._doorOpened
+            .trigger(device, tokens, state)
+            .catch(this.error);
+    }
+
+    triggerDoorClosed(device, tokens, state) {
+        this._doorClosed
+            .trigger(device, tokens, state)
+            .catch(this.error);
     }
 
     onAccessLogKeypaddEvent(device, { credentialProvider, actor, result }) {

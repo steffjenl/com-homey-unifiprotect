@@ -207,6 +207,68 @@
   ],
   "triggers": [
     {
+      "id": "ufv_reader_door_opened",
+      "title": {
+        "en": "Door opened",
+        "nl": "Deur geopend",
+        "de": "Tür geöffnet",
+        "fr": "Porte ouverte",
+        "it": "Porta aperta",
+        "sv": "Dörr öppnad",
+        "no": "Dør åpnet",
+        "es": "Puerta abierta",
+        "da": "Dør åbnet",
+        "ru": "Дверь открыта",
+        "pl": "Drzwi otwarte",
+        "ko": "문 열림"
+      },
+      "hint": {
+        "en": "Triggers when the door is opened",
+        "nl": "Wordt geactiveerd wanneer de deur wordt geopend",
+        "de": "Löst aus, wenn die Tür geöffnet wird",
+        "fr": "Déclenche lorsque la porte est ouverte",
+        "it": "Si attiva quando la porta è aperta",
+        "sv": "Utlöses när dörren öppnas",
+        "no": "Utløses når døren åpnes",
+        "es": "Se activa cuando la puerta está abierta",
+        "da": "Udløses når døren åbnes",
+        "ru": "Срабатывает при открытии двери",
+        "pl": "Wyzwala się, gdy drzwi są otwarte",
+        "ko": "문이 열릴 때 트리거됨"
+      }
+    },
+    {
+      "id": "ufv_reader_door_closed",
+      "title": {
+        "en": "Door closed",
+        "nl": "Deur gesloten",
+        "de": "Tür geschlossen",
+        "fr": "Porte fermée",
+        "it": "Porta chiusa",
+        "sv": "Dörr stängd",
+        "no": "Dør lukket",
+        "es": "Puerta cerrada",
+        "da": "Dør lukket",
+        "ru": "Дверь закрыта",
+        "pl": "Drzwi zamknięte",
+        "ko": "문 닫힘"
+      },
+      "hint": {
+        "en": "Triggers when the door is closed",
+        "nl": "Wordt geactiveerd wanneer de deur wordt gesloten",
+        "de": "Löst aus, wenn die Tür geschlossen wird",
+        "fr": "Déclenche lorsque la porte est fermée",
+        "it": "Si attiva quando la porta è chiusa",
+        "sv": "Utlöses när dörren stängs",
+        "no": "Utløses når døren lukkes",
+        "es": "Se activa cuando la puerta está cerrada",
+        "da": "Udløses når døren lukkes",
+        "ru": "Срабатывает при закрытии двери",
+        "pl": "Wyzwala się, gdy drzwi są zamknięte",
+        "ko": "문이 닫힐 때 트리거됨"
+      }
+    },
+    {
       "id": "ufv_device_access_keypad_used",
       "title": {
         "en": "Keypad / PIN used on door",
@@ -355,6 +417,42 @@
         "ru": "Неверный PIN введён на двери",
         "pl": "Nieprawidłowy PIN wprowadzony przy drzwiach",
         "ko": "문에서 잘못된 PIN 입력됨"
+      }
+    }
+  ],
+  "conditions": [
+    {
+      "id": "ufv_reader_door_is_open",
+      "title": {
+        "en": "Door is open",
+        "nl": "Deur is open",
+        "de": "Tür ist offen",
+        "fr": "La porte est ouverte",
+        "it": "La porta è aperta",
+        "sv": "Dörren är öppen",
+        "no": "Døren er åpen",
+        "es": "La puerta está abierta",
+        "da": "Døren er åben",
+        "ru": "Дверь открыта",
+        "pl": "Drzwi są otwarte",
+        "ko": "문이 열려 있음"
+      }
+    },
+    {
+      "id": "ufv_reader_door_is_closed",
+      "title": {
+        "en": "Door is closed",
+        "nl": "Deur is gesloten",
+        "de": "Tür ist geschlossen",
+        "fr": "La porte est fermée",
+        "it": "La porta è chiusa",
+        "sv": "Dörren är stängd",
+        "no": "Døren er lukket",
+        "es": "La puerta está cerrada",
+        "da": "Døren er lukket",
+        "ru": "Дверь закрыта",
+        "pl": "Drzwi są zamknięte",
+        "ko": "문이 닫혀 있음"
       }
     }
   ]

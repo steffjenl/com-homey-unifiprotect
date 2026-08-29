@@ -113,7 +113,7 @@ class AccessIntercomeDriver extends Homey.Driver {
           device.onLockChange(payload.state.lock === 'locked');
         }
         if (payload.state.dps) {
-          device.onDoorChange(payload.state.dps === 'open');
+          device.onDoorChange(payload.state.dps, payload.state.dps_connected);
         }
       }
     }

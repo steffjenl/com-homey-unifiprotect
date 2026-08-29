@@ -1,6 +1,7 @@
 'use strict';
 
 const BaseClass = require('./baseclass');
+const UfvConstants = require('./constants');
 
 class AppAccess extends BaseClass {
 
@@ -116,6 +117,54 @@ class AppAccess extends BaseClass {
         return this.homey.app.accessApi.setDoorUnLock(args.device.getData().id);
       }
       return Promise.resolve(true);
+    });
+
+    const _conditionDoorIsOpen = this.homey.flow.getConditionCard(UfvConstants.CONDITION_ACCESS_DOOR_IS_OPEN);
+    _conditionDoorIsOpen.registerRunListener(async (args, state) => {
+      try {
+        if (args.device && typeof args.device.isDoorOpen === 'function') {
+          return Promise.resolve(args.device.isDoorOpen());
+        }
+      } catch (error) {
+        this.error(error);
+      }
+      return Promise.resolve(false);
+    });
+
+    const _conditionDoorIsClosed = this.homey.flow.getConditionCard(UfvConstants.CONDITION_ACCESS_DOOR_IS_CLOSED);
+    _conditionDoorIsClosed.registerRunListener(async (args, state) => {
+      try {
+        if (args.device && typeof args.device.isDoorClosed === 'function') {
+          return Promise.resolve(args.device.isDoorClosed());
+        }
+      } catch (error) {
+        this.error(error);
+      }
+      return Promise.resolve(false);
+    });
+
+    const _conditionGarageDoorIsOpen = this.homey.flow.getConditionCard(UfvConstants.CONDITION_ACCESS_GARAGEDOOR_IS_OPEN);
+    _conditionGarageDoorIsOpen.registerRunListener(async (args, state) => {
+      try {
+        if (args.device && typeof args.device.isDoorOpen === 'function') {
+          return Promise.resolve(args.device.isDoorOpen());
+        }
+      } catch (error) {
+        this.error(error);
+      }
+      return Promise.resolve(false);
+    });
+
+    const _conditionGarageDoorIsClosed = this.homey.flow.getConditionCard(UfvConstants.CONDITION_ACCESS_GARAGEDOOR_IS_CLOSED);
+    _conditionGarageDoorIsClosed.registerRunListener(async (args, state) => {
+      try {
+        if (args.device && typeof args.device.isDoorClosed === 'function') {
+          return Promise.resolve(args.device.isDoorClosed());
+        }
+      } catch (error) {
+        this.error(error);
+      }
+      return Promise.resolve(false);
     });
 
     // Device trigger: keypad / PIN used

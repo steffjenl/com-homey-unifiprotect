@@ -2,6 +2,7 @@
 
 const Homey = require('homey');
 const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
+const { DOOR_STATE_OPEN, DOOR_STATE_UNKNOWN, normalizeDoorState } = require('../../library/door-state');
 
 class IntercomDevice extends Homey.Device {
   async onInit() {
@@ -39,8 +40,15 @@ class IntercomDevice extends Homey.Device {
     this.setCapabilityValue('locked', value).catch(this.error);
   }
 
-  onDoorChange(value) {
-    this.setCapabilityValue('alarm_contact', value).catch(this.error);
+  onDoorChange(rawDps, dpsConnected) {
+    // A Gate/Access Hub without a wired door position sensor reports dps 'none' /
+    // dps_connected:false — that is unknown, not closed, so it must not overwrite
+    // the last known contact state (see normalizeDoorState()).
+    const nextState = normalizeDoorState(rawDps, dpsConnected);
+    if (nextState === DOOR_STATE_UNKNOWN) {
+      return;
+    }
+    this.setCapabilityValue('alarm_contact', nextState === DOOR_STATE_OPEN).catch(this.error);
   }
 
   onBellPressed() {

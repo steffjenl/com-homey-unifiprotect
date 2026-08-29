@@ -457,3 +457,39 @@ All paths relative to `https://<NVR_IP>:<port>/proxy/protect/api/`.
 - The v2 `/subscribe/devices` NVR item does NOT include `isAway` in its official schema
 - Newer firmware can emit alarm transitions as `event` (`recordModel: nvr`, `type: armed|disarmed`) and `externalArmProfile` updates instead of only `nvr.armMode` updates
 
+### UniFi Access — door position (`dps`) vs. lock relay
+
+UA Gate Hubs and UA Access Hubs expose **two independent things** per door, both reported under
+`state` in the `access.data.v2.location.update` websocket event and under `data` from
+`GET /doors/:id`:
+
+- `lock` — the relay that locks/unlocks. There is no separate "open"/"close" action for a
+  gate: unlocking pulses the same relay the gate controller uses to open **or** close,
+  depending on the gate's own physical state.
+- `dps` (door position sensor) — the actual open/closed reading, from a reed switch wired to a
+  *different* set of contacts. Values seen: `'open'`, `'close'`/`'closed'`, and `'none'`.
+- `dps_connected` (boolean) — whether a position sensor is wired up at all. Gate Hubs are
+  commonly installed *without* one (the gate controller board handles open/close logic itself),
+  in which case `dps` is `'none'` and `dps_connected` is `false`.
+
+**`dps: 'none'` / `dps_connected: false` means "unknown", not "closed".** Treating it as closed
+caused [issue #49](https://github.com/steffjenl/com-homey-unifiprotect/issues/49): the "Opened"
+flow trigger fired on both open and close (because every state transition looked like
+`unknown → open`), fired multiple times per toggle, and "Closed" never fired at all.
+`library/door-state.js#normalizeDoorState()` centralises this mapping; door/garagedoor/intercom
+devices poll `GET /doors/:id` every `ACCESS_DOOR_POLL_INTERVAL_MS` (30s) in addition to the
+websocket event, since gate motors take time to move and the `dps` value can lag behind the
+unlock toggle by several seconds.
+
+Example payload (hub with no door position sensor wired up):
+```json
+{
+  "event": "access.data.v2.location.update",
+  "data": {
+    "id": "ce884336-...",
+    "location_type": "door",
+    "state": { "lock": "locked", "dps": "none", "dps_connected": false }
+  }
+}
+```
+

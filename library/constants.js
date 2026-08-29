@@ -140,6 +140,19 @@ module.exports.EVENT_DEVICE_ACCESS_GARAGEDOOR_KEYPAD_DENIED = 'ufv_device_access
 // Comparison is done case-insensitively (events emit 'PIN_CODE' uppercase)
 module.exports.ACCESS_KEYPAD_CREDENTIAL_PROVIDERS = ['pin_code', 'keypad', 'pin'];
 
+// UniFi Access — door position (dps) triggers and conditions.
+// Separate from the lock/unlock relay: Gate/Access Hubs toggle a relay to lock/unlock,
+// but the actual open/closed state comes from a reed switch reported via `state.dps`.
+module.exports.EVENT_ACCESS_DOOR_OPENED = 'ufv_reader_door_opened';
+module.exports.EVENT_ACCESS_DOOR_CLOSED = 'ufv_reader_door_closed';
+module.exports.CONDITION_ACCESS_DOOR_IS_OPEN = 'ufv_reader_door_is_open';
+module.exports.CONDITION_ACCESS_DOOR_IS_CLOSED = 'ufv_reader_door_is_closed';
+module.exports.CONDITION_ACCESS_GARAGEDOOR_IS_OPEN = 'ufv_reader_garagedoor_is_open';
+module.exports.CONDITION_ACCESS_GARAGEDOOR_IS_CLOSED = 'ufv_reader_garagedoor_is_closed';
+// How often, in milliseconds, to poll the door position for Access doors/garage doors/intercoms.
+// Gate/garage motors take time to move, so the dps websocket event can lag behind the toggle action.
+module.exports.ACCESS_DOOR_POLL_INTERVAL_MS = 30000;
+
 // NVR Alarm Manager
 module.exports.EVENT_NVR_ALARM_STATE_CHANGED = 'ufp_nvr_alarm_state_changed';
 module.exports.EVENT_NVR_ALARM_ARMED = 'ufp_nvr_alarm_armed';

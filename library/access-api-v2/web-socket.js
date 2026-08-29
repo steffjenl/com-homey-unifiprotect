@@ -117,7 +117,11 @@ class AccessWebSocket extends BaseClass {
       this._eventListener = _ws;
 
       // Connection opened
-      this._eventListener.on('open', (event) => {
+      _ws.on('open', (event) => {
+        // Ignore stray events from a socket that has since been replaced/disconnected -
+        // without this guard a late event from a stale socket can clobber state that
+        // belongs to the current connection (or process the same message twice).
+        if (this._eventListener !== _ws) return;
         this.homey.app.log(`${this.homey.app.accessApi.webclient._serverHost}: Connected to the UniFi realtime update events API.`);
         this.loggedInStatus = 'Connected';
         this._reconnectAttempt = 0;
@@ -126,11 +130,12 @@ class AccessWebSocket extends BaseClass {
         this.heartbeat();
       });
 
-      this._eventListener.on('pong', (event) => {
+      _ws.on('pong', (event) => {
         this.homey.log('Received pong from access websocket');
       });
 
-      this._eventListener.on('close', () => {
+      _ws.on('close', () => {
+        if (this._eventListener !== _ws) return;
         // terminate and cleanup websocket connection and timers
         delete this._eventListener;
         this._eventListenerConfigured = false;
@@ -140,7 +145,8 @@ class AccessWebSocket extends BaseClass {
         this._scheduleReconnect();
       });
 
-      this._eventListener.on('error', (error) => {
+      _ws.on('error', (error) => {
+        if (this._eventListener !== _ws) return;
         this.homey.app.log(error);
         // If we're closing before fully established it's because we're shutting down the API - ignore it.
         if (error.message !== 'WebSocket was closed before the connection was established') {
@@ -167,6 +173,10 @@ class AccessWebSocket extends BaseClass {
 
       if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
         this.homey.app.log('Called terminate websocket');
+        // Detach every listener before closing so a message/close/error event that the
+        // socket has already queued cannot still fire after it has been replaced - that
+        // was causing every Access websocket event to be processed twice on reconnect.
+        this._eventListener.removeAllListeners();
         this._eventListener.close();
         delete this._eventListener;
       }
@@ -230,8 +240,14 @@ class AccessWebSocket extends BaseClass {
       return true;
     }
 
+    const _ws = this._eventListener;
+
     // Listen for any messages coming in from our listener.
-    this._eventListener.on('message', (event) => {
+    _ws.on('message', (event) => {
+      // Ignore a message from a socket that has since been replaced - removeAllListeners()
+      // in disconnectEventListener() should already prevent this, but this is cheap insurance
+      // against double-processing the same Access event on reconnect.
+      if (this._eventListener !== _ws) return;
 
       if (!this.shouldProcessEvent(event.toString())) {
         return;

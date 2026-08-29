@@ -1,68 +1,4 @@
 {
-  "triggers": [
-    {
-      "id": "ufv_reader_garagedoor_opened",
-      "title": {
-        "en": "Garage door opened",
-        "nl": "Garage deur geopend",
-        "de": "Garagentor geöffnet",
-        "fr": "Porte de garage ouverte",
-        "it": "Porta garage aperta",
-        "sv": "Garageport öppnad",
-        "no": "Garasjeport åpnet",
-        "es": "Puerta de garaje abierta",
-        "da": "Garageport åbnet",
-        "ru": "Гаражные ворота открыты",
-        "pl": "Brama garażowa otwarta",
-        "ko": "차고문 열림"
-      },
-      "hint": {
-        "en": "Triggers when the garage door is opened",
-        "nl": "Wordt geactiveerd wanneer de garage deur wordt geopend",
-        "de": "Löst aus, wenn das Garagentor geöffnet wird",
-        "fr": "Déclenche lorsque la porte de garage est ouverte",
-        "it": "Si attiva quando la porta del garage è aperta",
-        "sv": "Utlöses när garageporten öppnas",
-        "no": "Utløses når garasjeporten åpnes",
-        "es": "Se activa cuando la puerta de garaje está abierta",
-        "da": "Udløses når garageporten åbnes",
-        "ru": "Срабатывает при открытии гаражных ворот",
-        "pl": "Wyzwala się, gdy brama garażowa jest otwarta",
-        "ko": "차고문이 열릴 때 트리거됨"
-      }
-    },
-    {
-      "id": "ufv_reader_garagedoor_closed",
-      "title": {
-        "en": "Garage door closed",
-        "nl": "Garage deur gesloten",
-        "de": "Garagentor geschlossen",
-        "fr": "Porte de garage fermée",
-        "it": "Porta garage chiusa",
-        "sv": "Garageport stängd",
-        "no": "Garasjeport lukket",
-        "es": "Puerta de garaje cerrada",
-        "da": "Garageport lukket",
-        "ru": "Гаражные ворота закрыты",
-        "pl": "Brama garażowa zamknięta",
-        "ko": "차고문 닫힘"
-      },
-      "hint": {
-        "en": "Triggers when the garage door is closed",
-        "nl": "Wordt geactiveerd wanneer de garage deur wordt gesloten",
-        "de": "Löst aus, wenn das Garagentor geschlossen wird",
-        "fr": "Déclenche lorsque la porte de garage est fermée",
-        "it": "Si attiva quando la porta del garage è chiusa",
-        "sv": "Utlöses när garageporten stängs",
-        "no": "Utløses når garasjeporten lukkes",
-        "es": "Se activa cuando la puerta de garaje está cerrada",
-        "da": "Udløses når garageporten lukkes",
-        "ru": "Срабатывает при закрытии гаражных ворот",
-        "pl": "Wyzwala się, gdy brama garażowa jest zamknięta",
-        "ko": "차고문이 닫힐 때 트리거됨"
-      }
-    }
-  ],
   "actions": [
     {
       "id": "ufv_set_reader_garagedoor_locking_rule",
@@ -483,6 +419,42 @@
         "ru": "Неверный PIN введён на воротах гаража",
         "pl": "Nieprawidłowy PIN wprowadzony przy bramie garażowej",
         "ko": "차고문에서 잘못된 PIN 입력됨"
+      }
+    }
+  ],
+  "conditions": [
+    {
+      "id": "ufv_reader_garagedoor_is_open",
+      "title": {
+        "en": "Garage door is open",
+        "nl": "Garage deur is open",
+        "de": "Garagentor ist offen",
+        "fr": "La porte de garage est ouverte",
+        "it": "La porta del garage è aperta",
+        "sv": "Garageporten är öppen",
+        "no": "Garasjeporten er åpen",
+        "es": "La puerta del garaje está abierta",
+        "da": "Garageporten er åben",
+        "ru": "Гаражные ворота открыты",
+        "pl": "Brama garażowa jest otwarta",
+        "ko": "차고문이 열려 있음"
+      }
+    },
+    {
+      "id": "ufv_reader_garagedoor_is_closed",
+      "title": {
+        "en": "Garage door is closed",
+        "nl": "Garage deur is gesloten",
+        "de": "Garagentor ist geschlossen",
+        "fr": "La porte de garage est fermée",
+        "it": "La porta del garage è chiusa",
+        "sv": "Garageporten är stängd",
+        "no": "Garasjeporten er lukket",
+        "es": "La puerta del garaje está cerrada",
+        "da": "Garageporten er lukket",
+        "ru": "Гаражные ворота закрыты",
+        "pl": "Brama garażowa jest zamknięta",
+        "ko": "차고문이 닫혀 있음"
       }
     }
   ]
