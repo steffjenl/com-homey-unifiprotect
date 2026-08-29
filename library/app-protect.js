@@ -475,6 +475,22 @@ class AppProtect extends BaseClass {
             return Promise.reject(new Error('No relay device found'));
         });
 
+        const _actionStartSiren = this.homey.flow.getActionCard(UfvConstants.ACTION_START_DEVICE_SIREN);
+        _actionStartSiren.registerRunListener(async (args, state) => {
+            if (args.device && typeof args.device.startSiren === 'function') {
+                return args.device.startSiren(args.duration).then(() => true);
+            }
+            return Promise.reject(new Error('No siren device found'));
+        });
+
+        const _actionStopSiren = this.homey.flow.getActionCard(UfvConstants.ACTION_STOP_DEVICE_SIREN);
+        _actionStopSiren.registerRunListener(async (args, state) => {
+            if (args.device && typeof args.device.stopSiren === 'function') {
+                return args.device.stopSiren().then(() => true);
+            }
+            return Promise.reject(new Error('No siren device found'));
+        });
+
         const _conditionGarageIsOpen = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_GARAGE_IS_OPEN);
         _conditionGarageIsOpen.registerRunListener(async (args, state) => {
             try {

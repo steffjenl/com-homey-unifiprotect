@@ -26,6 +26,40 @@
           "labelDecimals": 0
         }
       ]
+    },
+    {
+      "id": "ufp_start_device_siren",
+      "title": {
+        "en": "Start siren",
+        "nl": "Start sirene"
+      },
+      "titleFormatted": {
+        "en": "Start siren for [[duration]] seconds",
+        "nl": "Start sirene voor [[duration]] seconden"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "duration",
+          "title": {
+            "en": "Duration",
+            "nl": "Duur"
+          },
+          "values": [
+            { "id": "5", "label": { "en": "5 seconds", "nl": "5 seconden" } },
+            { "id": "10", "label": { "en": "10 seconds", "nl": "10 seconden" } },
+            { "id": "20", "label": { "en": "20 seconds", "nl": "20 seconden" } },
+            { "id": "30", "label": { "en": "30 seconds", "nl": "30 seconden" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ufp_stop_device_siren",
+      "title": {
+        "en": "Stop siren",
+        "nl": "Stop sirene"
+      }
     }
   ]
 }

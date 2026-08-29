@@ -89,6 +89,26 @@ class Siren extends Homey.Device {
         }
     }
 
+    async startSiren(duration) {
+        const sirenId = this.getData().id;
+
+        if (this.homey.app.isV2Available()) {
+            return this.homey.app.apiV2.playSiren(sirenId, duration);
+        }
+
+        return Promise.reject(new Error('Siren start/stop requires the UniFi Protect V2 (API key) connection'));
+    }
+
+    async stopSiren() {
+        const sirenId = this.getData().id;
+
+        if (this.homey.app.isV2Available()) {
+            return this.homey.app.apiV2.stopSiren(sirenId);
+        }
+
+        return Promise.reject(new Error('Siren start/stop requires the UniFi Protect V2 (API key) connection'));
+    }
+
     onIsSirenOn(volume) {
         if (this.hasCapability('siren_volume_set')) {
             this.setCapabilityValue('siren_volume_set', volume / 100);

@@ -237,6 +237,25 @@ class ProtectAPI extends BaseClass {
         });
     }
 
+    async playSiren(sirenId, duration = 5) {
+        return new Promise((resolve, reject) => {
+            const allowed = [5, 10, 20, 30];
+            const safeDuration = allowed.includes(Number(duration)) ? Number(duration) : 5;
+
+            this.webclient.post(`sirens/${sirenId}/play`, { duration: safeDuration })
+                .then(response => resolve(response || 'Siren successfully activated.'))
+                .catch(error => reject(error));
+        });
+    }
+
+    async stopSiren(sirenId) {
+        return new Promise((resolve, reject) => {
+            this.webclient.post(`sirens/${sirenId}/stop`, {})
+                .then(response => resolve(response || 'Siren successfully stopped.'))
+                .catch(error => reject(error));
+        });
+    }
+
     // Sensors
     async getSensors() {
         return new Promise((resolve, reject) => {
