@@ -79,7 +79,7 @@ const ConnectionMonitorMixin = {
       try {
         this.setAvailable();
       } catch (error) {
-        this.debug('[ConnectionMonitor] Error restoring availability:', error);
+        this.homey.app.debug('[ConnectionMonitor] Error restoring availability:', error);
       }
     } else if (details.state === 'disconnected') {
       // Connection lost - schedule marking unavailable after debounce
@@ -103,9 +103,9 @@ const ConnectionMonitorMixin = {
     try {
       const msg = this.homey.__('msg.controller_unreachable');
       this.setUnavailable(msg);
-      this.debug(`[ConnectionMonitor] Device marked unavailable (${apiType})`);
+      this.homey.app.debug(`[ConnectionMonitor] Device marked unavailable (${apiType})`);
     } catch (error) {
-      this.debug('[ConnectionMonitor] Error marking unavailable:', error);
+      this.homey.app.debug('[ConnectionMonitor] Error marking unavailable:', error);
     }
   },
 
