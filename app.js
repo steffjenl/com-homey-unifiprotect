@@ -9,7 +9,7 @@ const FobHandler = require('./library/fob-handler');
 const FobActionMapper = require('./library/action-mapper');
 const SpeakerService = require('./library/speaker-service');
 //
-const { stat, existsSync, unlinkSync, writeFile } = require('fs');
+const { stat, unlinkSync, writeFile } = require('fs');
 
 class UniFiProtect extends Homey.App {
     /**
@@ -475,8 +475,10 @@ class UniFiProtect extends Homey.App {
             const args = Array.prototype.slice.call(arguments);
             args.unshift('[debug]');
             this.homey.log(args.join(' '));
-            if (existsSync(logFile)) {
+            try {
                 unlinkSync(logFile);
+            } catch (error) {
+                if (error.code !== 'ENOENT') throw error;
             }
         }
         const settings = this.homey.settings.get('ufp:settings');
@@ -487,7 +489,11 @@ class UniFiProtect extends Homey.App {
                 } else {
                     // When file size exceeds 25MB, delete it
                     if (stats.size >= 25 * 1024 * 1024) {
-                        unlinkSync(logFile);
+                        try {
+                            unlinkSync(logFile);
+                        } catch (error) {
+                            if (error.code !== 'ENOENT') throw error;
+                        }
                     }
                 }
             })

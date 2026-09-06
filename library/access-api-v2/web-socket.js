@@ -177,7 +177,11 @@ class AccessWebSocket extends BaseClass {
         // socket has already queued cannot still fire after it has been replaced - that
         // was causing every Access websocket event to be processed twice on reconnect.
         this._eventListener.removeAllListeners();
-        this._eventListener.close();
+        try {
+          this._eventListener.close();
+        } catch (error) {
+          // Socket was closed before the connection was established - safe to ignore.
+        }
         delete this._eventListener;
       }
       this._eventListenerConfigured = false;
