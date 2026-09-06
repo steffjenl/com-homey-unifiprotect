@@ -379,5 +379,8 @@
   },
   "1.12.3": {
     "en": "Add siren action cards for V2"
+  },
+  "1.12.4": {
+    "en": "Fix websocket disconnect "
   }
 }
