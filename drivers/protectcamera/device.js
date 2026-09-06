@@ -312,6 +312,7 @@ class Camera extends Homey.Device {
     }
 
     if (camera) {
+      this._smartDetectZones = camera.smartDetectZones || [];
       if (this.hasCapability('ip_address') && camera.host) {
         this.setCapabilityValue('ip_address', camera.host).catch(this.error);
       }

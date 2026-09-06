@@ -344,6 +344,7 @@ class Doorbell extends Homey.Device {
     }
 
     if (doorbell) {
+      this._smartDetectZones = doorbell.smartDetectZones || [];
       if (this.hasCapability('ip_address') && doorbell.host) {
         this.setCapabilityValue('ip_address', doorbell.host).catch(this.error);
       }

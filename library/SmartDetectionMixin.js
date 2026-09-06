@@ -93,9 +93,33 @@ const SmartDetectionMixin = {
     let zones = '';
     if (payload && payload.metadata && payload.metadata.zonesStatus
       && typeof payload.metadata.zonesStatus === 'object') {
+      let zoneNameMap = {};
+      try {
+        let smartDetectZones = null;
+        if (this.homey.app.isV1Available()) {
+          const bootstrap = this.homey.app.api.getBootstrap();
+          const camera = bootstrap && bootstrap.cameras
+            && bootstrap.cameras.find(c => c.id === this.getData().id);
+          if (camera && camera.smartDetectZones) {
+            smartDetectZones = camera.smartDetectZones;
+          }
+        }
+        if (!smartDetectZones && this._smartDetectZones) {
+          smartDetectZones = this._smartDetectZones;
+        }
+        if (smartDetectZones) {
+          zoneNameMap = smartDetectZones.reduce((map, zone) => {
+            map[String(zone.id)] = zone.name;
+            return map;
+          }, {});
+        }
+      } catch (e) {
+        this.homey.app.debug('[SmartDetection] zone name lookup failed: ' + e);
+      }
+
       zones = Object.entries(payload.metadata.zonesStatus)
         .filter(([, zone]) => zone.status !== 'none')
-        .map(([key]) => key)
+        .map(([key]) => zoneNameMap[key] || key)
         .join(', ');
     }
 
