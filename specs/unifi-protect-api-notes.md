@@ -9,6 +9,10 @@ Cloud connector base URL: `https://api.ui.com/v1/connector/consoles/{consoleId}/
 Local and cloud Protect V2 expose the same REST endpoint set. The app treats cloud as REST-only:
 WebSocket/realtime device and event updates remain local-only until a supported cloud realtime path is adopted.
 
+Verified 2026-09-09: `specs/protect-integration-v2-openapi.json` in this repo is byte-identical
+to a fresh download of `https://developer.ui.com/protect/v7.2.105/openapi.json` (55 paths, 298
+schemas, full diff match) — the checked-in spec file is current.
+
 ---
 
 ## Authentication
@@ -176,37 +180,95 @@ All paths are relative to either `https://<NVR_IP>:443/proxy/protect/integration
   "item": {
     "id": "66d025b301ebc903e80003ea",
     "modelKey": "event",
-    "type": "ring" | "motion" | "smartDetectZone",
+    "type": "ring" | "motion" | "smartDetectZone" | "...",
     "start": 1445408038748,
     "end": 1445408048748,
-    "device": "<cameraId>",
-    "smartDetectTypes": ["person", "vehicle", "animal", "package", "licensePlate", "face"]
+    "device": "<deviceId>",
+    "metadata": { "...": "type-specific, see table below" }
   }
 }
 ```
+`type` is a discriminator with **37** possible values (per `components.schemas.event` in
+`specs/protect-integration-v2-openapi.json`, spec v7.2.105). The table below is the full spec
+catalogue — the "Handled" column shows which are actually dispatched today by
+`library/protect-api-v2/web-socket-events.js` (checked via `itemType === '...'`). Unhandled
+types currently arrive over the socket and are silently ignored by the app.
 
-**Handled:**
-- `add` + `type=ring` → doorbell ring
-- `add` + `type=motion` → camera motion
-- `update` + `type=smartDetectZone` + `smartDetectTypes != []` → smart detection
+| `item.type` | Device category | `metadata` fields | Handled |
+|---|---|---|---|
+| `ring` | Doorbell (camera) | — | ✅ (`web-socket-events.js:242`) |
+| `motion` | Camera | — | ✅ (`:250`) |
+| `smartDetectZone` | Camera | (top-level `smartDetectTypes`, not under `metadata`) | ✅ (`:273`) |
+| `smartAudioDetect` | Camera | (top-level `smartDetectTypes`) | ✅ (`:291`) |
+| `smartDetectLine` | Camera (line-crossing) | schema not separately defined in spec (`smartDetectLineEvent: null`) — verify shape against `cameraSmartDetectZoneEvent` | ❌ |
+| `smartDetectLoiterZone` | Camera (loitering) | schema not separately defined in spec (`smartDetectLoiterZoneEvent: null`) — verify shape against `cameraSmartDetectZoneEvent` | ❌ |
+| `cameraDigitalInputChanged` | Camera (digital input) | `inputState.text` (`circuitClosed`/`circuitOpen`), `inputToken`, `inputChannel` | ❌ |
+| `lightMotion` | Light | — | ❌ |
+| `relayInputChanged` | Relay | `inputState.text` (`circuitClosed`/`circuitOpen`), `inputChannel` | ❌ |
+| `sensorVape` | Sensor (UP-AirQuality) | — | ✅ (`:308`) |
+| `sensorExtremeValues` | Sensor | `sensorType.text`, `sensorValue.text`, `status.text` | ✅ (`:318`) |
+| `sensorAlarm` | Sensor | `alarmType.text` | ✅ (`:329`) |
+| `sensorTamper` | Sensor | — | ✅ (`:338`) |
+| `sensorBatteryLow` | Sensor | `sensorBatteryPercentage` | ✅ (`:346`) |
+| `sensorWaterLeak` | Sensor (leak) | `sensorMountType` | ❌ |
+| `sensorOpened` | Sensor (contact, opened) | `sensorMountType` | ❌ |
+| `sensorClosed` | Sensor (contact, closed) | `sensorMountType` | ❌ |
+| `sensorMotion` | Sensor (PIR) | — | ❌ |
+| `sensorButtonPressed` | Sensor (button) | `button` | ❌ |
+| `sensorSmokeTest` | Sensor (smoke, test mode) | `source` | ❌ |
+| `sensorSmokeBatteryLow` | Sensor (smoke) | — | ❌ |
+| `sensorSmokeNeedsCleaning` | Sensor (smoke) | — | ❌ |
+| `sensorSmokeFault` | Sensor (smoke) | — | ❌ |
+| `sensorCoFault` | Sensor (CO) | — | ❌ |
+| `sensorSmokeEndOfLife` | Sensor (smoke) | — | ❌ |
+| `alarmHubMotion` | Alarm hub zone (relevant to `protect-nvr-alarm` driver) | `pin.text`, `status`, `deviceId`, `deviceName` | ❌ |
+| `alarmHubEntryOpened` | Alarm hub zone | `pin.text`, `status`, `deviceId`, `deviceName` | ❌ |
+| `alarmHubEntryClosed` | Alarm hub zone | `pin.text`, `status`, `deviceId`, `deviceName` | ❌ |
+| `alarmHubSmoke` | Alarm hub zone | `pin.text`, `status`, `alarmType`, `deviceId`, `deviceName` | ❌ |
+| `alarmHubGlassBreak` | Alarm hub zone | `pin.text`, `status`, `alarmType`, `deviceId`, `deviceName` | ❌ |
+| `alarmHubButtonPress` | Alarm hub zone | `pin.text`, `status`, `button`, `alarmType`, `deviceId`, `deviceName` | ❌ |
+| `alarmHubTamper` | Alarm hub zone | `pin.text`, `status`, `alarmType`, `deviceId`, `deviceName` | ❌ |
+| `alarmHubDeviceTamper` | Alarm hub zone | `status`, `deviceId`, `deviceName` | ❌ |
+| `alarmHubRelaySwitched` | Alarm hub zone | — | ❌ |
+| `alarmHubBatteryLow` | Alarm hub zone | — | ❌ |
+| `alarmHubBatteryConnected` | Alarm hub zone | — | ❌ |
+| `nfcCardScanned` | Access reader | `metadata.nfc` (`$ref: nfcMetadata`) | ❌ |
+| `fingerprintIdentified` | Access reader | `metadata.fingerprint` (`$ref: fingerprintMetadata`) | ❌ |
 
 ### `/v1/subscribe/devices` — Device State Updates
 - URL: `wss://<NVR_IP>:443/proxy/protect/integration/v1/subscribe/devices`
 - Auth: `X-API-KEY` header
 - Implemented: `library/protect-api-v2/web-socket-devices.js`
 
-**Message format (from official docs):**
+**Message format — single item (from official docs):**
 ```json
 {
   "type": "add" | "update" | "remove",
   "item": {
     "id": "66d025b301ebc903e80003ea",
-    "modelKey": "nvr" | "camera" | "light" | "sensor" | "siren" | "viewer",
+    "modelKey": "nvr" | "camera" | "chime" | "light" | "viewer" | "speaker" | "bridge" | "sensor" | "siren" | "fob" | "relay" | "aiprocessor" | "aiport" | "linkstation",
     "name": "string",
     "...": "device-specific fields"
   }
 }
 ```
+`modelKey` is a discriminator with **14** values (`components.schemas.device` in the spec).
+`library/protect-api-v2/web-socket-devices.js` handles 12 of these today (`camera`, `light`,
+`relay`, `sensor`, `chime`, `viewer`, `speaker`, `fob`, `aiport`, `siren`, `nvr`, plus doorbell
+routing via `camera`) — `bridge` and `aiprocessor`/`linkstation` are not explicitly wired up.
+
+**Bulk variant:** the spec's `deviceEvent` schema (used by `/v1/subscribe/devices`) is an
+`anyOf` of two discriminated unions — besides the single-item `add|update|remove` shown above,
+it also allows a **bulk** form:
+```json
+{
+  "type": "add" | "update" | "remove",
+  "item": [ /* array of devices, for bulk add/remove */ ]
+}
+```
+mapped via schemas `devicesAdd` / `devicesBulkUpdate` / `devicesBulkRemove`
+(`item: deviceBulkPartialWithReference` for the bulk-update case). Not currently handled or
+documented beyond this note — `web-socket-devices.js` assumes a single `item` object.
 
 ---
 
