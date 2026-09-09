@@ -414,9 +414,12 @@ class ProtectWebSocket extends BaseClass {
         updatePacket.action.modelKey === 'event'
                 && !!this._resolveCameraId(updatePacket)
                 && typeof updatePacket.payload.type !== 'undefined'
-                && updatePacket.payload.type === 'smartDetectZone'
+                && ['smartDetectZone', 'smartDetectLine', 'smartDetectLoiterZone'].includes(updatePacket.payload.type)
       ) {
-        this.homey.app.debug('smartDetectZone event without filled smartDetectTypes array');
+        // smartDetectLine (line-crossing) / smartDetectLoiterZone (loitering) share the
+        // same payload shape as smartDetectZone and were never wired up on V1 before
+        // (only a commented-out debug line existed, see history above).
+        this.homey.app.debug(`${updatePacket.payload.type} event without filled smartDetectTypes array`);
         const resolvedId = this._resolveCameraId(updatePacket);
         // get protectcamera driver
         const driverCamera = this.homey.drivers.getDriver('protectcamera');
@@ -510,6 +513,79 @@ class ProtectWebSocket extends BaseClass {
         const deviceDoorbell = driverDoorbell.getUnifiDeviceById(resolvedId);
         if (deviceDoorbell) {
           deviceDoorbell.onDoorbellRinging(updatePacket.payload.start);
+        }
+      } else if (
+        updatePacket.action.modelKey === 'event'
+                && typeof updatePacket.payload.type !== 'undefined'
+                && updatePacket.payload.type === 'sensorVape'
+      ) {
+        // Was V2-only until now (no V1 precedent) - sensor-scoped events carry
+        // payload.device directly, same as V2's item.device, no camera-id resolution needed.
+        this.homey.app.debug(`sensorVape event: ${JSON.stringify(updatePacket.payload)}`);
+        const driverSensor = this.homey.drivers.getDriver('protectsensor');
+        const deviceSensor = driverSensor.getUnifiDeviceById(updatePacket.payload.device);
+        if (deviceSensor) {
+          deviceSensor.onVapeDetected(updatePacket.action.action, updatePacket.payload.start, updatePacket.payload.end || null);
+        }
+      } else if (
+        updatePacket.action.modelKey === 'event'
+                && typeof updatePacket.payload.type !== 'undefined'
+                && updatePacket.payload.type === 'sensorSmokeNeedsCleaning'
+      ) {
+        // Was V2-only until now (no V1 precedent, no continuous smokeStatus equivalent either).
+        this.homey.app.debug(`sensorSmokeNeedsCleaning event: ${JSON.stringify(updatePacket.payload)}`);
+        const driverSensor = this.homey.drivers.getDriver('protectsensor');
+        const deviceSensor = driverSensor.getUnifiDeviceById(updatePacket.payload.device);
+        if (deviceSensor) {
+          deviceSensor.onSmokeSubEvent('sensorSmokeNeedsCleaning', updatePacket.action.action, updatePacket.payload.end || null);
+        }
+      } else if (
+        updatePacket.action.modelKey === 'event'
+                && typeof updatePacket.payload.type !== 'undefined'
+                && updatePacket.payload.type === 'sensorExtremeValues'
+                && updatePacket.payload.metadata
+                && updatePacket.payload.metadata.sensorType
+      ) {
+        // Was V2-only until now. Real gap on V1: AQI/CO2/VOC/PM measures have no
+        // continuous fallback (see specs/unifi-protect-api-notes.md) - without this,
+        // a V1-only setup never got these values at all.
+        const metric = updatePacket.payload.metadata.sensorType.text;
+        const value = updatePacket.payload.metadata.sensorValue ? updatePacket.payload.metadata.sensorValue.text : null;
+        const status = updatePacket.payload.metadata.status ? updatePacket.payload.metadata.status.text : null;
+        this.homey.app.debug(`sensorExtremeValues event: ${metric}=${value} (${status})`);
+        const driverSensor = this.homey.drivers.getDriver('protectsensor');
+        const deviceSensor = driverSensor.getUnifiDeviceById(updatePacket.payload.device);
+        if (deviceSensor) {
+          deviceSensor.onExtremeValue(metric, value, status);
+        }
+      } else if (
+        updatePacket.action.modelKey === 'event'
+                && typeof updatePacket.payload.type !== 'undefined'
+                && updatePacket.payload.type === 'sensorAlarm'
+                && updatePacket.payload.metadata
+                && updatePacket.payload.metadata.alarmType
+      ) {
+        // Was V2-only until now. alarm_smoke/alarm_co are already covered continuously
+        // on V1 (onSmokeStatusChange), but alarm_glassbreak has no continuous fallback.
+        const alarmType = updatePacket.payload.metadata.alarmType.text;
+        this.homey.app.debug(`sensorAlarm event: ${alarmType} (${updatePacket.action.action})`);
+        const driverSensor = this.homey.drivers.getDriver('protectsensor');
+        const deviceSensor = driverSensor.getUnifiDeviceById(updatePacket.payload.device);
+        if (deviceSensor) {
+          deviceSensor.onSensorAlarm(alarmType, updatePacket.action.action, updatePacket.payload.end || null);
+        }
+      } else if (
+        updatePacket.action.modelKey === 'event'
+                && typeof updatePacket.payload.type !== 'undefined'
+                && updatePacket.payload.type === 'sensorTamper'
+                && updatePacket.action.action === 'add'
+      ) {
+        // Was V2-only until now. alarm_tamper has no continuous fallback.
+        this.homey.app.debug(`sensorTamper event: ${JSON.stringify(updatePacket.payload)}`);
+        const driverSensor = this.homey.drivers.getDriver('protectsensor');
+        const deviceSensor = driverSensor.getUnifiDeviceById(updatePacket.payload.device);
+        if (deviceSensor) {
+          deviceSensor.onTamperDetected(updatePacket.payload.start, updatePacket.payload.end || null);
         }
       } else if (
         typeof updatePacket.action.modelKey !== 'undefined'

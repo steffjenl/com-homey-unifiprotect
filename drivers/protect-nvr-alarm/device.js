@@ -249,6 +249,39 @@ class NVRAlarmDevice extends Homey.Device {
   }
 
   /**
+   * Alarm-hub zone/peripheral event (alarmHub* discriminator types on
+   * /v1/subscribe/events, e.g. 'alarmHubEntryOpened'). Spec-only: there is no V1
+   * precedent for these and they have not been verified against real Alarm Hub
+   * hardware yet, so treat the exact metadata semantics as provisional (the spec's own
+   * field descriptions are inconsistent about whether `deviceId` identifies the hub or
+   * the peripheral - `deviceName` is described as "the configured name of the input").
+   * @param {string} itemType e.g. 'alarmHubEntryOpened'
+   * @param {object} item raw V2 event item, metadata fields are `{text}`-wrapped
+   */
+  onAlarmHubZoneEvent(itemType, item) {
+    const metadata = (item && item.metadata) || {};
+    const textOf = (field) => (field && typeof field === 'object' ? field.text : field) || '';
+
+    const zoneName = textOf(metadata.deviceName);
+    const zoneId = textOf(metadata.deviceId);
+    const alarmType = textOf(metadata.alarmType);
+    const button = textOf(metadata.button);
+
+    this.homey.app.debug(`[NVRAlarmDevice] onAlarmHubZoneEvent ${itemType} zone="${zoneName}" (${zoneId})`);
+
+    this.driver.homey.flow
+      .getDeviceTriggerCard(UfvConstants.EVENT_NVR_ALARM_ZONE_EVENT)
+      .trigger(this, {
+        zone_name: zoneName,
+        zone_id: zoneId,
+        event_type: itemType,
+        alarm_type: alarmType,
+        button,
+      })
+      .catch((err) => this.error(err));
+  }
+
+  /**
    * Set the NVR away mode via the v1 API (POST arm/enable or arm/disable).
    * @param {boolean} isAway
    * @returns {Promise}

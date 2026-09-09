@@ -1,0 +1,11 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "CO sensor fault",
+    "nl": "Storing CO-melder"
+  },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "insights": true
+}

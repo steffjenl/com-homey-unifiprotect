@@ -477,9 +477,14 @@ class Sensor extends Homey.Device {
 
     /**
      * Continuous smoke/CO state (payload.smokeStatus), complements the discrete
-     * sensorAlarmEvent handled in onSensorAlarm.
+     * sensorAlarmEvent handled in onSensorAlarm. Also backs the fault/end-of-life/test
+     * capabilities from the same continuous feed - unlike the discrete
+     * sensorSmokeFault/CoFault/SmokeEndOfLife/SmokeTest events (onSmokeSubEvent), this
+     * path runs on V1 too (shared onParseWebsocketMessage), so these capabilities now
+     * stay current even without the V2 event socket. sensorSmokeNeedsCleaning has no
+     * continuous equivalent in smokeStatus - remains event-only (V2-only).
      */
-    onSmokeStatusChange(smokeStatus) {
+    async onSmokeStatusChange(smokeStatus) {
         this.homey.app.debug('onSmokeStatusChange');
         if (!smokeStatus) {
             return;
@@ -489,6 +494,21 @@ class Sensor extends Homey.Device {
         }
         if (this.hasCapability('alarm_co')) {
             this.setCapabilityValue('alarm_co', !!smokeStatus.coAlarm).catch(this.error);
+        }
+
+        const continuousFaultMap = {
+            alarm_smoke_fault: smokeStatus.smokeSensorFault,
+            alarm_co_fault: smokeStatus.coSensorFault,
+            alarm_smoke_end_of_life: smokeStatus.endOfLife,
+            alarm_smoke_test: smokeStatus.testing,
+        };
+
+        for (const [capability, value] of Object.entries(continuousFaultMap)) {
+            if (typeof value === 'undefined') {
+                continue;
+            }
+            await this._ensureCapability(capability);
+            this.setCapabilityValue(capability, !!value).catch(this.error);
         }
     }
 
@@ -627,6 +647,45 @@ class Sensor extends Homey.Device {
         if (this.hasCapability('alarm_battery')) {
             this.setCapabilityValue('alarm_battery', true).catch(this.error);
         }
+    }
+
+    /**
+     * Smoke-detector sub-events (sensorSmokeFault/CoFault/SmokeEndOfLife/
+     * SmokeBatteryLow/SmokeNeedsCleaning/SmokeTest). These states already exist in the
+     * continuous sensor.smokeStatus feed (smokeSensorFault/coSensorFault/endOfLife/
+     * testing) but onSmokeStatusChange only ever mapped smokeAlarm/coAlarm to a
+     * capability - fault/end-of-life/testing/cleaning were never surfaced. Lazily
+     * creates custom capabilities the same way onVapeDetected/onSensorAlarm do.
+     * @param {string} itemType e.g. 'sensorSmokeFault'
+     * @param {string} eventType 'add' or 'update'
+     * @param {number|null} end
+     */
+    async onSmokeSubEvent(itemType, eventType, end) {
+        // sensorSmokeBatteryLow reuses the existing alarm_battery capability (present on
+        // every sensor) rather than a smoke-specific duplicate.
+        if (itemType === 'sensorSmokeBatteryLow') {
+            if (eventType === 'add') {
+                this.onBatteryLow();
+            }
+            return;
+        }
+
+        const capabilityMap = {
+            sensorSmokeFault: 'alarm_smoke_fault',
+            sensorCoFault: 'alarm_co_fault',
+            sensorSmokeEndOfLife: 'alarm_smoke_end_of_life',
+            sensorSmokeNeedsCleaning: 'alarm_smoke_needs_cleaning',
+            sensorSmokeTest: 'alarm_smoke_test',
+        };
+
+        const capability = capabilityMap[itemType];
+        if (!capability) {
+            return;
+        }
+
+        await this._ensureCapability(capability);
+        const isActive = eventType === 'add' || !end;
+        this.setCapabilityValue(capability, isActive).catch(this.error);
     }
 
     onMotionDetected(lastMotionTime, isMotionDetected) {

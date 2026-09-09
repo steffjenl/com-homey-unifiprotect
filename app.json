@@ -2808,6 +2808,136 @@
         ]
       },
       {
+        "id": "ufp_nvr_alarm_zone_event",
+        "title": {
+          "en": "Alarm hub zone event",
+          "nl": "Alarmhub-zone-event",
+          "de": "Alarm-Hub-Zonenereignis",
+          "fr": "Événement de zone du hub d'alarme",
+          "it": "Evento zona hub allarme",
+          "sv": "Larmhubb zonhändelse",
+          "no": "Alarmhub sonehendelse",
+          "es": "Evento de zona del hub de alarma",
+          "da": "Alarmhub zonehændelse",
+          "ru": "Событие зоны аларм-хаба",
+          "pl": "Zdarzenie strefy alarm hubu",
+          "ko": "알람 허브 구역 이벤트"
+        },
+        "titleFormatted": {
+          "en": "Alarm hub zone [[event_type]] on [[zone_name]]",
+          "nl": "Alarmhub-zone [[event_type]] op [[zone_name]]",
+          "de": "Alarm-Hub-Zone [[event_type]] bei [[zone_name]]",
+          "fr": "Zone du hub d'alarme [[event_type]] sur [[zone_name]]",
+          "it": "Zona hub allarme [[event_type]] su [[zone_name]]",
+          "sv": "Larmhubb zon [[event_type]] på [[zone_name]]",
+          "no": "Alarmhub sone [[event_type]] på [[zone_name]]",
+          "es": "Zona del hub de alarma [[event_type]] en [[zone_name]]",
+          "da": "Alarmhub zone [[event_type]] på [[zone_name]]",
+          "ru": "Зона аларм-хаба [[event_type]] на [[zone_name]]",
+          "pl": "Strefa alarm hubu [[event_type]] na [[zone_name]]",
+          "ko": "알람 허브 구역 [[event_type]] on [[zone_name]]"
+        },
+        "tokens": [
+          {
+            "name": "zone_name",
+            "type": "string",
+            "title": {
+              "en": "Zone name",
+              "nl": "Zonenaam",
+              "de": "Zonenname",
+              "fr": "Nom de la zone",
+              "it": "Nome zona",
+              "sv": "Zonnamn",
+              "no": "Sonenavn",
+              "es": "Nombre de zona",
+              "da": "Zonenavn",
+              "ru": "Название зоны",
+              "pl": "Nazwa strefy",
+              "ko": "구역 이름"
+            }
+          },
+          {
+            "name": "zone_id",
+            "type": "string",
+            "title": {
+              "en": "Zone ID",
+              "nl": "Zone-ID",
+              "de": "Zonen-ID",
+              "fr": "ID de zone",
+              "it": "ID zona",
+              "sv": "Zon-ID",
+              "no": "Sone-ID",
+              "es": "ID de zona",
+              "da": "Zone-ID",
+              "ru": "ID зоны",
+              "pl": "ID strefy",
+              "ko": "구역 ID"
+            }
+          },
+          {
+            "name": "event_type",
+            "type": "string",
+            "title": {
+              "en": "Event type",
+              "nl": "Type event",
+              "de": "Ereignistyp",
+              "fr": "Type d'événement",
+              "it": "Tipo di evento",
+              "sv": "Händelsetyp",
+              "no": "Hendelsestype",
+              "es": "Tipo de evento",
+              "da": "Hændelsestype",
+              "ru": "Тип события",
+              "pl": "Typ zdarzenia",
+              "ko": "이벤트 유형"
+            }
+          },
+          {
+            "name": "alarm_type",
+            "type": "string",
+            "title": {
+              "en": "Alarm type",
+              "nl": "Alarmtype",
+              "de": "Alarmtyp",
+              "fr": "Type d'alarme",
+              "it": "Tipo di allarme",
+              "sv": "Larmtyp",
+              "no": "Alarmtype",
+              "es": "Tipo de alarma",
+              "da": "Alarmtype",
+              "ru": "Тип тревоги",
+              "pl": "Typ alarmu",
+              "ko": "알람 유형"
+            }
+          },
+          {
+            "name": "button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop",
+              "de": "Taste",
+              "fr": "Bouton",
+              "it": "Pulsante",
+              "sv": "Knapp",
+              "no": "Knapp",
+              "es": "Botón",
+              "da": "Knap",
+              "ru": "Кнопка",
+              "pl": "Przycisk",
+              "ko": "버튼"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protect-nvr-alarm"
+          }
+        ]
+      },
+      {
         "id": "ufp_device_relay_state_changed",
         "title": {
           "en": "Relay state changed",
@@ -9439,11 +9569,66 @@
     }
   },
   "capabilities": {
+    "alarm_co_fault": {
+      "type": "boolean",
+      "title": {
+        "en": "CO sensor fault",
+        "nl": "Storing CO-melder"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true
+    },
     "alarm_glassbreak": {
       "type": "boolean",
       "title": {
         "en": "Glass break",
         "nl": "Glasbreuk"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true
+    },
+    "alarm_smoke_end_of_life": {
+      "type": "boolean",
+      "title": {
+        "en": "Smoke sensor end of life",
+        "nl": "Rookmelder einde levensduur"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true
+    },
+    "alarm_smoke_fault": {
+      "type": "boolean",
+      "title": {
+        "en": "Smoke sensor fault",
+        "nl": "Storing rookmelder"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true
+    },
+    "alarm_smoke_needs_cleaning": {
+      "type": "boolean",
+      "title": {
+        "en": "Smoke sensor needs cleaning",
+        "nl": "Rookmelder moet gereinigd worden"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true
+    },
+    "alarm_smoke_test": {
+      "type": "boolean",
+      "title": {
+        "en": "Smoke sensor test mode",
+        "nl": "Rookmelder testmodus"
       },
       "uiComponent": "sensor",
       "getable": true,

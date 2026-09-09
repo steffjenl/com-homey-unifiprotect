@@ -160,6 +160,7 @@ module.exports.EVENT_NVR_ALARM_STATE_CHANGED = 'ufp_nvr_alarm_state_changed';
 module.exports.EVENT_NVR_ALARM_ARMED = 'ufp_nvr_alarm_armed';
 module.exports.EVENT_NVR_ALARM_DISARMED = 'ufp_nvr_alarm_disarmed';
 module.exports.EVENT_NVR_ALARM_BREACH = 'ufp_nvr_alarm_breach';
+module.exports.EVENT_NVR_ALARM_ZONE_EVENT = 'ufp_nvr_alarm_zone_event';
 
 // Weather
 module.exports.EVENT_WEATHER_UPDATED = 'ufp_weather_updated';

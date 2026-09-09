@@ -3,6 +3,22 @@
 const WebSocketEvents = require('ws');
 const BaseClass = require('../baseclass');
 
+// Alarm-hub zone/peripheral events - spec-only (see specs/unifi-protect-api-notes.md),
+// no V1 precedent, dispatched as a single generic device trigger via
+// NVRAlarmDevice#onAlarmHubZoneEvent.
+const ALARM_HUB_EVENT_TYPES = [
+    'alarmHubMotion', 'alarmHubEntryOpened', 'alarmHubEntryClosed', 'alarmHubSmoke',
+    'alarmHubGlassBreak', 'alarmHubButtonPress', 'alarmHubTamper', 'alarmHubDeviceTamper',
+    'alarmHubRelaySwitched', 'alarmHubBatteryLow', 'alarmHubBatteryConnected',
+];
+
+// Smoke-detector sub-events not covered by the continuous sensor.smokeStatus feed -
+// see Sensor#onSmokeSubEvent.
+const SMOKE_SUB_EVENT_TYPES = [
+    'sensorSmokeFault', 'sensorCoFault', 'sensorSmokeEndOfLife',
+    'sensorSmokeBatteryLow', 'sensorSmokeNeedsCleaning', 'sensorSmokeTest',
+];
+
 class ProtectWebSocket extends BaseClass {
     constructor(...props) {
         super(...props);
@@ -269,14 +285,18 @@ class ProtectWebSocket extends BaseClass {
                     }
                 }
 
-                // Smart detection event
-                if (itemType === 'smartDetectZone') {
+                // Smart detection event - zone (person/vehicle/etc.), line-crossing and
+                // loitering all share the same payload shape and are dispatched the same
+                // way. detectionMethod is passed through for a possible future
+                // dedicated trigger/token; SmartDetectionMixin ignores unknown fields today.
+                if (itemType === 'smartDetectZone' || itemType === 'smartDetectLine' || itemType === 'smartDetectLoiterZone') {
                     if (item.smartDetectTypes && item.smartDetectTypes.length > 0) {
-                        this.homey.app.debug('[V2] smart detection: ' + JSON.stringify(item.smartDetectTypes) + ' on ' + deviceId);
+                        this.homey.app.debug(`[V2] smart detection (${itemType}): ` + JSON.stringify(item.smartDetectTypes) + ' on ' + deviceId);
                         const payload = {
                             smartDetectTypes: item.smartDetectTypes,
                             start: item.start,
                             end: item.end || null,
+                            detectionMethod: itemType,
                         };
                         if (deviceCamera) {
                             driverCamera.onParseWebsocketMessage(deviceCamera, payload, eventType, item.id);
@@ -347,6 +367,66 @@ class ProtectWebSocket extends BaseClass {
                     this.homey.app.debug('[V2] battery low on ' + deviceId);
                     if (deviceSensor) {
                         deviceSensor.onBatteryLow();
+                    }
+                }
+
+                // NFC card scanned / fingerprint identified (doorbell/camera readers).
+                // V1 has dispatched this for a long time (library/websocket.js:439,457);
+                // the driver/device layer (onNFCCardScanned/onFingerprintIdentified) was
+                // already fully built for it, V2 just never called it.
+                if (itemType === 'nfcCardScanned' || itemType === 'fingerprintIdentified') {
+                    this.homey.app.debug(`[V2] ${itemType} on ${deviceId}`);
+                    const payload = {
+                        type: itemType,
+                        start: item.start,
+                        end: item.end || null,
+                        metadata: item.metadata,
+                    };
+                    if (deviceDoorbell) {
+                        driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, eventType, item.id);
+                    }
+                    if (deviceCamera) {
+                        driverCamera.onParseWebsocketMessage(deviceCamera, payload, eventType, item.id);
+                    }
+                }
+
+                // Sensor button pressed (fob remote, alarm hub panel button, or wired
+                // input - see specs/unifi-protect-api-notes.md for the button enum).
+                // Reuse the existing V1 FOB pipeline (library/fob-handler.js) by adapting
+                // this V2 item into the V1 updatePacket shape it expects; FobHandler
+                // already filters on metadata.deviceModelKey === 'fob' + known
+                // button/pressType, so non-fob presses (e.g. alarmHubButton, handled
+                // below via the dedicated alarmHubButtonPress event) are ignored safely.
+                if (itemType === 'sensorButtonPressed') {
+                    this.homey.app.debug(`[V2] sensorButtonPressed on ${deviceId}: ${JSON.stringify(item.metadata || {})}`);
+                    const v1ShapedPacket = {
+                        action: {modelKey: 'event', action: eventType, id: item.id},
+                        payload: {
+                            type: item.type,
+                            device: item.device,
+                            start: item.start,
+                            end: item.end,
+                            metadata: item.metadata,
+                        },
+                    };
+                    this.homey.app.onFobWebsocketMessage(v1ShapedPacket);
+                }
+
+                // Alarm-hub zone/peripheral events - see ALARM_HUB_EVENT_TYPES comment.
+                if (ALARM_HUB_EVENT_TYPES.includes(itemType)) {
+                    this.homey.app.debug(`[V2] alarm hub zone event ${itemType} on ${deviceId}`);
+                    const driverAlarm = this.homey.drivers.getDriver('protect-nvr-alarm');
+                    const deviceAlarm = driverAlarm && driverAlarm.getNVRAlarmDevice();
+                    if (deviceAlarm && typeof deviceAlarm.onAlarmHubZoneEvent === 'function') {
+                        deviceAlarm.onAlarmHubZoneEvent(itemType, item);
+                    }
+                }
+
+                // Smoke-detector sub-events - see SMOKE_SUB_EVENT_TYPES comment.
+                if (SMOKE_SUB_EVENT_TYPES.includes(itemType)) {
+                    this.homey.app.debug(`[V2] ${itemType} (${eventType}) on ${deviceId}`);
+                    if (deviceSensor) {
+                        deviceSensor.onSmokeSubEvent(itemType, eventType, item.end || null);
                     }
                 }
 

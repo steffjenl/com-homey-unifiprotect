@@ -194,46 +194,81 @@ catalogue — the "Handled" column shows which are actually dispatched today by
 `library/protect-api-v2/web-socket-events.js` (checked via `itemType === '...'`). Unhandled
 types currently arrive over the socket and are silently ignored by the app.
 
-| `item.type` | Device category | `metadata` fields | Handled |
-|---|---|---|---|
-| `ring` | Doorbell (camera) | — | ✅ (`web-socket-events.js:242`) |
-| `motion` | Camera | — | ✅ (`:250`) |
-| `smartDetectZone` | Camera | (top-level `smartDetectTypes`, not under `metadata`) | ✅ (`:273`) |
-| `smartAudioDetect` | Camera | (top-level `smartDetectTypes`) | ✅ (`:291`) |
-| `smartDetectLine` | Camera (line-crossing) | schema not separately defined in spec (`smartDetectLineEvent: null`) — verify shape against `cameraSmartDetectZoneEvent` | ❌ |
-| `smartDetectLoiterZone` | Camera (loitering) | schema not separately defined in spec (`smartDetectLoiterZoneEvent: null`) — verify shape against `cameraSmartDetectZoneEvent` | ❌ |
-| `cameraDigitalInputChanged` | Camera (digital input) | `inputState.text` (`circuitClosed`/`circuitOpen`), `inputToken`, `inputChannel` | ❌ |
-| `lightMotion` | Light | — | ❌ |
-| `relayInputChanged` | Relay | `inputState.text` (`circuitClosed`/`circuitOpen`), `inputChannel` | ❌ |
-| `sensorVape` | Sensor (UP-AirQuality) | — | ✅ (`:308`) |
-| `sensorExtremeValues` | Sensor | `sensorType.text`, `sensorValue.text`, `status.text` | ✅ (`:318`) |
-| `sensorAlarm` | Sensor | `alarmType.text` | ✅ (`:329`) |
-| `sensorTamper` | Sensor | — | ✅ (`:338`) |
-| `sensorBatteryLow` | Sensor | `sensorBatteryPercentage` | ✅ (`:346`) |
-| `sensorWaterLeak` | Sensor (leak) | `sensorMountType` | ❌ |
-| `sensorOpened` | Sensor (contact, opened) | `sensorMountType` | ❌ |
-| `sensorClosed` | Sensor (contact, closed) | `sensorMountType` | ❌ |
-| `sensorMotion` | Sensor (PIR) | — | ❌ |
-| `sensorButtonPressed` | Sensor (button) | `button` | ❌ |
-| `sensorSmokeTest` | Sensor (smoke, test mode) | `source` | ❌ |
-| `sensorSmokeBatteryLow` | Sensor (smoke) | — | ❌ |
-| `sensorSmokeNeedsCleaning` | Sensor (smoke) | — | ❌ |
-| `sensorSmokeFault` | Sensor (smoke) | — | ❌ |
-| `sensorCoFault` | Sensor (CO) | — | ❌ |
-| `sensorSmokeEndOfLife` | Sensor (smoke) | — | ❌ |
-| `alarmHubMotion` | Alarm hub zone (relevant to `protect-nvr-alarm` driver) | `pin.text`, `status`, `deviceId`, `deviceName` | ❌ |
-| `alarmHubEntryOpened` | Alarm hub zone | `pin.text`, `status`, `deviceId`, `deviceName` | ❌ |
-| `alarmHubEntryClosed` | Alarm hub zone | `pin.text`, `status`, `deviceId`, `deviceName` | ❌ |
-| `alarmHubSmoke` | Alarm hub zone | `pin.text`, `status`, `alarmType`, `deviceId`, `deviceName` | ❌ |
-| `alarmHubGlassBreak` | Alarm hub zone | `pin.text`, `status`, `alarmType`, `deviceId`, `deviceName` | ❌ |
-| `alarmHubButtonPress` | Alarm hub zone | `pin.text`, `status`, `button`, `alarmType`, `deviceId`, `deviceName` | ❌ |
-| `alarmHubTamper` | Alarm hub zone | `pin.text`, `status`, `alarmType`, `deviceId`, `deviceName` | ❌ |
-| `alarmHubDeviceTamper` | Alarm hub zone | `status`, `deviceId`, `deviceName` | ❌ |
-| `alarmHubRelaySwitched` | Alarm hub zone | — | ❌ |
-| `alarmHubBatteryLow` | Alarm hub zone | — | ❌ |
-| `alarmHubBatteryConnected` | Alarm hub zone | — | ❌ |
-| `nfcCardScanned` | Access reader | `metadata.nfc` (`$ref: nfcMetadata`) | ❌ |
-| `fingerprintIdentified` | Access reader | `metadata.fingerprint` (`$ref: fingerprintMetadata`) | ❌ |
+**V1/V2 classification** (added after cross-checking `library/websocket.js`, the V1 legacy
+websocket client, against the same catalogue): most event types fall into one of three buckets —
+**(A)** V1 already dispatched it (or was ported after confirming sensor-scoped `event` records
+carry `payload.device` directly on V1 too, same as V2's `item.device` — the same low-risk pattern
+used for `sensorVape`/`sensorSmokeNeedsCleaning`/`sensorExtremeValues`/`sensorAlarm`/
+`sensorTamper`), **(B)** neither stack ever built it (genuinely new — kept V2-only, either because
+there's no real precedent/way to verify V1 carries the event at all (`alarmHub*`, not yet tested
+against real hardware in either stack), or because the discrete event would be redundant with
+capability coverage that's already continuous on both stacks (`sensorBatteryLow`,
+`sensorSmokeNeedsCleaning`'s siblings)), or **(C)** not a real gap — already
+covered by the continuous `/v1/subscribe/devices` device-state channel in both stacks via the
+shared `onParseWebsocketMessage` handlers.
+
+| `item.type` | Device category | `metadata` fields | V1 (`library/websocket.js`) | V2 (`web-socket-events.js`) |
+|---|---|---|---|---|
+| `ring` | Doorbell (camera) | — | ✅ | ✅ (`:242`) |
+| `motion` | Camera | — | ✅ | ✅ (`:250`) |
+| `smartDetectZone` | Camera | (top-level `smartDetectTypes`, not under `metadata`) | ✅ | ✅ (`:273`) |
+| `smartAudioDetect` | Camera | (top-level `smartDetectTypes`) | ✅ | ✅ (`:291`) |
+| `smartDetectLine` | Camera (line-crossing) | (top-level `smartDetectTypes`, same shape as `smartDetectZone`) | ✅ (B, added — was only a commented-out debug line) | ✅ (B, `:273`) |
+| `smartDetectLoiterZone` | Camera (loitering) | (top-level `smartDetectTypes`, same shape as `smartDetectZone`) | ✅ (B, added) | ✅ (B, `:273`) |
+| `cameraDigitalInputChanged` | Camera (digital input) | `inputState.text` (`circuitClosed`/`circuitOpen`), `inputToken`, `inputChannel` | ❌ | ❌ (out of scope — niche hardware) |
+| `lightMotion` | Light | — | (C) covered via device-state `isPirMotionDetected` | (C) covered via device-state, both stacks (`web-socket-devices.js:248`) |
+| `relayInputChanged` | Relay | `inputState.text` (`circuitClosed`/`circuitOpen`), `inputChannel` | (C) covered via device-state `payload.inputs` | (C) covered via device-state, both stacks |
+| `sensorVape` | Sensor (UP-AirQuality) | — | ✅ (A, added — sensor-scoped events carry `payload.device` directly, no `_resolveCameraId` needed) | ✅ (`:308`) |
+| `sensorExtremeValues` | Sensor | `sensorType.text`, `sensorValue.text`, `status.text` | ✅ (A, added — AQI/CO2/VOC/PM measures had no continuous fallback, so this was a real V1 gap, not just redundant) | ✅ (`:318`) |
+| `sensorAlarm` | Sensor | `alarmType.text` | ✅ (A, added — `alarm_smoke`/`alarm_co` already had continuous coverage, but `alarm_glassbreak` did not) | ✅ (`:329`) |
+| `sensorTamper` | Sensor | — | ✅ (A, added — `alarm_tamper` had no continuous fallback) | ✅ (`:338`) |
+| `sensorBatteryLow` | Sensor | `sensorBatteryPercentage` | ❌ (deliberately not ported — `alarm_battery` already has full continuous coverage via `onBatteryStatusChange`, both stacks; this discrete event would be redundant) | ✅ (`:346`) |
+| `sensorWaterLeak` | Sensor (leak) | `sensorMountType` | ❌ | ❌ (out of scope — no known Ubiquiti hardware model) |
+| `sensorOpened` | Sensor (contact, opened) | `sensorMountType` | (C) covered via device-state `isOpened` | (C) covered via device-state, both stacks (`drivers/protectsensor/driver.js:127`) |
+| `sensorClosed` | Sensor (contact, closed) | `sensorMountType` | (C) covered via device-state `isOpened` | (C) covered via device-state, both stacks |
+| `sensorMotion` | Sensor (PIR) | — | (C) covered via device-state `motionDetectedAt`/`isMotionDetected` | (C) covered via device-state, both stacks |
+| `sensorButtonPressed` | Sensor (fob/alarm-hub-panel/wired-input button) | `button.text` | ✅ (routes to `app.js#onFobWebsocketMessage` → `library/fob-handler.js`) | ✅ (A, added — adapts the V2 item into the V1 packet shape `fob-handler.js` expects, `:` fob block) |
+| `sensorSmokeTest` | Sensor (smoke, test mode) | `source` | ❌ (B, spec-only) | ✅ (B, added — `alarm_smoke_test` capability, `onSmokeSubEvent`; also backed continuously on **both** V1 and V2 via `smokeStatus.testing`, see note below) |
+| `sensorSmokeBatteryLow` | Sensor (smoke) | — | ❌ (B, spec-only) | ✅ (B, added — reuses existing `alarm_battery`) |
+| `sensorSmokeNeedsCleaning` | Sensor (smoke) | — | ✅ (A, added) | ✅ (B, added — `alarm_smoke_needs_cleaning` capability; no continuous `smokeStatus` equivalent exists, so this stays event-driven on both stacks) |
+| `sensorSmokeFault` | Sensor (smoke) | — | ❌ (B, spec-only) | ✅ (B, added — `alarm_smoke_fault` capability; also backed continuously on **both** V1 and V2 via `smokeStatus.smokeSensorFault`) |
+| `sensorCoFault` | Sensor (CO) | — | ❌ (B, spec-only) | ✅ (B, added — `alarm_co_fault` capability; also backed continuously on **both** V1 and V2 via `smokeStatus.coSensorFault`) |
+| `sensorSmokeEndOfLife` | Sensor (smoke) | — | ❌ (B, spec-only) | ✅ (B, added — `alarm_smoke_end_of_life` capability; also backed continuously on **both** V1 and V2 via `smokeStatus.endOfLife`) |
+| `alarmHubMotion` | Alarm hub zone (`protect-nvr-alarm` driver) | `pin.text`, `status`, `deviceId`, `deviceName` | ❌ (B, spec-only — kept V2-only, see below) | ✅ (B, added — generic `ufp_nvr_alarm_zone_event` trigger) |
+| `alarmHubEntryOpened` | Alarm hub zone | `pin.text`, `status`, `deviceId`, `deviceName` | ❌ (B, spec-only) | ✅ (B, added) |
+| `alarmHubEntryClosed` | Alarm hub zone | `pin.text`, `status`, `deviceId`, `deviceName` | ❌ (B, spec-only) | ✅ (B, added) |
+| `alarmHubSmoke` | Alarm hub zone | `pin.text`, `status`, `alarmType`, `deviceId`, `deviceName` | ❌ (B, spec-only) | ✅ (B, added) |
+| `alarmHubGlassBreak` | Alarm hub zone | `pin.text`, `status`, `alarmType`, `deviceId`, `deviceName` | ❌ (B, spec-only) | ✅ (B, added) |
+| `alarmHubButtonPress` | Alarm hub zone | `pin.text`, `status`, `button`, `alarmType`, `deviceId`, `deviceName` | ❌ (B, spec-only) | ✅ (B, added) |
+| `alarmHubTamper` | Alarm hub zone | `pin.text`, `status`, `alarmType`, `deviceId`, `deviceName` | ❌ (B, spec-only) | ✅ (B, added) |
+| `alarmHubDeviceTamper` | Alarm hub zone | `status`, `deviceId`, `deviceName` | ❌ (B, spec-only) | ✅ (B, added) |
+| `alarmHubRelaySwitched` | Alarm hub zone | — | ❌ (B, spec-only) | ✅ (B, added) |
+| `alarmHubBatteryLow` | Alarm hub zone | — | ❌ (B, spec-only) | ✅ (B, added) |
+| `alarmHubBatteryConnected` | Alarm hub zone | — | ❌ (B, spec-only) | ✅ (B, added) |
+| `nfcCardScanned` | Access reader (camera/doorbell) | `metadata.nfc` (`$ref: nfcMetadata`) | ✅ (`:457`) | ✅ (A, added — driver/device layer was already fully built, V2 just never dispatched it) |
+| `fingerprintIdentified` | Access reader (camera/doorbell) | `metadata.fingerprint` (`$ref: fingerprintMetadata`) | ✅ (`:439`) | ✅ (A, added) |
+
+The only sensor-family event kept V2-only by deliberate choice is `sensorBatteryLow` — its
+capability (`alarm_battery`) already has full continuous coverage on both stacks, so the discrete
+event would be redundant (see its table row above). Every other sensor-scoped event that had no
+V1 dispatch (`sensorVape`, `sensorExtremeValues`, `sensorAlarm`, `sensorTamper`,
+`sensorSmokeNeedsCleaning`) has now been ported to V1 using the same low-risk `payload.device`
+lookup pattern.
+
+`alarmHub*` (11 events) is a different case: it's genuinely **not verified against real Alarm Hub
+hardware** at all yet (V1 or V2) — the alarm-hub `metadata.deviceId`/`deviceName` semantics in
+particular are ambiguous in the spec's own field descriptions (see
+`drivers/protect-nvr-alarm/device.js#onAlarmHubZoneEvent`) — so it stays V2-only for now; porting
+to V1 before that's confirmed would just double the unverified surface.
+
+**Note on `alarm_smoke_fault`/`alarm_co_fault`/`alarm_smoke_end_of_life`/`alarm_smoke_test`:**
+unlike `alarm_smoke_needs_cleaning`, these four also get updated from the continuous
+`sensor.smokeStatus` feed (`onSmokeStatusChange`, `drivers/protectsensor/device.js`) — the same
+shared handler that already backs `alarm_smoke`/`alarm_co` on both V1 and V2. So even without the
+discrete event dispatch, a V1-only setup keeps these capabilities current; the discrete event
+(`onSmokeSubEvent`, now dispatched on both stacks for `sensorSmokeNeedsCleaning`, V2-only for the
+rest) only adds slightly earlier/more explicit updates for those four. `alarm_smoke_needs_cleaning`
+has no equivalent field in `smokeStatus`, so it depends entirely on the (now V1+V2) discrete event.
 
 ### `/v1/subscribe/devices` — Device State Updates
 - URL: `wss://<NVR_IP>:443/proxy/protect/integration/v1/subscribe/devices`
