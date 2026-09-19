@@ -71,13 +71,19 @@ async function getRtspStreamUrl(app, camera, options = {}) {
 
   const packageCamera = options.packageCamera === true;
   const qualities = packageCamera ? PACKAGE_STREAM_QUALITIES : NORMAL_STREAM_QUALITIES;
+  const v1StreamUrl = await _getV1StreamUrl(app, camera, packageCamera);
+
+  if (v1StreamUrl) {
+    return v1StreamUrl;
+  }
+
   const v2StreamUrl = await _getV2StreamUrl(app, camera, qualities);
 
   if (v2StreamUrl) {
     return v2StreamUrl;
   }
 
-  return _getV1StreamUrl(app, camera, packageCamera);
+  return '';
 }
 
 module.exports = {

@@ -22,19 +22,19 @@ function assert(condition, message) {
 }
 
 function assertNormalizedStreams(streams) {
-  assert(streams.high === 'rtsp://nvr.example/live/high', 'expected high RTSPS URL to become RTSP');
-  assert(streams.package === 'rtsp://nvr.example/live/package', 'expected package RTSPS URL to become RTSP');
-  assert(streams.medium === 'rtsp://nvr.example/live/medium', 'expected existing RTSP URL to remain unchanged');
-  assert(streams.low === null, 'expected non-string stream values to remain unchanged');
+  assert(streams.high === 'rtsp://192.168.1.1:7447/live/high', 'expected high RTSPS URL to become RTSP on port 7447');
+  assert(streams.package === 'rtsp://192.168.1.1:7447/live/package', 'expected package RTSPS URL to become RTSP on port 7447');
+  assert(streams.medium === 'rtsp://192.168.1.1:7447/live/medium', 'expected existing RTSP port 7441 URL to move to port 7447');
+  assert(streams.low === 'rtsp://nvr.example/live/low', 'expected existing RTSP URL without secure marker to remain unchanged');
   assert(streams.metadata === 'unchanged', 'expected non-stream response fields to remain unchanged');
 }
 
 async function run() {
   const response = JSON.stringify({
-    high: 'rtsps://nvr.example/live/high',
-    package: 'RTSPS://nvr.example/live/package',
-    medium: 'rtsp://nvr.example/live/medium',
-    low: null,
+    high: 'rtsps://192.168.1.1:7441/live/high?enableSrtp',
+    package: 'RTSPS://192.168.1.1:7441/live/package?enableSrtp',
+    medium: 'rtsp://192.168.1.1:7441/live/medium?enableSrtp',
+    low: 'rtsp://nvr.example/live/low',
     metadata: 'unchanged',
   });
   const api = new ProtectAPI();

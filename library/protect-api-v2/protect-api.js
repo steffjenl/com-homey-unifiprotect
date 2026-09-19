@@ -3,10 +3,37 @@ const WebClient = require('./web-client');
 const ProtectWebSocketEvents = require('./web-socket-events');
 const ProtectWebSocketDevices = require('./web-socket-devices');
 
+function normalizeRtspsStreamUrl(streamUrl) {
+    try {
+        const parsedUrl = new URL(streamUrl);
+        const isSecureRtsp = parsedUrl.protocol.toLowerCase() === 'rtsps:';
+
+        if (isSecureRtsp) {
+            parsedUrl.protocol = 'rtsp:';
+            parsedUrl.port = '7447';
+        }
+
+        if (parsedUrl.searchParams.has('enableSrtp')) {
+            parsedUrl.searchParams.delete('enableSrtp');
+        }
+
+        if (parsedUrl.protocol.toLowerCase() === 'rtsp:' && parsedUrl.port === '7441') {
+            parsedUrl.port = '7447';
+        }
+
+        return parsedUrl.toString();
+    } catch (error) {
+        return streamUrl
+            .replace(/^rtsps:\/\//i, 'rtsp://')
+            .replace(':7441/', ':7447/')
+            .replace(/\?enableSrtp$/i, '');
+    }
+}
+
 function normalizeRtspsStreams(streams) {
     ['high', 'medium', 'low', 'package'].forEach(quality => {
         if (typeof streams[quality] === 'string') {
-            streams[quality] = streams[quality].replace(/^rtsps:\/\//i, 'rtsp://');
+            streams[quality] = normalizeRtspsStreamUrl(streams[quality]);
         }
     });
 

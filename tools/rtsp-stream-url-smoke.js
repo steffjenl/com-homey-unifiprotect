@@ -55,21 +55,24 @@ function createApp(options) {
 async function assertResolverBehavior() {
   const camera = { id: 'camera-1', name: 'Front Door' };
   let app = createApp({ v2Streams: { high: 'rtsp://nvr/high' }, v1StreamUrl: 'rtsp://nvr/v1' });
-  assert(await getRtspStreamUrl(app, camera) === 'rtsp://nvr/high', 'expected V2 high stream to be preferred');
-  assert(app.calls.length === 1 && app.calls[0].api === 'v2', 'expected V1 not to be called when V2 succeeds');
+  assert(await getRtspStreamUrl(app, camera) === 'rtsp://nvr/v1', 'expected V1 stream to be preferred when available');
+  assert(app.calls.length === 1 && app.calls[0].api === 'v1', 'expected V2 not to be called when V1 succeeds');
 
-  app = createApp({ v2Streams: { high: null, medium: 'rtsp://nvr/medium', low: 'rtsp://nvr/low' } });
+  app = createApp({ v1Available: false, v2Streams: { high: null, medium: 'rtsp://nvr/medium', low: 'rtsp://nvr/low' } });
   assert(await getRtspStreamUrl(app, camera) === 'rtsp://nvr/medium', 'expected medium fallback when high is missing');
 
-  app = createApp({ v2Error: new Error('not allowed'), v1StreamUrl: 'rtsp://nvr/v1' });
-  assert(await getRtspStreamUrl(app, camera) === 'rtsp://nvr/v1', 'expected V1 fallback when V2 fails');
-  assert(app.calls.some(call => call.api === 'v1'), 'expected V1 to be called after V2 failure');
+  app = createApp({ v2Streams: { high: 'rtsp://nvr/high' }, v1StreamUrl: '' });
+  assert(await getRtspStreamUrl(app, camera) === 'rtsp://nvr/high', 'expected V2 fallback when V1 returns no stream');
+  assert(app.calls.some(call => call.api === 'v2'), 'expected V2 to be called after empty V1 result');
 
   app = createApp({ v2Streams: { package: 'rtsp://nvr/package' }, v1PackageStreamUrl: 'rtsp://nvr/v1-package' });
-  assert(await getRtspStreamUrl(app, camera, { packageCamera: true }) === 'rtsp://nvr/package', 'expected V2 package stream to be preferred');
+  assert(await getRtspStreamUrl(app, camera, { packageCamera: true }) === 'rtsp://nvr/v1-package', 'expected V1 package stream to be preferred when available');
 
   app = createApp({ v2Streams: { package: null }, v1PackageStreamUrl: 'rtsp://nvr/v1-package' });
   assert(await getRtspStreamUrl(app, camera, { packageCamera: true }) === 'rtsp://nvr/v1-package', 'expected V1 package fallback when V2 package is missing');
+
+  app = createApp({ v2Streams: { package: 'rtsp://nvr/package' }, v1PackageStreamUrl: '' });
+  assert(await getRtspStreamUrl(app, camera, { packageCamera: true }) === 'rtsp://nvr/package', 'expected V2 package fallback when V1 package is missing');
 }
 
 async function assertV1MissingChannelsBehavior() {
