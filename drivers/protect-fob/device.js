@@ -47,6 +47,10 @@ class ProtectFobDevice extends Homey.Device {
       await this.addCapability('measure_battery');
     }
 
+    if (!this.hasCapability('measure_signal_strength')) {
+      await this.addCapability('measure_signal_strength');
+    }
+
     if (this.hasCapability('alarm_battery')) {
       await this.removeCapability('alarm_battery');
     }
@@ -83,6 +87,22 @@ class ProtectFobDevice extends Homey.Device {
       if (percentage !== null && this.hasCapability('measure_battery')) {
         const normalized = Math.max(0, Math.min(100, Number(percentage)));
         await this.setCapabilityValue('measure_battery', normalized);
+      }
+
+      const signalState = payload
+        && payload.wirelessConnectionState
+        && payload.wirelessConnectionState.signalState;
+      const signalStrength = signalState && signalState.signalStrength;
+
+      if (typeof signalStrength === 'number' && this.hasCapability('measure_signal_strength')) {
+        await this.setCapabilityValue('measure_signal_strength', signalStrength);
+      }
+
+      const awayState = payload && payload.awayState;
+      if (awayState === 'OFFLINE' && this.getAvailable()) {
+        await this.setUnavailable(this.homey.__('msg.fob_offline'));
+      } else if (awayState === 'ONLINE' && !this.getAvailable()) {
+        await this.setAvailable();
       }
     } catch (error) {
       this.error(error);

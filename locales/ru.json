@@ -235,7 +235,8 @@
     },
     "msg": {
         "controller_unreachable": "Контроллер недоступен. Проверьте IP-адрес в настройках.",
-        "repair_controller_unreachable": "Обновите IP-адрес контроллера и попробуйте снова."
+        "repair_controller_unreachable": "Обновите IP-адрес контроллера и попробуйте снова.",
+        "fob_offline": "FOB не в сети."
     },
     "notification": {
         "controller_error_title": "Контроллер UniFi Protect недоступен",

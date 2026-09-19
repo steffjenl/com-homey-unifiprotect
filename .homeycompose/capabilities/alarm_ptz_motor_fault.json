@@ -1,0 +1,11 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "PTZ motor fault",
+    "nl": "PTZ-motorstoring"
+  },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "insights": true
+}

@@ -480,6 +480,13 @@ class ProtectWebSocket extends BaseClass {
         this.homey.app.onParseWebsocketMessage(payload);
       } else if (
         updatePacket.action.modelKey === 'event'
+                && typeof updatePacket.payload.type !== 'undefined'
+                && updatePacket.payload.type === 'access'
+      ) {
+        // NVR-level login/session access event (distinct from UniFi Access doorAccess)
+        this.homey.app.onNvrAccessWebsocketMessage(payload);
+      } else if (
+        updatePacket.action.modelKey === 'event'
                 && !!this._resolveCameraId(updatePacket)
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'smartAudioDetect'

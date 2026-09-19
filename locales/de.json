@@ -241,7 +241,8 @@
     },
     "msg": {
         "controller_unreachable": "Controller nicht erreichbar. Überprüfen Sie die IP-Adresse in den Einstellungen.",
-        "repair_controller_unreachable": "Aktualisieren Sie die Controller-IP-Adresse und versuchen Sie es erneut."
+        "repair_controller_unreachable": "Aktualisieren Sie die Controller-IP-Adresse und versuchen Sie es erneut.",
+        "fob_offline": "FOB ist offline."
     },
     "notification": {
         "controller_error_title": "UniFi Protect Controller nicht erreichbar",

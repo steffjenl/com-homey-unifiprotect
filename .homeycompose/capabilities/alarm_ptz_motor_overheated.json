@@ -1,0 +1,11 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "PTZ motor overheated",
+    "nl": "PTZ-motor oververhit"
+  },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "insights": true
+}

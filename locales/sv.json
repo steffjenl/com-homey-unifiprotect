@@ -235,7 +235,8 @@
     },
     "msg": {
         "controller_unreachable": "Kontrollenheten kan inte nås. Kontrollera IP-adressen i inställningarna.",
-        "repair_controller_unreachable": "Uppdatera kontrollenhetens IP-adress och försök igen."
+        "repair_controller_unreachable": "Uppdatera kontrollenhetens IP-adress och försök igen.",
+        "fob_offline": "FOB är offline."
     },
     "notification": {
         "controller_error_title": "UniFi Protect-kontrollenhet kan inte nås",

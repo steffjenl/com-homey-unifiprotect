@@ -247,6 +247,7 @@ shared `onParseWebsocketMessage` handlers.
 | `alarmHubBatteryConnected` | Alarm hub zone | — | ❌ (B, spec-only) | ✅ (B, added) |
 | `nfcCardScanned` | Access reader (camera/doorbell) | `metadata.nfc` (`$ref: nfcMetadata`) | ✅ (`:457`) | ✅ (A, added — driver/device layer was already fully built, V2 just never dispatched it) |
 | `fingerprintIdentified` | Access reader (camera/doorbell) | `metadata.fingerprint` (`$ref: fingerprintMetadata`) | ✅ (`:439`) | ✅ (A, added) |
+| `access` | NVR (login/session log, not a physical door) | `userName`, `ip`, `clientPlatform` | ✅ (A, added — `library/websocket.js` → `app.js#onNvrAccessWebsocketMessage` → `ufp_nvr_access` global trigger) | ❌ (not part of the v2 `components.schemas.event` discriminator list — V1-only) |
 
 The only sensor-family event kept V2-only by deliberate choice is `sensorBatteryLow` — its
 capability (`alarm_battery`) already has full continuous coverage on both stacks, so the discrete

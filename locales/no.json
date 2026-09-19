@@ -235,7 +235,8 @@
     },
     "msg": {
         "controller_unreachable": "Kontrolleren er utilgjengelig. Sjekk IP-adressen i innstillingene.",
-        "repair_controller_unreachable": "Oppdater kontrollerens IP-adresse og prøv igjen."
+        "repair_controller_unreachable": "Oppdater kontrollerens IP-adresse og prøv igjen.",
+        "fob_offline": "FOB er frakoblet."
     },
     "notification": {
         "controller_error_title": "UniFi Protect-kontroller utilgjengelig",

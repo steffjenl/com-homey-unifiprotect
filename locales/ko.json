@@ -235,7 +235,8 @@
     },
     "msg": {
         "controller_unreachable": "컨트롤러에 연결할 수 없습니다. 설정에서 IP 주소를 확인하세요.",
-        "repair_controller_unreachable": "컨트롤러 IP 주소를 업데이트하고 다시 시도하세요."
+        "repair_controller_unreachable": "컨트롤러 IP 주소를 업데이트하고 다시 시도하세요.",
+        "fob_offline": "FOB가 오프라인 상태입니다."
     },
     "notification": {
         "controller_error_title": "UniFi Protect 컨트롤러에 연결할 수 없음",

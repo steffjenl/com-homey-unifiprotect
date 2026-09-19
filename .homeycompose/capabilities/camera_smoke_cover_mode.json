@@ -1,0 +1,10 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Smoke cover mode",
+    "nl": "Rookmelderafdekking modus"
+  },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false
+}

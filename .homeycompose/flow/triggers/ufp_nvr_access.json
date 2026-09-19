@@ -1,0 +1,49 @@
+{
+  "id": "ufp_nvr_access",
+  "title": {
+    "en": "The NVR is accessed",
+    "nl": "Er wordt toegang verkregen tot de NVR"
+  },
+  "hint": {
+    "en": "Triggered when a user logs in to or accesses the UniFi Protect controller (NVR) itself",
+    "nl": "Geschakeld wanneer een gebruiker inlogt op of toegang krijgt tot de UniFi Protect controller (NVR) zelf"
+  },
+  "tokens": [
+    {
+      "name": "ufp_nvr_access_user",
+      "type": "string",
+      "title": {
+        "en": "Username",
+        "nl": "Gebruikersnaam"
+      },
+      "example": {
+        "en": "admin",
+        "nl": "admin"
+      }
+    },
+    {
+      "name": "ufp_nvr_access_ip",
+      "type": "string",
+      "title": {
+        "en": "IP address",
+        "nl": "IP-adres"
+      },
+      "example": {
+        "en": "192.168.1.10",
+        "nl": "192.168.1.10"
+      }
+    },
+    {
+      "name": "ufp_nvr_access_platform",
+      "type": "string",
+      "title": {
+        "en": "Client platform",
+        "nl": "Client platform"
+      },
+      "example": {
+        "en": "web",
+        "nl": "web"
+      }
+    }
+  ]
+}

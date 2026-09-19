@@ -241,7 +241,8 @@
     },
     "msg": {
         "controller_unreachable": "Controlador inaccesible. Verifique la dirección IP en la configuración.",
-        "repair_controller_unreachable": "Actualice la dirección IP del controlador e intente de nuevo."
+        "repair_controller_unreachable": "Actualice la dirección IP del controlador e intente de nuevo.",
+        "fob_offline": "El FOB está desconectado."
     },
     "notification": {
         "controller_error_title": "Controlador UniFi Protect inaccesible",

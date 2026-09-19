@@ -1,0 +1,11 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "PTZ auto-tracking thermal threshold reached",
+    "nl": "PTZ auto-tracking thermische grens bereikt"
+  },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "insights": true
+}

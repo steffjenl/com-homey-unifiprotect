@@ -245,7 +245,8 @@
     },
     "msg": {
         "controller_unreachable": "Controller unreachable. Check IP address in settings.",
-        "repair_controller_unreachable": "Update controller IP address and try again."
+        "repair_controller_unreachable": "Update controller IP address and try again.",
+        "fob_offline": "FOB is offline."
     },
     "notification": {
         "controller_error_title": "UniFi Protect Controller Unreachable",

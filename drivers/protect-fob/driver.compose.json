@@ -2,7 +2,8 @@
   "id": "protect-fob",
   "class": "sensor",
   "capabilities": [
-    "measure_battery"
+    "measure_battery",
+    "measure_signal_strength"
   ],
   "energy": {
     "batteries": [

@@ -126,6 +126,7 @@ module.exports.EVENT_DEVICE_FOB_BUTTON_PANIC = 'ufp_device_fob_button_panic';
 module.exports.EVENT_DEVICE_FOB_BUTTON_NIGHT = 'ufp_device_fob_button_night';
 module.exports.EVENT_DEVICE_FOB_BUTTON_LEFT = 'ufp_device_fob_button_left';
 module.exports.EVENT_DEVICE_FOB_BUTTON_RIGHT = 'ufp_device_fob_button_right';
+module.exports.EVENT_NVR_ACCESS = 'ufp_nvr_access';
 module.exports.FOB_EVENT_TYPE = 'fob.button';
 module.exports.FOB_BUTTONS = ['arm', 'disarm', 'panic', 'night', 'left', 'right'];
 module.exports.FOB_PRESS_TYPES = ['press', 'longPress', 'doublePress'];

@@ -241,7 +241,8 @@
     },
     "msg": {
         "controller_unreachable": "Controller onbereikbaar. Controleer het IP-adres in de instellingen.",
-        "repair_controller_unreachable": "Werk het controller IP-adres bij en probeer opnieuw."
+        "repair_controller_unreachable": "Werk het controller IP-adres bij en probeer opnieuw.",
+        "fob_offline": "FOB is offline."
     },
     "notification": {
         "controller_error_title": "UniFi Protect Controller Onbereikbaar",

@@ -235,7 +235,8 @@
     },
     "msg": {
         "controller_unreachable": "Styreenheden er ikke tilgængelig. Tjek IP-adressen i indstillingerne.",
-        "repair_controller_unreachable": "Opdater styreenhedens IP-adresse og prøv igen."
+        "repair_controller_unreachable": "Opdater styreenhedens IP-adresse og prøv igen.",
+        "fob_offline": "FOB er offline."
     },
     "notification": {
         "controller_error_title": "UniFi Protect-styreenhed ikke tilgængelig",

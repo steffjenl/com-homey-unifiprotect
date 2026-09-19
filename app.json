@@ -976,6 +976,55 @@
         ]
       },
       {
+        "id": "ufp_nvr_access",
+        "title": {
+          "en": "The NVR is accessed",
+          "nl": "Er wordt toegang verkregen tot de NVR"
+        },
+        "hint": {
+          "en": "Triggered when a user logs in to or accesses the UniFi Protect controller (NVR) itself",
+          "nl": "Geschakeld wanneer een gebruiker inlogt op of toegang krijgt tot de UniFi Protect controller (NVR) zelf"
+        },
+        "tokens": [
+          {
+            "name": "ufp_nvr_access_user",
+            "type": "string",
+            "title": {
+              "en": "Username",
+              "nl": "Gebruikersnaam"
+            },
+            "example": {
+              "en": "admin",
+              "nl": "admin"
+            }
+          },
+          {
+            "name": "ufp_nvr_access_ip",
+            "type": "string",
+            "title": {
+              "en": "IP address",
+              "nl": "IP-adres"
+            },
+            "example": {
+              "en": "192.168.1.10",
+              "nl": "192.168.1.10"
+            }
+          },
+          {
+            "name": "ufp_nvr_access_platform",
+            "type": "string",
+            "title": {
+              "en": "Client platform",
+              "nl": "Client platform"
+            },
+            "example": {
+              "en": "web",
+              "nl": "web"
+            }
+          }
+        ]
+      },
+      {
         "id": "ufp_smart_detection",
         "title": {
           "en": "A object was detected",
@@ -8483,7 +8532,8 @@
       "id": "protect-fob",
       "class": "sensor",
       "capabilities": [
-        "measure_battery"
+        "measure_battery",
+        "measure_signal_strength"
       ],
       "energy": {
         "batteries": [
@@ -9591,6 +9641,50 @@
       "setable": false,
       "insights": true
     },
+    "alarm_ptz_autotracking_thermal": {
+      "type": "boolean",
+      "title": {
+        "en": "PTZ auto-tracking thermal threshold reached",
+        "nl": "PTZ auto-tracking thermische grens bereikt"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true
+    },
+    "alarm_ptz_lens_thermal": {
+      "type": "boolean",
+      "title": {
+        "en": "PTZ lens thermal threshold reached",
+        "nl": "PTZ-lens thermische grens bereikt"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true
+    },
+    "alarm_ptz_motor_fault": {
+      "type": "boolean",
+      "title": {
+        "en": "PTZ motor fault",
+        "nl": "PTZ-motorstoring"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true
+    },
+    "alarm_ptz_motor_overheated": {
+      "type": "boolean",
+      "title": {
+        "en": "PTZ motor overheated",
+        "nl": "PTZ-motor oververhit"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true
+    },
     "alarm_smoke_end_of_life": {
       "type": "boolean",
       "title": {
@@ -9645,6 +9739,29 @@
       "getable": true,
       "setable": false,
       "insights": true
+    },
+    "camera_brightness_auto": {
+      "type": "boolean",
+      "title": {
+        "en": "Auto brightness",
+        "nl": "Automatische helderheid"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "toggle"
+    },
+    "camera_brightness_set": {
+      "type": "number",
+      "title": {
+        "en": "Brightness",
+        "nl": "Helderheid"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "slider",
+      "min": 0,
+      "max": 100,
+      "step": 1
     },
     "camera_connection_status": {
       "type": "boolean",
@@ -9773,6 +9890,16 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "/assets/recording.svg"
+    },
+    "camera_smoke_cover_mode": {
+      "type": "boolean",
+      "title": {
+        "en": "Smoke cover mode",
+        "nl": "Rookmelderafdekking modus"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false
     },
     "doorbell_ring_volume": {
       "type": "number",

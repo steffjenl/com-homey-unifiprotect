@@ -338,6 +338,28 @@ class UniFiProtect extends Homey.App {
         }
     }
 
+    onNvrAccessWebsocketMessage(payload) {
+        try {
+            const metadata = payload && payload.metadata;
+            if (!metadata) {
+                return false;
+            }
+
+            if (this.homey.app._nvrAccessTrigger) {
+                this.homey.app._nvrAccessTrigger.trigger({
+                    ufp_nvr_access_user: metadata.userName || '',
+                    ufp_nvr_access_ip: metadata.ip || '',
+                    ufp_nvr_access_platform: metadata.clientPlatform || '',
+                }).catch((error) => this.error(error));
+            }
+
+            return true;
+        } catch (error) {
+            this.error(error);
+            return false;
+        }
+    }
+
     onFobWebsocketMessage(updatePacket) {
         try {
             const event = this.fobHandler.parseWebsocketPacket(updatePacket);

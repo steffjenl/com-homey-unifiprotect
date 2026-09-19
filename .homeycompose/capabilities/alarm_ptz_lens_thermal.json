@@ -1,0 +1,11 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "PTZ lens thermal threshold reached",
+    "nl": "PTZ-lens thermische grens bereikt"
+  },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "insights": true
+}
