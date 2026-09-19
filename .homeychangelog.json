@@ -385,5 +385,8 @@
   },
   "1.12.5": {
     "en": "Add more sensor event"
+  },
+  "1.12.6": {
+    "en": "Fix V2 camera streams to use RTSP instead of RTSPS URLs"
   }
 }

@@ -3,6 +3,16 @@ const WebClient = require('./web-client');
 const ProtectWebSocketEvents = require('./web-socket-events');
 const ProtectWebSocketDevices = require('./web-socket-devices');
 
+function normalizeRtspsStreams(streams) {
+    ['high', 'medium', 'low', 'package'].forEach(quality => {
+        if (typeof streams[quality] === 'string') {
+            streams[quality] = streams[quality].replace(/^rtsps:\/\//i, 'rtsp://');
+        }
+    });
+
+    return streams;
+}
+
 class ProtectAPI extends BaseClass {
     constructor(...props) {
         super(...props);
@@ -380,7 +390,7 @@ class ProtectAPI extends BaseClass {
                 .then(response => {
                     let result = JSON.parse(response);
                     if (result) {
-                        return resolve(result);
+                        return resolve(normalizeRtspsStreams(result));
                     } else {
                         return reject(new Error('Error creating RTSPS stream.'));
                     }
@@ -395,7 +405,7 @@ class ProtectAPI extends BaseClass {
                 .then(response => {
                     let result = JSON.parse(response);
                     if (result) {
-                        return resolve(result);
+                        return resolve(normalizeRtspsStreams(result));
                     } else {
                         return reject(new Error('Error obtaining RTSPS stream.'));
                     }
