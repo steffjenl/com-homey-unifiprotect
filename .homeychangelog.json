@@ -388,5 +388,8 @@
   },
   "1.12.6": {
     "en": "Fix V2 camera streams to use RTSP instead of RTSPS URLs"
+  },
+  "1.12.7": {
+    "en": "Fix V2 camera streams to use RTSP instead of RTSPS URLs"
   }
 }
