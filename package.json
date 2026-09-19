@@ -6,7 +6,8 @@
     "test:fob-pipeline": "node tools/fob-pipeline-smoke.js",
     "test:sensor-events": "node tools/sensor-event-smoke.js",
     "test:access-door-state": "node tools/access-door-state-smoke.js",
-    "test:v2-rtsp-stream": "node tools/v2-rtsp-stream-smoke.js"
+    "test:v2-rtsp-stream": "node tools/v2-rtsp-stream-smoke.js",
+    "test:rtsp-stream-url": "node tools/rtsp-stream-url-smoke.js"
   },
   "devDependencies": {
     "@tsconfig/node12": "^12.1.4",

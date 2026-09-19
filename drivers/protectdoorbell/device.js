@@ -5,6 +5,7 @@ const http = require('http');
 const https = require('https');
 const SmartDetectionMixin = require('../../library/SmartDetectionMixin');
 const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
+const { getRtspStreamUrl } = require('../../library/rtsp-stream-url');
 
 function requestByUrl(url, options, onResponse) {
   const parsedUrl = new URL(url);
@@ -753,23 +754,9 @@ class Doorbell extends Homey.Device {
         };
       });
 
-      if (this.homey.app.isV1Available()) {
-        try {
-          this.rtspUrl = await this.homey.app.api.getStreamUrl(this.getData());
-          this.log(`RTSP URL for doorbell ${this.getName()}: ${this.rtspUrl}`);
-        } catch (error) {
-          this.error(error);
-        }
-      } else if (this.homey.app.isV2Available()) {
-        try {
-          const streams = await this.homey.app.apiV2.getRtspsStream(this.getData().id, ['high']);
-          if (streams && streams.high) {
-            this.rtspUrl = streams.high;
-            this.log(`RTSPS URL (V2) for doorbell ${this.getName()}: ${this.rtspUrl}`);
-          }
-        } catch (e) {
-          this.homey.app.debug(`V2 getRtspsStream failed for ${this.getName()}: ${e}`);
-        }
+      this.rtspUrl = await getRtspStreamUrl(this.homey.app, this.getData());
+      if (this.rtspUrl) {
+        this.log(`RTSP URL configured for doorbell ${this.getName()}.`);
       }
 
       if (!this.rtspUrl) {
@@ -795,32 +782,15 @@ class Doorbell extends Homey.Device {
         };
       });
 
-      if (this.homey.app.isV1Available()) {
-        try {
-          this.rtspPackageUrl = await this.homey.app.api.getPackageStreamUrl(this.getData());
-          this.log(`RTSP URL for doorbell-package ${this.getName()}: ${this.rtspPackageUrl}`);
-        } catch (error) {
-          this.error(error);
-        }
-      } else if (this.homey.app.isV2Available()) {
-        try {
-          const streams = await this.homey.app.apiV2.getRtspsStream(this.getData().id, ['package']);
-          if (streams && streams.package) {
-            this.rtspPackageUrl = streams.package;
-            this.log(`RTSPS Package URL (V2) for doorbell-package ${this.getName()}: ${this.rtspPackageUrl}`);
-          }
-        } catch (e) {
-          this.homey.app.debug(`V2 getRtspsStream (package) failed for ${this.getName()}: ${e}`);
-        }
+      this.rtspPackageUrl = await getRtspStreamUrl(this.homey.app, this.getData(), { packageCamera: true });
+      if (this.rtspPackageUrl) {
+        this.log(`RTSP URL configured for doorbell-package ${this.getName()}.`);
       }
 
       if (!this.rtspPackageUrl) {
-        this.setWarning(this.homey.__('warnings.no_rtsp_url'));
         this.homey.app.debug(`No RTSP URL available for package camera ${this.getName()}.`);
-      } else {
-        if (this.rtspUrl) {
-          this.setWarning(null);
-        }
+      } else if (this.rtspUrl) {
+        this.setWarning(null);
       }
 
       this.setCameraVideo('package-snapshot', `${this.getName()} Package Video`, this.packageVideo);
@@ -881,10 +851,7 @@ class Doorbell extends Homey.Device {
 
     if (triggerFlow) {
       const getStreamUrl = async () => {
-        if (this.homey.app.isV1Available()) {
-          return this.homey.app.api.getStreamUrl(this.getData());
-        }
-        return this.rtspUrl || '';
+        return this.rtspUrl || getRtspStreamUrl(this.homey.app, this.getData());
       };
 
       try {
@@ -960,10 +927,7 @@ class Doorbell extends Homey.Device {
 
       if (triggerFlow) {
         const getStreamUrl = async () => {
-          if (this.homey.app.isV1Available()) {
-            return this.homey.app.api.getPackageStreamUrl(this.getData());
-          }
-          return this.rtspPackageUrl || '';
+          return this.rtspPackageUrl || getRtspStreamUrl(this.homey.app, this.getData(), { packageCamera: true });
         };
 
         try {

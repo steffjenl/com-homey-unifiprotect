@@ -620,37 +620,39 @@ class ProtectAPI extends BaseClass {
 
     getStreamUrl(camera, packageCamera = false) {
         return new Promise((resolve, reject) => {
-            let rtspAlias = null;
-
             this.findCameraById(camera.id)
                 .then(cameraInfo => {
-                    cameraInfo.channels.forEach(channel => {
-                        if (channel.isRtspEnabled && channel.name !== 'Package Camera') {
-                            resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${channel.rtspAlias}`);
-                        }
-                    });
+                    if (!cameraInfo || !Array.isArray(cameraInfo.channels)) {
+                        return resolve('');
+                    }
 
-                    resolve('');
+                    const channel = cameraInfo.channels.find(item => item.isRtspEnabled && item.name !== 'Package Camera');
+                    if (channel) {
+                        return resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${channel.rtspAlias}`);
+                    }
+
+                    return resolve('');
                 })
-                .catch(error => reject(new Error(`Error getting steam url: ${error}`)));
+                .catch(error => reject(new Error(`Error getting stream url: ${error}`)));
         });
     }
 
     getPackageStreamUrl(camera) {
         return new Promise((resolve, reject) => {
-            let rtspAlias = null;
-
             this.findCameraById(camera.id)
                 .then(cameraInfo => {
-                    cameraInfo.channels.forEach(channel => {
-                        if (channel.isRtspEnabled && channel.name === 'Package Camera') {
-                            resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${channel.rtspAlias}`);
-                        }
-                    });
+                    if (!cameraInfo || !Array.isArray(cameraInfo.channels)) {
+                        return resolve('');
+                    }
 
-                    resolve('');
+                    const channel = cameraInfo.channels.find(item => item.isRtspEnabled && item.name === 'Package Camera');
+                    if (channel) {
+                        return resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${channel.rtspAlias}`);
+                    }
+
+                    return resolve('');
                 })
-                .catch(error => reject(new Error(`Error getting steam url: ${error}`)));
+                .catch(error => reject(new Error(`Error getting stream url: ${error}`)));
         });
     }
 

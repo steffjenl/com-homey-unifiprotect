@@ -5,6 +5,7 @@ const http = require('http');
 const https = require('https');
 const SmartDetectionMixin = require('../../library/SmartDetectionMixin');
 const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
+const { getRtspStreamUrl } = require('../../library/rtsp-stream-url');
 
 function requestByUrl(url, options, onResponse) {
   const parsedUrl = new URL(url);
@@ -607,23 +608,9 @@ class Camera extends Homey.Device {
         };
       });
 
-      if (this.homey.app.isV1Available()) {
-        try {
-          this.rtspUrl = await this.homey.app.api.getStreamUrl(this.getData());
-          this.log(`RTSP URL for camera ${this.getName()}: ${this.rtspUrl}`);
-        } catch (error) {
-          this.error(error);
-        }
-      } else if (this.homey.app.isV2Available()) {
-        try {
-          const streams = await this.homey.app.apiV2.getRtspsStream(this.getData().id, ['high']);
-          if (streams && streams.high) {
-            this.rtspUrl = streams.high;
-            this.log(`RTSPS URL (V2) for camera ${this.getName()}: ${this.rtspUrl}`);
-          }
-        } catch (e) {
-          this.homey.app.debug(`V2 getRtspsStream failed for ${this.getName()}: ${e}`);
-        }
+      this.rtspUrl = await getRtspStreamUrl(this.homey.app, this.getData());
+      if (this.rtspUrl) {
+        this.log(`RTSP URL configured for camera ${this.getName()}.`);
       }
 
       if (!this.rtspUrl) {
@@ -690,10 +677,7 @@ class Camera extends Homey.Device {
 
     if (triggerFlow) {
       const getStreamUrl = async () => {
-        if (this.homey.app.isV1Available()) {
-          return this.homey.app.api.getStreamUrl(this.getData());
-        }
-        return this.rtspUrl || '';
+        return this.rtspUrl || getRtspStreamUrl(this.homey.app, this.getData());
       };
 
       try {

@@ -32,6 +32,22 @@ function buildProtectV2TestOptions(body) {
     };
 }
 
+function getLastWebsocketMessageTime(websocket) {
+    if (websocket && typeof websocket.getLastWebsocketMessageTime === 'function') {
+        return websocket.getLastWebsocketMessageTime();
+    }
+
+    return 'Not initialized';
+}
+
+function getWebsocketStatus(websocket) {
+    if (!websocket || typeof websocket.isWebsocketConnected !== 'function') {
+        return 'Not initialized';
+    }
+
+    return websocket.isWebsocketConnected() ? 'Connected' : 'Unknown';
+}
+
 module.exports = {
     async getStatus({homey, query}) {
         // Return status based on which API is available
@@ -41,24 +57,24 @@ module.exports = {
         if (homey.app.isV2Available()) {
             return homey.app.apiV2.loggedInStatus || 'Connected (V2)';
         }
-        return homey.app.api.loggedInStatus || 'Not configured';
+        return homey.app.api ? homey.app.api.loggedInStatus || 'Not configured' : 'Not configured';
     },
     async getWebsocketStatus({homey, query}) {
-        return homey.app.api.ws.isWebsocketConnected() ? 'Connected' : 'Unknown';
+        return getWebsocketStatus(homey.app.api && homey.app.api.ws);
     },
     async getLastWebsocketMessageTime({homey, query}) {
-        return homey.app.api.ws.getLastWebsocketMessageTime();
+        return getLastWebsocketMessageTime(homey.app.api && homey.app.api.ws);
     },
     async getAccessWebsocketStatus({homey, query}) {
         const tokens = homey.settings.get('ufp:tokens');
         if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
-            return homey.app.accessApi.websocket.isWebsocketConnected() ? 'Connected' : 'Unknown';
+            return getWebsocketStatus(homey.app.accessApi && homey.app.accessApi.websocket);
         } else {
             return 'No API Key found';
         }
     },
     async getLastAccessWebsocketMessageTime({homey, query}) {
-        return homey.app.accessApi.websocket.getLastWebsocketMessageTime();
+        return getLastWebsocketMessageTime(homey.app.accessApi && homey.app.accessApi.websocket);
     },
     async getProtectV2WebsocketStatus({homey, query}) {
         const tokens = homey.settings.get('ufp:tokens');
@@ -66,13 +82,13 @@ module.exports = {
             if (homey.app.isProtectCloudApiEnabled && homey.app.isProtectCloudApiEnabled()) {
                 return 'Disabled (Cloud API)';
             }
-            return homey.app.apiV2.websocket.isWebsocketConnected() ? 'Connected' : 'Unknown';
+            return getWebsocketStatus(homey.app.apiV2 && homey.app.apiV2.websocket);
         } else {
             return 'No API Key found';
         }
     },
     async getLastProtectV2WebsocketMessageTime({homey, query}) {
-        return homey.app.apiV2.websocket.getLastWebsocketMessageTime();
+        return getLastWebsocketMessageTime(homey.app.apiV2 && homey.app.apiV2.websocket);
     },
     async testCredentials({homey, body}) {
         // Test V1 (username/password) credentials
