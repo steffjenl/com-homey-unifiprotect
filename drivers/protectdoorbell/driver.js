@@ -18,6 +18,7 @@ class UniFiDoorbellDriver extends Homey.Driver {
         this._deviceSmartDetectionTriggerPackage = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_PACKAGE);
         this._deviceSmartDetectionTriggerLicensePlate = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_LICENSEPLATE);
         this._deviceSmartDetectionTriggerFace = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_FACE);
+        this._deviceSmartDetectionEndedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_SMART_DETECTION_ENDED);
         this._deviceAudioDetectionTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOORBELL_AUDIO_DETECTION);
         this._deviceAudioDetectionTrigger.registerRunListener(async (args, state) => {
             // Check if "any" is selected or if the detected audio type matches the selected type
@@ -202,6 +203,9 @@ class UniFiDoorbellDriver extends Homey.Driver {
             if (payload.hasOwnProperty('smartDetectTypes')) {
                 this.homey.app.debug('onParseWebsocketMessage ' + JSON.stringify(payload));
                 camera.onSmartDetection(payload, actionType, eventId);
+            } else if (payload.hasOwnProperty('end') && payload.end && actionType === 'update' && eventId) {
+                // Closing frame without smartDetectTypes (V1)
+                camera.onSmartDetectionEnd(payload, eventId);
             }
 
             if (payload.hasOwnProperty('type') && payload.type === 'fingerprintIdentified') {

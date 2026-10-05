@@ -412,6 +412,27 @@ class ProtectWebSocket extends BaseClass {
         }
       } else if (
         updatePacket.action.modelKey === 'event'
+                && updatePacket.action.action === 'update'
+                && !!updatePacket.payload.end
+                && typeof updatePacket.payload.type === 'undefined'
+                && typeof updatePacket.payload.smartDetectTypes === 'undefined'
+                && this._eventCameraMap.has(updatePacket.action.id)
+      ) {
+        // Closing frame of a smart detection without type/smartDetectTypes. The mixin
+        // ignores ids it does not know (motion etc.) and dedupes repeated frames.
+        const resolvedId = this._resolveCameraId(updatePacket);
+        const driverCamera = this.homey.drivers.getDriver('protectcamera');
+        const deviceCamera = driverCamera.getUnifiDeviceById(resolvedId);
+        if (deviceCamera) {
+          driverCamera.onParseWebsocketMessage(deviceCamera, payload, updatePacket.action.action, updatePacket.action.id);
+        }
+        const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
+        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(resolvedId);
+        if (deviceDoorbell) {
+          driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, updatePacket.action.action, updatePacket.action.id);
+        }
+      } else if (
+        updatePacket.action.modelKey === 'event'
                 && !!this._resolveCameraId(updatePacket)
                 && typeof updatePacket.payload.type !== 'undefined'
                 && ['smartDetectZone', 'smartDetectLine', 'smartDetectLoiterZone'].includes(updatePacket.payload.type)

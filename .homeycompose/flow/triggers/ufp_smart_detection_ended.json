@@ -1,0 +1,179 @@
+{
+  "id": "ufp_smart_detection_ended",
+  "title": {
+    "en": "A smart detection ended",
+    "nl": "Een slimme detectie is beëindigd",
+    "de": "Eine intelligente Erkennung wurde beendet",
+    "fr": "Une détection intelligente est terminée",
+    "it": "Un rilevamento intelligente è terminato",
+    "sv": "En smart detektering har avslutats",
+    "no": "En smart deteksjon er avsluttet",
+    "es": "Ha finalizado una detección inteligente",
+    "da": "En smart registrering er afsluttet",
+    "ru": "Умное обнаружение завершено",
+    "pl": "Inteligentne wykrywanie zakończone",
+    "ko": "스마트 감지가 종료되었습니다"
+  },
+  "tokens": [
+    {
+      "name": "ufp_smart_detection_camera",
+      "type": "string",
+      "title": {
+        "en": "Camera",
+        "nl": "Camera",
+        "de": "Kamera",
+        "fr": "Caméra",
+        "it": "Telecamera",
+        "sv": "Kamera",
+        "no": "Kamera",
+        "es": "Cámara",
+        "da": "Kamera",
+        "ru": "Камера",
+        "pl": "Kamera",
+        "ko": "카메라"
+      },
+      "example": {
+        "en": "Doorbell",
+        "nl": "Doorbell",
+        "de": "Doorbell",
+        "fr": "Doorbell",
+        "it": "Doorbell",
+        "sv": "Doorbell",
+        "no": "Doorbell",
+        "es": "Doorbell",
+        "da": "Doorbell",
+        "ru": "Doorbell",
+        "pl": "Doorbell",
+        "ko": "Doorbell"
+      }
+    },
+    {
+      "name": "smart_detection_type",
+      "type": "string",
+      "title": {
+        "en": "Detection types",
+        "nl": "Detectietypes",
+        "de": "Erkennungstypen",
+        "fr": "Types de détection",
+        "it": "Tipi di rilevamento",
+        "sv": "Detekteringstyper",
+        "no": "Deteksjonstyper",
+        "es": "Tipos de detección",
+        "da": "Registreringstyper",
+        "ru": "Типы обнаружения",
+        "pl": "Typy wykrywania",
+        "ko": "감지 유형"
+      },
+      "example": {
+        "en": "person, vehicle",
+        "nl": "person, vehicle",
+        "de": "person, vehicle",
+        "fr": "person, vehicle",
+        "it": "person, vehicle",
+        "sv": "person, vehicle",
+        "no": "person, vehicle",
+        "es": "person, vehicle",
+        "da": "person, vehicle",
+        "ru": "person, vehicle",
+        "pl": "person, vehicle",
+        "ko": "person, vehicle"
+      }
+    },
+    {
+      "name": "score",
+      "type": "number",
+      "title": {
+        "en": "Score",
+        "nl": "Score",
+        "de": "Punktzahl",
+        "fr": "Score",
+        "it": "Punteggio",
+        "sv": "Poäng",
+        "no": "Poeng",
+        "es": "Puntuación",
+        "da": "Score",
+        "ru": "Оценка",
+        "pl": "Wynik",
+        "ko": "점수"
+      },
+      "example": {
+        "en": "62",
+        "nl": "62",
+        "de": "62",
+        "fr": "62",
+        "it": "62",
+        "sv": "62",
+        "no": "62",
+        "es": "62",
+        "da": "62",
+        "ru": "62",
+        "pl": "62",
+        "ko": "62"
+      }
+    },
+    {
+      "name": "zones",
+      "type": "string",
+      "title": {
+        "en": "Zones",
+        "nl": "Zones",
+        "de": "Zonen",
+        "fr": "Zones",
+        "it": "Zone",
+        "sv": "Zoner",
+        "no": "Soner",
+        "es": "Zonas",
+        "da": "Zoner",
+        "ru": "Зоны",
+        "pl": "Strefy",
+        "ko": "존"
+      },
+      "example": {
+        "en": "Driveway",
+        "nl": "Driveway",
+        "de": "Driveway",
+        "fr": "Driveway",
+        "it": "Driveway",
+        "sv": "Driveway",
+        "no": "Driveway",
+        "es": "Driveway",
+        "da": "Driveway",
+        "ru": "Driveway",
+        "pl": "Driveway",
+        "ko": "Driveway"
+      }
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "title": {
+        "en": "Duration (seconds)",
+        "nl": "Duur (seconden)",
+        "de": "Dauer (Sekunden)",
+        "fr": "Durée (secondes)",
+        "it": "Durata (secondi)",
+        "sv": "Varaktighet (sekunder)",
+        "no": "Varighet (sekunder)",
+        "es": "Duración (segundos)",
+        "da": "Varighed (sekunder)",
+        "ru": "Длительность (секунды)",
+        "pl": "Czas trwania (sekundy)",
+        "ko": "지속 시간(초)"
+      },
+      "example": {
+        "en": "12",
+        "nl": "12",
+        "de": "12",
+        "fr": "12",
+        "it": "12",
+        "sv": "12",
+        "no": "12",
+        "es": "12",
+        "da": "12",
+        "ru": "12",
+        "pl": "12",
+        "ko": "12"
+      }
+    }
+  ]
+}

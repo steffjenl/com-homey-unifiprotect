@@ -308,6 +308,13 @@ documented beyond this note — `web-socket-devices.js` assumes a single `item` 
 
 ---
 
+## Smart Detection Lifecycle (`smartDetectZone` / `smartDetectLine` / `smartDetectLoiterZone`)
+
+- `add`: event opens, often with `smartDetectTypes: []`. Types arrive in a later `update`.
+- `update` with `end` (ms epoch): Protect closes the detection. The closing frame is repeated 2-3 times, and may carry empty `smartDetectTypes` (V2) or only `{end}` (V1).
+- App behaviour: `SmartDetectionMixin.onSmartDetectionEnd` fires the `ufp_smart_detection_ended` / `ufp_device_*_smart_detection_ended` triggers **once per event id** (`SmartDetectionEvent.endedFired`). Events that never received types never fire an ended trigger. Audio events (`kind: 'audio'`) are excluded.
+- Tokens: `smart_detection_type` (comma-separated), `score`, `zones`, `duration` (seconds).
+
 ## NVR Alarm / Away Mode
 
 Protect firmware now exposes alarm actions through dedicated **v2** endpoints, with **v1** fallback for compatibility.
