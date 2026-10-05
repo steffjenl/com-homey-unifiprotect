@@ -391,5 +391,8 @@
   },
   "1.12.7": {
     "en": "Fix V2 camera streams to use RTSP instead of RTSPS URLs"
+  },
+  "1.13.0": {
+    "en": "Add a \"smart detection ended\" flow trigger, a zone argument on smart detection triggers, a motion sensor device per camera detection zone, and a direction token. The license plate trigger now waits for the plate text. Zone features need the V1 login."
   }
 }
