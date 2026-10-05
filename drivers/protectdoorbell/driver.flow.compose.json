@@ -641,6 +641,20 @@
         "pl": "Obiekt wykryty",
         "ko": "물체가 감지되었습니다"
       },
+      "titleFormatted": {
+        "en": "A object was detected in [[zone]]",
+        "nl": "Er is een object gedetecteerd in [[zone]]",
+        "de": "Ein Objekt wurde erkannt in [[zone]]",
+        "fr": "Un objet a été détecté dans [[zone]]",
+        "it": "È stato rilevato un oggetto in [[zone]]",
+        "sv": "Ett objekt har upptäckts i [[zone]]",
+        "no": "Et objekt ble oppdaget i [[zone]]",
+        "es": "Se ha detectado un objeto en [[zone]]",
+        "da": "Der er registreret et objekt i [[zone]]",
+        "ru": "Объект обнаружен в [[zone]]",
+        "pl": "Obiekt wykryty w [[zone]]",
+        "ko": "물체가 감지되었습니다 ([[zone]])"
+      },
       "tokens": [
         {
           "name": "smart_detection_type",
@@ -823,6 +837,20 @@
         "pl": "Wykryto pojazd",
         "ko": "차량이 감지되었습니다"
       },
+      "titleFormatted": {
+        "en": "A vehicle was detected in [[zone]]",
+        "nl": "Een voertuig werd gedetecteerd in [[zone]]",
+        "de": "Ein Fahrzeug wurde erkannt in [[zone]]",
+        "fr": "Un véhicule a été détecté dans [[zone]]",
+        "it": "È stato rilevato un veicolo in [[zone]]",
+        "sv": "Ett fordon har upptäckts i [[zone]]",
+        "no": "Et kjøretøy ble oppdaget i [[zone]]",
+        "es": "Se ha detectado un vehículo en [[zone]]",
+        "da": "Der er registreret et køretøj i [[zone]]",
+        "ru": "Обнаружено транспортное средство в [[zone]]",
+        "pl": "Wykryto pojazd w [[zone]]",
+        "ko": "차량이 감지되었습니다 ([[zone]])"
+      },
       "tokens": [
         {
           "name": "score",
@@ -940,6 +968,20 @@
         "ru": "Обнаружено лицо",
         "pl": "Wykryto osobę",
         "ko": "사람이 감지되었습니다"
+      },
+      "titleFormatted": {
+        "en": "A person was detected in [[zone]]",
+        "nl": "Een persoon werd gedetecteerd in [[zone]]",
+        "de": "Eine Person wurde erkannt in [[zone]]",
+        "fr": "Une personne a été détectée dans [[zone]]",
+        "it": "È stata rilevata una persona in [[zone]]",
+        "sv": "En person har upptäckts i [[zone]]",
+        "no": "En person ble oppdaget i [[zone]]",
+        "es": "Se ha detectado una persona en [[zone]]",
+        "da": "Der er registreret en person i [[zone]]",
+        "ru": "Обнаружено лицо в [[zone]]",
+        "pl": "Wykryto osobę w [[zone]]",
+        "ko": "사람이 감지되었습니다 ([[zone]])"
       },
       "tokens": [
         {
@@ -1059,6 +1101,20 @@
         "pl": "Wykryto paczkę",
         "ko": "소포가 감지되었습니다"
       },
+      "titleFormatted": {
+        "en": "A package was detected in [[zone]]",
+        "nl": "Een pakket werd gedetecteerd in [[zone]]",
+        "de": "Ein Paket wurde erkannt in [[zone]]",
+        "fr": "Un colis a été détecté dans [[zone]]",
+        "it": "È stato rilevato un pacco in [[zone]]",
+        "sv": "Ett paket har upptäckts i [[zone]]",
+        "no": "En pakke ble oppdaget i [[zone]]",
+        "es": "Se ha detectado un paquete en [[zone]]",
+        "da": "Der er registreret en pakke i [[zone]]",
+        "ru": "Обнаружена посылка в [[zone]]",
+        "pl": "Wykryto paczkę w [[zone]]",
+        "ko": "소포가 감지되었습니다 ([[zone]])"
+      },
       "tokens": [
         {
           "name": "score",
@@ -1177,6 +1233,20 @@
         "pl": "Wykryto zwierzę",
         "ko": "동물이 감지되었습니다"
       },
+      "titleFormatted": {
+        "en": "A animal was detected in [[zone]]",
+        "nl": "Een dier werd gedetecteerd in [[zone]]",
+        "de": "Ein Tier wurde erkannt in [[zone]]",
+        "fr": "Un animal a été détecté dans [[zone]]",
+        "it": "È stato rilevato un animale in [[zone]]",
+        "sv": "Ett djur har upptäckts i [[zone]]",
+        "no": "Et dyr ble oppdaget i [[zone]]",
+        "es": "Se ha detectado un animal en [[zone]]",
+        "da": "Der er registreret et dyr i [[zone]]",
+        "ru": "Обнаружено животное в [[zone]]",
+        "pl": "Wykryto zwierzę w [[zone]]",
+        "ko": "동물이 감지되었습니다 ([[zone]])"
+      },
       "tokens": [
         {
           "name": "score",
@@ -1294,6 +1364,20 @@
         "ru": "Обнаружен номерной знак",
         "pl": "Wykryto tablicę rejestracyjną",
         "ko": "번호판이 감지되었습니다"
+      },
+      "titleFormatted": {
+        "en": "A license plate was detected in [[zone]]",
+        "nl": "Een kenteken werd gedetecteerd in [[zone]]",
+        "de": "Ein Nummernschild wurde erkannt in [[zone]]",
+        "fr": "Une plaque d'immatriculation a été détectée dans [[zone]]",
+        "it": "È stata rilevata una targa in [[zone]]",
+        "sv": "En registreringsskylt har upptäckts i [[zone]]",
+        "no": "Et registreringsskilt ble oppdaget i [[zone]]",
+        "es": "Se ha detectado una matrícula en [[zone]]",
+        "da": "Der er registreret et nummerplade i [[zone]]",
+        "ru": "Обнаружен номерной знак в [[zone]]",
+        "pl": "Wykryto tablicę rejestracyjną w [[zone]]",
+        "ko": "번호판이 감지되었습니다 ([[zone]])"
       },
       "tokens": [
         {
@@ -1434,6 +1518,20 @@
         "ru": "Обнаружено лицо",
         "pl": "Wykryto twarz",
         "ko": "얼굴이 감지되었습니다"
+      },
+      "titleFormatted": {
+        "en": "A face was detected in [[zone]]",
+        "nl": "Een gezicht werd gedetecteerd in [[zone]]",
+        "de": "Ein Gesicht wurde erkannt in [[zone]]",
+        "fr": "Un visage a été détecté dans [[zone]]",
+        "it": "È stato rilevato un volto in [[zone]]",
+        "sv": "Ett ansikte har upptäckts i [[zone]]",
+        "no": "Et ansikt ble oppdaget i [[zone]]",
+        "es": "Se ha detectado un rostro en [[zone]]",
+        "da": "Der er registreret et ansigt i [[zone]]",
+        "ru": "Обнаружено лицо в [[zone]]",
+        "pl": "Wykryto twarz w [[zone]]",
+        "ko": "얼굴이 감지되었습니다 ([[zone]])"
       },
       "tokens": [
         {
@@ -1841,6 +1939,20 @@
         "ru": "Умное обнаружение завершено",
         "pl": "Inteligentne wykrywanie zakończone",
         "ko": "스마트 감지가 종료되었습니다"
+      },
+      "titleFormatted": {
+        "en": "A smart detection ended in [[zone]]",
+        "nl": "Een slimme detectie is beëindigd in [[zone]]",
+        "de": "Eine intelligente Erkennung wurde beendet in [[zone]]",
+        "fr": "Une détection intelligente est terminée dans [[zone]]",
+        "it": "Un rilevamento intelligente è terminato in [[zone]]",
+        "sv": "En smart detektering har avslutats i [[zone]]",
+        "no": "En smart deteksjon er avsluttet i [[zone]]",
+        "es": "Ha finalizado una detección inteligente en [[zone]]",
+        "da": "En smart registrering er afsluttet i [[zone]]",
+        "ru": "Умное обнаружение завершено в [[zone]]",
+        "pl": "Inteligentne wykrywanie zakończone w [[zone]]",
+        "ko": "스마트 감지가 종료되었습니다 ([[zone]])"
       },
       "tokens": [
         {
