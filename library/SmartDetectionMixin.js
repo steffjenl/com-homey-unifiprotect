@@ -29,8 +29,8 @@ const SmartDetectionMixin = {
     return this._getEventStore().get(eventId) || null;
   },
 
-  setSmartDetectionEvent(eventId, detectionTime, detectionTypes, detectionScore) {
-    const event = new SmartDetectionEvent(detectionTime, detectionTypes, detectionScore, eventId);
+  setSmartDetectionEvent(eventId, detectionTime, detectionTypes, detectionScore, kind = 'smart') {
+    const event = new SmartDetectionEvent(detectionTime, detectionTypes, detectionScore, eventId, kind);
     this._getEventStore().set(eventId, event);
     return event;
   },
@@ -48,48 +48,7 @@ const SmartDetectionMixin = {
   // Smart detection (visual)
   // --------------------------------------------------------------------------
 
-  onSmartDetection(payload, actionType, eventId) {
-    let event = null;
-
-    if (actionType === 'add') {
-      event = this.setSmartDetectionEvent(
-        eventId,
-        payload.start,
-        payload.smartDetectTypes || [],
-        payload.score,
-      );
-      if (!event.detectionTypes || event.detectionTypes.length === 0) {
-        this.homey.app.debug('[SmartDetection] add: waiting for update [' + eventId + ']');
-        return;
-      }
-    } else if (actionType === 'update') {
-      event = this.getSmartDetectionEvent(eventId);
-      if (event === null) {
-        this.homey.app.debug('[SmartDetection] update for unknown event [' + eventId + '] - ignoring');
-        return;
-      }
-      if (payload.smartDetectTypes !== undefined) {
-        event.detectionTypes = payload.smartDetectTypes;
-      }
-      if (payload.score !== undefined) {
-        event.detectionScore = payload.score;
-      }
-    } else {
-      this.homey.app.debug('[SmartDetection] unknown actionType: ' + actionType);
-      return;
-    }
-
-    this.homey.app.debug('[SmartDetection] onSmartDetection id=' + eventId + ' action=' + actionType + ' types=' + ((event.detectionTypes || []).join(',')));
-
-    if (!event.detectionTypes || event.detectionTypes.length === 0) {
-      this.homey.app.debug('[SmartDetection] still empty types [' + eventId + '] - skipping');
-      return;
-    }
-
-    const lastDetectionAt = event.detectionTime;
-    const score = typeof event.detectionScore === 'number' ? event.detectionScore : 0;
-    const smartDetectTypes = event.detectionTypes;
-
+  _getZonesText(payload) {
     let zones = '';
     if (payload && payload.metadata && payload.metadata.zonesStatus
       && typeof payload.metadata.zonesStatus === 'object') {
@@ -122,6 +81,86 @@ const SmartDetectionMixin = {
         .map(([key]) => zoneNameMap[key] || key)
         .join(', ');
     }
+    return zones;
+  },
+
+  /**
+   * Smart detection closed by Protect (payload.end). Protect repeats the closing
+   * frame two or three times, so fire the ended trigger once per event id.
+   */
+  onSmartDetectionEnd(payload, eventId) {
+    const event = this.getSmartDetectionEvent(eventId);
+    if (event === null || event.kind !== 'smart') {
+      this.homey.app.debug('[SmartDetection] end for unknown event [' + eventId + '] - ignoring');
+      return;
+    }
+    if (event.endedFired) {
+      this.homey.app.debug('[SmartDetection] duplicate end frame [' + eventId + '] - ignoring');
+      return;
+    }
+    // Event opened with smartDetectTypes: [] and never filled: no start trigger fired, so no ended either.
+    if (!event.detectionTypes || event.detectionTypes.length === 0) {
+      this.homey.app.debug('[SmartDetection] end for event without types [' + eventId + '] - ignoring');
+      return;
+    }
+    event.endedFired = true;
+    event.endTime = payload.end;
+
+    const score = typeof event.detectionScore === 'number' ? event.detectionScore : 0;
+    const duration = event.detectionTime ? Math.max(0, Math.round((event.endTime - event.detectionTime) / 1000)) : 0;
+    this.homey.app.debug('[SmartDetection] ended id=' + eventId + ' types=' + event.detectionTypes.join(',') + ' duration=' + duration);
+    this.triggerSmartDetectionEndedTrigger(event.detectionTypes.join(', '), score, event.zones || '', duration);
+  },
+
+  onSmartDetection(payload, actionType, eventId) {
+    let event = null;
+
+    if (actionType === 'add') {
+      event = this.setSmartDetectionEvent(
+        eventId,
+        payload.start,
+        payload.smartDetectTypes || [],
+        payload.score,
+      );
+      if (!event.detectionTypes || event.detectionTypes.length === 0) {
+        this.homey.app.debug('[SmartDetection] add: waiting for update [' + eventId + ']');
+        return;
+      }
+    } else if (actionType === 'update') {
+      event = this.getSmartDetectionEvent(eventId);
+      if (event === null) {
+        this.homey.app.debug('[SmartDetection] update for unknown event [' + eventId + '] - ignoring');
+        return;
+      }
+      // Protect repeats the closing frame, sometimes with an empty types array: never wipe known types.
+      if (Array.isArray(payload.smartDetectTypes) && payload.smartDetectTypes.length > 0) {
+        event.detectionTypes = payload.smartDetectTypes;
+      }
+      if (payload.score !== undefined) {
+        event.detectionScore = payload.score;
+      }
+      if (payload.end) {
+        this.onSmartDetectionEnd(payload, eventId);
+        return;
+      }
+    } else {
+      this.homey.app.debug('[SmartDetection] unknown actionType: ' + actionType);
+      return;
+    }
+
+    this.homey.app.debug('[SmartDetection] onSmartDetection id=' + eventId + ' action=' + actionType + ' types=' + ((event.detectionTypes || []).join(',')));
+
+    if (!event.detectionTypes || event.detectionTypes.length === 0) {
+      this.homey.app.debug('[SmartDetection] still empty types [' + eventId + '] - skipping');
+      return;
+    }
+
+    const lastDetectionAt = event.detectionTime;
+    const score = typeof event.detectionScore === 'number' ? event.detectionScore : 0;
+    const smartDetectTypes = event.detectionTypes;
+
+    const zones = this._getZonesText(payload);
+    event.zones = zones;
 
     const licensePlateText = (payload && payload.metadata && payload.metadata.licensePlate && payload.metadata.licensePlate.name)
       ? payload.metadata.licensePlate.name
@@ -177,6 +216,7 @@ const SmartDetectionMixin = {
         payload.start,
         payload.smartDetectTypes || [],
         payload.score,
+        'audio',
       );
       if (!event.detectionTypes || event.detectionTypes.length === 0) {
         this.homey.app.debug(`[AudioDetection] add: waiting for update [${eventId}]`);
@@ -391,6 +431,22 @@ const SmartDetectionMixin = {
     this.driver._deviceSmartDetectionTriggerFace.trigger(this, {
       score,
       zones,
+    }).catch(this.error);
+  },
+
+  triggerSmartDetectionEndedTrigger(types, score, zones, duration) {
+    this.homey.app._smartDetectionEndedTrigger.trigger({
+      ufp_smart_detection_camera: this.getName(),
+      smart_detection_type: types,
+      score,
+      zones,
+      duration,
+    }).catch(this.error);
+    this.driver._deviceSmartDetectionEndedTrigger.trigger(this, {
+      smart_detection_type: types,
+      score,
+      zones,
+      duration,
     }).catch(this.error);
   },
 

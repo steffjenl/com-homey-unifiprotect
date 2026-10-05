@@ -290,10 +290,11 @@ class ProtectWebSocket extends BaseClass {
                 // way. detectionMethod is passed through for a possible future
                 // dedicated trigger/token; SmartDetectionMixin ignores unknown fields today.
                 if (itemType === 'smartDetectZone' || itemType === 'smartDetectLine' || itemType === 'smartDetectLoiterZone') {
-                    if (item.smartDetectTypes && item.smartDetectTypes.length > 0) {
+                    // A closing frame (item.end) may carry empty types; the mixin keeps the types it already knows.
+                    if ((item.smartDetectTypes && item.smartDetectTypes.length > 0) || (item.end && eventType === 'update')) {
                         this.homey.app.debug(`[V2] smart detection (${itemType}): ` + JSON.stringify(item.smartDetectTypes) + ' on ' + deviceId);
                         const payload = {
-                            smartDetectTypes: item.smartDetectTypes,
+                            smartDetectTypes: item.smartDetectTypes || [],
                             start: item.start,
                             end: item.end || null,
                             detectionMethod: itemType,
