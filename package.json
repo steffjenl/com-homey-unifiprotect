@@ -9,7 +9,8 @@
     "test:v2-rtsp-stream": "node tools/v2-rtsp-stream-smoke.js",
     "test:rtsp-stream-url": "node tools/rtsp-stream-url-smoke.js",
     "test:smart-detection-ended": "node tools/smart-detection-ended-smoke.js",
-    "test:smart-detection-zone": "node tools/smart-detection-zone-smoke.js"
+    "test:smart-detection-zone": "node tools/smart-detection-zone-smoke.js",
+    "test:zone-sensor": "node tools/zone-sensor-smoke.js"
   },
   "devDependencies": {
     "@tsconfig/node12": "^12.1.4",

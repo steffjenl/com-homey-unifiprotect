@@ -604,3 +604,10 @@ Example payload (hub with no door position sensor wired up):
 }
 ```
 
+
+## Camera Zone Motion Sensor (`protect-zone-sensor`)
+
+- Virtual device, one per camera detection zone (paired from `smartDetectZones`; device data `{ id: "<cameraId>:<zoneId>", cameraId, zoneId }`). Capability `alarm_motion`, class `sensor`; checkboxes `ufp:type_<type>` choose which detection types count (default person, vehicle, animal).
+- Fed by `SmartDetectionMixin` through the driver (`onSmartDetectionUpdate` / `onSmartDetectionEnded`), so the WS classes hold no device references. The sensor keeps the set of open event ids in its zone: on while the set is non-empty, off when Protect closes the last one. A 15 min stale timer per event guards against a lost closing frame; timers are cleared in `onDeleted`/`onUninit`.
+- Needs zone ids from `metadata.zonesStatus` (V1 login). V2-only (API key) frames carry no zone metadata, so the sensor never turns on there.
+- No `waitForBootstrap`: the device makes no API calls. No repair flow.

@@ -86,6 +86,28 @@ const SmartDetectionMixin = {
   },
 
   /**
+   * Feed the per-zone motion sensors (protect-zone-sensor). Dispatched via the driver so the
+   * mixin holds no device references.
+   */
+  _dispatchZoneSensors(eventId, event) {
+    try {
+      const driver = this.homey.drivers.getDriver('protect-zone-sensor');
+      driver.onSmartDetectionUpdate(this.getData().id, eventId, event.detectionTypes, event.zoneIds);
+    } catch (e) {
+      this.homey.app.debug('[SmartDetection] zone sensor dispatch failed: ' + e);
+    }
+  },
+
+  _notifyZoneSensorsEnded(eventId) {
+    try {
+      const driver = this.homey.drivers.getDriver('protect-zone-sensor');
+      driver.onSmartDetectionEnded(this.getData().id, eventId);
+    } catch (e) {
+      this.homey.app.debug('[SmartDetection] zone sensor end dispatch failed: ' + e);
+    }
+  },
+
+  /**
    * Smart detection closed by Protect (payload.end). Protect repeats the closing
    * frame two or three times, so fire the ended trigger once per event id.
    */
@@ -95,6 +117,7 @@ const SmartDetectionMixin = {
       this.homey.app.debug('[SmartDetection] end for unknown event [' + eventId + '] - ignoring');
       return;
     }
+    this._notifyZoneSensorsEnded(eventId);
     if (event.endedFired) {
       this.homey.app.debug('[SmartDetection] duplicate end frame [' + eventId + '] - ignoring');
       return;
@@ -168,6 +191,9 @@ const SmartDetectionMixin = {
     }
     const zones = event.zones;
     const zoneIds = event.zoneIds;
+    if (!event.endedFired) {
+      this._dispatchZoneSensors(eventId, event);
+    }
 
     const licensePlateText = (payload && payload.metadata && payload.metadata.licensePlate && payload.metadata.licensePlate.name)
       ? payload.metadata.licensePlate.name
