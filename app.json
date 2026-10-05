@@ -3622,6 +3622,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectcamera"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -3712,6 +3745,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectcamera"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -3802,6 +3868,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectcamera"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -3892,6 +3991,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectcamera"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -3982,6 +4114,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectcamera"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -4094,6 +4259,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectcamera"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -4184,6 +4382,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectcamera"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -4632,6 +4863,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectcamera"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -5421,6 +5685,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -5511,6 +5808,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -5601,6 +5931,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -5691,6 +6054,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -5781,6 +6177,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -5893,6 +6322,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -5983,6 +6445,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       },
@@ -6431,6 +6926,39 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "type": "autocomplete",
+            "name": "zone",
+            "required": false,
+            "title": {
+              "en": "Zone",
+              "nl": "Zone",
+              "de": "Zone",
+              "fr": "Zone",
+              "it": "Zona",
+              "sv": "Zon",
+              "no": "Sone",
+              "es": "Zona",
+              "da": "Zone",
+              "ru": "Зона",
+              "pl": "Strefa",
+              "ko": "존"
+            },
+            "placeholder": {
+              "en": "Any zone",
+              "nl": "Elke zone",
+              "de": "Beliebige Zone",
+              "fr": "N'importe quelle zone",
+              "it": "Qualsiasi zona",
+              "sv": "Valfri zon",
+              "no": "Hvilken som helst sone",
+              "es": "Cualquier zona",
+              "da": "Enhver zone",
+              "ru": "Любая зона",
+              "pl": "Dowolna strefa",
+              "ko": "모든 존"
+            }
           }
         ]
       }

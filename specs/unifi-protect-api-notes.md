@@ -315,6 +315,12 @@ documented beyond this note — `web-socket-devices.js` assumes a single `item` 
 - App behaviour: `SmartDetectionMixin.onSmartDetectionEnd` fires the `ufp_smart_detection_ended` / `ufp_device_*_smart_detection_ended` triggers **once per event id** (`SmartDetectionEvent.endedFired`). Events that never received types never fire an ended trigger. Audio events (`kind: 'audio'`) are excluded.
 - Tokens: `smart_detection_type` (comma-separated), `score`, `zones`, `duration` (seconds).
 
+### Zone argument on smart detection triggers
+
+- Device triggers (camera + doorbell, all smart detection types and ended) have an optional autocomplete `zone` argument ("Any zone" + the camera's `smartDetectZones` names). Flows without it match every zone.
+- Matching uses zone **ids** from `metadata.zonesStatus` (entries whose `status !== 'none'`), passed as trigger state `{ zone_ids }`; logic in `library/smart-detection-zone.js`. The `zones` text token is unchanged.
+- V2 (API key) frames carry no `metadata`, so `zone_ids` is empty there: a specific zone never matches, "Any zone" always does. Zone filtering needs the V1 login.
+
 ## NVR Alarm / Away Mode
 
 Protect firmware now exposes alarm actions through dedicated **v2** endpoints, with **v1** fallback for compatibility.

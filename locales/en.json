@@ -252,5 +252,8 @@
         "controller_error_title": "UniFi Protect Controller Unreachable",
         "controller_error_body": "Controller at {ip}:{port} is not responding. Check your network and IP configuration.",
         "repair_action": "Fix Settings"
+    },
+    "flow": {
+        "any_zone": "Any zone"
     }
 }
