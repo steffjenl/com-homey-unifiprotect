@@ -40,6 +40,38 @@
         "en": "62",
         "nl": "62"
       }
+    },
+    {
+      "name": "direction",
+      "type": "string",
+      "title": {
+        "en": "Direction",
+        "nl": "Richting",
+        "de": "Richtung",
+        "fr": "Direction",
+        "it": "Direzione",
+        "sv": "Riktning",
+        "no": "Retning",
+        "es": "Dirección",
+        "da": "Retning",
+        "ru": "Направление",
+        "pl": "Kierunek",
+        "ko": "방향"
+      },
+      "example": {
+        "en": "enter",
+        "nl": "enter",
+        "de": "enter",
+        "fr": "enter",
+        "it": "enter",
+        "sv": "enter",
+        "no": "enter",
+        "es": "enter",
+        "da": "enter",
+        "ru": "enter",
+        "pl": "enter",
+        "ko": "enter"
+      }
     }
   ]
 }
