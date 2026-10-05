@@ -1,0 +1,135 @@
+[
+  {
+    "type": "group",
+    "label": {
+      "en": "Detection types that count as motion",
+      "nl": "Detectietypes die als beweging tellen",
+      "de": "Erkennungstypen, die als Bewegung zählen",
+      "fr": "Types de détection comptant comme mouvement",
+      "it": "Tipi di rilevamento considerati movimento",
+      "sv": "Detekteringstyper som räknas som rörelse",
+      "no": "Deteksjonstyper som teller som bevegelse",
+      "es": "Tipos de detección que cuentan como movimiento",
+      "da": "Registreringstyper der tæller som bevægelse",
+      "ru": "Типы обнаружения, считающиеся движением",
+      "pl": "Typy wykrywania liczone jako ruch",
+      "ko": "움직임으로 간주할 감지 유형"
+    },
+    "children": [
+      {
+        "id": "ufp:type_person",
+        "type": "checkbox",
+        "label": {
+          "en": "Person",
+          "nl": "Persoon",
+          "de": "Person",
+          "fr": "Personne",
+          "it": "Persona",
+          "sv": "Person",
+          "no": "Person",
+          "es": "Persona",
+          "da": "Person",
+          "ru": "Человек",
+          "pl": "Osoba",
+          "ko": "사람"
+        },
+        "value": true
+      },
+      {
+        "id": "ufp:type_vehicle",
+        "type": "checkbox",
+        "label": {
+          "en": "Vehicle",
+          "nl": "Voertuig",
+          "de": "Fahrzeug",
+          "fr": "Véhicule",
+          "it": "Veicolo",
+          "sv": "Fordon",
+          "no": "Kjøretøy",
+          "es": "Vehículo",
+          "da": "Køretøj",
+          "ru": "Транспорт",
+          "pl": "Pojazd",
+          "ko": "차량"
+        },
+        "value": true
+      },
+      {
+        "id": "ufp:type_animal",
+        "type": "checkbox",
+        "label": {
+          "en": "Animal",
+          "nl": "Dier",
+          "de": "Tier",
+          "fr": "Animal",
+          "it": "Animale",
+          "sv": "Djur",
+          "no": "Dyr",
+          "es": "Animal",
+          "da": "Dyr",
+          "ru": "Животное",
+          "pl": "Zwierzę",
+          "ko": "동물"
+        },
+        "value": true
+      },
+      {
+        "id": "ufp:type_package",
+        "type": "checkbox",
+        "label": {
+          "en": "Package",
+          "nl": "Pakket",
+          "de": "Paket",
+          "fr": "Colis",
+          "it": "Pacco",
+          "sv": "Paket",
+          "no": "Pakke",
+          "es": "Paquete",
+          "da": "Pakke",
+          "ru": "Посылка",
+          "pl": "Paczka",
+          "ko": "택배"
+        },
+        "value": false
+      },
+      {
+        "id": "ufp:type_face",
+        "type": "checkbox",
+        "label": {
+          "en": "Face",
+          "nl": "Gezicht",
+          "de": "Gesicht",
+          "fr": "Visage",
+          "it": "Volto",
+          "sv": "Ansikte",
+          "no": "Ansikt",
+          "es": "Rostro",
+          "da": "Ansigt",
+          "ru": "Лицо",
+          "pl": "Twarz",
+          "ko": "얼굴"
+        },
+        "value": false
+      },
+      {
+        "id": "ufp:type_licensePlate",
+        "type": "checkbox",
+        "label": {
+          "en": "License plate",
+          "nl": "Kenteken",
+          "de": "Nummernschild",
+          "fr": "Plaque d'immatriculation",
+          "it": "Targa",
+          "sv": "Registreringsskylt",
+          "no": "Registreringsskilt",
+          "es": "Matrícula",
+          "da": "Nummerplade",
+          "ru": "Номерной знак",
+          "pl": "Tablica rejestracyjna",
+          "ko": "번호판"
+        },
+        "value": false
+      }
+    ]
+  }
+]

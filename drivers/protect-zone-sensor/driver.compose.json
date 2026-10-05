@@ -1,0 +1,45 @@
+{
+  "id": "protect-zone-sensor",
+  "name": {
+    "en": "Camera Zone Motion Sensor",
+    "nl": "Camera zone bewegingssensor",
+    "de": "Kamera-Zonen-Bewegungsmelder",
+    "fr": "Détecteur de mouvement de zone caméra",
+    "it": "Sensore di movimento zona telecamera",
+    "sv": "Kamerazon-rörelsesensor",
+    "no": "Kamerasone-bevegelsessensor",
+    "es": "Sensor de movimiento de zona de cámara",
+    "da": "Kamerazone-bevægelsessensor",
+    "ru": "Датчик движения зоны камеры",
+    "pl": "Czujnik ruchu strefy kamery",
+    "ko": "카메라 존 모션 센서"
+  },
+  "class": "sensor",
+  "capabilities": [
+    "alarm_motion"
+  ],
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png"
+  },
+  "pair": [
+    {
+      "id": "validate"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}
