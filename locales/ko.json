@@ -242,5 +242,8 @@
         "controller_error_title": "UniFi Protect 컨트롤러에 연결할 수 없음",
         "controller_error_body": "{ip}:{port}의 컨트롤러가 응답하지 않습니다. 네트워크 및 IP 설정을 확인하세요.",
         "repair_action": "설정 열기"
+    },
+    "flow": {
+        "any_zone": "모든 존"
     }
 }

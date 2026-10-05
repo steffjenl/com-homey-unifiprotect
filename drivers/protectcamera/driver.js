@@ -1,6 +1,7 @@
 'use strict';
 
 const Homey = require('homey');
+const { registerZoneListeners } = require('../../library/smart-detection-zone');
 const UfvConstants = require('../../library/constants');
 const { GUIDE_URL, getCamerasWithoutRtsp } = require('../../library/rtsp-status');
 
@@ -18,6 +19,16 @@ class UniFiCameraDriver extends Homey.Driver {
     this._deviceSmartDetectionTriggerLicensePlate = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION_LICENSEPLATE);
     this._deviceSmartDetectionTriggerFace = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION_FACE);
     this._deviceSmartDetectionEndedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_SMART_DETECTION_ENDED);
+    registerZoneListeners(this.homey, [
+      this._deviceSmartDetectionTrigger,
+      this._deviceSmartDetectionTriggerPerson,
+      this._deviceSmartDetectionTriggerVehicle,
+      this._deviceSmartDetectionTriggerAnimal,
+      this._deviceSmartDetectionTriggerPackage,
+      this._deviceSmartDetectionTriggerLicensePlate,
+      this._deviceSmartDetectionTriggerFace,
+      this._deviceSmartDetectionEndedTrigger,
+    ]);
     this._deviceAudioDetectionTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_CAMERA_AUDIO_DETECTION);
     this._deviceAudioDetectionTrigger.registerRunListener(async (args, state) => {
       // Check if "any" is selected or if the detected audio type matches the selected type

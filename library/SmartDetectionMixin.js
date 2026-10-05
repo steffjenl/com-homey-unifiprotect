@@ -48,8 +48,9 @@ const SmartDetectionMixin = {
   // Smart detection (visual)
   // --------------------------------------------------------------------------
 
-  _getZonesText(payload) {
+  _getZoneInfo(payload) {
     let zones = '';
+    let zoneIds = [];
     if (payload && payload.metadata && payload.metadata.zonesStatus
       && typeof payload.metadata.zonesStatus === 'object') {
       let zoneNameMap = {};
@@ -76,12 +77,12 @@ const SmartDetectionMixin = {
         this.homey.app.debug('[SmartDetection] zone name lookup failed: ' + e);
       }
 
-      zones = Object.entries(payload.metadata.zonesStatus)
-        .filter(([, zone]) => zone.status !== 'none')
-        .map(([key]) => zoneNameMap[key] || key)
-        .join(', ');
+      const activeZones = Object.entries(payload.metadata.zonesStatus)
+        .filter(([, zone]) => zone && zone.status !== 'none');
+      zoneIds = activeZones.map(([key]) => String(key));
+      zones = activeZones.map(([key]) => zoneNameMap[key] || key).join(', ');
     }
-    return zones;
+    return { zones, zoneIds };
   },
 
   /**
@@ -109,7 +110,7 @@ const SmartDetectionMixin = {
     const score = typeof event.detectionScore === 'number' ? event.detectionScore : 0;
     const duration = event.detectionTime ? Math.max(0, Math.round((event.endTime - event.detectionTime) / 1000)) : 0;
     this.homey.app.debug('[SmartDetection] ended id=' + eventId + ' types=' + event.detectionTypes.join(',') + ' duration=' + duration);
-    this.triggerSmartDetectionEndedTrigger(event.detectionTypes.join(', '), score, event.zones || '', duration);
+    this.triggerSmartDetectionEndedTrigger(event.detectionTypes.join(', '), score, event.zones || '', duration, event.zoneIds || []);
   },
 
   onSmartDetection(payload, actionType, eventId) {
@@ -159,8 +160,14 @@ const SmartDetectionMixin = {
     const score = typeof event.detectionScore === 'number' ? event.detectionScore : 0;
     const smartDetectTypes = event.detectionTypes;
 
-    const zones = this._getZonesText(payload);
-    event.zones = zones;
+    // Zones can be reported on a later frame, and later frames may omit metadata: keep what we know.
+    const zoneInfo = this._getZoneInfo(payload);
+    if (zoneInfo.zoneIds.length > 0) {
+      event.zones = zoneInfo.zones;
+      event.zoneIds = zoneInfo.zoneIds;
+    }
+    const zones = event.zones;
+    const zoneIds = event.zoneIds;
 
     const licensePlateText = (payload && payload.metadata && payload.metadata.licensePlate && payload.metadata.licensePlate.name)
       ? payload.metadata.licensePlate.name
@@ -183,23 +190,23 @@ const SmartDetectionMixin = {
         event.triggered.add(type);
         this.homey.app.debug('[SmartDetection] type=' + type + ' device=' + this.getData().id);
         if (type === 'person') {
-          this.triggerSmartDetectionTriggerPerson(score, zones);
+          this.triggerSmartDetectionTriggerPerson(score, zones, zoneIds);
         } else if (type === 'vehicle') {
-          this.triggerSmartDetectionTriggerVehicle(score, zones);
+          this.triggerSmartDetectionTriggerVehicle(score, zones, zoneIds);
         } else if (type === 'animal') {
-          this.triggerSmartDetectionTriggerAnimal(score, zones);
+          this.triggerSmartDetectionTriggerAnimal(score, zones, zoneIds);
         } else if (type === 'package') {
-          this.triggerSmartDetectionTriggerPackage(score, zones);
+          this.triggerSmartDetectionTriggerPackage(score, zones, zoneIds);
         } else if (type === 'licensePlate') {
-          this.triggerSmartDetectionTriggerLicensePlate(score, zones, licensePlateText);
+          this.triggerSmartDetectionTriggerLicensePlate(score, zones, licensePlateText, zoneIds);
         } else if (type === 'face') {
-          this.triggerSmartDetectionTriggerFace(score, zones);
+          this.triggerSmartDetectionTriggerFace(score, zones, zoneIds);
         } else {
           this.homey.app.debug(`[SmartDetection] unknown type: ${type}`);
         }
       }
     } else {
-      this.triggerSmartDetectionTriggerUnknown(score, zones);
+      this.triggerSmartDetectionTriggerUnknown(score, zones, zoneIds);
     }
   },
 
@@ -279,7 +286,7 @@ const SmartDetectionMixin = {
   // Smart detection triggers
   // --------------------------------------------------------------------------
 
-  triggerSmartDetectionTriggerUnknown(score, zones) {
+  triggerSmartDetectionTriggerUnknown(score, zones, zoneIds = []) {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'unknown',
@@ -290,10 +297,10 @@ const SmartDetectionMixin = {
       smart_detection_type: 'unknown',
       score,
       zones,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionTriggerPerson(score, zones) {
+  triggerSmartDetectionTriggerPerson(score, zones, zoneIds = []) {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'person',
@@ -304,7 +311,7 @@ const SmartDetectionMixin = {
       smart_detection_type: 'person',
       score,
       zones,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
     this.homey.app._smartDetectionTriggerPerson.trigger({
       ufp_smart_detection_camera: this.getName(),
       score,
@@ -313,10 +320,10 @@ const SmartDetectionMixin = {
     this.driver._deviceSmartDetectionTriggerPerson.trigger(this, {
       score,
       zones,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionTriggerVehicle(score, zones) {
+  triggerSmartDetectionTriggerVehicle(score, zones, zoneIds = []) {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'vehicle',
@@ -327,7 +334,7 @@ const SmartDetectionMixin = {
       smart_detection_type: 'vehicle',
       score,
       zones,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
     this.homey.app._smartDetectionTriggerVehicle.trigger({
       ufp_smart_detection_camera: this.getName(),
       score,
@@ -337,10 +344,10 @@ const SmartDetectionMixin = {
     this.driver._deviceSmartDetectionTriggerVehicle.trigger(this, {
       score,
       zones,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionTriggerAnimal(score, zones) {
+  triggerSmartDetectionTriggerAnimal(score, zones, zoneIds = []) {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'animal',
@@ -351,7 +358,7 @@ const SmartDetectionMixin = {
       smart_detection_type: 'animal',
       score,
       zones,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
     this.homey.app._smartDetectionTriggerAnimal.trigger({
       ufp_smart_detection_camera: this.getName(),
       score,
@@ -360,10 +367,10 @@ const SmartDetectionMixin = {
     this.driver._deviceSmartDetectionTriggerAnimal.trigger(this, {
       score,
       zones,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionTriggerPackage(score, zones) {
+  triggerSmartDetectionTriggerPackage(score, zones, zoneIds = []) {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'package',
@@ -374,7 +381,7 @@ const SmartDetectionMixin = {
       smart_detection_type: 'package',
       score,
       zones,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
     this.homey.app._smartDetectionTriggerPackage.trigger({
       ufp_smart_detection_camera: this.getName(),
       score,
@@ -383,10 +390,10 @@ const SmartDetectionMixin = {
     this.driver._deviceSmartDetectionTriggerPackage.trigger(this, {
       score,
       zones,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionTriggerLicensePlate(score, zones, licensePlate = '') {
+  triggerSmartDetectionTriggerLicensePlate(score, zones, licensePlate = '', zoneIds = []) {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'licensePlate',
@@ -397,7 +404,7 @@ const SmartDetectionMixin = {
       smart_detection_type: 'licensePlate',
       score,
       zones,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
     this.homey.app._smartDetectionTriggerLicensePlate.trigger({
       ufp_smart_detection_camera: this.getName(),
       score,
@@ -408,10 +415,10 @@ const SmartDetectionMixin = {
       score,
       zones,
       license_plate: licensePlate,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionTriggerFace(score, zones) {
+  triggerSmartDetectionTriggerFace(score, zones, zoneIds = []) {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'face',
@@ -422,7 +429,7 @@ const SmartDetectionMixin = {
       smart_detection_type: 'face',
       score,
       zones,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
     this.homey.app._smartDetectionTriggerFace.trigger({
       ufp_smart_detection_camera: this.getName(),
       score,
@@ -431,10 +438,10 @@ const SmartDetectionMixin = {
     this.driver._deviceSmartDetectionTriggerFace.trigger(this, {
       score,
       zones,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionEndedTrigger(types, score, zones, duration) {
+  triggerSmartDetectionEndedTrigger(types, score, zones, duration, zoneIds = []) {
     this.homey.app._smartDetectionEndedTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: types,
@@ -447,7 +454,7 @@ const SmartDetectionMixin = {
       score,
       zones,
       duration,
-    }).catch(this.error);
+    }, { zone_ids: zoneIds }).catch(this.error);
   },
 
   // --------------------------------------------------------------------------

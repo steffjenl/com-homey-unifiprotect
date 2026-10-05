@@ -242,5 +242,8 @@
         "controller_error_title": "UniFi Protect-kontroller utilgjengelig",
         "controller_error_body": "Kontrolleren på {ip}:{port} svarer ikke. Sjekk nettverket og IP-konfigurasjonen.",
         "repair_action": "Åpne innstillinger"
+    },
+    "flow": {
+        "any_zone": "Hvilken som helst sone"
     }
 }
