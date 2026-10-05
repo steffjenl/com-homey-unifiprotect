@@ -130,10 +130,16 @@ const SmartDetectionMixin = {
     event.endedFired = true;
     event.endTime = payload.end;
 
+    // Plate type seen but its text never arrived: still fire the plate trigger once, with an empty token.
+    if (event.detectionTypes.includes('licensePlate') && !event.triggered.has('licensePlate')) {
+      event.triggered.add('licensePlate');
+      this.triggerSmartDetectionTriggerLicensePlate(typeof event.detectionScore === 'number' ? event.detectionScore : 0, event.zones || '', '', event.zoneIds || [], event.direction || '');
+    }
+
     const score = typeof event.detectionScore === 'number' ? event.detectionScore : 0;
     const duration = event.detectionTime ? Math.max(0, Math.round((event.endTime - event.detectionTime) / 1000)) : 0;
     this.homey.app.debug('[SmartDetection] ended id=' + eventId + ' types=' + event.detectionTypes.join(',') + ' duration=' + duration);
-    this.triggerSmartDetectionEndedTrigger(event.detectionTypes.join(', '), score, event.zones || '', duration, event.zoneIds || []);
+    this.triggerSmartDetectionEndedTrigger(event.detectionTypes.join(', '), score, event.zones || '', duration, event.zoneIds || [], event.direction || '');
   },
 
   onSmartDetection(payload, actionType, eventId) {
@@ -195,9 +201,15 @@ const SmartDetectionMixin = {
       this._dispatchZoneSensors(eventId, event);
     }
 
-    const licensePlateText = (payload && payload.metadata && payload.metadata.licensePlate && payload.metadata.licensePlate.name)
-      ? payload.metadata.licensePlate.name
-      : '';
+    // Plate text and direction can arrive on a later frame: remember them on the event.
+    if (payload && payload.metadata && payload.metadata.licensePlate && payload.metadata.licensePlate.name) {
+      event.licensePlate = payload.metadata.licensePlate.name;
+    }
+    if (payload && payload.metadata && typeof payload.metadata.direction === 'string' && payload.metadata.direction) {
+      event.direction = payload.metadata.direction;
+    }
+    const licensePlateText = event.licensePlate;
+    const { direction } = event;
 
     const lastDetection = this.homey.app.toLocalTime(new Date(lastDetectionAt));
     this.setCapabilityValue('last_smart_detection_at', lastDetectionAt).catch(this.error);
@@ -213,26 +225,30 @@ const SmartDetectionMixin = {
         if (event.triggered.has(type)) {
           continue;
         }
+        // The plate text often arrives on a later frame: wait for it (onSmartDetectionEnd flushes if it never comes).
+        if (type === 'licensePlate' && !licensePlateText) {
+          continue;
+        }
         event.triggered.add(type);
         this.homey.app.debug('[SmartDetection] type=' + type + ' device=' + this.getData().id);
         if (type === 'person') {
-          this.triggerSmartDetectionTriggerPerson(score, zones, zoneIds);
+          this.triggerSmartDetectionTriggerPerson(score, zones, zoneIds, direction);
         } else if (type === 'vehicle') {
-          this.triggerSmartDetectionTriggerVehicle(score, zones, zoneIds);
+          this.triggerSmartDetectionTriggerVehicle(score, zones, zoneIds, direction);
         } else if (type === 'animal') {
-          this.triggerSmartDetectionTriggerAnimal(score, zones, zoneIds);
+          this.triggerSmartDetectionTriggerAnimal(score, zones, zoneIds, direction);
         } else if (type === 'package') {
-          this.triggerSmartDetectionTriggerPackage(score, zones, zoneIds);
+          this.triggerSmartDetectionTriggerPackage(score, zones, zoneIds, direction);
         } else if (type === 'licensePlate') {
-          this.triggerSmartDetectionTriggerLicensePlate(score, zones, licensePlateText, zoneIds);
+          this.triggerSmartDetectionTriggerLicensePlate(score, zones, licensePlateText, zoneIds, direction);
         } else if (type === 'face') {
-          this.triggerSmartDetectionTriggerFace(score, zones, zoneIds);
+          this.triggerSmartDetectionTriggerFace(score, zones, zoneIds, direction);
         } else {
           this.homey.app.debug(`[SmartDetection] unknown type: ${type}`);
         }
       }
     } else {
-      this.triggerSmartDetectionTriggerUnknown(score, zones, zoneIds);
+      this.triggerSmartDetectionTriggerUnknown(score, zones, zoneIds, direction);
     }
   },
 
@@ -312,31 +328,35 @@ const SmartDetectionMixin = {
   // Smart detection triggers
   // --------------------------------------------------------------------------
 
-  triggerSmartDetectionTriggerUnknown(score, zones, zoneIds = []) {
+  triggerSmartDetectionTriggerUnknown(score, zones, zoneIds = [], direction = '') {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'unknown',
       score,
       zones,
+      direction,
     }).catch(this.error);
     this.driver._deviceSmartDetectionTrigger.trigger(this, {
       smart_detection_type: 'unknown',
       score,
       zones,
+      direction,
     }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionTriggerPerson(score, zones, zoneIds = []) {
+  triggerSmartDetectionTriggerPerson(score, zones, zoneIds = [], direction = '') {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'person',
       score,
       zones,
+      direction,
     }).catch(this.error);
     this.driver._deviceSmartDetectionTrigger.trigger(this, {
       smart_detection_type: 'person',
       score,
       zones,
+      direction,
     }, { zone_ids: zoneIds }).catch(this.error);
     this.homey.app._smartDetectionTriggerPerson.trigger({
       ufp_smart_detection_camera: this.getName(),
@@ -349,17 +369,19 @@ const SmartDetectionMixin = {
     }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionTriggerVehicle(score, zones, zoneIds = []) {
+  triggerSmartDetectionTriggerVehicle(score, zones, zoneIds = [], direction = '') {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'vehicle',
       score,
       zones,
+      direction,
     }).catch(this.error);
     this.driver._deviceSmartDetectionTrigger.trigger(this, {
       smart_detection_type: 'vehicle',
       score,
       zones,
+      direction,
     }, { zone_ids: zoneIds }).catch(this.error);
     this.homey.app._smartDetectionTriggerVehicle.trigger({
       ufp_smart_detection_camera: this.getName(),
@@ -373,17 +395,19 @@ const SmartDetectionMixin = {
     }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionTriggerAnimal(score, zones, zoneIds = []) {
+  triggerSmartDetectionTriggerAnimal(score, zones, zoneIds = [], direction = '') {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'animal',
       score,
       zones,
+      direction,
     }).catch(this.error);
     this.driver._deviceSmartDetectionTrigger.trigger(this, {
       smart_detection_type: 'animal',
       score,
       zones,
+      direction,
     }, { zone_ids: zoneIds }).catch(this.error);
     this.homey.app._smartDetectionTriggerAnimal.trigger({
       ufp_smart_detection_camera: this.getName(),
@@ -396,17 +420,19 @@ const SmartDetectionMixin = {
     }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionTriggerPackage(score, zones, zoneIds = []) {
+  triggerSmartDetectionTriggerPackage(score, zones, zoneIds = [], direction = '') {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'package',
       score,
       zones,
+      direction,
     }).catch(this.error);
     this.driver._deviceSmartDetectionTrigger.trigger(this, {
       smart_detection_type: 'package',
       score,
       zones,
+      direction,
     }, { zone_ids: zoneIds }).catch(this.error);
     this.homey.app._smartDetectionTriggerPackage.trigger({
       ufp_smart_detection_camera: this.getName(),
@@ -419,17 +445,19 @@ const SmartDetectionMixin = {
     }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionTriggerLicensePlate(score, zones, licensePlate = '', zoneIds = []) {
+  triggerSmartDetectionTriggerLicensePlate(score, zones, licensePlate = '', zoneIds = [], direction = '') {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'licensePlate',
       score,
       zones,
+      direction,
     }).catch(this.error);
     this.driver._deviceSmartDetectionTrigger.trigger(this, {
       smart_detection_type: 'licensePlate',
       score,
       zones,
+      direction,
     }, { zone_ids: zoneIds }).catch(this.error);
     this.homey.app._smartDetectionTriggerLicensePlate.trigger({
       ufp_smart_detection_camera: this.getName(),
@@ -444,17 +472,19 @@ const SmartDetectionMixin = {
     }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionTriggerFace(score, zones, zoneIds = []) {
+  triggerSmartDetectionTriggerFace(score, zones, zoneIds = [], direction = '') {
     this.homey.app._smartDetectionTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: 'face',
       score,
       zones,
+      direction,
     }).catch(this.error);
     this.driver._deviceSmartDetectionTrigger.trigger(this, {
       smart_detection_type: 'face',
       score,
       zones,
+      direction,
     }, { zone_ids: zoneIds }).catch(this.error);
     this.homey.app._smartDetectionTriggerFace.trigger({
       ufp_smart_detection_camera: this.getName(),
@@ -467,19 +497,21 @@ const SmartDetectionMixin = {
     }, { zone_ids: zoneIds }).catch(this.error);
   },
 
-  triggerSmartDetectionEndedTrigger(types, score, zones, duration, zoneIds = []) {
+  triggerSmartDetectionEndedTrigger(types, score, zones, duration, zoneIds = [], direction = '') {
     this.homey.app._smartDetectionEndedTrigger.trigger({
       ufp_smart_detection_camera: this.getName(),
       smart_detection_type: types,
       score,
       zones,
       duration,
+      direction,
     }).catch(this.error);
     this.driver._deviceSmartDetectionEndedTrigger.trigger(this, {
       smart_detection_type: types,
       score,
       zones,
       duration,
+      direction,
     }, { zone_ids: zoneIds }).catch(this.error);
   },
 

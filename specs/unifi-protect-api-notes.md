@@ -315,6 +315,11 @@ documented beyond this note — `web-socket-devices.js` assumes a single `item` 
 - App behaviour: `SmartDetectionMixin.onSmartDetectionEnd` fires the `ufp_smart_detection_ended` / `ufp_device_*_smart_detection_ended` triggers **once per event id** (`SmartDetectionEvent.endedFired`). Events that never received types never fire an ended trigger. Audio events (`kind: 'audio'`) are excluded.
 - Tokens: `smart_detection_type` (comma-separated), `score`, `zones`, `duration` (seconds).
 
+### License plate and direction tokens
+
+- `metadata.licensePlate.name` (V1) often arrives on a later frame than the `licensePlate` type. The plate trigger waits for the text; if the detection ends without it, the trigger fires once with an empty `license_plate`. V2 frames carry no metadata, so the token is empty there.
+- `direction` token (generic + ended triggers): taken from `metadata.direction` when it is a non-empty string, remembered on the event, empty otherwise. The field name comes from the `ProtectEventMetadataInterface` types of the reference project; no real line-crossing sample is in the repo yet, so verify the values on real hardware (the issue reporter offered measurements). V2 has no direction.
+
 ### Zone argument on smart detection triggers
 
 - Device triggers (camera + doorbell, all smart detection types and ended) have an optional autocomplete `zone` argument ("Any zone" + the camera's `smartDetectZones` names). Flows without it match every zone.
