@@ -394,5 +394,8 @@
   },
   "1.13.0": {
     "en": "Add a \"smart detection ended\" flow trigger, a zone argument on smart detection triggers, a motion sensor device per camera detection zone, and a direction token. The license plate trigger now waits for the plate text. Zone features need the V1 login."
+  },
+  "1.13.1": {
+    "en": "Fix doorbell crash on smart detection events"
   }
 }

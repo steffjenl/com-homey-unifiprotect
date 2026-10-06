@@ -173,9 +173,11 @@ class Doorbell extends Homey.Device {
       this.homey.app.debug('camera_microphone_volume');
       if (this.homey.app.isV1Available()) {
         return this.homey.app.api.setMicVolume(this.getData(), value);
-      } else if (this.homey.app.isV2Available()) {
+      }
+      if (this.homey.app.isV2Available()) {
         return this.homey.app.apiV2.setCamera(this.getData().id, { micVolume: value });
       }
+      return undefined;
     });
 
     this.registerCapabilityListener('doorbell_ring_volume', async (value) => {
@@ -184,6 +186,7 @@ class Doorbell extends Homey.Device {
         return this.homey.app.api.setDoorbellRingVolume(this.getData(), value);
       }
       // V2 does not expose speakerSettings directly
+      return undefined;
     });
 
     this.registerCapabilityListener('doorbell_speaker_volume', async (value) => {
@@ -192,6 +195,7 @@ class Doorbell extends Homey.Device {
         return this.homey.app.api.setDoorbellTalkbackVolume(this.getData(), value);
       }
       // V2 does not expose speakerSettings directly
+      return undefined;
     });
 
     this.registerCapabilityListener('camera_nightvision_set', async (value) => {
@@ -200,6 +204,7 @@ class Doorbell extends Homey.Device {
         return this.homey.app.api.setNightVisionMode(this.getData(), value);
       }
       // V2 does not expose irLedMode directly
+      return undefined;
     });
 
     await this._createMissingCapabilities();
@@ -331,7 +336,7 @@ class Doorbell extends Homey.Device {
     if (this.homey.app.isV1Available()) {
       const bootstrapData = this.homey.app.api.getBootstrap();
       if (bootstrapData && bootstrapData.cameras) {
-        doorbell = bootstrapData.cameras.find(c => c.id === this.getData().id);
+        doorbell = bootstrapData.cameras.find((c) => c.id === this.getData().id);
       }
     }
 
@@ -621,66 +626,6 @@ class Doorbell extends Homey.Device {
     return false;
   }
 
-  onSmartDetection(payload, actionType = null, eventId = null) {
-    return SmartDetectionMixin.onSmartDetection.call(this, payload, actionType, eventId);
-  }
-
-  onAudioDetection(payload, actionType = null, eventId = null) {
-    return SmartDetectionMixin.onAudioDetection.call(this, payload, actionType, eventId);
-  }
-
-  mapAudioDetectionType(apiType) {
-    return SmartDetectionMixin.mapAudioDetectionType.call(this, apiType);
-  }
-
-  triggerSmartDetectionTriggerUnknown(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerUnknown.call(this, score, zones);
-  }
-
-  triggerSmartDetectionTriggerPerson(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerPerson.call(this, score, zones);
-  }
-
-  triggerSmartDetectionTriggerVehicle(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerVehicle.call(this, score, zones);
-  }
-
-  triggerSmartDetectionTriggerAnimal(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerAnimal.call(this, score, zones);
-  }
-
-  triggerSmartDetectionTriggerPackage(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerPackage.call(this, score, zones);
-  }
-
-  triggerSmartDetectionTriggerLicensePlate(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerLicensePlate.call(this, score, zones);
-  }
-
-  triggerSmartDetectionTriggerFace(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerFace.call(this, score, zones);
-  }
-
-  triggerAudioDetectionTrigger(audioType, readableType, score) {
-    return SmartDetectionMixin.triggerAudioDetectionTrigger.call(this, audioType, readableType, score);
-  }
-
-  _getEventStore() {
-    return SmartDetectionMixin._getEventStore.call(this);
-  }
-
-  getSmartDetectionEvent(eventId) {
-    return SmartDetectionMixin.getSmartDetectionEvent.call(this, eventId);
-  }
-
-  setSmartDetectionEvent(eventId, detectionTime, detectionTypes, detectionScore) {
-    return SmartDetectionMixin.setSmartDetectionEvent.call(this, eventId, detectionTime, detectionTypes, detectionScore);
-  }
-
-  cleanSmartDetectionEvents() {
-    return SmartDetectionMixin.cleanSmartDetectionEvents.call(this);
-  }
-
   onConnectionChanged(connectionStatus) {
     this.homey.app._connectionStatusTrigger.trigger({
       ufp_connection_status: connectionStatus,
@@ -691,14 +636,14 @@ class Doorbell extends Homey.Device {
   onIsRecording(isRecording) {
     // Debug information about playload
     if (this.hasCapability('camera_recording_status')) {
-      this.setCapabilityValue('camera_recording_status', isRecording);
+      this.setCapabilityValue('camera_recording_status', isRecording).catch(this.error);
     }
   }
 
   onIsMicEnabled(isMicEnabled) {
     // Debug information about playload
     if (this.hasCapability('camera_microphone_status')) {
-      this.setCapabilityValue('camera_microphone_status', isMicEnabled);
+      this.setCapabilityValue('camera_microphone_status', isMicEnabled).catch(this.error);
     }
   }
 
@@ -707,13 +652,13 @@ class Doorbell extends Homey.Device {
     if (this.getCapabilityValue('camera_connection_status') !== isConnected) {
       this.onConnectionChanged(isConnected);
     }
-    this.setCapabilityValue('camera_connection_status', isConnected);
+    this.setCapabilityValue('camera_connection_status', isConnected).catch(this.error);
   }
 
   onMicVolume(micVolume) {
     // Debug information about playload
     if (this.hasCapability('camera_microphone_volume')) {
-      this.setCapabilityValue('camera_microphone_volume', micVolume);
+      this.setCapabilityValue('camera_microphone_volume', micVolume).catch(this.error);
     }
   }
 
@@ -734,7 +679,7 @@ class Doorbell extends Homey.Device {
     if (this.hasCapability('camera_recording_mode')) {
       this.setCapabilityValue('camera_recording_mode',
         this.homey.__(`events.Doorbell.${String(mode)
-          .toLowerCase()}`));
+          .toLowerCase()}`)).catch(this.error);
     }
   }
 
@@ -760,10 +705,10 @@ class Doorbell extends Homey.Device {
       }
 
       if (!this.rtspUrl) {
-        this.setWarning(this.homey.__('warnings.no_rtsp_url'));
+        this.setWarning(this.homey.__('warnings.no_rtsp_url')).catch(this.error);
         this.homey.app.debug(`No RTSP URL available for camera ${this.getName()}.`);
       } else {
-        this.setWarning(null);
+        this.setWarning(null).catch(this.error);
       }
 
       this.setCameraVideo('snapshot', `${this.getName()} Video`, this.video);
@@ -790,7 +735,7 @@ class Doorbell extends Homey.Device {
       if (!this.rtspPackageUrl) {
         this.homey.app.debug(`No RTSP URL available for package camera ${this.getName()}.`);
       } else if (this.rtspUrl) {
-        this.setWarning(null);
+        this.setWarning(null).catch(this.error);
       }
 
       this.setCameraVideo('package-snapshot', `${this.getName()} Package Video`, this.packageVideo);
@@ -875,85 +820,82 @@ class Doorbell extends Homey.Device {
   }
 
   async _createSnapshotPackageImage(triggerFlow = false) {
-    return new Promise(async (resolve, reject) => {
-      this._snapshotPackageImage = await this.homey.images.createImage();
-      this.homey.app.debug(`Creating snapshot packages image for doorbell ${this.getName()}.`);
+    this._snapshotPackageImage = await this.homey.images.createImage();
+    this.homey.app.debug(`Creating snapshot packages image for doorbell ${this.getName()}.`);
 
-      const ipAddress = this.getCapabilityValue('ip_address');
+    const ipAddress = this.getCapabilityValue('ip_address');
 
-      this._snapshotPackageImage.setStream(async (stream) => {
-        try {
-          const agent = new https.Agent({
-            rejectUnauthorized: false, // rejectUnauthorized: false is intentional — NVR uses self-signed TLS
-            keepAlive: false,
-          });
+    this._snapshotPackageImage.setStream(async (stream) => {
+      try {
+        const agent = new https.Agent({
+          rejectUnauthorized: false, // rejectUnauthorized: false is intentional — NVR uses self-signed TLS
+          keepAlive: false,
+        });
 
-          if (this.settings.useCameraSnapshot) {
-            const directUrl = `https://${ipAddress}/snap_2.jpeg`;
-            try {
-              const directUrlAvailable = await isUrlReachable(directUrl, agent);
-              if (directUrlAvailable) {
-                  try {
-                    return pipeHttpsUrlToStream(directUrl, agent, {}, stream);
-                  } catch (directError) {
-                    this.homey.app.debug(`[DoorbellDevice] Direct package snapshot stream failed for ${this.getName()}, falling back to API: ${directError.message}`);
-                  }
+        if (this.settings.useCameraSnapshot) {
+          const directUrl = `https://${ipAddress}/snap_2.jpeg`;
+          try {
+            const directUrlAvailable = await isUrlReachable(directUrl, agent);
+            if (directUrlAvailable) {
+              try {
+                return pipeHttpsUrlToStream(directUrl, agent, {}, stream);
+              } catch (directError) {
+                this.homey.app.debug(`[DoorbellDevice] Direct package snapshot stream failed for ${this.getName()}, falling back to API: ${directError.message}`);
               }
-              this.homey.app.debug(`[DoorbellDevice] Direct package snapshot URL not available for ${this.getName()}, falling back to API.`);
-            } catch (error) {
-              this.homey.app.debug(`[DoorbellDevice] Direct package snapshot fetch failed for ${this.getName()}, falling back to API: ${error.message}`);
             }
+            this.homey.app.debug(`[DoorbellDevice] Direct package snapshot URL not available for ${this.getName()}, falling back to API.`);
+          } catch (error) {
+            this.homey.app.debug(`[DoorbellDevice] Direct package snapshot fetch failed for ${this.getName()}, falling back to API: ${error.message}`);
           }
-
-          if (this.homey.app.isV1Available()) {
-            const snapshotBuffer = await this.homey.app.api.packageSnapshot(this.getData().id);
-            stream.end(snapshotBuffer);
-            return stream;
-          }
-
-          if (this.homey.app.isV2Available()) {
-            // V2 package camera has no dedicated endpoint; use standard snapshot endpoint.
-            const snapshotBuffer = await this.homey.app.apiV2.getSnapshot(this.getData().id);
-            stream.end(snapshotBuffer);
-            return stream;
-          }
-
-          reject('No API available for package snapshot retrieval.');
-        } catch (error) {
-          this.homey.app.debug(`[DoorbellDevice] Package snapshot retrieval failed for ${this.getName()}: ${error.message}`);
-          reject(error.message || 'Could not fetch snapshot image.');
         }
-      });
 
-      if (triggerFlow) {
-        const getStreamUrl = async () => {
-          return this.rtspPackageUrl || getRtspStreamUrl(this.homey.app, this.getData(), { packageCamera: true });
-        };
-
-        try {
-          const rtspUrl = await getStreamUrl();
-          this.homey.app._packageSnapshotTrigger.trigger({
-            ufv_snapshot_token: this._snapshotPackageImage,
-            ufv_snapshot_camera: this.getName(),
-            ufv_snapshot_snapshot_url: this._snapshotPackageImage.cloudUrl || '',
-            ufv_snapshot_stream_url: rtspUrl,
-          }).catch(this.error);
-        } catch (error) {
-          this.error(error);
+        if (this.homey.app.isV1Available()) {
+          const snapshotBuffer = await this.homey.app.api.packageSnapshot(this.getData().id);
+          stream.end(snapshotBuffer);
+          return stream;
         }
+
+        if (this.homey.app.isV2Available()) {
+          // V2 package camera has no dedicated endpoint; use standard snapshot endpoint.
+          const snapshotBuffer = await this.homey.app.apiV2.getSnapshot(this.getData().id);
+          stream.end(snapshotBuffer);
+          return stream;
+        }
+
+        throw new Error('No API available for package snapshot retrieval.');
+      } catch (error) {
+        this.homey.app.debug(`[DoorbellDevice] Package snapshot retrieval failed for ${this.getName()}: ${error.message}`);
+        throw new Error(error.message || 'Could not fetch snapshot image.');
       }
-
-      this.setCameraImage('package-snapshot', this.homey.__('package_camera', { name: this.getName() }), this._snapshotPackageImage).catch(this.error);
-
-      this.cloudUrlPackage = this._snapshotPackageImage.cloudUrl;
-
-      this.homey.app.debug(`Created package snapshot image for doorbell ${this.getName()}.`);
-      resolve();
     });
+
+    if (triggerFlow) {
+      const getStreamUrl = async () => {
+        return this.rtspPackageUrl || getRtspStreamUrl(this.homey.app, this.getData(), { packageCamera: true });
+      };
+
+      try {
+        const rtspUrl = await getStreamUrl();
+        this.homey.app._packageSnapshotTrigger.trigger({
+          ufv_snapshot_token: this._snapshotPackageImage,
+          ufv_snapshot_camera: this.getName(),
+          ufv_snapshot_snapshot_url: this._snapshotPackageImage.cloudUrl || '',
+          ufv_snapshot_stream_url: rtspUrl,
+        }).catch(this.error);
+      } catch (error) {
+        this.error(error);
+      }
+    }
+
+    this.setCameraImage('package-snapshot', this.homey.__('package_camera', { name: this.getName() }), this._snapshotPackageImage).catch(this.error);
+
+    this.cloudUrlPackage = this._snapshotPackageImage.cloudUrl;
+
+    this.homey.app.debug(`Created package snapshot image for doorbell ${this.getName()}.`);
   }
 
 }
 
-Object.assign(Doorbell.prototype, ConnectionMonitorMixin);
+Object.assign(Doorbell.prototype, SmartDetectionMixin, ConnectionMonitorMixin);
 
 module.exports = Doorbell;

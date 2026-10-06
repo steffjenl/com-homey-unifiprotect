@@ -169,9 +169,11 @@ class Camera extends Homey.Device {
       this.homey.app.debug('camera_microphone_volume');
       if (this.homey.app.isV1Available()) {
         return this.homey.app.api.setMicVolume(this.getData(), value);
-      } else if (this.homey.app.isV2Available()) {
+      }
+      if (this.homey.app.isV2Available()) {
         return this.homey.app.apiV2.setCamera(this.getData().id, { micVolume: value });
       }
+      return undefined;
     });
 
     this.registerCapabilityListener('camera_nightvision_set', async (value) => {
@@ -180,6 +182,7 @@ class Camera extends Homey.Device {
         return this.homey.app.api.setNightVisionMode(this.getData(), value);
       }
       // V2 does not expose irLedMode directly
+      return undefined;
     });
 
     await this._createMissingCapabilities();
@@ -299,7 +302,7 @@ class Camera extends Homey.Device {
     if (this.homey.app.isV1Available()) {
       const cameraData = this.homey.app.api.getBootstrap();
       if (cameraData && cameraData.cameras) {
-        camera = cameraData.cameras.find(c => c.id === this.getData().id);
+        camera = cameraData.cameras.find((c) => c.id === this.getData().id);
       }
     }
 
@@ -489,66 +492,6 @@ class Camera extends Homey.Device {
     return true;
   }
 
-  onSmartDetection(payload, actionType = null, eventId = null) {
-    return SmartDetectionMixin.onSmartDetection.call(this, payload, actionType, eventId);
-  }
-
-  onAudioDetection(payload, actionType = null, eventId = null) {
-    return SmartDetectionMixin.onAudioDetection.call(this, payload, actionType, eventId);
-  }
-
-  mapAudioDetectionType(apiType) {
-    return SmartDetectionMixin.mapAudioDetectionType.call(this, apiType);
-  }
-
-  triggerSmartDetectionTriggerUnknown(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerUnknown.call(this, score, zones);
-  }
-
-  triggerSmartDetectionTriggerPerson(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerPerson.call(this, score, zones);
-  }
-
-  triggerSmartDetectionTriggerVehicle(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerVehicle.call(this, score, zones);
-  }
-
-  triggerSmartDetectionTriggerAnimal(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerAnimal.call(this, score, zones);
-  }
-
-  triggerSmartDetectionTriggerPackage(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerPackage.call(this, score, zones);
-  }
-
-  triggerSmartDetectionTriggerLicensePlate(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerLicensePlate.call(this, score, zones);
-  }
-
-  triggerSmartDetectionTriggerFace(score, zones) {
-    return SmartDetectionMixin.triggerSmartDetectionTriggerFace.call(this, score, zones);
-  }
-
-  triggerAudioDetectionTrigger(audioType, readableType, score) {
-    return SmartDetectionMixin.triggerAudioDetectionTrigger.call(this, audioType, readableType, score);
-  }
-
-  _getEventStore() {
-    return SmartDetectionMixin._getEventStore.call(this);
-  }
-
-  getSmartDetectionEvent(eventId) {
-    return SmartDetectionMixin.getSmartDetectionEvent.call(this, eventId);
-  }
-
-  setSmartDetectionEvent(eventId, detectionTime, detectionTypes, detectionScore) {
-    return SmartDetectionMixin.setSmartDetectionEvent.call(this, eventId, detectionTime, detectionTypes, detectionScore);
-  }
-
-  cleanSmartDetectionEvents() {
-    return SmartDetectionMixin.cleanSmartDetectionEvents.call(this);
-  }
-
   onConnectionChanged(connectionStatus) {
     this.homey.app._connectionStatusTrigger.trigger({
       ufp_connection_status: connectionStatus,
@@ -614,10 +557,10 @@ class Camera extends Homey.Device {
       }
 
       if (!this.rtspUrl) {
-        this.setWarning(this.homey.__('warnings.no_rtsp_url'));
+        this.setWarning(this.homey.__('warnings.no_rtsp_url')).catch(this.error);
         this.homey.app.debug(`No RTSP URL available for camera ${this.getName()}.`);
       } else {
-        this.setWarning(null);
+        this.setWarning(null).catch(this.error);
       }
 
       this.setCameraVideo('snapshot', `${this.getName()} Video`, this.video);
