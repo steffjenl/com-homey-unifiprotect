@@ -28,7 +28,7 @@ class AccessWebSocket extends BaseClass {
             this._eventListener.ping();
           }
         } catch (error) {
-          this.homey.app.log('[AccessWS] heartbeat ping failed: ' + error);
+          this.homey.app.log(`[AccessWS] heartbeat ping failed: ${error}`);
         }
       }, 30000);
     }
@@ -47,7 +47,7 @@ class AccessWebSocket extends BaseClass {
     }
 
     const baseReconnectDelayMs = Math.min(
-      this._reconnectMinDelayMs * Math.pow(2, this._reconnectAttempt),
+      this._reconnectMinDelayMs * 2 ** this._reconnectAttempt,
       this._reconnectMaxDelayMs,
     );
     const jitterRangeMs = Math.floor(baseReconnectDelayMs * this._reconnectJitterRatio);
@@ -59,7 +59,7 @@ class AccessWebSocket extends BaseClass {
       Math.max(this._reconnectMinDelayMs, baseReconnectDelayMs + jitterOffsetMs),
     );
     const reconnectAttempt = this._reconnectAttempt + 1;
-    this.homey.app.log('[AccessWS] WebSocket disconnected, reconnect attempt #' + reconnectAttempt + ' in ' + (reconnectDelayMs / 1000) + 's');
+    this.homey.app.log(`[AccessWS] WebSocket disconnected, reconnect attempt #${reconnectAttempt} in ${reconnectDelayMs / 1000}s`);
 
     this._reconnectAttempt += 1;
     this._reconnectTimeout = this.homey.setTimeout(() => {
@@ -126,7 +126,7 @@ class AccessWebSocket extends BaseClass {
         this.loggedInStatus = 'Connected';
         this._reconnectAttempt = 0;
         this._clearReconnectTimeout();
-        this.homey.app.accessApi.emit('access-connection-change', {state: 'connected', host: this.homey.app.accessApi.webclient._serverHost, port: this.homey.app.accessApi.webclient._serverPort});
+        this.homey.app.accessApi.emit('access-connection-change', { state: 'connected', host: this.homey.app.accessApi.webclient._serverHost, port: this.homey.app.accessApi.webclient._serverPort });
         this.heartbeat();
       });
 
@@ -141,7 +141,11 @@ class AccessWebSocket extends BaseClass {
         this._eventListenerConfigured = false;
         this.homey.clearInterval(this.pingTimeout);
         this.loggedInStatus = 'Disconnected';
-        this.homey.app.accessApi.emit('access-connection-change', {state: 'disconnected', host: this.homey.app.accessApi.webclient._serverHost, port: this.homey.app.accessApi.webclient._serverPort});
+        this.homey.app.accessApi.emit('access-connection-change', {
+          state: 'disconnected',
+          host: this.homey.app.accessApi.webclient._serverHost,
+          port: this.homey.app.accessApi.webclient._serverPort,
+        });
         this._scheduleReconnect();
       });
 
@@ -151,7 +155,7 @@ class AccessWebSocket extends BaseClass {
         // If we're closing before fully established it's because we're shutting down the API - ignore it.
         if (error.message !== 'WebSocket was closed before the connection was established') {
           this.homey.app.log(`${this.homey.app.accessApi.webclient._serverHost}: ${error}`);
-          this.homey.emit('access-connection-error', {error, host: this.homey.app.accessApi.webclient._serverHost, port: this.homey.app.accessApi.webclient._serverPort});
+          this.homey.emit('access-connection-error', { error, host: this.homey.app.accessApi.webclient._serverHost, port: this.homey.app.accessApi.webclient._serverPort });
         }
 
         this.loggedInStatus = error.message;
@@ -203,7 +207,7 @@ class AccessWebSocket extends BaseClass {
 
   /*  */
   shouldProcessEvent(updatePacket) {
-    if (!updatePacket || updatePacket == 'Hello') {
+    if (!updatePacket || updatePacket === 'Hello') {
       return false;
     }
     const jsonData = JSON.parse(updatePacket);
@@ -224,16 +228,18 @@ class AccessWebSocket extends BaseClass {
     }
 
     if (jsonData.event === 'access.data.v2.device.update') {
-      if (jsonData.data.hasOwnProperty('configs')) {
+      if (Object.prototype.hasOwnProperty.call(jsonData.data, 'configs')) {
         return false;
       }
     }
 
+    /* eslint-disable max-len */
     /*
         {
             "event":"access.data.v2.location.update","receiver_id":"","event_object_id":"9f485e3a-b4a2-46b1-bd14-5780539f0aee","save_to_history":false,
             "data":{"id":"ce884336-81c8-4f6a-8725-60c8ca76d91f","location_type":"door","name":"Hub Mini","up_id":"7dd4125f-4f38-4645-9739-7f279c1cdaf7","extras":null,"device_ids":["245a4c4ece14","1c0b8beec87e","672e0e8103aadb03e40003ff"],"state":{"lock":"locked","dps":"none","dps_connected":false,"emergency":{"software":"none","hardware":"none"},"is_unavailable":false},"thumbnail":{"type":"thumbnail","url":"/preview/camera_672e0e8103aadb03e40003ff_ce884336-81c8-4f6a-8725-60c8ca76d91f_1756391020.png","door_thumbnail_last_update":1756391020},"last_activity":1756394054},"meta":{"object_type":"location","target_field":null,"all_field":true,"id":"ce884336-81c8-4f6a-8725-60c8ca76d91f","source":""}}
          */
+    /* eslint-enable max-len */
 
     return true;
   }

@@ -59,7 +59,7 @@ const SmartDetectionMixin = {
         if (this.homey.app.isV1Available()) {
           const bootstrap = this.homey.app.api.getBootstrap();
           const camera = bootstrap && bootstrap.cameras
-            && bootstrap.cameras.find(c => c.id === this.getData().id);
+            && bootstrap.cameras.find((c) => c.id === this.getData().id);
           if (camera && camera.smartDetectZones) {
             smartDetectZones = camera.smartDetectZones;
           }
@@ -74,7 +74,7 @@ const SmartDetectionMixin = {
           }, {});
         }
       } catch (e) {
-        this.homey.app.debug('[SmartDetection] zone name lookup failed: ' + e);
+        this.homey.app.debug(`[SmartDetection] zone name lookup failed: ${e}`);
       }
 
       const activeZones = Object.entries(payload.metadata.zonesStatus)
@@ -94,7 +94,7 @@ const SmartDetectionMixin = {
       const driver = this.homey.drivers.getDriver('protect-zone-sensor');
       driver.onSmartDetectionUpdate(this.getData().id, eventId, event.detectionTypes, event.zoneIds);
     } catch (e) {
-      this.homey.app.debug('[SmartDetection] zone sensor dispatch failed: ' + e);
+      this.homey.app.debug(`[SmartDetection] zone sensor dispatch failed: ${e}`);
     }
   },
 
@@ -103,7 +103,7 @@ const SmartDetectionMixin = {
       const driver = this.homey.drivers.getDriver('protect-zone-sensor');
       driver.onSmartDetectionEnded(this.getData().id, eventId);
     } catch (e) {
-      this.homey.app.debug('[SmartDetection] zone sensor end dispatch failed: ' + e);
+      this.homey.app.debug(`[SmartDetection] zone sensor end dispatch failed: ${e}`);
     }
   },
 
@@ -114,17 +114,17 @@ const SmartDetectionMixin = {
   onSmartDetectionEnd(payload, eventId) {
     const event = this.getSmartDetectionEvent(eventId);
     if (event === null || event.kind !== 'smart') {
-      this.homey.app.debug('[SmartDetection] end for unknown event [' + eventId + '] - ignoring');
+      this.homey.app.debug(`[SmartDetection] end for unknown event [${eventId}] - ignoring`);
       return;
     }
     this._notifyZoneSensorsEnded(eventId);
     if (event.endedFired) {
-      this.homey.app.debug('[SmartDetection] duplicate end frame [' + eventId + '] - ignoring');
+      this.homey.app.debug(`[SmartDetection] duplicate end frame [${eventId}] - ignoring`);
       return;
     }
     // Event opened with smartDetectTypes: [] and never filled: no start trigger fired, so no ended either.
     if (!event.detectionTypes || event.detectionTypes.length === 0) {
-      this.homey.app.debug('[SmartDetection] end for event without types [' + eventId + '] - ignoring');
+      this.homey.app.debug(`[SmartDetection] end for event without types [${eventId}] - ignoring`);
       return;
     }
     event.endedFired = true;
@@ -138,7 +138,7 @@ const SmartDetectionMixin = {
 
     const score = typeof event.detectionScore === 'number' ? event.detectionScore : 0;
     const duration = event.detectionTime ? Math.max(0, Math.round((event.endTime - event.detectionTime) / 1000)) : 0;
-    this.homey.app.debug('[SmartDetection] ended id=' + eventId + ' types=' + event.detectionTypes.join(',') + ' duration=' + duration);
+    this.homey.app.debug(`[SmartDetection] ended id=${eventId} types=${event.detectionTypes.join(',')} duration=${duration}`);
     this.triggerSmartDetectionEndedTrigger(event.detectionTypes.join(', '), score, event.zones || '', duration, event.zoneIds || [], event.direction || '');
   },
 
@@ -153,13 +153,13 @@ const SmartDetectionMixin = {
         payload.score,
       );
       if (!event.detectionTypes || event.detectionTypes.length === 0) {
-        this.homey.app.debug('[SmartDetection] add: waiting for update [' + eventId + ']');
+        this.homey.app.debug(`[SmartDetection] add: waiting for update [${eventId}]`);
         return;
       }
     } else if (actionType === 'update') {
       event = this.getSmartDetectionEvent(eventId);
       if (event === null) {
-        this.homey.app.debug('[SmartDetection] update for unknown event [' + eventId + '] - ignoring');
+        this.homey.app.debug(`[SmartDetection] update for unknown event [${eventId}] - ignoring`);
         return;
       }
       // Protect repeats the closing frame, sometimes with an empty types array: never wipe known types.
@@ -174,14 +174,14 @@ const SmartDetectionMixin = {
         return;
       }
     } else {
-      this.homey.app.debug('[SmartDetection] unknown actionType: ' + actionType);
+      this.homey.app.debug(`[SmartDetection] unknown actionType: ${actionType}`);
       return;
     }
 
-    this.homey.app.debug('[SmartDetection] onSmartDetection id=' + eventId + ' action=' + actionType + ' types=' + ((event.detectionTypes || []).join(',')));
+    this.homey.app.debug(`[SmartDetection] onSmartDetection id=${eventId} action=${actionType} types=${(event.detectionTypes || []).join(',')}`);
 
     if (!event.detectionTypes || event.detectionTypes.length === 0) {
-      this.homey.app.debug('[SmartDetection] still empty types [' + eventId + '] - skipping');
+      this.homey.app.debug(`[SmartDetection] still empty types [${eventId}] - skipping`);
       return;
     }
 
@@ -195,8 +195,8 @@ const SmartDetectionMixin = {
       event.zones = zoneInfo.zones;
       event.zoneIds = zoneInfo.zoneIds;
     }
-    const zones = event.zones;
-    const zoneIds = event.zoneIds;
+    const { zones } = event;
+    const { zoneIds } = event;
     if (!event.endedFired) {
       this._dispatchZoneSensors(eventId, event);
     }
@@ -230,7 +230,7 @@ const SmartDetectionMixin = {
           continue;
         }
         event.triggered.add(type);
-        this.homey.app.debug('[SmartDetection] type=' + type + ' device=' + this.getData().id);
+        this.homey.app.debug(`[SmartDetection] type=${type} device=${this.getData().id}`);
         if (type === 'person') {
           this.triggerSmartDetectionTriggerPerson(score, zones, zoneIds, direction);
         } else if (type === 'vehicle') {
@@ -550,6 +550,3 @@ const SmartDetectionMixin = {
 };
 
 module.exports = SmartDetectionMixin;
-
-
-

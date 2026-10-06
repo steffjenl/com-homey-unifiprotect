@@ -1,108 +1,110 @@
-const BaseClient = require('./base-class');
+'use strict';
+
 const https = require('node:https');
+const BaseClient = require('./base-class');
 
 class WebClient extends BaseClient {
-    constructor(...props) {
-        super(...props);
+  constructor(...props) {
+    super(...props);
 
-        this._serverHost = null;
-        this._serverPort = 12445;
-        this._apiToken = null;
-    }
+    this._serverHost = null;
+    this._serverPort = 12445;
+    this._apiToken = null;
+  }
 
-    async get(resource, params = {}) {
-        return new Promise((resolve, reject) => {
-            const options = {
-                method: 'GET',
-                hostname: this._serverHost,
-                port: this._serverPort,
-                path: `/api/v1/developer/${resource}${this.toQueryString(params)}`,
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                    Accept: '*/*',
-                    'Authorization': `Bearer ${this._apiToken}`,
-                },
-                maxRedirects: 20,
-                rejectUnauthorized: false,
-                keepAlive: true,
-            };
+  async get(resource, params = {}) {
+    return new Promise((resolve, reject) => {
+      const options = {
+        method: 'GET',
+        hostname: this._serverHost,
+        port: this._serverPort,
+        path: `/api/v1/developer/${resource}${this.toQueryString(params)}`,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: '*/*',
+          Authorization: `Bearer ${this._apiToken}`,
+        },
+        maxRedirects: 20,
+        rejectUnauthorized: false,
+        keepAlive: true,
+      };
 
-            const req = https.request(options, res => {
-                const data = [];
+      const req = https.request(options, (res) => {
+        const data = [];
 
-                res.on('data', chunk => data.push(chunk));
-                res.on('end', () => {
-                    if (res.statusCode === 403) {
-                        return reject(new Error(`Homey user has no permission to perform this action. Please check the user's role.`));
-                    }
+        res.on('data', (chunk) => data.push(chunk));
+        res.on('end', () => {
+          if (res.statusCode === 403) {
+            return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
+          }
 
-                    if (res.statusCode !== 200) {
-                        return reject(new Error(`Failed to GET url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
-                    }
+          if (res.statusCode !== 200) {
+            return reject(new Error(`Failed to GET url: ${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+          }
 
-                    return resolve(data.join(''));
-                });
-            });
-
-            req.on('error', error => reject(error));
-            req.end();
+          return resolve(data.join(''));
         });
-    }
+      });
 
-    async put(resource, payload = {}) {
-        return new Promise((resolve, reject) => {
-            const body = JSON.stringify(payload);
+      req.on('error', (error) => reject(error));
+      req.end();
+    });
+  }
 
-            const params = {};
+  async put(resource, payload = {}) {
+    return new Promise((resolve, reject) => {
+      const body = JSON.stringify(payload);
 
-            const options = {
-                method: 'PUT',
-                hostname: this._serverHost,
-                port: this._serverPort,
-                path: `/api/v1/developer/${resource}${this.toQueryString(params)}`,
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                    'Content-Length': Buffer.byteLength(body),
-                    Accept: '*/*',
-                    'Authorization': `Bearer ${this._apiToken}`,
-                },
-                maxRedirects: 20,
-                rejectUnauthorized: false,
-                keepAlive: true,
-            };
+      const params = {};
 
-            const req = https.request(options, res => {
-                res.setEncoding('utf8');
-                const data = [];
+      const options = {
+        method: 'PUT',
+        hostname: this._serverHost,
+        port: this._serverPort,
+        path: `/api/v1/developer/${resource}${this.toQueryString(params)}`,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Content-Length': Buffer.byteLength(body),
+          Accept: '*/*',
+          Authorization: `Bearer ${this._apiToken}`,
+        },
+        maxRedirects: 20,
+        rejectUnauthorized: false,
+        keepAlive: true,
+      };
 
-                res.on('data', chunk => data.push(chunk));
-                res.on('end', () => {
-                    if (res.statusCode === 403) {
-                        return reject(new Error(`Homey user has no permission to perform this action. Please check the user's role.`));
-                    }
+      const req = https.request(options, (res) => {
+        res.setEncoding('utf8');
+        const data = [];
 
-                    if (res.statusCode !== 200) {
-                        return reject(new Error(`Failed to PUT to url: ${options.host}${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
-                    }
+        res.on('data', (chunk) => data.push(chunk));
+        res.on('end', () => {
+          if (res.statusCode === 403) {
+            return reject(new Error('Homey user has no permission to perform this action. Please check the user\'s role.'));
+          }
 
-                    return resolve(data.join(''));
-                });
-            });
+          if (res.statusCode !== 200) {
+            return reject(new Error(`Failed to PUT to url: ${options.host}${options.path} (status code: ${res.statusCode}, response: ${data.join('')})`));
+          }
 
-            req.on('error', error => reject(error));
-            req.write(body);
-            req.end();
+          return resolve(data.join(''));
         });
-    }
+      });
 
-    toQueryString(obj) {
-        if (obj === null || typeof obj === 'undefined' || Object.keys(obj).length === 0) {
-            return '';
-        }
-        return `?${Object.keys(obj)
-            .map(k => `${k}=${encodeURIComponent(obj[k])}`)
-            .join('&')}`;
+      req.on('error', (error) => reject(error));
+      req.write(body);
+      req.end();
+    });
+  }
+
+  toQueryString(obj) {
+    if (obj === null || typeof obj === 'undefined' || Object.keys(obj).length === 0) {
+      return '';
     }
+    return `?${Object.keys(obj)
+      .map((k) => `${k}=${encodeURIComponent(obj[k])}`)
+      .join('&')}`;
+  }
 }
 
 module.exports = WebClient;

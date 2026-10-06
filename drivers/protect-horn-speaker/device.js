@@ -112,4 +112,3 @@ class ProtectHornSpeakerDevice extends Homey.Device {
 Object.assign(ProtectHornSpeakerDevice.prototype, ConnectionMonitorMixin);
 
 module.exports = ProtectHornSpeakerDevice;
-

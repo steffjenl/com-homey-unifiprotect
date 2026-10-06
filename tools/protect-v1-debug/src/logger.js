@@ -8,17 +8,17 @@ function pad2(value) {
 }
 
 function dateKey(date) {
-  return date.getFullYear() + '-' + pad2(date.getMonth() + 1) + '-' + pad2(date.getDate());
+  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
 }
 
 function timestampKey(date) {
-  return date.getFullYear()
+  return `${date.getFullYear()
     + pad2(date.getMonth() + 1)
     + pad2(date.getDate())
-    + '-'
-    + pad2(date.getHours())
-    + pad2(date.getMinutes())
-    + pad2(date.getSeconds());
+  }-${
+    pad2(date.getHours())
+  }${pad2(date.getMinutes())
+  }${pad2(date.getSeconds())}`;
 }
 
 class SessionLogger {
@@ -38,7 +38,7 @@ class SessionLogger {
 
   writeBootstrap(bootstrap) {
     this.ensureDir();
-    const filePath = path.join(this.outputDir, 'bootstrap-' + timestampKey(new Date()) + '.json');
+    const filePath = path.join(this.outputDir, `bootstrap-${timestampKey(new Date())}.json`);
     fs.writeFileSync(filePath, JSON.stringify(bootstrap, null, 2), 'utf8');
     return filePath;
   }
@@ -65,8 +65,8 @@ class SessionLogger {
   }
 
   openCurrentFile() {
-    const suffix = this.currentIndex > 0 ? '-' + this.currentIndex : '';
-    this.currentPath = path.join(this.outputDir, 'decoded-' + this.currentDate + suffix + '.ndjson');
+    const suffix = this.currentIndex > 0 ? `-${this.currentIndex}` : '';
+    this.currentPath = path.join(this.outputDir, `decoded-${this.currentDate}${suffix}.ndjson`);
     const exists = fs.existsSync(this.currentPath);
     this.currentBytes = exists ? fs.statSync(this.currentPath).size : 0;
     this.currentStream = fs.createWriteStream(this.currentPath, { flags: 'a' });
@@ -74,7 +74,7 @@ class SessionLogger {
 
   writeDecoded(entry) {
     this.rotateIfNeeded();
-    const line = JSON.stringify(entry) + '\n';
+    const line = `${JSON.stringify(entry)}\n`;
     this.currentStream.write(line, 'utf8');
     this.currentBytes += Buffer.byteLength(line);
   }

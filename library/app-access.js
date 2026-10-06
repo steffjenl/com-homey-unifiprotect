@@ -51,7 +51,7 @@ class AppAccess extends BaseClass {
           excerpt: this.homey.__('notification.controller_error_body', { ip: host, port: String(port) }),
         }).catch(this.error);
       } catch (err) {
-        this.homey.app.debug('[AppAccess] Failed to create notification: ' + err);
+        this.homey.app.debug(`[AppAccess] Failed to create notification: ${err}`);
       }
     }, 20000);
   }
@@ -179,7 +179,7 @@ class AppAccess extends BaseClass {
 
   async loginToAccess() {
     // Validate Access address, this is configured separately from the Protect V1 settings
-    const {host, port} = this.homey.app.getAccessConnection();
+    const { host, port } = this.homey.app.getAccessConnection();
     if (!host) {
       this.log('Access IP address not set.');
       return;
@@ -232,36 +232,36 @@ class AppAccess extends BaseClass {
     return false;
   }
 
-    async checkWebSocketConnection() {
-        // Clear any existing interval to prevent duplicates on app restart
-        if (this._checkWebSocketConnectionInterval) {
-            this.homey.clearInterval(this._checkWebSocketConnectionInterval);
-            this._checkWebSocketConnectionInterval = null;
+  async checkWebSocketConnection() {
+    // Clear any existing interval to prevent duplicates on app restart
+    if (this._checkWebSocketConnectionInterval) {
+      this.homey.clearInterval(this._checkWebSocketConnectionInterval);
+      this._checkWebSocketConnectionInterval = null;
+    }
+
+    // Store the interval handle on instance so it can be cleared later
+    this._checkWebSocketConnectionInterval = this.homey.setInterval(() => {
+      try {
+        this.homey.app.debug('Reconnect Access WebSocket if not connected...');
+
+        const tokens = this.homey.settings.get('ufp:tokens');
+        if (tokens) {
+          this.accessApiKey = tokens.accessApiKey;
+          this.protectV2ApiKey = tokens.protectV2ApiKey;
         }
 
-        // Store the interval handle on instance so it can be cleared later
-        this._checkWebSocketConnectionInterval = this.homey.setInterval(() => {
-            try {
-                this.homey.app.debug('Reconnect Access WebSocket if not connected...');
-
-                const tokens = this.homey.settings.get('ufp:tokens');
-                if (tokens) {
-                    this.accessApiKey = tokens.accessApiKey;
-                    this.protectV2ApiKey = tokens.protectV2ApiKey;
-                }
-
-                if (
-                    tokens && typeof tokens.accessApiKey !== 'undefined'
+        if (
+          tokens && typeof tokens.accessApiKey !== 'undefined'
                     && tokens.accessApiKey !== ''
                     && !this.homey.app.accessApi.websocket.isWebsocketConnected()
-                ) {
-                    this.loginToAccess().catch(this.error);
-                }
-            } catch (error) {
-                this.homey.error(`${JSON.stringify(error)}`);
-            }
-        }, this.homey.app._refreshAuthTokensnterval);
-    }
+        ) {
+          this.loginToAccess().catch(this.error);
+        }
+      } catch (error) {
+        this.homey.error(`${JSON.stringify(error)}`);
+      }
+    }, this.homey.app._refreshAuthTokensnterval);
+  }
 
 }
 

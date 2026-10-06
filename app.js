@@ -3,534 +3,535 @@
 'use strict';
 
 const Homey = require('homey');
+const { stat, unlinkSync, writeFile } = require('fs');
 const ProtectAPI = require('./library/protectapi');
 const AppProtect = require('./library/app-protect');
 const FobHandler = require('./library/fob-handler');
 const FobActionMapper = require('./library/action-mapper');
 const SpeakerService = require('./library/speaker-service');
 //
-const { stat, unlinkSync, writeFile } = require('fs');
 
 class UniFiProtect extends Homey.App {
-    /**
+  /**
      * onInit is called when the app is initialized.
      */
-    async onInit() {
-        this.debuggedIn = false;
-        this.nvrIp = null;
-        this.nvrPort = null;
-        this.nvrUsername = null;
-        this.nvrPassword = null;
-        this.ignoreEventsNfcFingerprint = 5; // seconds
-        this.ignoreEventsDoorbell = 5; // seconds
-        this._refreshAuthTokensnterval = 60 * 60 * 1000; // 1 hour
-        this.lastDoorAccessEvent = null;
+  async onInit() {
+    this.debuggedIn = false;
+    this.nvrIp = null;
+    this.nvrPort = null;
+    this.nvrUsername = null;
+    this.nvrPassword = null;
+    this.ignoreEventsNfcFingerprint = 5; // seconds
+    this.ignoreEventsDoorbell = 5; // seconds
+    this._refreshAuthTokensnterval = 60 * 60 * 1000; // 1 hour
+    this.lastDoorAccessEvent = null;
 
-        // Single API instance for all devices
-        this.api = new ProtectAPI();
-        this.api.setHomeyObject(this.homey);
-        this.appProtect = new AppProtect();
-        this.appProtect.setHomeyObject(this.homey);
-        this.apiV2 = null;
-        this.accessApi = null;
-        this.appAccess = null;
+    // Single API instance for all devices
+    this.api = new ProtectAPI();
+    this.api.setHomeyObject(this.homey);
+    this.appProtect = new AppProtect();
+    this.appProtect.setHomeyObject(this.homey);
+    this.apiV2 = null;
+    this.accessApi = null;
+    this.appAccess = null;
 
-        this.speakerService = new SpeakerService();
-        this.speakerService.setHomeyObject(this.homey);
+    this.speakerService = new SpeakerService();
+    this.speakerService.setHomeyObject(this.homey);
 
-        this.fobHandler = new FobHandler();
-        this.fobHandler.setHomeyObject(this.homey);
+    this.fobHandler = new FobHandler();
+    this.fobHandler.setHomeyObject(this.homey);
 
-        this.fobActionMapper = new FobActionMapper({
-            setArmMode: this._setNvrArmModeFromFob.bind(this),
-            triggerAlarm: this._triggerAlarmFromFob.bind(this),
-            customAction: this._runCustomFobAction.bind(this),
-            sendSpeakerMessage: this.speakerService.sendSpeakerMessage.bind(this.speakerService),
-        });
-        this.fobActionMapper.setHomeyObject(this.homey);
+    this.fobActionMapper = new FobActionMapper({
+      setArmMode: this._setNvrArmModeFromFob.bind(this),
+      triggerAlarm: this._triggerAlarmFromFob.bind(this),
+      customAction: this._runCustomFobAction.bind(this),
+      sendSpeakerMessage: this.speakerService.sendSpeakerMessage.bind(this.speakerService),
+    });
+    this.fobActionMapper.setHomeyObject(this.homey);
 
-        await this.appProtect.onInit();
+    await this.appProtect.onInit();
 
-        // Register snapshot image token
-        this.appProtect._registerSnapshotToken();
+    // Register snapshot image token
+    this.appProtect._registerSnapshotToken();
 
-        // Split the shared V1 host into dedicated V2/Access hosts, before the settings listener is attached
-        this._migrateHostSettings();
+    // Split the shared V1 host into dedicated V2/Access hosts, before the settings listener is attached
+    this._migrateHostSettings();
 
-        // Subscribe to credentials updates - FIXED: Store bound method for removal on uninit
-        this._onSettingsChanged = this._handleSettingsChange.bind(this);
-        this.homey.settings.on('set', this._onSettingsChanged);
+    // Subscribe to credentials updates - FIXED: Store bound method for removal on uninit
+    this._onSettingsChanged = (key) => {
+      this._handleSettingsChange(key).catch(this.error);
+    };
+    this.homey.settings.on('set', this._onSettingsChanged);
 
-        // set settings
-        const settings = this.homey.settings.get('ufp:settings');
-        if (settings) {
-            this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
-            this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
-        }
-
-        const tokens = this.homey.settings.get('ufp:tokens');
-        if (tokens) {
-            this.accessApiKey = tokens.accessApiKey;
-            this.protectV2ApiKey = tokens.protectV2ApiKey;
-        }
-
-        if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
-            await this._initAccessStack();
-            this.appAccess.loginToAccess().catch(this.error);
-        }
-
-        if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
-            this._initProtectV2Stack();
-            this.appProtect.loginToProtectV2().catch(this.error);
-        }
-
-        // Only attempt V1 login if credentials (username/password) are configured
-        const credentials = this.homey.settings.get('ufp:credentials');
-        if (credentials && credentials.username && credentials.password) {
-            this.appProtect._appLogin();
-        }
-
-        // refresh auth tokens every hour
-        await this.appProtect.refreshAuthTokens();
-
-        const cameraWidget = this.homey.dashboards.getWidget('camera');
-        cameraWidget.registerSettingAutocompleteListener('device', async (query, settings) => {
-            const cameraDevices = await this.homey.drivers.getDriver('protectcamera').getDevices();
-            const returnDevices = [];
-            cameraDevices.forEach((device) => {
-                returnDevices.push({name: device.getName(), id: device.getData().id, driverId: 'protectcamera'});
-            });
-            return returnDevices;
-        });
-
-        const doorbellWidget = this.homey.dashboards.getWidget('doorbell');
-        doorbellWidget.registerSettingAutocompleteListener('device', async (query, settings) => {
-            const cameraDevices = await this.homey.drivers.getDriver('protectdoorbell').getDevices();
-            const returnDevices = [];
-            cameraDevices.forEach((device) => {
-                returnDevices.push({name: device.getName(), id: device.getData().id, driverId: 'protectdoorbell'});
-            });
-            return returnDevices;
-        });
-
-        this._startMemoryLogging();
-
-        this.debug('UniFiProtect has been initialized');
+    // set settings
+    const settings = this.homey.settings.get('ufp:settings');
+    if (settings) {
+      this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
+      this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
     }
 
-    /**
+    const tokens = this.homey.settings.get('ufp:tokens');
+    if (tokens) {
+      this.accessApiKey = tokens.accessApiKey;
+      this.protectV2ApiKey = tokens.protectV2ApiKey;
+    }
+
+    if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
+      await this._initAccessStack();
+      this.appAccess.loginToAccess().catch(this.error);
+    }
+
+    if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
+      this._initProtectV2Stack();
+      this.appProtect.loginToProtectV2().catch(this.error);
+    }
+
+    // Only attempt V1 login if credentials (username/password) are configured
+    const credentials = this.homey.settings.get('ufp:credentials');
+    if (credentials && credentials.username && credentials.password) {
+      this.appProtect._appLogin();
+    }
+
+    // refresh auth tokens every hour
+    await this.appProtect.refreshAuthTokens();
+
+    const cameraWidget = this.homey.dashboards.getWidget('camera');
+    cameraWidget.registerSettingAutocompleteListener('device', async (query, settings) => {
+      const cameraDevices = await this.homey.drivers.getDriver('protectcamera').getDevices();
+      const returnDevices = [];
+      cameraDevices.forEach((device) => {
+        returnDevices.push({ name: device.getName(), id: device.getData().id, driverId: 'protectcamera' });
+      });
+      return returnDevices;
+    });
+
+    const doorbellWidget = this.homey.dashboards.getWidget('doorbell');
+    doorbellWidget.registerSettingAutocompleteListener('device', async (query, settings) => {
+      const cameraDevices = await this.homey.drivers.getDriver('protectdoorbell').getDevices();
+      const returnDevices = [];
+      cameraDevices.forEach((device) => {
+        returnDevices.push({ name: device.getName(), id: device.getData().id, driverId: 'protectdoorbell' });
+      });
+      return returnDevices;
+    });
+
+    this._startMemoryLogging();
+
+    this.debug('UniFiProtect has been initialized').catch(this.error);
+  }
+
+  /**
      * One-time migration: Protect V2 and Access used to reuse the V1 NVR IP address with a
      * hardcoded port. Copy the V1 address into the dedicated settings when a token is present,
      * so existing installations keep working after the upgrade.
      */
-    _migrateHostSettings() {
-        const migrations = this.homey.settings.get('ufp:migrations') || {};
-        if (migrations.hostSplit) {
-            return;
-        }
-
-        const nvrip = this.homey.settings.get('ufp:nvrip');
-        const tokens = this.homey.settings.get('ufp:tokens') || {};
-
-        if (nvrip) {
-            if (tokens.protectV2ApiKey && !this.homey.settings.get('ufp:v2nvr')) {
-                this.homey.settings.set('ufp:v2nvr', {nvrip, nvrport: '443'});
-                this.debug('[App] Migrated V1 NVR IP address to the Protect V2 settings');
-            }
-
-            if (tokens.accessApiKey && !this.homey.settings.get('ufp:accessnvr')) {
-                this.homey.settings.set('ufp:accessnvr', {nvrip, nvrport: '12445'});
-                this.debug('[App] Migrated V1 NVR IP address to the Access settings');
-            }
-        }
-
-        this.homey.settings.set('ufp:migrations', Object.assign({}, migrations, {hostSplit: true}));
+  _migrateHostSettings() {
+    const migrations = this.homey.settings.get('ufp:migrations') || {};
+    if (migrations.hostSplit) {
+      return;
     }
 
-    /**
+    const nvrip = this.homey.settings.get('ufp:nvrip');
+    const tokens = this.homey.settings.get('ufp:tokens') || {};
+
+    if (nvrip) {
+      if (tokens.protectV2ApiKey && !this.homey.settings.get('ufp:v2nvr')) {
+        this.homey.settings.set('ufp:v2nvr', { nvrip, nvrport: '443' });
+        this.debug('[App] Migrated V1 NVR IP address to the Protect V2 settings').catch(this.error);
+      }
+
+      if (tokens.accessApiKey && !this.homey.settings.get('ufp:accessnvr')) {
+        this.homey.settings.set('ufp:accessnvr', { nvrip, nvrport: '12445' });
+        this.debug('[App] Migrated V1 NVR IP address to the Access settings').catch(this.error);
+      }
+    }
+
+    this.homey.settings.set('ufp:migrations', { ...migrations, hostSplit: true });
+  }
+
+  /**
      * Host and port used by the Protect V2 API, falling back to the V1 address when unset.
      */
-    getV2Connection() {
-        const config = this.homey.settings.get('ufp:v2nvr') || {};
-        return {
-            host: config.nvrip || this.homey.settings.get('ufp:nvrip'),
-            port: parseInt(config.nvrport, 10) || 443,
-        };
-    }
+  getV2Connection() {
+    const config = this.homey.settings.get('ufp:v2nvr') || {};
+    return {
+      host: config.nvrip || this.homey.settings.get('ufp:nvrip'),
+      port: parseInt(config.nvrport, 10) || 443,
+    };
+  }
 
-    getProtectCloudConnection() {
-        const config = this.homey.settings.get('ufp:protectCloudApi') || {};
-        return {
-            enabled: config.enabled === true,
-            consoleId: config.consoleId || '',
-        };
-    }
+  getProtectCloudConnection() {
+    const config = this.homey.settings.get('ufp:protectCloudApi') || {};
+    return {
+      enabled: config.enabled === true,
+      consoleId: config.consoleId || '',
+    };
+  }
 
-    isProtectCloudApiEnabled() {
-        return this.getProtectCloudConnection().enabled;
-    }
+  isProtectCloudApiEnabled() {
+    return this.getProtectCloudConnection().enabled;
+  }
 
-    /**
+  /**
      * Host and port used by the Access API, falling back to the V1 address when unset.
      */
-    getAccessConnection() {
-        const config = this.homey.settings.get('ufp:accessnvr') || {};
-        return {
-            host: config.nvrip || this.homey.settings.get('ufp:nvrip'),
-            port: parseInt(config.nvrport, 10) || 12445,
-        };
+  getAccessConnection() {
+    const config = this.homey.settings.get('ufp:accessnvr') || {};
+    return {
+      host: config.nvrip || this.homey.settings.get('ufp:nvrip'),
+      port: parseInt(config.nvrport, 10) || 12445,
+    };
+  }
+
+  // FIXED: Extracted settings change handler so it can be unregistered
+  async _handleSettingsChange(key) {
+    try {
+      if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {
+        this.appProtect._appLogin();
+      }
+      if (key === 'ufp:settings') {
+        const settings = this.homey.settings.get('ufp:settings');
+        this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
+        this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
+      }
+      if (key === 'ufp:tokens') {
+        const tokens = this.homey.settings.get('ufp:tokens');
+        if (tokens) {
+          this.accessApiKey = tokens.accessApiKey;
+          this.protectV2ApiKey = tokens.protectV2ApiKey;
+        }
+
+        if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
+          await this._initAccessStack();
+          this.appAccess.loginToAccess().catch(this.error);
+        }
+
+        if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
+          this._initProtectV2Stack();
+          this.appProtect.loginToProtectV2().catch(this.error);
+        }
+      }
+      if (key === 'ufp:v2nvr' || key === 'ufp:protectCloudApi') {
+        const tokens = this.homey.settings.get('ufp:tokens');
+        if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
+          this._initProtectV2Stack();
+          this.appProtect.loginToProtectV2().catch(this.error);
+        }
+      }
+      if (key === 'ufp:accessnvr') {
+        const tokens = this.homey.settings.get('ufp:tokens');
+        if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
+          await this._initAccessStack();
+          this.appAccess.loginToAccess().catch(this.error);
+        }
+      }
+    } catch (error) {
+      this.error(error);
+    }
+  }
+
+  _initProtectV2Stack() {
+    if (this.apiV2) {
+      return;
     }
 
-    // FIXED: Extracted settings change handler so it can be unregistered
-    async _handleSettingsChange(key) {
-        try {
-            if (key === 'ufp:credentials' || key === 'ufp:nvrip' || key === 'ufp:nvrport') {
-                this.appProtect._appLogin();
-            }
-            if (key === 'ufp:settings') {
-                const settings = this.homey.settings.get('ufp:settings');
-                this.ignoreEventsNfcFingerprint = settings.ignoreEventsNfcFingerprint || 5;
-                this.ignoreEventsDoorbell = settings.ignoreEventsDoorbell || 5;
-            }
-            if (key === 'ufp:tokens') {
-                const tokens = this.homey.settings.get('ufp:tokens');
-                if (tokens) {
-                    this.accessApiKey = tokens.accessApiKey;
-                    this.protectV2ApiKey = tokens.protectV2ApiKey;
-                }
+    // eslint-disable-next-line global-require -- lazy init keeps startup memory low
+    const ProtectAPIV2 = require('./library/protect-api-v2/protect-api');
+    this.apiV2 = new ProtectAPIV2();
+    this.apiV2.setHomeyObject(this.homey);
+    this.homey.app.debug('[App] Initialized Protect V2 stack lazily');
+  }
 
-                if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
-                    await this._initAccessStack();
-                    this.appAccess.loginToAccess().catch(this.error);
-                }
-
-                if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
-                    this._initProtectV2Stack();
-                    this.appProtect.loginToProtectV2().catch(this.error);
-                }
-            }
-            if (key === 'ufp:v2nvr' || key === 'ufp:protectCloudApi') {
-                const tokens = this.homey.settings.get('ufp:tokens');
-                if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
-                    this._initProtectV2Stack();
-                    this.appProtect.loginToProtectV2().catch(this.error);
-                }
-            }
-            if (key === 'ufp:accessnvr') {
-                const tokens = this.homey.settings.get('ufp:tokens');
-                if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
-                    await this._initAccessStack();
-                    this.appAccess.loginToAccess().catch(this.error);
-                }
-            }
-        } catch (error) {
-            this.error(error);
-        }
+  async _initAccessStack() {
+    if (!this.accessApi) {
+      // eslint-disable-next-line global-require -- lazy init keeps startup memory low
+      const AccessAPI = require('./library/access-api-v2/access-api');
+      this.accessApi = new AccessAPI();
+      this.accessApi.setHomeyObject(this.homey);
     }
 
-    _initProtectV2Stack() {
-        if (this.apiV2) {
-            return;
-        }
+    if (!this.appAccess) {
+      // eslint-disable-next-line global-require -- lazy init keeps startup memory low
+      const AppAccess = require('./library/app-access');
+      this.appAccess = new AppAccess();
+      this.appAccess.setHomeyObject(this.homey);
+      await this.appAccess.onInit();
+      this.homey.app.debug('[App] Initialized Access stack lazily');
+    }
+  }
 
-        const ProtectAPIV2 = require('./library/protect-api-v2/protect-api');
-        this.apiV2 = new ProtectAPIV2();
-        this.apiV2.setHomeyObject(this.homey);
-        this.homey.app.debug('[App] Initialized Protect V2 stack lazily');
+  _startMemoryLogging() {
+    if (Homey.env.DEBUG !== 'true') {
+      return;
     }
 
-    async _initAccessStack() {
-        if (!this.accessApi) {
-            const AccessAPI = require('./library/access-api-v2/access-api');
-            this.accessApi = new AccessAPI();
-            this.accessApi.setHomeyObject(this.homey);
-        }
-
-        if (!this.appAccess) {
-            const AppAccess = require('./library/app-access');
-            this.appAccess = new AppAccess();
-            this.appAccess.setHomeyObject(this.homey);
-            await this.appAccess.onInit();
-            this.homey.app.debug('[App] Initialized Access stack lazily');
-        }
+    if (this._memoryLogInterval) {
+      this.homey.clearInterval(this._memoryLogInterval);
+      this._memoryLogInterval = null;
     }
 
-    _startMemoryLogging() {
-        if (Homey.env.DEBUG !== 'true') {
-            return;
-        }
+    this._logMemoryUsage();
+    this._memoryLogInterval = this.homey.setInterval(() => {
+      this._logMemoryUsage();
+    }, 30 * 60 * 1000);
+  }
 
-        if (this._memoryLogInterval) {
-            this.homey.clearInterval(this._memoryLogInterval);
-            this._memoryLogInterval = null;
-        }
-
-        this._logMemoryUsage();
-        this._memoryLogInterval = this.homey.setInterval(() => {
-            this._logMemoryUsage();
-        }, 30 * 60 * 1000);
+  _logMemoryUsage() {
+    try {
+      const usage = process.memoryUsage();
+      const toMb = (value) => (value / (1024 * 1024)).toFixed(1);
+      this.debug(
+        `[memory] rss=${toMb(usage.rss)}MB heapUsed=${toMb(usage.heapUsed)}MB heapTotal=${toMb(usage.heapTotal)}MB external=${toMb(usage.external)}MB`,
+      ).catch(this.error);
+    } catch (error) {
+      this.error(error);
     }
+  }
 
-    _logMemoryUsage() {
-        try {
-            const usage = process.memoryUsage();
-            const toMb = (value) => (value / (1024 * 1024)).toFixed(1);
-            this.debug(
-                `[memory] rss=${toMb(usage.rss)}MB heapUsed=${toMb(usage.heapUsed)}MB heapTotal=${toMb(usage.heapTotal)}MB external=${toMb(usage.external)}MB`,
-            );
-        } catch (error) {
-            this.error(error);
-        }
-    }
-
-    /**
+  /**
      * Convert a Homey time to a local time
      * @param {Date} homeyTime
      * @returns {Date}
      */
-    toLocalTime(homeyTime) {
-        const tz = this.homey.clock.getTimezone();
-        const localTime = new Date(homeyTime.toLocaleString('en-US', {timeZone: tz}));
-        return localTime;
+  toLocalTime(homeyTime) {
+    const tz = this.homey.clock.getTimezone();
+    const localTime = new Date(homeyTime.toLocaleString('en-US', { timeZone: tz }));
+    return localTime;
+  }
+
+  getUnixTimestamp() {
+    return Math.floor(Date.now());
+  }
+
+  // FIXED: Added onUninit to clean up event listeners and intervals to prevent memory leaks
+  async onUninit() {
+    this.debug('UniFiProtect app is uninitialized, cleaning up...').catch(this.error);
+
+    // Remove settings event listener to prevent duplicate listeners on app restart
+    if (this._onSettingsChanged) {
+      this.homey.settings.removeListener('set', this._onSettingsChanged);
+      this._onSettingsChanged = null;
     }
 
-    getUnixTimestamp() {
-        return Math.floor(Date.now());
+    // Clear refresh auth tokens interval
+    if (this.appProtect && this.appProtect._refreshAuthTokensInterval) {
+      this.homey.clearInterval(this.appProtect._refreshAuthTokensInterval);
+      this.appProtect._refreshAuthTokensInterval = null;
     }
 
-    // FIXED: Added onUninit to clean up event listeners and intervals to prevent memory leaks
-    async onUninit() {
-        this.debug('UniFiProtect app is uninitialized, cleaning up...');
+    // Clear access websocket check interval
+    if (this.appAccess && this.appAccess._checkWebSocketConnectionInterval) {
+      this.homey.clearInterval(this.appAccess._checkWebSocketConnectionInterval);
+      this.appAccess._checkWebSocketConnectionInterval = null;
+    }
 
-        // Remove settings event listener to prevent duplicate listeners on app restart
-        if (this._onSettingsChanged) {
-            this.homey.settings.removeListener('set', this._onSettingsChanged);
-            this._onSettingsChanged = null;
+    if (this._memoryLogInterval) {
+      this.homey.clearInterval(this._memoryLogInterval);
+      this._memoryLogInterval = null;
+    }
+  }
+
+  onParseWebsocketMessage(payload) {
+    if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
+
+      if (payload.type === 'doorAccess') {
+        if (this.appAccess && typeof this.appAccess.onDoorAccess === 'function') {
+          this.appAccess.onDoorAccess(payload);
         }
+      }
 
-        // Clear refresh auth tokens interval
-        if (this.appProtect && this.appProtect._refreshAuthTokensInterval) {
-            this.homey.clearInterval(this.appProtect._refreshAuthTokensInterval);
-            this.appProtect._refreshAuthTokensInterval = null;
-        }
+    }
+  }
 
-        // Clear access websocket check interval
-        if (this.appAccess && this.appAccess._checkWebSocketConnectionInterval) {
-            this.homey.clearInterval(this.appAccess._checkWebSocketConnectionInterval);
-            this.appAccess._checkWebSocketConnectionInterval = null;
-        }
+  onNvrAccessWebsocketMessage(payload) {
+    try {
+      const metadata = payload && payload.metadata;
+      if (!metadata) {
+        return false;
+      }
 
-        if (this._memoryLogInterval) {
-            this.homey.clearInterval(this._memoryLogInterval);
-            this._memoryLogInterval = null;
+      if (this.homey.app._nvrAccessTrigger) {
+        this.homey.app._nvrAccessTrigger.trigger({
+          ufp_nvr_access_user: metadata.userName || '',
+          ufp_nvr_access_ip: metadata.ip || '',
+          ufp_nvr_access_platform: metadata.clientPlatform || '',
+        }).catch((error) => this.error(error));
+      }
+
+      return true;
+    } catch (error) {
+      this.error(error);
+      return false;
+    }
+  }
+
+  onFobWebsocketMessage(updatePacket) {
+    try {
+      const event = this.fobHandler.parseWebsocketPacket(updatePacket);
+      if (!event) {
+        return false;
+      }
+
+      this.homey.app.debug(`[FOB] normalized event: ${JSON.stringify(event)}`);
+      if (this.homey.app._fobButtonTrigger) {
+        this.homey.app._fobButtonTrigger.trigger({
+          ufp_fob_device_id: event.deviceId,
+          ufp_fob_sensor_name: event.sensorName || event.deviceId,
+          ufp_fob_button: event.button,
+          ufp_fob_press_type: event.pressType,
+          ufp_fob_timestamp: event.timestamp,
+        }, {
+          fob_device_id: event.deviceId,
+          fob_button: event.button,
+          fob_press_type: event.pressType,
+        }).catch((error) => this.error(error));
+      }
+
+      if (this.homey.app._fobButtonDeviceTrigger) {
+        this.homey.app._fobButtonDeviceTrigger.trigger({
+          ufp_fob_device_id: event.deviceId,
+          ufp_fob_sensor_name: event.sensorName || event.deviceId,
+          ufp_fob_button: event.button,
+          ufp_fob_press_type: event.pressType,
+          ufp_fob_timestamp: event.timestamp,
+        }, {
+          fob_device_id: event.deviceId,
+          fob_button: event.button,
+          fob_press_type: event.pressType,
+        }).catch((error) => this.error(error));
+      }
+
+      try {
+        const fobDriver = this.homey.drivers.getDriver('protect-fob');
+        const fobDevice = fobDriver.getUnifiDeviceById(event.deviceId);
+        if (fobDevice) {
+          fobDevice.onFobButtonEvent(event).catch((error) => this.error(error));
         }
+      } catch (error) {
+        // Driver may not be paired/installed yet.
+      }
+
+      this.fobActionMapper.handleEvent(event).catch((error) => this.error(error));
+      return true;
+    } catch (error) {
+      this.error(error);
+      return false;
+    }
+  }
+
+  async _setNvrArmModeFromFob(mode) {
+    this.homey.app.debug(`[FOB] setArmMode=${mode}`);
+    return this.api.setNvrArmMode(mode);
+  }
+
+  async _triggerAlarmFromFob(context) {
+    this.homey.app.debug(`[FOB] panic requested context=${JSON.stringify(context || {})}`);
+
+    // Keep panic implementation abstract and non-breaking for existing setups.
+    if (this.api && typeof this.api.triggerAlarm === 'function') {
+      return this.api.triggerAlarm(context || {});
     }
 
-    onParseWebsocketMessage(payload) {
-        if (payload.hasOwnProperty('type')) {
+    return Promise.resolve(true);
+  }
 
-            if (payload.type === 'doorAccess') {
-                if (this.appAccess && typeof this.appAccess.onDoorAccess === 'function') {
-                    this.appAccess.onDoorAccess(payload);
-                }
-            }
+  async _runCustomFobAction(actionId, event) {
+    this.homey.app.debug(`[FOB] custom action=${actionId} event=${JSON.stringify(event)}`);
+    return Promise.resolve(true);
+  }
 
-        }
-    }
-
-    onNvrAccessWebsocketMessage(payload) {
-        try {
-            const metadata = payload && payload.metadata;
-            if (!metadata) {
-                return false;
-            }
-
-            if (this.homey.app._nvrAccessTrigger) {
-                this.homey.app._nvrAccessTrigger.trigger({
-                    ufp_nvr_access_user: metadata.userName || '',
-                    ufp_nvr_access_ip: metadata.ip || '',
-                    ufp_nvr_access_platform: metadata.clientPlatform || '',
-                }).catch((error) => this.error(error));
-            }
-
-            return true;
-        } catch (error) {
-            this.error(error);
-            return false;
-        }
-    }
-
-    onFobWebsocketMessage(updatePacket) {
-        try {
-            const event = this.fobHandler.parseWebsocketPacket(updatePacket);
-            if (!event) {
-                return false;
-            }
-
-            this.homey.app.debug('[FOB] normalized event: ' + JSON.stringify(event));
-            if (this.homey.app._fobButtonTrigger) {
-                this.homey.app._fobButtonTrigger.trigger({
-                    ufp_fob_device_id: event.deviceId,
-                    ufp_fob_sensor_name: event.sensorName || event.deviceId,
-                    ufp_fob_button: event.button,
-                    ufp_fob_press_type: event.pressType,
-                    ufp_fob_timestamp: event.timestamp,
-                }, {
-                    fob_device_id: event.deviceId,
-                    fob_button: event.button,
-                    fob_press_type: event.pressType,
-                }).catch((error) => this.error(error));
-            }
-
-            if (this.homey.app._fobButtonDeviceTrigger) {
-                this.homey.app._fobButtonDeviceTrigger.trigger({
-                    ufp_fob_device_id: event.deviceId,
-                    ufp_fob_sensor_name: event.sensorName || event.deviceId,
-                    ufp_fob_button: event.button,
-                    ufp_fob_press_type: event.pressType,
-                    ufp_fob_timestamp: event.timestamp,
-                }, {
-                    fob_device_id: event.deviceId,
-                    fob_button: event.button,
-                    fob_press_type: event.pressType,
-                }).catch((error) => this.error(error));
-            }
-
-            try {
-                const fobDriver = this.homey.drivers.getDriver('protect-fob');
-                const fobDevice = fobDriver.getUnifiDeviceById(event.deviceId);
-                if (fobDevice) {
-                    fobDevice.onFobButtonEvent(event).catch((error) => this.error(error));
-                }
-            } catch (error) {
-                // Driver may not be paired/installed yet.
-            }
-
-            this.fobActionMapper.handleEvent(event).catch((error) => this.error(error));
-            return true;
-        } catch (error) {
-            this.error(error);
-            return false;
-        }
-    }
-
-    async _setNvrArmModeFromFob(mode) {
-        this.homey.app.debug('[FOB] setArmMode=' + mode);
-        return this.api.setNvrArmMode(mode);
-    }
-
-    async _triggerAlarmFromFob(context) {
-        this.homey.app.debug('[FOB] panic requested context=' + JSON.stringify(context || {}));
-
-        // Keep panic implementation abstract and non-breaking for existing setups.
-        if (this.api && typeof this.api.triggerAlarm === 'function') {
-            return this.api.triggerAlarm(context || {});
-        }
-
-        return Promise.resolve(true);
-    }
-
-    async _runCustomFobAction(actionId, event) {
-        this.homey.app.debug('[FOB] custom action=' + actionId + ' event=' + JSON.stringify(event));
-        return Promise.resolve(true);
-    }
-
-    /**
+  /**
      * Check if V1 API (username/password) is logged in and available
      */
-    isV1Available() {
-        return this.api && this.api.loggedInStatus === 'Connected';
-    }
+  isV1Available() {
+    return this.api && this.api.loggedInStatus === 'Connected';
+  }
 
-    /**
+  /**
      * Check if V2 API (API key) is configured and available
      */
-    isV2Available() {
-        return this.apiV2 && this.apiV2.webclient && this.apiV2.webclient._apiToken;
-    }
+  isV2Available() {
+    return this.apiV2 && this.apiV2.webclient && this.apiV2.webclient._apiToken;
+  }
 
-    /**
+  /**
      * Check if a specific controller API is currently reachable
      * @param {string} apiType - 'v1', 'v2', or 'access'
      * @returns {boolean}
      */
-    isControllerReachable(apiType) {
-        if (apiType === 'v2') {
-            return this.apiV2 && this.apiV2.websocket && this.apiV2.websocket.isWebsocketConnected();
-        }
-        if (apiType === 'v1') {
-            return this.api && this.api.ws && this.api.ws.isWebsocketConnected();
-        }
-        if (apiType === 'access') {
-            return this.accessApi && this.accessApi.websocket && this.accessApi.websocket.isWebsocketConnected();
-        }
-        return false;
+  isControllerReachable(apiType) {
+    if (apiType === 'v2') {
+      return this.apiV2 && this.apiV2.websocket && this.apiV2.websocket.isWebsocketConnected();
     }
+    if (apiType === 'v1') {
+      return this.api && this.api.ws && this.api.ws.isWebsocketConnected();
+    }
+    if (apiType === 'access') {
+      return this.accessApi && this.accessApi.websocket && this.accessApi.websocket.isWebsocketConnected();
+    }
+    return false;
+  }
 
-    /**
+  /**
      * Get overall connection status across all configured APIs
      * @returns {object} status object with states for v1, v2, access
      */
-    getConnectionStatus() {
-        return {
-            v1: {
-                configured: !!this.isV1Available(),
-                connected: this.isControllerReachable('v1'),
-                status: this.api ? this.api.loggedInStatus : 'Not initialized',
-            },
-            v2: {
-                configured: !!this.isV2Available(),
-                connected: this.isControllerReachable('v2'),
-                status: this.apiV2 && this.apiV2.websocket ? this.apiV2.websocket.loggedInStatus : 'Not initialized',
-            },
-            access: {
-                configured: !!(this.accessApi && this.accessApi.webclient && this.accessApi.webclient._apiToken),
-                connected: this.isControllerReachable('access'),
-                status: this.accessApi && this.accessApi.websocket ? this.accessApi.websocket.loggedInStatus : 'Not initialized',
-            },
-        };
-    }
+  getConnectionStatus() {
+    return {
+      v1: {
+        configured: !!this.isV1Available(),
+        connected: this.isControllerReachable('v1'),
+        status: this.api ? this.api.loggedInStatus : 'Not initialized',
+      },
+      v2: {
+        configured: !!this.isV2Available(),
+        connected: this.isControllerReachable('v2'),
+        status: this.apiV2 && this.apiV2.websocket ? this.apiV2.websocket.loggedInStatus : 'Not initialized',
+      },
+      access: {
+        configured: !!(this.accessApi && this.accessApi.webclient && this.accessApi.webclient._apiToken),
+        connected: this.isControllerReachable('access'),
+        status: this.accessApi && this.accessApi.websocket ? this.accessApi.websocket.loggedInStatus : 'Not initialized',
+      },
+    };
+  }
 
-    async debug() {
-        const logFile = '/userdata/application-log.log';
-        if (Homey.env.DEBUG === 'true') {
-            const args = Array.prototype.slice.call(arguments);
-            args.unshift('[debug]');
-            this.homey.log(args.join(' '));
-            try {
-                unlinkSync(logFile);
-            } catch (error) {
-                if (error.code !== 'ENOENT') throw error;
-            }
-        }
-        const settings = this.homey.settings.get('ufp:settings');
-        if (settings && settings.saveLogToPersistentStorage) {
-            stat(logFile, (err, stats) => {
-                if (err) {
-                    // File does not exist
-                } else {
-                    // When file size exceeds 25MB, delete it
-                    if (stats.size >= 25 * 1024 * 1024) {
-                        try {
-                            unlinkSync(logFile);
-                        } catch (error) {
-                            if (error.code !== 'ENOENT') throw error;
-                        }
-                    }
-                }
-            })
-            const args = Array.prototype.slice.call(arguments);
-            args.unshift('[debug]');
-            // Append to log file
-            writeFile(logFile, args.join(' ') + '\n', { flag: 'a+' }, err => {
-                if (err) {
-                    this.error(err);
-                } else {
-                    // file written successfully
-                }
-            });
-        }
+  async debug(...logArgs) {
+    const logFile = '/userdata/application-log.log';
+    if (Homey.env.DEBUG === 'true') {
+      const args = [...logArgs];
+      args.unshift('[debug]');
+      this.homey.log(args.join(' '));
+      try {
+        unlinkSync(logFile);
+      } catch (error) {
+        if (error.code !== 'ENOENT') throw error;
+      }
     }
+    const settings = this.homey.settings.get('ufp:settings');
+    if (settings && settings.saveLogToPersistentStorage) {
+      stat(logFile, (err, stats) => {
+        // err: file does not exist. When file size exceeds 25MB, delete it
+        if (!err && stats.size >= 25 * 1024 * 1024) {
+          try {
+            unlinkSync(logFile);
+          } catch (error) {
+            if (error.code !== 'ENOENT') throw error;
+          }
+        }
+      });
+      const args = [...logArgs];
+      args.unshift('[debug]');
+      // Append to log file
+      writeFile(logFile, `${args.join(' ')}\n`, { flag: 'a+' }, (err) => {
+        if (err) {
+          this.error(err);
+        } else {
+          // file written successfully
+        }
+      });
+    }
+  }
 }
 
 module.exports = UniFiProtect;

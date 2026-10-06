@@ -12,15 +12,15 @@ class UniFiRelayDriver extends Homey.Driver {
   }
 
   onPair(session) {
-    const homey = this.homey;
+    const { homey } = this;
     let pairMode = 'auto';
 
-    session.setHandler('validate', async function () {
+    session.setHandler('validate', async () => {
       const nvrip = homey.settings.get('ufp:nvrip') || homey.app.getV2Connection().host;
       return (nvrip ? 'ok' : 'nok:protect');
     });
 
-    session.setHandler('set_pair_mode', async function (mode) {
+    session.setHandler('set_pair_mode', async (mode) => {
       if (mode === 'force_garagedoor' || mode === 'force_relay' || mode === 'auto') {
         pairMode = mode;
       } else {
@@ -30,11 +30,11 @@ class UniFiRelayDriver extends Homey.Driver {
       return pairMode;
     });
 
-    session.setHandler('get_pair_mode', async function () {
+    session.setHandler('get_pair_mode', async () => {
       return pairMode;
     });
 
-    session.setHandler('list_devices', async function () {
+    session.setHandler('list_devices', async () => {
       let relays;
 
       if (homey.app.isV1Available()) {
@@ -53,9 +53,9 @@ class UniFiRelayDriver extends Homey.Driver {
         return outputs.map((output) => {
           const outputName = output.name || `Output ${Number(output.id) + 1}`;
           const outputType = output.type || 'relay';
-          const classOverride = pairMode === 'force_garagedoor'
-            ? 'garagedoor'
-            : (pairMode === 'force_relay' ? 'relay' : null);
+          let classOverride = null;
+          if (pairMode === 'force_garagedoor') classOverride = 'garagedoor';
+          else if (pairMode === 'force_relay') classOverride = 'relay';
 
           return {
             data: {
@@ -72,83 +72,87 @@ class UniFiRelayDriver extends Homey.Driver {
     });
   }
 
-        async onRepair(session, device) {
-        const homey = this.homey;
+  async onRepair(session, device) {
+    const { homey } = this;
 
-        session.setHandler('get_repair_data', async () => {
-            const v2Conn = homey.app.getV2Connection();
-            const nvrip = homey.settings.get('ufp:nvrip');
-            const tokens = homey.settings.get('ufp:tokens') || {};
-            const isV2 = !!(tokens.protectV2ApiKey);
-            const host = v2Conn.host || nvrip || '';
-            const port = v2Conn.port || 443;
-            const connected = homey.app.isControllerReachable(isV2 ? 'v2' : 'v1');
-            const status = isV2 
-                ? (homey.app.apiV2 && homey.app.apiV2.websocket ? homey.app.apiV2.websocket.loggedInStatus : 'Disconnected')
-                : (homey.app.api ? homey.app.api.loggedInStatus : 'Disconnected');
+    session.setHandler('get_repair_data', async () => {
+      const v2Conn = homey.app.getV2Connection();
+      const nvrip = homey.settings.get('ufp:nvrip');
+      const tokens = homey.settings.get('ufp:tokens') || {};
+      const isV2 = !!(tokens.protectV2ApiKey);
+      const host = v2Conn.host || nvrip || '';
+      const port = v2Conn.port || 443;
+      const connected = homey.app.isControllerReachable(isV2 ? 'v2' : 'v1');
+      let status = 'Disconnected';
+      if (isV2) {
+        if (homey.app.apiV2 && homey.app.apiV2.websocket) status = homey.app.apiV2.websocket.loggedInStatus;
+      } else if (homey.app.api) {
+        status = homey.app.api.loggedInStatus;
+      }
 
-            return {
-                deviceName: device ? device.getName() : 'UniFi Protect',
-                apiType: 'protect',
-                host,
-                port,
-                isV2,
-                apiKey: tokens.protectV2ApiKey || '',
-                connected,
-                status,
-            };
-        });
+      return {
+        deviceName: device ? device.getName() : 'UniFi Protect',
+        apiType: 'protect',
+        host,
+        port,
+        isV2,
+        apiKey: tokens.protectV2ApiKey || '',
+        connected,
+        status,
+      };
+    });
 
-        session.setHandler('save_repair_data', async (data) => {
-            try {
-                const host = data.host;
-                const port = data.port || '443';
-                const token = data.token;
+    session.setHandler('save_repair_data', async (data) => {
+      try {
+        const { host } = data;
+        const port = data.port || '443';
+        const { token } = data;
 
-                const tokens = homey.settings.get('ufp:tokens') || {};
-                if (token) {
-                    tokens.protectV2ApiKey = token;
-                    homey.settings.set('ufp:tokens', tokens);
-                }
+        const tokens = homey.settings.get('ufp:tokens') || {};
+        if (token) {
+          tokens.protectV2ApiKey = token;
+          homey.settings.set('ufp:tokens', tokens);
+        }
 
-                homey.settings.set('ufp:v2nvr', { nvrip: host, nvrport: port });
-                homey.settings.set('ufp:nvrip', host);
-                homey.settings.set('ufp:nvrport', port);
+        homey.settings.set('ufp:v2nvr', { nvrip: host, nvrport: port });
+        homey.settings.set('ufp:nvrip', host);
+        homey.settings.set('ufp:nvrport', port);
 
-                if (tokens.protectV2ApiKey) {
-                    homey.app._initProtectV2Stack();
-                    await homey.app.appProtect.loginToProtectV2();
-                } else {
-                    homey.app.appProtect._appLogin();
-                }
+        if (tokens.protectV2ApiKey) {
+          homey.app._initProtectV2Stack();
+          await homey.app.appProtect.loginToProtectV2();
+        } else {
+          homey.app.appProtect._appLogin();
+        }
 
-                if (device) {
-                    await device.setAvailable().catch(homey.error);
-                    if (typeof device.initDevice === 'function') {
-                        await device.initDevice().catch(homey.error);
-                    }
-                }
+        if (device) {
+          await device.setAvailable().catch(homey.error);
+          if (typeof device.initDevice === 'function') {
+            await device.initDevice().catch(homey.error);
+          }
+        }
 
-                return { status: 'ok', message: 'Connection restored' };
-            } catch (error) {
-                homey.app.debug('[onRepair] save_repair_data error: ' + error);
-                return { status: 'failure', error: error.message || String(error) };
-            }
-        });
+        return { status: 'ok', message: 'Connection restored' };
+      } catch (error) {
+        homey.app.debug(`[onRepair] save_repair_data error: ${error}`);
+        return { status: 'failure', error: error.message || String(error) };
+      }
+    });
 
-        session.setHandler('validate', async () => {
-            return 'ok';
-        });
-    }
+    session.setHandler('validate', async () => {
+      return 'ok';
+    });
+  }
 
-    async repair(session, device) {
-        return this.onRepair(session, device);
-    }
-
+  async repair(session, device) {
+    return this.onRepair(session, device);
+  }
 
   static getOutputs(relay) {
     if (!relay || !Array.isArray(relay.outputs) || relay.outputs.length === 0) {
-      return [{ id: 0, name: null, type: null, state: 'off' }];
+      return [{
+        id: 0, name: null, type: null, state: 'off',
+      }];
     }
 
     return relay.outputs;
@@ -202,4 +206,3 @@ class UniFiRelayDriver extends Homey.Driver {
 }
 
 module.exports = UniFiRelayDriver;
-

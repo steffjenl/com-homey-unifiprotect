@@ -196,5 +196,3 @@ class WeatherDevice extends Homey.Device {
 Object.assign(WeatherDevice.prototype, ConnectionMonitorMixin);
 
 module.exports = WeatherDevice;
-
-

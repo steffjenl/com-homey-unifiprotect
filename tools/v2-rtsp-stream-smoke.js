@@ -1,6 +1,7 @@
 'use strict';
 
 const Module = require('module');
+
 const originalLoad = Module._load;
 
 Module._load = function patchedLoad(request, parent, isMain) {
@@ -50,7 +51,7 @@ async function run() {
   console.log('V2 RTSP stream smoke test passed');
 }
 
-run().catch(error => {
+run().catch((error) => {
   // eslint-disable-next-line no-console
   console.error(error);
   process.exitCode = 1;

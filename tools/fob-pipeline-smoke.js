@@ -1,6 +1,7 @@
 'use strict';
 
 const Module = require('module');
+
 const originalLoad = Module._load;
 
 Module._load = function patchedLoad(request, parent, isMain) {
@@ -86,5 +87,3 @@ run().catch((error) => {
   console.error(error);
   process.exit(1);
 });
-
-

@@ -7,7 +7,7 @@ const SmartDetectionMixin = require('../library/SmartDetectionMixin');
 
 function create() {
   const calls = { plate: [], generic: [], ended: [] };
-  const device = Object.assign({}, SmartDetectionMixin);
+  const device = { ...SmartDetectionMixin };
   const noop = { trigger: async () => {} };
   device.homey = {
     app: {
@@ -15,12 +15,28 @@ function create() {
       getUnixTimestamp: () => Date.now(),
       toLocalTime: (d) => d,
       isV1Available: () => false,
-      _smartDetectionTrigger: { trigger: async (t) => { calls.generic.push(t); } },
+      _smartDetectionTrigger: {
+        trigger: async (t) => {
+          calls.generic.push(t);
+        },
+      },
       _smartDetectionTriggerPerson: noop,
-      _smartDetectionTriggerLicensePlate: { trigger: async (t) => { calls.plate.push(t); } },
-      _smartDetectionEndedTrigger: { trigger: async (t) => { calls.ended.push(t); } },
+      _smartDetectionTriggerLicensePlate: {
+        trigger: async (t) => {
+          calls.plate.push(t);
+        },
+      },
+      _smartDetectionEndedTrigger: {
+        trigger: async (t) => {
+          calls.ended.push(t);
+        },
+      },
     },
-    drivers: { getDriver: () => { throw new Error('no zone sensor driver'); } },
+    drivers: {
+      getDriver: () => {
+        throw new Error('no zone sensor driver');
+      },
+    },
   };
   device.driver = {
     _deviceSmartDetectionTrigger: noop,
@@ -31,7 +47,9 @@ function create() {
   device.getName = () => 'Cam';
   device.getData = () => ({ id: 'cam-1' });
   device.setCapabilityValue = () => Promise.resolve();
-  device.error = (e) => { throw e; };
+  device.error = (e) => {
+    throw e;
+  };
   return { device, calls };
 }
 
@@ -62,7 +80,9 @@ function create() {
 // Direction token (from metadata.direction) on generic + ended triggers, kept after frames without it
 {
   const { device, calls } = create();
-  device.onSmartDetection({ smartDetectTypes: ['person'], start: 1, score: 50, metadata: { direction: 'enter' } }, 'add', 'd1');
+  device.onSmartDetection({
+    smartDetectTypes: ['person'], start: 1, score: 50, metadata: { direction: 'enter' },
+  }, 'add', 'd1');
   assert.strictEqual(calls.generic[0].direction, 'enter');
   device.onSmartDetection({ smartDetectTypes: [], end: 9 }, 'update', 'd1');
   assert.strictEqual(calls.ended[0].direction, 'enter');

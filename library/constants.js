@@ -249,4 +249,3 @@ module.exports.PROTECT_SENSOR_MOTION_TIMER_WAIT_IN_SEC = 10 * 1000;
 
 module.exports.PROTECT_V2_API_BASE_PATH = '/proxy/protect/integration';
 module.exports.PROTECT_V2_API_VERSION = 'v1';
-

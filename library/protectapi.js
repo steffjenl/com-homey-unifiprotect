@@ -10,1168 +10,1156 @@ let UFV_API_ENDPOINT = '/proxy/protect/api';
 
 class ProtectAPI extends BaseClass {
 
-    constructor(...props) {
-        super(...props);
-        // Single WebSocket instance for all devices
-        this.ws = new ProtectWebSocket();
-        this.webclient = new ProtectWebClient();
-        this._bootstrap = null;
-        this._lastUpdateId = null;
-        this._rtspPort = null;
-        this.homey = null;
-        this.loggedInStatus = 0;
-        this.lastWebsocketMessage = null;
+  constructor(...props) {
+    super(...props);
+    // Single WebSocket instance for all devices
+    this.ws = new ProtectWebSocket();
+    this.webclient = new ProtectWebClient();
+    this._bootstrap = null;
+    this._lastUpdateId = null;
+    this._rtspPort = null;
+    this.homey = null;
+    this.loggedInStatus = 0;
+    this.lastWebsocketMessage = null;
+  }
+
+  setHomeyObject(homey) {
+    this.homey = homey;
+    this.ws.setHomeyObject(this.homey);
+    this.webclient.setHomeyObject(this.homey);
+  }
+
+  getProxyCookieToken() {
+    return this.webclient.getCookieToken();
+  }
+
+  getHost() {
+    return this.webclient.getServerHost();
+  }
+
+  getLastUpdateId() {
+    return this._lastUpdateId;
+  }
+
+  getBootstrap() {
+    return this._bootstrap;
+  }
+
+  _compactBootstrapPayload(payload) {
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+      return payload;
     }
 
-    setHomeyObject(homey) {
-        this.homey = homey;
-        this.ws.setHomeyObject(this.homey);
-        this.webclient.setHomeyObject(this.homey);
+    const compactPayload = { ...payload };
+
+    // Bootstrap event history can become very large and is not read by this app.
+    if (Array.isArray(compactPayload.events)) {
+      compactPayload.events = [];
     }
 
-    getProxyCookieToken() {
-        return this.webclient.getCookieToken();
+    // Keep only fields used by getUsers/getUsernameById.
+    if (Array.isArray(compactPayload.users)) {
+      compactPayload.users = compactPayload.users.map((user) => ({
+        id: user.id,
+        localUsername: user.localUsername,
+      }));
     }
 
-    getHost() {
-        return this.webclient.getServerHost();
+    return compactPayload;
+  }
+
+  getNvrName() {
+    if (typeof this._bootstrap.nvr.name !== 'undefined' && this._bootstrap.nvr.name !== null) {
+      return this._bootstrap.nvr.name;
     }
-
-    getLastUpdateId() {
-        return this._lastUpdateId;
+    if (typeof this._bootstrap.nvr.host !== 'undefined' && this._bootstrap.nvr.host !== null) {
+      return this._bootstrap.nvr.host;
     }
-
-    getBootstrap() {
-        return this._bootstrap;
+    if (typeof this._bootstrap.nvr.id !== 'undefined' && this._bootstrap.nvr.id !== null) {
+      return this._bootstrap.nvr.id;
     }
-
-    _compactBootstrapPayload(payload) {
-        if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
-            return payload;
-        }
-
-        const compactPayload = Object.assign({}, payload);
-
-        // Bootstrap event history can become very large and is not read by this app.
-        if (Array.isArray(compactPayload.events)) {
-            compactPayload.events = [];
-        }
-
-        // Keep only fields used by getUsers/getUsernameById.
-        if (Array.isArray(compactPayload.users)) {
-            compactPayload.users = compactPayload.users.map((user) => ({
-                id: user.id,
-                localUsername: user.localUsername,
-            }));
-        }
-
-        return compactPayload;
-    }
-
-    getNvrName() {
-        if (typeof this._bootstrap.nvr.name !== 'undefined' && this._bootstrap.nvr.name !== null) {
-            return this._bootstrap.nvr.name;
-        }
-        if (typeof this._bootstrap.nvr.host !== 'undefined' && this._bootstrap.nvr.host !== null) {
-            return this._bootstrap.nvr.host;
-        }
-        if (typeof this._bootstrap.nvr.id !== 'undefined' && this._bootstrap.nvr.id !== null) {
-            return this._bootstrap.nvr.id;
-        }
-
-    }
-
-    getCSRFToken(host, port) {
-        this.homey.app.debug('Get CSRF Token...');
-
-        return new Promise((resolve, reject) => {
-            //this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Getting CSRF token');
-            //this.loggedInStatus = 'Getting CSRF token';
-
-            if (!host) reject(new Error('Invalid host.'));
-
-            const options = {
-                method: 'GET',
-                hostname: host,
-                port: port,
-                path: '/',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                    Accept: '*/*',
-                    'x-csrf-token': 'undefined'
-                },
-                maxRedirects: 20,
-                rejectUnauthorized: false,
-                timeout: 2000,
-                keepAlive: true,
-            };
-
-            const req = https.request(options, res => {
-                const body = [];
-
-                res.on('data', chunk => body.push(chunk));
-                res.on('end', () => {
-                    // Obtain authorization header
-                    res.rawHeaders.forEach((item, index) => {
-                        if (item.toLowerCase() === 'set-cookie') {
-                            this.webclient.setCookieToken(res.rawHeaders[index + 1]);
-                        }
-
-                        // X-CSRF-Token
-                        if (item.toLowerCase() === 'x-csrf-token') {
-                            this.webclient.setCSRFToken(res.rawHeaders[index + 1]);
-                        }
-
-                        // this.homey.app.debug('Header: ' + item.toLowerCase() + ' => ' + res.rawHeaders[index + 1]);
-                    });
-
-                    // Connected
-                    //this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'CSRF Token found');
-                    //this.loggedInStatus = 'CSRF Token found';
-                    //
-                    return resolve(this.webclient.getCSRFToken());
-                });
-            });
-
-            req.on('error', error => {
-                this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
-                this.loggedInStatus = 'Disconnected';
-                return reject(error);
-            });
-            req.end();
-        });
-    }
-
-    login(host, port, username, password) {
-        this.homey.app.debug('Logging in...');
-        UFV_API_ENDPOINT = '/proxy/protect/api';
-
-        this.webclient.setServerHost(host);
-        this.webclient.setServerPort(port);
-
-        return new Promise((resolve, reject) => {
-
-            //this.getCSRFToken(host, port).then(response => {
-
-            this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connecting');
-            this.loggedInStatus = 'Connecting';
-
-            if (!host) reject(new Error('Invalid host.'));
-            if (!username) reject(new Error('Invalid username.'));
-            if (!password) reject(new Error('Invalid password.'));
-
-            const credentials = JSON.stringify({
-                username,
-                password,
-            });
-
-            const options = {
-                method: 'POST',
-                hostname: host,
-                port: port,
-                path: '/api/auth/login',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                    Accept: 'application/json',
-                },
-                maxRedirects: 20,
-                rejectUnauthorized: false,
-                timeout: 2000,
-                keepAlive: true,
-            };
-
-            const req = https.request(options, res => {
-                if (res.statusCode === 401 || res.statusCode === 403) {
-                    this.loggedInStatus = 'Invalid credentials (401)';
-                    this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Invalid credentials (401)');
-                    return reject(new Error('Invalid credentials (401)'));
-                }
-
-                if (res.statusCode !== 200) {
-                    this.loggedInStatus = `Request failed: ${options.path} (status code: ${res.statusCode})`;
-                    return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode}) (creds: ${credentials}`));
-                }
-                const body = [];
-
-                res.on('data', chunk => body.push(chunk));
-                res.on('end', () => {
-                    if (res.statusCode === 401 || res.statusCode === 403) {
-                        this.loggedInStatus = 'Invalid credentials (401)';
-                        return reject(new Error('Invalid credentials (401)'));
-                    }
-
-                    if (res.statusCode !== 200) {
-                        this.loggedInStatus = `Request failed: ${options.path} (status code: ${res.statusCode})`;
-                        return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode})`));
-                    }
-
-                    // Obtain authorization header
-                    res.rawHeaders.forEach((item, index) => {
-                        if (item.toLowerCase() === 'set-cookie') {
-                            this.webclient.setCookieToken(res.rawHeaders[index + 1]);
-                        }
-
-                        // X-CSRF-Token
-                        if (item.toLowerCase() === 'x-csrf-token') {
-                            this.webclient.setCSRFToken(res.rawHeaders[index + 1]);
-                        }
-                    });
-
-                    if (this.webclient.getCookieToken() === null) {
-                        reject(new Error('Invalid set-cookie header.'));
-                        return;
-                    }
-
-                    // Connected
-                    this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connected');
-                    this.loggedInStatus = 'Connected';
-                    this.emit('protectv1-connection-change', { state: 'connected', host, port });
-                    //
-                    return resolve('Logged in...');
-                });
-            });
-
-            req.on('error', error => {
-                this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
-                this.loggedInStatus = 'Disconnected';
-                this.emit('protectv1-connection-error', { error, host, port });
-                this.emit('protectv1-connection-change', { state: 'disconnected', host, port });
-                return reject(error);
-            });
-
-            req.write(credentials);
-            req.end();
-
-        }).catch(error => this.homey.error(error));
-    }
-
-    getBootstrapInfo() {
-        return new Promise((resolve, reject) => {
-            this.homey.log('Getting bootstrap info...');
-            this.webclient.get('bootstrap')
-                .then(response => {
-                    const result = JSON.parse(response);
-                    const compactResult = this._compactBootstrapPayload(result);
-                    this.homey.log('Bootstrap info obtained.');
-
-                    if (compactResult) {
-                        this.homey.log('Setting bootstrap info...');
-                        this._bootstrap = compactResult;
-
-                        if (compactResult.cameras) {
-                            this.homey.log('Setting API key...');
-                            this._rtspPort = compactResult.nvr.ports.rtsp;
-                            this._lastUpdateId = compactResult.lastUpdateId;
-
-                            if (this.ws.isWebsocketConnected() === false) {
-                                this.homey.log('Connecting to websocket...');
-                                // lastUpdateId is changed, please reconnect to websocket when websocket is disconnected.
-                                this.ws.reconnectUpdatesListener();
-                            }
-                        }
-
-                        return resolve(compactResult);
-                    } else {
-                        return reject(new Error('Error obtaining bootstrap info.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
-
-    getAccessKey() {
-        return new Promise((resolve, reject) => {
-            this.webclient.post('auth/access-key')
-                .then(response => {
-                    const result = JSON.parse(response);
-                    this.webclient.setApiKey(result.accessKey);
-
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining access-key.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
-
-    getDebugInfo() {
-        return new Promise((resolve, reject) => {
-            this.webclient.get('debug/info')
-                .then(response => {
-                    const result = JSON.parse(response);
-
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining server.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
-
-    getServer() {
-        return new Promise((resolve, reject) => {
-            this.webclient.get('nvr')
-                .then(response => {
-                    const result = JSON.parse(response);
-
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining server.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
-
-    findCameraById(id) {
-        return new Promise((resolve, reject) => {
-            this.webclient.get(`cameras/${id}`)
-                .then(response => {
-                    const result = JSON.parse(response);
-
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining cameras.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
-
-    getCameras() {
-        return new Promise((resolve, reject) => {
-            this.webclient.get('cameras')
-                .then(response => {
-                    let result = JSON.parse(response);
-                    result = result.filter(obj => obj.featureFlags.isDoorbell !== true);
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining cameras.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
-
-    getDoorbells() {
-        const DOORBELL_MODEL_HINTS = ['Doorbell', 'G6 Pro Entry', 'G6 Entry', 'G4 Doorbell'];
-
-        const isDoorbellCam = (cam) =>
-            cam.featureFlags?.isDoorbell === true ||
-            cam.featureFlags?.hasChime === true ||
-            DOORBELL_MODEL_HINTS.some(hint => cam.type?.includes(hint) || cam.marketName?.includes(hint));
-
-        return new Promise((resolve, reject) => {
-            this.webclient.get('cameras')
-                .then(response => {
-                    let result = JSON.parse(response);
-                    result = result.filter(isDoorbellCam);
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining cameras.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
-
-    snapshot(id, widthInPixels = 1920) {
-        return new Promise((resolve, reject) => {
-            if (!id) reject(new Error('Invalid camera identifier.'));
-
-            const height = this.getAspectRatioHeight(id, widthInPixels);
-
-            const params = {
-                accessKey: this.webclient.getApiKey(),
-                w: widthInPixels,
-                force: true,
-                ext: '.jpg'
-            };
-
-            let snapshot;
-            return this.webclient.download(`cameras/${id}/snapshot`, params)
-                .then(buffer => resolve(buffer))
-                .catch(error => reject(new Error(`Error obtaining snapshot buffer: ${error}`)));
-        });
-    }
-
-    packageSnapshot(id, widthInPixels = 1920) {
-        return new Promise((resolve, reject) => {
-            if (!id) reject(new Error('Invalid camera identifier.'));
-
-            const params = {
-                accessKey: this.webclient.getApiKey(),
-                w: widthInPixels,
-                force: true,
-                ext: '.jpg'
-            };
-
-            return this.webclient.download(`cameras/${id}/package-snapshot`, params)
-                .then(buffer => resolve(buffer))
-                .catch(error => reject(new Error(`Error obtaining package snapshot buffer: ${error}`)));
-        });
-    }
-
-    createSnapshotUrl(camera, widthInPixels = 1920, useCameraSnapshotUrl = false) {
-        return new Promise((resolve, reject) => {
-            if (!this.webclient.getServerHost()) reject(new Error('Invalid host.'));
-            if (!camera) reject(new Error('Invalid camera'));
-
-            const params = {
-                accessKey: this.webclient.getApiKey(),
-                w: widthInPixels,
-                force: true,
-                ts: Date.now(),
-                ext: '.jpg'
-            };
-
-            return resolve(`https://${this.webclient.getServerHost()}:${this.webclient.getServerPort()}${UFV_API_ENDPOINT}/cameras/${camera.id}/snapshot${this.webclient.toQueryString(params)}`);
-        });
-    }
-
-    createPackageSnapshotUrl(camera, widthInPixels = 1920, useCameraSnapshotUrl = false) {
-        return new Promise((resolve, reject) => {
-            if (!this.webclient.getServerHost()) reject(new Error('Invalid host.'));
-            if (!camera) reject(new Error('Invalid camera'));
-
-            const params = {
-                accessKey: this.webclient.getApiKey(),
-                w: widthInPixels,
-                force: true,
-                ts: Date.now(),
-                ext: '.jpg'
-            };
-
-            return resolve(`https://${this.webclient.getServerHost()}:${this.webclient.getServerPort()}${UFV_API_ENDPOINT}/cameras/${camera.id}/package-snapshot${this.webclient.toQueryString(params)}`);
-        });
-    }
-
-    setRecordingMode(camera, mode = 'never') {
-        return new Promise((resolve, reject) => {
-            this.findCameraById(camera.id)
-                .then(cameraInfo => {
-                    const recordingSettings = cameraInfo.recordingSettings;
-                    const channels = cameraInfo.channels;
-                    recordingSettings.mode = mode;
-
-                    const params = {
-                        channels,
-                        recordingSettings
-                    };
-
-                    return this.webclient.patch(`cameras/${camera.id}`, params)
-                        .then(() => resolve('Recording mode successfully set.'))
-                        .catch(error => reject(new Error(`Error setting recording mode: ${error}`)));
-                })
-                .catch(error => reject(new Error(`Error setting recording mode: ${error}`)));
-        });
-    }
-
-    setNightVisionMode(camera, mode = 'auto') {
-        return new Promise((resolve, reject) => {
-            this.findCameraById(camera.id)
-                .then(cameraInfo => {
-                    const params = {
-                        ispSettings: {
-                            irLedMode: mode
-                        }
-                    }
-
-                    return this.webclient.patch(`cameras/${camera.id}`, params)
-                        .then(() => resolve('Night Vision mode successfully set.'))
-                        .catch(error => reject(new Error(`Error setting Night Vision mode: ${error}`)));
-                })
-                .catch(error => reject(new Error(`Error setting Night Vision mode: ${error}`)));
-        });
-    }
-
-    setMicVolume(camera, volume = 100) {
-        return new Promise(async (resolve, reject) => {
-            const params = {
-                micVolume: volume,
-            };
-            try {
-                await this.webclient.patch(`cameras/${camera.id}`, params);
-                return resolve('Mic volume successfully set.');
-            } catch (error) {
-                return reject(new Error(`Error setting mic volume: ${error}`));
+    return undefined;
+  }
+
+  getCSRFToken(host, port) {
+    this.homey.app.debug('Get CSRF Token...');
+
+    return new Promise((resolve, reject) => {
+      // this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Getting CSRF token');
+      // this.loggedInStatus = 'Getting CSRF token';
+
+      if (!host) reject(new Error('Invalid host.'));
+
+      const options = {
+        method: 'GET',
+        hostname: host,
+        port,
+        path: '/',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: '*/*',
+          'x-csrf-token': 'undefined',
+        },
+        maxRedirects: 20,
+        rejectUnauthorized: false,
+        timeout: 2000,
+        keepAlive: true,
+      };
+
+      const req = https.request(options, (res) => {
+        const body = [];
+
+        res.on('data', (chunk) => body.push(chunk));
+        res.on('end', () => {
+          // Obtain authorization header
+          res.rawHeaders.forEach((item, index) => {
+            if (item.toLowerCase() === 'set-cookie') {
+              this.webclient.setCookieToken(res.rawHeaders[index + 1]);
             }
-        });
-    }
 
-    setCameraBlackout(camera, enabled) {
-        /*
+            // X-CSRF-Token
+            if (item.toLowerCase() === 'x-csrf-token') {
+              this.webclient.setCSRFToken(res.rawHeaders[index + 1]);
+            }
+
+            // this.homey.app.debug('Header: ' + item.toLowerCase() + ' => ' + res.rawHeaders[index + 1]);
+          });
+
+          // Connected
+          // this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'CSRF Token found');
+          // this.loggedInStatus = 'CSRF Token found';
+          //
+          return resolve(this.webclient.getCSRFToken());
+        });
+      });
+
+      req.on('error', (error) => {
+        this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
+        this.loggedInStatus = 'Disconnected';
+        return reject(error);
+      });
+      req.end();
+    });
+  }
+
+  login(host, port, username, password) {
+    this.homey.app.debug('Logging in...');
+    UFV_API_ENDPOINT = '/proxy/protect/api';
+
+    this.webclient.setServerHost(host);
+    this.webclient.setServerPort(port);
+
+    return new Promise((resolve, reject) => {
+
+      // this.getCSRFToken(host, port).then(response => {
+
+      this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connecting');
+      this.loggedInStatus = 'Connecting';
+
+      if (!host) reject(new Error('Invalid host.'));
+      if (!username) reject(new Error('Invalid username.'));
+      if (!password) reject(new Error('Invalid password.'));
+
+      const credentials = JSON.stringify({
+        username,
+        password,
+      });
+
+      const options = {
+        method: 'POST',
+        hostname: host,
+        port,
+        path: '/api/auth/login',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: 'application/json',
+        },
+        maxRedirects: 20,
+        rejectUnauthorized: false,
+        timeout: 2000,
+        keepAlive: true,
+      };
+
+      const req = https.request(options, (res) => {
+        if (res.statusCode === 401 || res.statusCode === 403) {
+          this.loggedInStatus = 'Invalid credentials (401)';
+          this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Invalid credentials (401)');
+          return reject(new Error('Invalid credentials (401)'));
+        }
+
+        if (res.statusCode !== 200) {
+          this.loggedInStatus = `Request failed: ${options.path} (status code: ${res.statusCode})`;
+          return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode})`));
+        }
+        const body = [];
+
+        res.on('data', (chunk) => body.push(chunk));
+        res.on('end', () => {
+          if (res.statusCode === 401 || res.statusCode === 403) {
+            this.loggedInStatus = 'Invalid credentials (401)';
+            return reject(new Error('Invalid credentials (401)'));
+          }
+
+          if (res.statusCode !== 200) {
+            this.loggedInStatus = `Request failed: ${options.path} (status code: ${res.statusCode})`;
+            return reject(new Error(`Request failed: ${options.path} (status code: ${res.statusCode})`));
+          }
+
+          // Obtain authorization header
+          res.rawHeaders.forEach((item, index) => {
+            if (item.toLowerCase() === 'set-cookie') {
+              this.webclient.setCookieToken(res.rawHeaders[index + 1]);
+            }
+
+            // X-CSRF-Token
+            if (item.toLowerCase() === 'x-csrf-token') {
+              this.webclient.setCSRFToken(res.rawHeaders[index + 1]);
+            }
+          });
+
+          if (this.webclient.getCookieToken() === null) {
+            return reject(new Error('Invalid set-cookie header.'));
+          }
+
+          // Connected
+          this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Connected');
+          this.loggedInStatus = 'Connected';
+          this.emit('protectv1-connection-change', { state: 'connected', host, port });
+          //
+          return resolve('Logged in...');
+        });
+        return undefined;
+      });
+
+      req.on('error', (error) => {
+        this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_STATUS, 'Disconnected');
+        this.loggedInStatus = 'Disconnected';
+        this.emit('protectv1-connection-error', { error, host, port });
+        this.emit('protectv1-connection-change', { state: 'disconnected', host, port });
+        return reject(error);
+      });
+
+      req.write(credentials);
+      req.end();
+
+    }).catch((error) => this.homey.error(error));
+  }
+
+  getBootstrapInfo() {
+    return new Promise((resolve, reject) => {
+      this.homey.log('Getting bootstrap info...');
+      this.webclient.get('bootstrap')
+        .then((response) => {
+          const result = JSON.parse(response);
+          const compactResult = this._compactBootstrapPayload(result);
+          this.homey.log('Bootstrap info obtained.');
+
+          if (compactResult) {
+            this.homey.log('Setting bootstrap info...');
+            this._bootstrap = compactResult;
+
+            if (compactResult.cameras) {
+              this.homey.log('Setting API key...');
+              this._rtspPort = compactResult.nvr.ports.rtsp;
+              this._lastUpdateId = compactResult.lastUpdateId;
+
+              if (this.ws.isWebsocketConnected() === false) {
+                this.homey.log('Connecting to websocket...');
+                // lastUpdateId is changed, please reconnect to websocket when websocket is disconnected.
+                this.ws.reconnectUpdatesListener();
+              }
+            }
+
+            return resolve(compactResult);
+          }
+          return reject(new Error('Error obtaining bootstrap info.'));
+
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  getAccessKey() {
+    return new Promise((resolve, reject) => {
+      this.webclient.post('auth/access-key')
+        .then((response) => {
+          const result = JSON.parse(response);
+          this.webclient.setApiKey(result.accessKey);
+
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining access-key.'));
+
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  getDebugInfo() {
+    return new Promise((resolve, reject) => {
+      this.webclient.get('debug/info')
+        .then((response) => {
+          const result = JSON.parse(response);
+
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining server.'));
+
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  getServer() {
+    return new Promise((resolve, reject) => {
+      this.webclient.get('nvr')
+        .then((response) => {
+          const result = JSON.parse(response);
+
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining server.'));
+
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  findCameraById(id) {
+    return new Promise((resolve, reject) => {
+      this.webclient.get(`cameras/${id}`)
+        .then((response) => {
+          const result = JSON.parse(response);
+
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining cameras.'));
+
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  getCameras() {
+    return new Promise((resolve, reject) => {
+      this.webclient.get('cameras')
+        .then((response) => {
+          let result = JSON.parse(response);
+          result = result.filter((obj) => obj.featureFlags.isDoorbell !== true);
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining cameras.'));
+
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  getDoorbells() {
+    const DOORBELL_MODEL_HINTS = ['Doorbell', 'G6 Pro Entry', 'G6 Entry', 'G4 Doorbell'];
+
+    const isDoorbellCam = (cam) => cam.featureFlags?.isDoorbell === true
+            || cam.featureFlags?.hasChime === true
+            || DOORBELL_MODEL_HINTS.some((hint) => cam.type?.includes(hint) || cam.marketName?.includes(hint));
+
+    return new Promise((resolve, reject) => {
+      this.webclient.get('cameras')
+        .then((response) => {
+          let result = JSON.parse(response);
+          result = result.filter(isDoorbellCam);
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining cameras.'));
+
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  snapshot(id, widthInPixels = 1920) {
+    return new Promise((resolve, reject) => {
+      if (!id) reject(new Error('Invalid camera identifier.'));
+
+      const params = {
+        accessKey: this.webclient.getApiKey(),
+        w: widthInPixels,
+        force: true,
+        ext: '.jpg',
+      };
+
+      return this.webclient.download(`cameras/${id}/snapshot`, params)
+        .then((buffer) => resolve(buffer))
+        .catch((error) => reject(new Error(`Error obtaining snapshot buffer: ${error}`)));
+    });
+  }
+
+  packageSnapshot(id, widthInPixels = 1920) {
+    return new Promise((resolve, reject) => {
+      if (!id) reject(new Error('Invalid camera identifier.'));
+
+      const params = {
+        accessKey: this.webclient.getApiKey(),
+        w: widthInPixels,
+        force: true,
+        ext: '.jpg',
+      };
+
+      return this.webclient.download(`cameras/${id}/package-snapshot`, params)
+        .then((buffer) => resolve(buffer))
+        .catch((error) => reject(new Error(`Error obtaining package snapshot buffer: ${error}`)));
+    });
+  }
+
+  createSnapshotUrl(camera, widthInPixels = 1920, useCameraSnapshotUrl = false) {
+    return new Promise((resolve, reject) => {
+      if (!this.webclient.getServerHost()) reject(new Error('Invalid host.'));
+      if (!camera) reject(new Error('Invalid camera'));
+
+      const params = {
+        accessKey: this.webclient.getApiKey(),
+        w: widthInPixels,
+        force: true,
+        ts: Date.now(),
+        ext: '.jpg',
+      };
+
+      return resolve(`https://${this.webclient.getServerHost()}:${this.webclient.getServerPort()}${UFV_API_ENDPOINT}/cameras/${camera.id}/snapshot${this.webclient.toQueryString(params)}`);
+    });
+  }
+
+  createPackageSnapshotUrl(camera, widthInPixels = 1920, useCameraSnapshotUrl = false) {
+    return new Promise((resolve, reject) => {
+      if (!this.webclient.getServerHost()) reject(new Error('Invalid host.'));
+      if (!camera) reject(new Error('Invalid camera'));
+
+      const params = {
+        accessKey: this.webclient.getApiKey(),
+        w: widthInPixels,
+        force: true,
+        ts: Date.now(),
+        ext: '.jpg',
+      };
+
+      return resolve(`https://${this.webclient.getServerHost()}:${this.webclient.getServerPort()}${UFV_API_ENDPOINT}/cameras/${camera.id}/package-snapshot${this.webclient.toQueryString(params)}`);
+    });
+  }
+
+  setRecordingMode(camera, mode = 'never') {
+    return new Promise((resolve, reject) => {
+      this.findCameraById(camera.id)
+        .then((cameraInfo) => {
+          const { recordingSettings } = cameraInfo;
+          const { channels } = cameraInfo;
+          recordingSettings.mode = mode;
+
+          const params = {
+            channels,
+            recordingSettings,
+          };
+
+          return this.webclient.patch(`cameras/${camera.id}`, params)
+            .then(() => resolve('Recording mode successfully set.'))
+            .catch((error) => reject(new Error(`Error setting recording mode: ${error}`)));
+        })
+        .catch((error) => reject(new Error(`Error setting recording mode: ${error}`)));
+    });
+  }
+
+  setNightVisionMode(camera, mode = 'auto') {
+    return new Promise((resolve, reject) => {
+      this.findCameraById(camera.id)
+        .then((cameraInfo) => {
+          const params = {
+            ispSettings: {
+              irLedMode: mode,
+            },
+          };
+
+          return this.webclient.patch(`cameras/${camera.id}`, params)
+            .then(() => resolve('Night Vision mode successfully set.'))
+            .catch((error) => reject(new Error(`Error setting Night Vision mode: ${error}`)));
+        })
+        .catch((error) => reject(new Error(`Error setting Night Vision mode: ${error}`)));
+    });
+  }
+
+  async setMicVolume(camera, volume = 100) {
+    const params = {
+      micVolume: volume,
+    };
+    try {
+      await this.webclient.patch(`cameras/${camera.id}`, params);
+      return 'Mic volume successfully set.';
+    } catch (error) {
+      throw new Error(`Error setting mic volume: ${error}`);
+    }
+  }
+
+  setCameraBlackout(camera, enabled) {
+    /* eslint-disable max-len */
+    /*
         {"privacyZones":[{"id":1,"name":"New Zone","color":"#5a6cea","points":[[0.002336448598130841,0.004155124653739612],[0.49221184989002265,0],[0.48831772135796947,0.03670364337614699],[0,0.22506933661378983]],"update":false,"uniqueId":"privacyZones-1"},{"id":2,"name":"New Privacy Blackout 001","color":"#586CED","points":[[0,0],[1,0],[1,1],[0,1]],"isTriggerLightEnabled":false,"direction":null,"uniqueId":"privacyZones-2","mergeId":null,"objectTypes":[],"sensitivity":null,"loiterTriggers":[],"quality":null,"isTargetCounting":null,"plan":null,"originalType":null,"zoneIds":null}]}
          */
-        return new Promise((resolve, reject) => {
-            this.findCameraById(camera.id)
-                .then(cameraInfo => {
-                    this.homey.app.debug('Current privacy zones: ' + JSON.stringify(cameraInfo.privacyZones));
-                    const privacyZones = cameraInfo.privacyZones;
-                    if (enabled) {
-                        // Add blackout zone
-                        if (privacyZones.filter(zone => zone.name === 'Homey Blackout Zone').length === 0) {
-                            const newZone = {
-                                id: privacyZones.length + 1,
-                                name: 'Homey Blackout Zone',
-                                color: '#586CED',
-                                points: [
-                                    [0, 0],
-                                    [1, 0],
-                                    [1, 1],
-                                    [0, 1]
-                                ],
-                                isTriggerLightEnabled: false,
-                                direction: null,
-                                uniqueId: `privacyZones-${privacyZones.length + 1}`,
-                                mergeId: null,
-                                objectTypes: [],
-                                sensitivity: null,
-                                loiterTriggers: [],
-                                quality: null,
-                                isTargetCounting: null,
-                                plan: null,
-                                originalType: null,
-                                zoneIds: null
-                            };
-                            privacyZones.push(newZone);
-                        }
-                    } else {
-                        // Remove blackout zone
-                        const index = privacyZones.findIndex(zone => zone.name === 'Homey Blackout Zone');
-                        if (index !== -1) {
-                            privacyZones.splice(index, 1);
-                        }
-                    }
-
-                    const params = {
-                        privacyZones
-                    };
-
-                    this.homey.app.debug('Updated privacy zones: ' + JSON.stringify(privacyZones));
-
-                    return this.webclient.patch(`cameras/${camera.id}`, params)
-                        .then(() => resolve('Blackout mode successfully set.'))
-                        .catch(error => reject(new Error(`Error setting Blackout mode: ${error}`)));
-                })
-                .catch(error => reject(new Error(`Error setting Blackout mode: ${error}`)));
-        });
-    }
-
-    setLCDMessage(camera, message = '', resetAt = null) {
-        return new Promise((resolve, reject) => {
-            const params = {
-                lcdMessage: {
-                    type: "CUSTOM_MESSAGE",
-                    text: message,
-                    resetAt: resetAt
-                },
-            };
-            return this.webclient.patch(`cameras/${camera.id}`, params)
-                .then(() => resolve('LCD message successfully set.'))
-                .catch(error => reject(new Error(`Error setting lcd message: ${error}`)));
-        });
-    }
-
-    getMotionEvents() {
-        return new Promise((resolve, reject) => {
-            let start = new Date();
-            start.setHours(0, 0, 0, 0);
-            let end = new Date();
-            end.setHours(23, 59, 59, 999);
-
-            let startTime = (this._lastMotionAt == null ? start.getTime() : this._lastMotionAt);
-
-            this.webclient.get(`events?start=${startTime}&end=${end.getTime()}&type=motion`)
-                .then(response => {
-                    start = null;
-                    end = null;
-                    startTime = null;
-                    const result = JSON.parse(response);
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining motion events.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
-
-    getAspectRatioHeight(cameraId, widthInPixels) {
-        this._bootstrap.cameras.forEach(camera => {
-            if (camera.id === cameraId) {
-                if (camera.type === 'UVC G4 Doorbell') {
-                    return widthInPixels / 4 * 3;
-                } else {
-                    return widthInPixels / 16 * 9;
-                }
+    /* eslint-enable max-len */
+    return new Promise((resolve, reject) => {
+      this.findCameraById(camera.id)
+        .then((cameraInfo) => {
+          this.homey.app.debug(`Current privacy zones: ${JSON.stringify(cameraInfo.privacyZones)}`);
+          const { privacyZones } = cameraInfo;
+          if (enabled) {
+            // Add blackout zone
+            if (privacyZones.filter((zone) => zone.name === 'Homey Blackout Zone').length === 0) {
+              const newZone = {
+                id: privacyZones.length + 1,
+                name: 'Homey Blackout Zone',
+                color: '#586CED',
+                points: [
+                  [0, 0],
+                  [1, 0],
+                  [1, 1],
+                  [0, 1],
+                ],
+                isTriggerLightEnabled: false,
+                direction: null,
+                uniqueId: `privacyZones-${privacyZones.length + 1}`,
+                mergeId: null,
+                objectTypes: [],
+                sensitivity: null,
+                loiterTriggers: [],
+                quality: null,
+                isTargetCounting: null,
+                plan: null,
+                originalType: null,
+                zoneIds: null,
+              };
+              privacyZones.push(newZone);
             }
-        });
+          } else {
+            // Remove blackout zone
+            const index = privacyZones.findIndex((zone) => zone.name === 'Homey Blackout Zone');
+            if (index !== -1) {
+              privacyZones.splice(index, 1);
+            }
+          }
+
+          const params = {
+            privacyZones,
+          };
+
+          this.homey.app.debug(`Updated privacy zones: ${JSON.stringify(privacyZones)}`);
+
+          return this.webclient.patch(`cameras/${camera.id}`, params)
+            .then(() => resolve('Blackout mode successfully set.'))
+            .catch((error) => reject(new Error(`Error setting Blackout mode: ${error}`)));
+        })
+        .catch((error) => reject(new Error(`Error setting Blackout mode: ${error}`)));
+    });
+  }
+
+  setLCDMessage(camera, message = '', resetAt = null) {
+    return new Promise((resolve, reject) => {
+      const params = {
+        lcdMessage: {
+          type: 'CUSTOM_MESSAGE',
+          text: message,
+          resetAt,
+        },
+      };
+      return this.webclient.patch(`cameras/${camera.id}`, params)
+        .then(() => resolve('LCD message successfully set.'))
+        .catch((error) => reject(new Error(`Error setting lcd message: ${error}`)));
+    });
+  }
+
+  getMotionEvents() {
+    return new Promise((resolve, reject) => {
+      let start = new Date();
+      start.setHours(0, 0, 0, 0);
+      let end = new Date();
+      end.setHours(23, 59, 59, 999);
+
+      let startTime = (this._lastMotionAt == null ? start.getTime() : this._lastMotionAt);
+
+      this.webclient.get(`events?start=${startTime}&end=${end.getTime()}&type=motion`)
+        .then((response) => {
+          start = null;
+          end = null;
+          startTime = null;
+          const result = JSON.parse(response);
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining motion events.'));
+
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  getAspectRatioHeight(cameraId, widthInPixels) {
+    const camera = this._bootstrap.cameras.find((c) => c.id === cameraId);
+    if (!camera) return undefined;
+    if (camera.type === 'UVC G4 Doorbell') {
+      return (widthInPixels / 4) * 3;
     }
+    return (widthInPixels / 16) * 9;
+  }
 
-    getStreamUrl(camera, packageCamera = false) {
-        return new Promise((resolve, reject) => {
-            this.findCameraById(camera.id)
-                .then(cameraInfo => {
-                    if (!cameraInfo || !Array.isArray(cameraInfo.channels)) {
-                        return resolve('');
-                    }
+  getStreamUrl(camera, packageCamera = false) {
+    return new Promise((resolve, reject) => {
+      this.findCameraById(camera.id)
+        .then((cameraInfo) => {
+          if (!cameraInfo || !Array.isArray(cameraInfo.channels)) {
+            return resolve('');
+          }
 
-                    const channel = cameraInfo.channels.find(item => item.isRtspEnabled && item.name !== 'Package Camera');
-                    if (channel) {
-                        return resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${channel.rtspAlias}`);
-                    }
+          const channel = cameraInfo.channels.find((item) => item.isRtspEnabled && item.name !== 'Package Camera');
+          if (channel) {
+            return resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${channel.rtspAlias}`);
+          }
 
-                    return resolve('');
-                })
-                .catch(error => reject(new Error(`Error getting stream url: ${error}`)));
-        });
-    }
+          return resolve('');
+        })
+        .catch((error) => reject(new Error(`Error getting stream url: ${error}`)));
+    });
+  }
 
-    getPackageStreamUrl(camera) {
-        return new Promise((resolve, reject) => {
-            this.findCameraById(camera.id)
-                .then(cameraInfo => {
-                    if (!cameraInfo || !Array.isArray(cameraInfo.channels)) {
-                        return resolve('');
-                    }
+  getPackageStreamUrl(camera) {
+    return new Promise((resolve, reject) => {
+      this.findCameraById(camera.id)
+        .then((cameraInfo) => {
+          if (!cameraInfo || !Array.isArray(cameraInfo.channels)) {
+            return resolve('');
+          }
 
-                    const channel = cameraInfo.channels.find(item => item.isRtspEnabled && item.name === 'Package Camera');
-                    if (channel) {
-                        return resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${channel.rtspAlias}`);
-                    }
+          const channel = cameraInfo.channels.find((item) => item.isRtspEnabled && item.name === 'Package Camera');
+          if (channel) {
+            return resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${channel.rtspAlias}`);
+          }
 
-                    return resolve('');
-                })
-                .catch(error => reject(new Error(`Error getting stream url: ${error}`)));
-        });
-    }
+          return resolve('');
+        })
+        .catch((error) => reject(new Error(`Error getting stream url: ${error}`)));
+    });
+  }
 
-    findLightById(id) {
-        return new Promise((resolve, reject) => {
-            this.webclient.get(`lights/${id}`)
-                .then(response => {
-                    const result = JSON.parse(response);
+  findLightById(id) {
+    return new Promise((resolve, reject) => {
+      this.webclient.get(`lights/${id}`)
+        .then((response) => {
+          const result = JSON.parse(response);
 
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining lights.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining lights.'));
 
-    getChimes() {
-        return new Promise((resolve, reject) => {
-            this.webclient.get('chimes')
-                .then(response => {
-                    const result = JSON.parse(response);
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining chimes.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
+        })
+        .catch((error) => reject(error));
+    });
+  }
 
-    getSpeakers() {
-        return new Promise((resolve, reject) => {
-            this.webclient.get('speakers')
-                .then(response => {
-                    const result = JSON.parse(response);
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining speakers.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
+  getChimes() {
+    return new Promise((resolve, reject) => {
+      this.webclient.get('chimes')
+        .then((response) => {
+          const result = JSON.parse(response);
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining chimes.'));
 
-    setChimeVolume(chime, volumeLevel) {
-        return new Promise((resolve, reject) => {
-            const volumeInt = Math.round(volumeLevel * 100);
-            const params = {
-                volume: volumeInt
-            };
+        })
+        .catch((error) => reject(error));
+    });
+  }
 
-            // Newer UniFi Protect firmware requires volume to be set per-camera
-            // via ringSettings[].volume (top-level volume alone returns HTTP 500).
-            const bootstrap = this._bootstrap;
-            if (bootstrap && Array.isArray(bootstrap.chimes)) {
-                const bootstrapChime = bootstrap.chimes.find(c => c.id === chime.id);
-                if (bootstrapChime && Array.isArray(bootstrapChime.ringSettings) && bootstrapChime.ringSettings.length > 0) {
-                    params.ringSettings = bootstrapChime.ringSettings.map(rs => Object.assign({}, rs, { volume: volumeInt }));
-                }
+  getSpeakers() {
+    return new Promise((resolve, reject) => {
+      this.webclient.get('speakers')
+        .then((response) => {
+          const result = JSON.parse(response);
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining speakers.'));
+
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  setChimeVolume(chime, volumeLevel) {
+    return new Promise((resolve, reject) => {
+      const volumeInt = Math.round(volumeLevel * 100);
+      const params = {
+        volume: volumeInt,
+      };
+
+      // Newer UniFi Protect firmware requires volume to be set per-camera
+      // via ringSettings[].volume (top-level volume alone returns HTTP 500).
+      const bootstrap = this._bootstrap;
+      if (bootstrap && Array.isArray(bootstrap.chimes)) {
+        const bootstrapChime = bootstrap.chimes.find((c) => c.id === chime.id);
+        if (bootstrapChime && Array.isArray(bootstrapChime.ringSettings) && bootstrapChime.ringSettings.length > 0) {
+          params.ringSettings = bootstrapChime.ringSettings.map((rs) => ({ ...rs, volume: volumeInt }));
+        }
+      }
+
+      return this.webclient.patch(`chimes/${chime.id}`, params)
+        .then(() => resolve('volume successfully set.'))
+        .catch((error) => reject(new Error(`Error setting volume: ${error}`)));
+    });
+  }
+
+  setSpeakerVolume(speaker, volumeLevel) {
+    return new Promise((resolve, reject) => {
+      const params = {
+        volume: Math.round(volumeLevel * 100),
+      };
+
+      return this.webclient.patch(`speakers/${speaker.id}`, params)
+        .then(() => resolve('Speaker volume successfully set.'))
+        .catch((error) => reject(new Error(`Error setting speaker volume: ${error}`)));
+    });
+  }
+
+  getLights() {
+    return new Promise((resolve, reject) => {
+      this.webclient.get('lights')
+        .then((response) => {
+          const result = JSON.parse(response);
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining lights.'));
+
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  findRelayById(id) {
+    return new Promise((resolve, reject) => {
+      this.webclient.get(`relays/${id}`)
+        .then((response) => {
+          const result = JSON.parse(response);
+
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining relay.'));
+
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  getRelays() {
+    return new Promise((resolve, reject) => {
+      this.webclient.get('relays')
+        .then((response) => {
+          const result = JSON.parse(response);
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining relays.'));
+
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  setViewerLiveview(viewerId, liveviewId) {
+    return new Promise((resolve, reject) => {
+      this.webclient.patch(`viewers/${viewerId}`, { liveview: liveviewId })
+        .then(() => resolve(true))
+        .catch((error) => reject(error));
+    });
+  }
+
+  setRelayOutputState(relayId, outputId, isOn) {
+    return new Promise((resolve, reject) => {
+      this.findRelayById(relayId)
+        .then((relay) => {
+          if (!relay || !Array.isArray(relay.outputs)) {
+            return reject(new Error('Relay outputs not found.'));
+          }
+
+          let outputFound = false;
+          const outputIdString = String(outputId);
+          const outputs = relay.outputs.map((output) => {
+            if (String(output.id) !== outputIdString) {
+              return output;
             }
 
-            return this.webclient.patch(`chimes/${chime.id}`, params)
-                .then(() => resolve('volume successfully set.'))
-                .catch(error => reject(new Error(`Error setting volume: ${error}`)));
-        });
-    }
+            outputFound = true;
+            return { ...output, state: isOn ? 'on' : 'off' };
+          });
 
-    setSpeakerVolume(speaker, volumeLevel) {
-        return new Promise((resolve, reject) => {
-            const params = {
-                volume: Math.round(volumeLevel * 100)
-            };
+          if (!outputFound) {
+            return reject(new Error(`Relay output ${outputId} not found.`));
+          }
 
-            return this.webclient.patch(`speakers/${speaker.id}`, params)
-                .then(() => resolve('Speaker volume successfully set.'))
-                .catch(error => reject(new Error(`Error setting speaker volume: ${error}`)));
-        });
-    }
+          return this.webclient.patch(`relays/${relayId}`, { outputs })
+            .then(() => resolve('Relay output successfully set.'))
+            .catch((error) => reject(new Error(`Error setting relay output: ${error}`)));
+        })
+        .catch((error) => reject(new Error(`Error setting relay output: ${error}`)));
+    });
+  }
 
-    getLights() {
-        return new Promise((resolve, reject) => {
-            this.webclient.get('lights')
-                .then(response => {
-                    const result = JSON.parse(response);
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining lights.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
+  pulseRelayOutput(relayId, outputId, pulseDuration = 1000) {
+    return new Promise((resolve, reject) => {
+      const duration = Number(pulseDuration);
+      const safeDuration = Number.isFinite(duration) && duration > 0 ? Math.round(duration) : 1000;
 
-    findRelayById(id) {
-        return new Promise((resolve, reject) => {
-            this.webclient.get(`relays/${id}`)
-                .then(response => {
-                    const result = JSON.parse(response);
+      return this.webclient.post(`relays/${relayId}/outputs/${outputId}/activate`, { pulseDuration: safeDuration })
+        .then(() => resolve('Relay output successfully pulsed.'))
+        .catch((error) => reject(new Error(`Error pulsing relay output: ${error}`)));
+    });
+  }
 
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining relay.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
+  setLightOn(light, isLightOn) {
+    return new Promise((resolve, reject) => {
+      const isLedForceOn = {
+        isLedForceOn: isLightOn,
+      };
+      const params = {
+        isLightOn,
+        lightOnSettings: isLedForceOn,
+      };
+      return this.webclient.patch(`lights/${light.id}`, params)
+        .then(() => resolve('isLightOn successfully set.'))
+        .catch((error) => reject(new Error(`Error setting isLightOn: ${error}`)));
+    });
+  }
 
-    getRelays() {
-        return new Promise((resolve, reject) => {
-            this.webclient.get('relays')
-                .then(response => {
-                    const result = JSON.parse(response);
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining relays.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
+  setLightLevel(light, ledLevel) {
+    this.homey.app.debug(ledLevel);
+    return new Promise((resolve, reject) => {
+      const isLedForceOn = {
+        ledLevel,
+      };
+      const params = {
+        lightDeviceSettings: isLedForceOn,
+      };
+      return this.webclient.patch(`lights/${light.id}`, params)
+        .then(() => resolve('setLightLevel successfully set.'))
+        .catch((error) => reject(new Error(`Error setting setLightLevel: ${error}`)));
+    });
+  }
 
-    setViewerLiveview(viewerId, liveviewId) {
-        return new Promise((resolve, reject) => {
-            this.webclient.patch(`viewers/${viewerId}`, { liveview: liveviewId })
-                .then(() => resolve(true))
-                .catch(error => reject(error));
-        });
-    }
+  setLightMode(light, mode) {
+    this.homey.app.debug(mode);
+    return new Promise((resolve, reject) => {
+      let lightModeSettings = {};
+      if (mode === 'motion') {
+        lightModeSettings = {
+          mode: 'motion',
+          enableAt: 'fulltime',
 
-    setRelayOutputState(relayId, outputId, isOn) {
-        return new Promise((resolve, reject) => {
-            this.findRelayById(relayId)
-                .then((relay) => {
-                    if (!relay || !Array.isArray(relay.outputs)) {
-                        return reject(new Error('Relay outputs not found.'));
-                    }
+        };
+      } else if (mode === 'dark') {
+        lightModeSettings = {
+          mode: 'motion',
+          enableAt: 'dark',
 
-                    let outputFound = false;
-                    const outputIdString = String(outputId);
-                    const outputs = relay.outputs.map((output) => {
-                        if (String(output.id) !== outputIdString) {
-                            return output;
-                        }
+        };
+      } else {
+        lightModeSettings = {
+          mode,
+          enableAt: 'dark',
 
-                        outputFound = true;
-                        return Object.assign({}, output, {
-                            state: isOn ? 'on' : 'off'
-                        });
-                    });
+        };
+      }
+      const params = {
+        lightModeSettings,
+      };
+      return this.webclient.patch(`lights/${light.id}`, params)
+        .then(() => resolve('setLightMode successfully set.'))
+        .catch((error) => reject(new Error(`Error setting setLightMode: ${error}`)));
+    });
+  }
 
-                    if (!outputFound) {
-                        return reject(new Error(`Relay output ${outputId} not found.`));
-                    }
+  getSensors() {
+    return new Promise((resolve, reject) => {
+      this.webclient.get('sensors')
+        .then((response) => {
+          const result = JSON.parse(response);
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining sensors.'));
 
-                    return this.webclient.patch(`relays/${relayId}`, { outputs })
-                        .then(() => resolve('Relay output successfully set.'))
-                        .catch(error => reject(new Error(`Error setting relay output: ${error}`)));
-                })
-                .catch(error => reject(new Error(`Error setting relay output: ${error}`)));
-        });
-    }
+        })
+        .catch((error) => reject(error));
+    });
+  }
 
-    pulseRelayOutput(relayId, outputId, pulseDuration = 1000) {
-        return new Promise((resolve, reject) => {
-            const duration = Number(pulseDuration);
-            const safeDuration = Number.isFinite(duration) && duration > 0 ? Math.round(duration) : 1000;
+  getWeather() {
+    return new Promise((resolve, reject) => {
+      this.webclient.get('weather')
+        .then((response) => {
+          const result = JSON.parse(response);
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining weather data.'));
 
-            return this.webclient.post(`relays/${relayId}/outputs/${outputId}/activate`, { pulseDuration: safeDuration })
-                .then(() => resolve('Relay output successfully pulsed.'))
-                .catch(error => reject(new Error(`Error pulsing relay output: ${error}`)));
-        });
-    }
+        })
+        .catch((error) => reject(error));
+    });
+  }
 
-    setLightOn(light, isLightOn) {
-        return new Promise((resolve, reject) => {
-            const isLedForceOn = {
-                isLedForceOn: isLightOn
-            }
-            const params = {
-                isLightOn: isLightOn,
-                lightOnSettings: isLedForceOn
-            };
-            return this.webclient.patch(`lights/${light.id}`, params)
-                .then(() => resolve('isLightOn successfully set.'))
-                .catch(error => reject(new Error(`Error setting isLightOn: ${error}`)));
-        });
-    }
+  getUsers() {
+    return new Promise((resolve, reject) => {
+      this.getBootstrapInfo()
+        .then((result) => {
+          return resolve(result.users);
+        })
+        .catch((error) => this.error(error));
+    });
+  }
 
-    setLightLevel(light, ledLevel) {
-        this.homey.app.debug(ledLevel);
-        return new Promise((resolve, reject) => {
-            const isLedForceOn = {
-                ledLevel: ledLevel
-            }
-            const params = {
-                lightDeviceSettings: isLedForceOn
-            };
-            return this.webclient.patch(`lights/${light.id}`, params)
-                .then(() => resolve('setLightLevel successfully set.'))
-                .catch(error => reject(new Error(`Error setting setLightLevel: ${error}`)));
-        });
-    }
+  getCloudUsers() {
+    return new Promise((resolve, reject) => {
+      const params = {
+        page_num: 1,
+        page_size: 200,
+      };
+      this.webclient.get('users/api/v2/users/search', params, false, true)
+        .then((response) => {
+          const result = JSON.parse(response);
+          return resolve(result.data);
+        })
+        .catch((error) => reject(error));
+    });
+  }
 
-    setLightMode(light, mode) {
-        this.homey.app.debug(mode);
-        return new Promise((resolve, reject) => {
-            let lightModeSettings = {}
-            if (mode === "motion") {
-                lightModeSettings = {
-                    mode: "motion",
-                    enableAt: "fulltime"
+  getUsernameById(id) {
+    return new Promise((resolve, reject) => {
+      this.getUsers()
+        .then((users) => {
+          const user = users.find((user) => user.id === id);
+          return resolve(user.localUsername);
+        })
+        .catch((error) => reject(error));
+    });
+  }
 
-                }
-            } else if (mode === "dark") {
-                lightModeSettings = {
-                    mode: "motion",
-                    enableAt: "dark"
+  getCloudUsernameById(id) {
+    return new Promise((resolve, reject) => {
+      this.getCloudUsers()
+        .then((users) => {
+          const user = users.find((user) => user.unique_id === id);
+          return resolve(user.email !== '' ? user.email : user.username);
+        })
+        .catch((error) => reject(error));
+    });
+  }
 
-                }
-            } else {
-                lightModeSettings = {
-                    mode: mode,
-                    enableAt: 'dark'
+  getCloudUserById(id) {
+    return new Promise((resolve, reject) => {
+      this.getCloudUsers()
+        .then((users) => {
+          const user = users.find((user) => user.unique_id === id);
+          return resolve(user);
+        })
+        .catch((error) => reject(error));
+    });
+  }
 
-                }
-            }
-            const params = {
-                lightModeSettings: lightModeSettings
-            };
-            return this.webclient.patch(`lights/${light.id}`, params)
-                .then(() => resolve('setLightMode successfully set.'))
-                .catch(error => reject(new Error(`Error setting setLightMode: ${error}`)));
-        });
-    }
+  setStatusLed(camera, enabled) {
+    return new Promise((resolve, reject) => {
+      const params = {
+        ledSettings: {
+          isEnabled: enabled,
+        },
+      };
+      return this.webclient.patch(`cameras/${camera.id}`, params)
+        .then(() => resolve('Status Led successfully set.'))
+        .catch((error) => reject(new Error(`Error setting status led: ${error}`)));
+    });
+  }
 
-    getSensors() {
-        return new Promise((resolve, reject) => {
-            this.webclient.get('sensors')
-                .then(response => {
-                    const result = JSON.parse(response);
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining sensors.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
+  setStatusSound(camera, enabled) {
+    return new Promise((resolve, reject) => {
+      const params = {
+        speakerSettings: {
+          areSystemSoundsEnabled: enabled,
+        },
+      };
+      return this.webclient.patch(`cameras/${camera.id}`, params)
+        .then(() => resolve('Status Sound successfully set.'))
+        .catch((error) => reject(new Error(`Error setting status sound: ${error}`)));
+    });
+  }
 
-    getWeather() {
-        return new Promise((resolve, reject) => {
-            this.webclient.get('weather')
-                .then(response => {
-                    const result = JSON.parse(response);
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining weather data.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
+  setDoorbellRingVolume(camera, volumeLevel) {
+    return new Promise((resolve, reject) => {
+      const params = {
+        speakerSettings: {
+          ringVolume: Math.round(volumeLevel),
+        },
+      };
+      return this.webclient.patch(`cameras/${camera.id}`, params)
+        .then(() => resolve('Doorbell ring volume successfully set.'))
+        .catch((error) => reject(new Error(`Error setting doorbell ring volume: ${error}`)));
+    });
+  }
 
-    getUsers() {
-        return new Promise((resolve, reject) => {
-            this.getBootstrapInfo()
-                .then((result) => {
-                    return resolve(result.users);
-                })
-                .catch(error => this.error(error));
-        });
-    }
+  setDoorbellTalkbackVolume(camera, volumeLevel) {
+    return new Promise((resolve, reject) => {
+      const params = {
+        speakerSettings: {
+          speakerVolume: Math.round(volumeLevel),
+        },
+      };
+      return this.webclient.patch(`cameras/${camera.id}`, params)
+        .then(() => resolve('Doorbell speaker volume successfully set.'))
+        .catch((error) => reject(new Error(`Error setting doorbell speaker volume: ${error}`)));
+    });
+  }
 
-    getCloudUsers() {
-        return new Promise((resolve, reject) => {
-            const params = {
-                page_num: 1,
-                page_size: 200
-            }
-            this.webclient.get('users/api/v2/users/search', params, false, true)
-                .then(response => {
-                    const result = JSON.parse(response);
-                    return resolve(result.data);
-                })
-                .catch(error => reject(error));
-        });
-    }
+  setPatrolStop(camera) {
+    return new Promise((resolve, reject) => {
+      return this.webclient.post(`cameras/${camera.id}/ptz/patrol/stop`, {})
+        .then(() => resolve('setPatrolStop successfully set.'))
+        .catch((error) => reject(new Error(`Error setting setPatrolStop: ${error}`)));
+    });
+  }
 
-    getUsernameById(id) {
-        return new Promise((resolve, reject) => {
-            this.getUsers()
-                .then(users => {
-                    const user = users.find(user => user.id === id);
-                    return resolve(user.localUsername);
-                })
-                .catch(error => reject(error));
-        });
-    }
+  setPatrolStart(camera, presetId) {
+    return new Promise((resolve, reject) => {
+      return this.webclient.post(`cameras/${camera.id}/ptz/patrol/start/${presetId}`, {})
+        .then(() => resolve('setPatrolStart successfully set.'))
+        .catch((error) => reject(new Error(`Error setting setPatrolStart: ${error}`)));
+    });
+  }
 
-    getCloudUsernameById(id) {
-        return new Promise((resolve, reject) => {
-            this.getCloudUsers()
-                .then(users => {
-                    const user = users.find(user => user.unique_id === id);
-                    return resolve(user.email !== "" ? user.email : user.username);
-                })
-                .catch(error => reject(error));
-        });
-    }
+  setPTZHome(camera) {
+    return new Promise((resolve, reject) => {
+      return this.webclient.post(`cameras/${camera.id}/ptz/goto/-1`, {})
+        .then(() => resolve('setPTZHome successfully set.'))
+        .catch((error) => reject(new Error(`Error setting setPTZHome: ${error}`)));
+    });
+  }
 
-    getCloudUserById(id) {
-        return new Promise((resolve, reject) => {
-            this.getCloudUsers()
-                .then(users => {
-                    const user = users.find(user => user.unique_id === id);
-                    return resolve(user);
-                })
-                .catch(error => reject(error));
-        });
-    }
+  setPTZPreset(camera, presetId) {
+    return new Promise((resolve, reject) => {
+      return this.webclient.post(`cameras/${camera.id}/ptz/goto/${(presetId - 1)}`, {})
+        .then(() => resolve('setPTZPreset successfully set.'))
+        .catch((error) => reject(new Error(`Error setting setPTZPreset: ${error}`)));
+    });
+  }
 
-    setStatusLed(camera, enabled) {
-        return new Promise((resolve, reject) => {
-            const params = {
-                ledSettings: {
-                    isEnabled: enabled
-                }
-            };
-            return this.webclient.patch(`cameras/${camera.id}`, params)
-                .then(() => resolve('Status Led successfully set.'))
-                .catch(error => reject(new Error(`Error setting status led: ${error}`)));
-        });
-    }
+  setColorNightVision(camera, enabled) {
+    return new Promise((resolve, reject) => {
+      const params = {
+        ispSettings: {
+          isColorNightVisionEnabled: enabled,
+        },
+      };
+      return this.webclient.patch(`cameras/${camera.id}`, params)
+        .then(() => resolve('Color Night Vision successfully set.'))
+        .catch((error) => reject(new Error(`Error setting Color Night Vision: ${error}`)));
+    });
+  }
 
-    setStatusSound(camera, enabled) {
-        return new Promise((resolve, reject) => {
-            const params = {
-                speakerSettings: {
-                    areSystemSoundsEnabled: enabled
-                }
-            };
-            return this.webclient.patch(`cameras/${camera.id}`, params)
-                .then(() => resolve('Status Sound successfully set.'))
-                .catch(error => reject(new Error(`Error setting status sound: ${error}`)));
-        });
-    }
+  setAutoTracking(camera, person, smartZoom) {
+    return new Promise((resolve, reject) => {
+      const autoTrackingObjectTypes = [];
+      if (person) {
+        autoTrackingObjectTypes.push('person');
+      }
+      const params = {
+        smartDetectSettings: {
+          autoTrackingWithZoom: smartZoom,
+          autoTrackingObjectTypes,
+        },
+      };
+      return this.webclient.patch(`cameras/${camera.id}`, params)
+        .then(() => resolve('Auto Tracking successfully set.'))
+        .catch((error) => reject(new Error(`Error setting Auto Tracking: ${error}`)));
+    });
+  }
 
-    setDoorbellRingVolume(camera, volumeLevel) {
-        return new Promise((resolve, reject) => {
-            const params = {
-                speakerSettings: {
-                    ringVolume: Math.round(volumeLevel)
-                }
-            };
-            return this.webclient.patch(`cameras/${camera.id}`, params)
-                .then(() => resolve('Doorbell ring volume successfully set.'))
-                .catch(error => reject(new Error(`Error setting doorbell ring volume: ${error}`)));
-        });
-    }
+  setFaceDetection(camera, enabled) {
+    return new Promise((resolve, reject) => {
+      this.webclient.get(`cameras/${camera.id}`)
+        .then((response) => {
+          const cameraConfig = JSON.parse(response);
+          let objectTypes = (cameraConfig.smartDetectSettings && Array.isArray(cameraConfig.smartDetectSettings.objectTypes))
+            ? [...cameraConfig.smartDetectSettings.objectTypes]
+            : [];
+          if (enabled) {
+            if (!objectTypes.includes('face')) objectTypes.push('face');
+          } else {
+            objectTypes = objectTypes.filter((t) => t !== 'face');
+          }
+          return this.webclient.patch(`cameras/${camera.id}`, { smartDetectSettings: { objectTypes } });
+        })
+        .then(() => resolve('Face Detection successfully set.'))
+        .catch((error) => reject(new Error(`Error setting Face Detection: ${error}`)));
+    });
+  }
 
-    setDoorbellTalkbackVolume(camera, volumeLevel) {
-        return new Promise((resolve, reject) => {
-            const params = {
-                speakerSettings: {
-                    speakerVolume: Math.round(volumeLevel)
-                }
-            };
-            return this.webclient.patch(`cameras/${camera.id}`, params)
-                .then(() => resolve('Doorbell speaker volume successfully set.'))
-                .catch(error => reject(new Error(`Error setting doorbell speaker volume: ${error}`)));
-        });
-    }
+  testRingtone(camera) {
+    return new Promise((resolve, reject) => {
+      return this.webclient.post(`cameras/${camera.id}/test-ringtone`, {})
+        .then(() => resolve('Ringtone successfully played.'))
+        .catch((error) => reject(new Error(`Error playing ringtone: ${error}`)));
+    });
+  }
 
-    setPatrolStop(camera) {
-        return new Promise((resolve, reject) => {
-            return this.webclient.post(`cameras/${camera.id}/ptz/patrol/stop`, {})
-                .then(() => resolve('setPatrolStop successfully set.'))
-                .catch(error => reject(new Error(`Error setting setPatrolStop: ${error}`)));
-        });
-    }
+  playChimeTone(chime) {
+    return new Promise((resolve, reject) => {
+      return this.webclient.post(`chimes/${chime.id}/play-speaker`, {})
+        .then(() => resolve('Chime test tone successfully played.'))
+        .catch((error) => reject(new Error(`Error playing chime test tone: ${error}`)));
+    });
+  }
 
-    setPatrolStart(camera, presetId) {
-        return new Promise((resolve, reject) => {
-            return this.webclient.post(`cameras/${camera.id}/ptz/patrol/start/${presetId}`, {})
-                .then(() => resolve('setPatrolStart successfully set.'))
-                .catch(error => reject(new Error(`Error setting setPatrolStart: ${error}`)));
-        });
-    }
+  getSirens() {
+    return new Promise((resolve, reject) => {
+      this.webclient.get('sirens')
+        .then((response) => {
+          const result = JSON.parse(response);
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining sirens.'));
 
-    setPTZHome(camera) {
-        return new Promise((resolve, reject) => {
-            return this.webclient.post(`cameras/${camera.id}/ptz/goto/-1`, {})
-                .then(() => resolve('setPTZHome successfully set.'))
-                .catch(error => reject(new Error(`Error setting setPTZHome: ${error}`)));
-        });
-    }
+        })
+        .catch((error) => reject(error));
+    });
+  }
 
-    setPTZPreset(camera, presetId) {
-        return new Promise((resolve, reject) => {
-            return this.webclient.post(`cameras/${camera.id}/ptz/goto/${(presetId - 1)}`, {})
-                .then(() => resolve('setPTZPreset successfully set.'))
-                .catch(error => reject(new Error(`Error setting setPTZPreset: ${error}`)));
-        });
-    }
+  setSirenVolume(siren, volumeLevel) {
+    return new Promise((resolve, reject) => {
+      const params = {
+        volume: volumeLevel * 100,
+      };
+      return this.webclient.patch(`sirens/${siren.id}`, params)
+        .then(() => resolve('volume successfully set.'))
+        .catch((error) => reject(new Error(`Error setting volume: ${error}`)));
+    });
+  }
 
-    setColorNightVision(camera, enabled) {
-        return new Promise((resolve, reject) => {
-            const params = {
-                ispSettings: {
-                    isColorNightVisionEnabled: enabled
-                }
-            };
-            return this.webclient.patch(`cameras/${camera.id}`, params)
-                .then(() => resolve('Color Night Vision successfully set.'))
-                .catch(error => reject(new Error(`Error setting Color Night Vision: ${error}`)));
-        });
-    }
-
-    setAutoTracking(camera, person, smart_zoom) {
-        return new Promise((resolve, reject) => {
-            let autoTrackingObjectTypes = [];
-            if (person) {
-                autoTrackingObjectTypes.push("person");
-            }
-            const params = {
-                smartDetectSettings: {
-                    autoTrackingWithZoom: smart_zoom,
-                    autoTrackingObjectTypes
-                }
-            };
-            return this.webclient.patch(`cameras/${camera.id}`, params)
-                .then(() => resolve('Auto Tracking successfully set.'))
-                .catch(error => reject(new Error(`Error setting Auto Tracking: ${error}`)));
-        });
-    }
-
-    setFaceDetection(camera, enabled) {
-        return new Promise((resolve, reject) => {
-            this.webclient.get(`cameras/${camera.id}`)
-                .then(response => {
-                    const cameraConfig = JSON.parse(response);
-                    let objectTypes = (cameraConfig.smartDetectSettings && Array.isArray(cameraConfig.smartDetectSettings.objectTypes))
-                        ? [...cameraConfig.smartDetectSettings.objectTypes]
-                        : [];
-                    if (enabled) {
-                        if (!objectTypes.includes('face')) objectTypes.push('face');
-                    } else {
-                        objectTypes = objectTypes.filter(t => t !== 'face');
-                    }
-                    return this.webclient.patch(`cameras/${camera.id}`, { smartDetectSettings: { objectTypes } });
-                })
-                .then(() => resolve('Face Detection successfully set.'))
-                .catch(error => reject(new Error(`Error setting Face Detection: ${error}`)));
-        });
-    }
-
-    testRingtone(camera) {
-        return new Promise((resolve, reject) => {
-            return this.webclient.post(`cameras/${camera.id}/test-ringtone`, {})
-                .then(() => resolve('Ringtone successfully played.'))
-                .catch(error => reject(new Error(`Error playing ringtone: ${error}`)));
-        });
-    }
-
-    playChimeTone(chime) {
-        return new Promise((resolve, reject) => {
-            return this.webclient.post(`chimes/${chime.id}/play-speaker`, {})
-                .then(() => resolve('Chime test tone successfully played.'))
-                .catch(error => reject(new Error(`Error playing chime test tone: ${error}`)));
-        });
-    }
-
-    getSirens() {
-        return new Promise((resolve, reject) => {
-            this.webclient.get('sirens')
-                .then(response => {
-                    const result = JSON.parse(response);
-                    if (result) {
-                        return resolve(result);
-                    } else {
-                        return reject(new Error('Error obtaining sirens.'));
-                    }
-                })
-                .catch(error => reject(error));
-        });
-    }
-
-    setSirenVolume(siren, volumeLevel) {
-        return new Promise((resolve, reject) => {
-            const params = {
-                volume: volumeLevel * 100
-            };
-            return this.webclient.patch(`sirens/${siren.id}`, params)
-                .then(() => resolve('volume successfully set.'))
-                .catch(error => reject(new Error(`Error setting volume: ${error}`)));
-        });
-    }
-
-    testSiren(siren, volumeLevel) {
-        return new Promise((resolve, reject) => {
-            const params = {
-                volume: volumeLevel * 100
-            };
-            return this.webclient.post(`sirens/${siren.id}/test-sound`, {})
-                .then(() => resolve('Siren Test successfully send.'))
-                .catch(error => reject(new Error(`Error send test siren: ${error}`)));
-        });
-    }
+  testSiren(siren, volumeLevel) {
+    return new Promise((resolve, reject) => {
+      return this.webclient.post(`sirens/${siren.id}/test-sound`, {})
+        .then(() => resolve('Siren Test successfully send.'))
+        .catch((error) => reject(new Error(`Error send test siren: ${error}`)));
+    });
+  }
 
   setNvrArmMode(mode) {
     const normalizedMode = String(mode || '').toLowerCase();
@@ -1235,7 +1223,7 @@ class ProtectAPI extends BaseClass {
       return null;
     }
 
-    const nvr = this._bootstrap.nvr;
+    const { nvr } = this._bootstrap;
     const profileGroups = [
       nvr.armProfiles,
       nvr.armModeProfiles,
@@ -1299,7 +1287,7 @@ class ProtectAPI extends BaseClass {
       return null;
     }
 
-    const nvr = this._bootstrap.nvr;
+    const { nvr } = this._bootstrap;
 
     const directCandidates = [
       nvr.alarmProfileId,
@@ -1356,7 +1344,7 @@ class ProtectAPI extends BaseClass {
       return null;
     }
 
-    const nvr = this._bootstrap.nvr;
+    const { nvr } = this._bootstrap;
     const profileGroups = [
       nvr.alarmProfiles,
       nvr.armProfiles,
@@ -1455,6 +1443,7 @@ class ProtectAPI extends BaseClass {
       req.on('error', (error) => reject(error));
       req.write(body);
       req.end();
+      return undefined;
     });
   }
 
@@ -1502,6 +1491,7 @@ class ProtectAPI extends BaseClass {
 
       req.on('error', (error) => reject(error));
       req.end();
+      return undefined;
     });
   }
 
@@ -1635,30 +1625,30 @@ class ProtectAPI extends BaseClass {
       }));
   }
 
-   setNvrAwayMode(isAway) {
-     return this._setNvrAwayModeV2(isAway)
-       .then((result) => {
-         if (this.homey && this.homey.app) {
-           this.homey.app.debug(`[ProtectAPI] ${isAway ? 'arm' : 'disarm'} via v2 endpoint: ${result.endpoint}`);
-         }
-         return result.message;
-       })
-       .catch((v2Error) => {
-         if (this._isAuthError(v2Error)) {
-           throw v2Error;
-         }
+  setNvrAwayMode(isAway) {
+    return this._setNvrAwayModeV2(isAway)
+      .then((result) => {
+        if (this.homey && this.homey.app) {
+          this.homey.app.debug(`[ProtectAPI] ${isAway ? 'arm' : 'disarm'} via v2 endpoint: ${result.endpoint}`);
+        }
+        return result.message;
+      })
+      .catch((v2Error) => {
+        if (this._isAuthError(v2Error)) {
+          throw v2Error;
+        }
 
-         if (!this._canFallbackToV1FromV2Error(v2Error)) {
-           this.homey.app.error(`[ProtectAPI] v2 alarm ${isAway ? 'arm' : 'disarm'} failed and no v1 fallback available: ${v2Error.message}`);
-           throw v2Error;
-         }
+        if (!this._canFallbackToV1FromV2Error(v2Error)) {
+          this.homey.app.error(`[ProtectAPI] v2 alarm ${isAway ? 'arm' : 'disarm'} failed and no v1 fallback available: ${v2Error.message}`);
+          throw v2Error;
+        }
 
-         if (this.homey && this.homey.app) {
-           this.homey.app.debug(`[ProtectAPI] v2 profile discovery unavailable, falling back to v1 for ${isAway ? 'arm' : 'disarm'}: ${v2Error.message}`);
-         }
-         return this._setNvrAwayModeV1(isAway);
-       });
-   }
+        if (this.homey && this.homey.app) {
+          this.homey.app.debug(`[ProtectAPI] v2 profile discovery unavailable, falling back to v1 for ${isAway ? 'arm' : 'disarm'}: ${v2Error.message}`);
+        }
+        return this._setNvrAwayModeV1(isAway);
+      });
+  }
 
   getNvrArmState() {
     // Read the current arm state from the cached bootstrap nvr.armMode

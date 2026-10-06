@@ -45,7 +45,7 @@ class ZoneSensorDriver extends Homey.Driver {
    * Cameras + doorbells from whichever Protect API is available.
    */
   async _listCameras() {
-    const app = this.homey.app;
+    const { app } = this.homey;
     if (app.isV1Available()) {
       const cameras = await app.api.getCameras();
       const doorbells = await app.api.getDoorbells();

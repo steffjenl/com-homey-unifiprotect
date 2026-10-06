@@ -15,7 +15,9 @@ function buildFrame(frameType, payloadFormat, compress, payloadBuffer) {
   return Buffer.concat([header, payload]);
 }
 
-const action = { action: 'add', id: 'event-1', modelKey: 'event', newUpdateId: '2' };
+const action = {
+  action: 'add', id: 'event-1', modelKey: 'event', newUpdateId: '2',
+};
 const payload = { type: 'smartDetectZone', camera: 'cam-1', modelKey: 'event' };
 
 const actionFrame = buildFrame(1, 1, false, Buffer.from(JSON.stringify(action), 'utf8'));

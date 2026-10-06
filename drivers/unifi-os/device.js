@@ -79,24 +79,24 @@ class UniFiOSDevice extends Homey.Device {
 
   onTemperatureChange(temperature) {
     if (this.hasCapability('measure_temperature')) {
-      this.setCapabilityValue('measure_temperature', temperature);
+      this.setCapabilityValue('measure_temperature', temperature).catch(this.error);
     }
   }
 
   onStorageChange(storage) {
-    if (storage.hasOwnProperty('available')) {
+    if (Object.prototype.hasOwnProperty.call(storage, 'available')) {
       if (this.hasCapability('measure_data_size.free')) {
-        this.setCapabilityValue('measure_data_size.free', (((storage.available / 1000) / 1000) / 1000)); // Convert byes to GB
+        this.setCapabilityValue('measure_data_size.free', (((storage.available / 1000) / 1000) / 1000)).catch(this.error); // Convert byes to GB
       }
     }
-    if (storage.hasOwnProperty('used')) {
+    if (Object.prototype.hasOwnProperty.call(storage, 'used')) {
       if (this.hasCapability('measure_data_size.used')) {
-        this.setCapabilityValue('measure_data_size.used', (((storage.used / 1000) / 1000) / 1000)); // Convert byes to GB
+        this.setCapabilityValue('measure_data_size.used', (((storage.used / 1000) / 1000) / 1000)).catch(this.error); // Convert byes to GB
       }
     }
-    if (storage.hasOwnProperty('size')) {
+    if (Object.prototype.hasOwnProperty.call(storage, 'size')) {
       if (this.hasCapability('measure_data_size.total')) {
-        this.setCapabilityValue('measure_data_size.total', (((storage.size / 1000) / 1000) / 1000)); // Convert byes to GB
+        this.setCapabilityValue('measure_data_size.total', (((storage.size / 1000) / 1000) / 1000)).catch(this.error); // Convert byes to GB
       }
     }
   }

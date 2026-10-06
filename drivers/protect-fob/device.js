@@ -80,9 +80,12 @@ class ProtectFobDevice extends Homey.Device {
         && payload.wirelessConnectionState
         && payload.wirelessConnectionState.batteryStatus;
       const batteryStatus = payload && payload.batteryStatus;
-      const percentage = wirelessBattery && typeof wirelessBattery.percentage !== 'undefined'
-        ? wirelessBattery.percentage
-        : (batteryStatus && typeof batteryStatus.percentage !== 'undefined' ? batteryStatus.percentage : null);
+      let percentage = null;
+      if (wirelessBattery && typeof wirelessBattery.percentage !== 'undefined') {
+        percentage = wirelessBattery.percentage;
+      } else if (batteryStatus && typeof batteryStatus.percentage !== 'undefined') {
+        percentage = batteryStatus.percentage;
+      }
 
       if (percentage !== null && this.hasCapability('measure_battery')) {
         const normalized = Math.max(0, Math.min(100, Number(percentage)));
@@ -124,4 +127,3 @@ class ProtectFobDevice extends Homey.Device {
 Object.assign(ProtectFobDevice.prototype, ConnectionMonitorMixin);
 
 module.exports = ProtectFobDevice;
-

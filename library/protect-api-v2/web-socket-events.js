@@ -7,437 +7,437 @@ const BaseClass = require('../baseclass');
 // no V1 precedent, dispatched as a single generic device trigger via
 // NVRAlarmDevice#onAlarmHubZoneEvent.
 const ALARM_HUB_EVENT_TYPES = [
-    'alarmHubMotion', 'alarmHubEntryOpened', 'alarmHubEntryClosed', 'alarmHubSmoke',
-    'alarmHubGlassBreak', 'alarmHubButtonPress', 'alarmHubTamper', 'alarmHubDeviceTamper',
-    'alarmHubRelaySwitched', 'alarmHubBatteryLow', 'alarmHubBatteryConnected',
+  'alarmHubMotion', 'alarmHubEntryOpened', 'alarmHubEntryClosed', 'alarmHubSmoke',
+  'alarmHubGlassBreak', 'alarmHubButtonPress', 'alarmHubTamper', 'alarmHubDeviceTamper',
+  'alarmHubRelaySwitched', 'alarmHubBatteryLow', 'alarmHubBatteryConnected',
 ];
 
 // Smoke-detector sub-events not covered by the continuous sensor.smokeStatus feed -
 // see Sensor#onSmokeSubEvent.
 const SMOKE_SUB_EVENT_TYPES = [
-    'sensorSmokeFault', 'sensorCoFault', 'sensorSmokeEndOfLife',
-    'sensorSmokeBatteryLow', 'sensorSmokeNeedsCleaning', 'sensorSmokeTest',
+  'sensorSmokeFault', 'sensorCoFault', 'sensorSmokeEndOfLife',
+  'sensorSmokeBatteryLow', 'sensorSmokeNeedsCleaning', 'sensorSmokeTest',
 ];
 
 class ProtectWebSocket extends BaseClass {
-    constructor(...props) {
-        super(...props);
-        this.loggedInStatus = 'Unknown';
-        this.lastWebsocketMessage = null;
-        this._isDisconnectRequested = false;
-        this._reconnectTimeout = null;
-        this._reconnectMinDelayMs = 10000;
-        this._reconnectMaxDelayMs = 300000;
-        this._reconnectJitterRatio = 0.2;
-        this._reconnectAttempt = 0;
-    }
+  constructor(...props) {
+    super(...props);
+    this.loggedInStatus = 'Unknown';
+    this.lastWebsocketMessage = null;
+    this._isDisconnectRequested = false;
+    this._reconnectTimeout = null;
+    this._reconnectMinDelayMs = 10000;
+    this._reconnectMaxDelayMs = 300000;
+    this._reconnectJitterRatio = 0.2;
+    this._reconnectAttempt = 0;
+  }
 
-    heartbeat() {
-        this.homey.log('Send heartbeat ping to websocket');
-        this.homey.clearInterval(this.pingTimeout);
+  heartbeat() {
+    this.homey.log('Send heartbeat ping to websocket');
+    this.homey.clearInterval(this.pingTimeout);
 
-        if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
-            this.pingTimeout = this.homey.setInterval(() => {
-                try {
-                    if (this._eventListener && this._eventListener.readyState === WebSocketEvents.OPEN) {
-                        this._eventListener.ping();
-                    }
-                } catch (error) {
-                    this.homey.app.log('[V2 Events WS] heartbeat ping failed: ' + error);
-                }
-            }, 30000);
-        }
-    }
-
-    _clearReconnectTimeout() {
-        if (this._reconnectTimeout) {
-            this.homey.clearTimeout(this._reconnectTimeout);
-            this._reconnectTimeout = null;
-        }
-    }
-
-    _scheduleReconnect() {
-        if (this._isDisconnectRequested || this._reconnectTimeout) {
-            return;
-        }
-
-        const baseReconnectDelayMs = Math.min(
-            this._reconnectMinDelayMs * Math.pow(2, this._reconnectAttempt),
-            this._reconnectMaxDelayMs,
-        );
-        const jitterRangeMs = Math.floor(baseReconnectDelayMs * this._reconnectJitterRatio);
-        const jitterOffsetMs = jitterRangeMs > 0
-            ? Math.floor((Math.random() * ((jitterRangeMs * 2) + 1)) - jitterRangeMs)
-            : 0;
-        const reconnectDelayMs = Math.min(
-            this._reconnectMaxDelayMs,
-            Math.max(this._reconnectMinDelayMs, baseReconnectDelayMs + jitterOffsetMs),
-        );
-        const reconnectAttempt = this._reconnectAttempt + 1;
-        this.homey.app.log('[V2 Events WS] WebSocket disconnected, reconnect attempt #' + reconnectAttempt + ' in ' + (reconnectDelayMs / 1000) + 's');
-
-        this._reconnectAttempt += 1;
-        this._reconnectTimeout = this.homey.setTimeout(() => {
-            this._reconnectTimeout = null;
-            this.reconnectNotificationsListener();
-        }, reconnectDelayMs);
-    }
-
-    isWebsocketConnected() {
-        if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
-            if (this._eventListener.readyState === WebSocketEvents.OPEN) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    getLastWebsocketMessageTime() {
-        return this.lastWebsocketMessage;
-    }
-
-    notificationsUrl() {
-        const webclient = this.homey.app.apiV2.webclient;
-        const path = webclient.buildApiPath('subscribe/events');
-        return `wss://${webclient.getRequestHost()}:${webclient.getRequestPort()}${path}`;
-    }
-
-    launchNotificationsListener() {
-        if (this.homey.app.apiV2.webclient.isCloudEnabled()) {
-            this.loggedInStatus = 'Disabled (Cloud API)';
-            this.homey.app.debug('[V2 Events WS] Cloud API mode enabled; websocket listener not started.');
-            return false;
-        }
-
-        // If we already have a listener, we're already all set.
-        if (this._eventListener) {
-            return true;
-        }
-
-        this.homey.app.log(`Update listener: ${this.notificationsUrl()}`);
-
+    if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
+      this.pingTimeout = this.homey.setInterval(() => {
         try {
-            this._isDisconnectRequested = false;
-            this.loggedInStatus = 'Connecting';
-
-            const _ws = new WebSocketEvents(this.notificationsUrl(), {
-                headers: {
-                    'X-API-KEY': `${this.homey.app.apiV2.webclient._apiToken}`,
-                },
-                rejectUnauthorized: false,
-                perMessageDeflate: false,
-            });
-
-            if (!_ws) {
-                this.homey.app.log('Unable to connect to the realtime update events API. Will retry again later.');
-                delete this._eventListener;
-                this._eventListenerConfigured = false;
-                return false;
-            }
-
-            this._eventListener = _ws;
-
-            // Connection opened
-            this._eventListener.on('open', (event) => {
-                this.homey.app.log(`${this.homey.app.apiV2.webclient._serverHost}: Connected to the UniFi realtime update events API.`);
-                this.loggedInStatus = 'Connected';
-                this._reconnectAttempt = 0;
-                this._clearReconnectTimeout();
-                this.homey.app.apiV2.emit('protectv2-connection-change', {state: 'connected', host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort});
-                this.heartbeat();
-            });
-
-            this._eventListener.on('pong', (event) => {
-                this.homey.log('Received pong from protect v2 events websocket');
-            });
-
-            this._eventListener.on('close', () => {
-                // terminate and cleanup websocket connection and timers
-                delete this._eventListener;
-                this._eventListenerConfigured = false;
-                this.homey.clearInterval(this.pingTimeout);
-                this.loggedInStatus = 'Disconnected';
-                this.homey.app.apiV2.emit('protectv2-connection-change', {state: 'disconnected', host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort});
-                this._scheduleReconnect();
-            });
-
-            this._eventListener.on('error', (error) => {
-                this.homey.app.log(error);
-                // If we're closing before fully established it's because we're shutting down the API - ignore it.
-                if (error.message !== 'WebSocket was closed before the connection was established') {
-                    this.homey.app.log(`${this.homey.app.apiV2.webclient._serverHost}: ${error}`);
-                    this.homey.emit('protectv2-connection-error', {error, host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort});
-                }
-
-                this.loggedInStatus = error.message;
-            });
+          if (this._eventListener && this._eventListener.readyState === WebSocketEvents.OPEN) {
+            this._eventListener.ping();
+          }
         } catch (error) {
-            this.homey.app.log(`${this.homey.app.apiV2.webclient._serverHost}: Error connecting to the realtime update events API: ${error}`);
-            this.loggedInStatus = error;
+          this.homey.app.log(`[V2 Events WS] heartbeat ping failed: ${error}`);
+        }
+      }, 30000);
+    }
+  }
+
+  _clearReconnectTimeout() {
+    if (this._reconnectTimeout) {
+      this.homey.clearTimeout(this._reconnectTimeout);
+      this._reconnectTimeout = null;
+    }
+  }
+
+  _scheduleReconnect() {
+    if (this._isDisconnectRequested || this._reconnectTimeout) {
+      return;
+    }
+
+    const baseReconnectDelayMs = Math.min(
+      this._reconnectMinDelayMs * 2 ** this._reconnectAttempt,
+      this._reconnectMaxDelayMs,
+    );
+    const jitterRangeMs = Math.floor(baseReconnectDelayMs * this._reconnectJitterRatio);
+    const jitterOffsetMs = jitterRangeMs > 0
+      ? Math.floor((Math.random() * ((jitterRangeMs * 2) + 1)) - jitterRangeMs)
+      : 0;
+    const reconnectDelayMs = Math.min(
+      this._reconnectMaxDelayMs,
+      Math.max(this._reconnectMinDelayMs, baseReconnectDelayMs + jitterOffsetMs),
+    );
+    const reconnectAttempt = this._reconnectAttempt + 1;
+    this.homey.app.log(`[V2 Events WS] WebSocket disconnected, reconnect attempt #${reconnectAttempt} in ${reconnectDelayMs / 1000}s`);
+
+    this._reconnectAttempt += 1;
+    this._reconnectTimeout = this.homey.setTimeout(() => {
+      this._reconnectTimeout = null;
+      this.reconnectNotificationsListener();
+    }, reconnectDelayMs);
+  }
+
+  isWebsocketConnected() {
+    if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
+      if (this._eventListener.readyState === WebSocketEvents.OPEN) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getLastWebsocketMessageTime() {
+    return this.lastWebsocketMessage;
+  }
+
+  notificationsUrl() {
+    const { webclient } = this.homey.app.apiV2;
+    const path = webclient.buildApiPath('subscribe/events');
+    return `wss://${webclient.getRequestHost()}:${webclient.getRequestPort()}${path}`;
+  }
+
+  launchNotificationsListener() {
+    if (this.homey.app.apiV2.webclient.isCloudEnabled()) {
+      this.loggedInStatus = 'Disabled (Cloud API)';
+      this.homey.app.debug('[V2 Events WS] Cloud API mode enabled; websocket listener not started.');
+      return false;
+    }
+
+    // If we already have a listener, we're already all set.
+    if (this._eventListener) {
+      return true;
+    }
+
+    this.homey.app.log(`Update listener: ${this.notificationsUrl()}`);
+
+    try {
+      this._isDisconnectRequested = false;
+      this.loggedInStatus = 'Connecting';
+
+      const _ws = new WebSocketEvents(this.notificationsUrl(), {
+        headers: {
+          'X-API-KEY': `${this.homey.app.apiV2.webclient._apiToken}`,
+        },
+        rejectUnauthorized: false,
+        perMessageDeflate: false,
+      });
+
+      if (!_ws) {
+        this.homey.app.log('Unable to connect to the realtime update events API. Will retry again later.');
+        delete this._eventListener;
+        this._eventListenerConfigured = false;
+        return false;
+      }
+
+      this._eventListener = _ws;
+
+      // Connection opened
+      this._eventListener.on('open', (event) => {
+        this.homey.app.log(`${this.homey.app.apiV2.webclient._serverHost}: Connected to the UniFi realtime update events API.`);
+        this.loggedInStatus = 'Connected';
+        this._reconnectAttempt = 0;
+        this._clearReconnectTimeout();
+        this.homey.app.apiV2.emit('protectv2-connection-change', { state: 'connected', host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort });
+        this.heartbeat();
+      });
+
+      this._eventListener.on('pong', (event) => {
+        this.homey.log('Received pong from protect v2 events websocket');
+      });
+
+      this._eventListener.on('close', () => {
+        // terminate and cleanup websocket connection and timers
+        delete this._eventListener;
+        this._eventListenerConfigured = false;
+        this.homey.clearInterval(this.pingTimeout);
+        this.loggedInStatus = 'Disconnected';
+        this.homey.app.apiV2.emit('protectv2-connection-change', { state: 'disconnected', host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort });
+        this._scheduleReconnect();
+      });
+
+      this._eventListener.on('error', (error) => {
+        this.homey.app.log(error);
+        // If we're closing before fully established it's because we're shutting down the API - ignore it.
+        if (error.message !== 'WebSocket was closed before the connection was established') {
+          this.homey.app.log(`${this.homey.app.apiV2.webclient._serverHost}: ${error}`);
+          this.homey.emit('protectv2-connection-error', { error, host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort });
         }
 
-        return true;
+        this.loggedInStatus = error.message;
+      });
+    } catch (error) {
+      this.homey.app.log(`${this.homey.app.apiV2.webclient._serverHost}: Error connecting to the realtime update events API: ${error}`);
+      this.loggedInStatus = error;
     }
 
-    disconnectEventListener() {
-        return new Promise((resolve, reject) => {
-            this._isDisconnectRequested = true;
-            this._reconnectAttempt = 0;
-            this._clearReconnectTimeout();
-            this.homey.clearInterval(this.pingTimeout);
+    return true;
+  }
 
-            if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
-                this.homey.app.log('Called terminate websocket');
-                this._eventListener.close();
-                delete this._eventListener;
-            }
-            this._eventListenerConfigured = false;
-            resolve(true);
-        });
+  disconnectEventListener() {
+    return new Promise((resolve, reject) => {
+      this._isDisconnectRequested = true;
+      this._reconnectAttempt = 0;
+      this._clearReconnectTimeout();
+      this.homey.clearInterval(this.pingTimeout);
+
+      if (typeof this._eventListener !== 'undefined' && this._eventListener !== null) {
+        this.homey.app.log('Called terminate websocket');
+        this._eventListener.close();
+        delete this._eventListener;
+      }
+      this._eventListenerConfigured = false;
+      resolve(true);
+    });
+  }
+
+  reconnectNotificationsListener() {
+    this.homey.app.log('Called reconnectUpdatesListener');
+    if (this.homey.app.apiV2.webclient.isCloudEnabled()) {
+      this._isDisconnectRequested = true;
+      this.disconnectEventListener().catch((error) => this.homey.error(error));
+      this.loggedInStatus = 'Disabled (Cloud API)';
+      return;
+    }
+    this._isDisconnectRequested = false;
+    this.disconnectEventListener().then((res) => {
+      this._isDisconnectRequested = false;
+      this.launchNotificationsListener();
+      this.configureNotificationsListener(this);
+    }).catch((error) => {
+      this.homey.error(error);
+    });
+  }
+
+  /*  */
+  shouldProcessEvent(updatePacket) {
+    return true;
+  }
+
+  configureNotificationsListener() {
+    // Only configure the event listener if it exists and it's not already configured.
+    if (!this._eventListener || this._eventListenerConfigured) {
+      return true;
     }
 
-    reconnectNotificationsListener() {
-        this.homey.app.log('Called reconnectUpdatesListener');
-        if (this.homey.app.apiV2.webclient.isCloudEnabled()) {
-            this._isDisconnectRequested = true;
-            this.disconnectEventListener().catch((error) => this.homey.error(error));
-            this.loggedInStatus = 'Disabled (Cloud API)';
-            return;
+    // Listen for any messages coming in from our listener.
+    this._eventListener.on('message', (event) => {
+
+      if (!this.shouldProcessEvent(event.toString())) {
+        return;
+      }
+
+      const eventData = JSON.parse(event.toString());
+
+      this.lastWebsocketMessage = this.homey.app.toLocalTime(new Date()).toISOString().slice(0, 16);
+
+      if (!eventData || !eventData.item || !eventData.item.device) {
+        return;
+      }
+
+      const { item } = eventData;
+      const deviceId = item.device;
+      const eventType = eventData.type; // 'add' or 'update'
+      const itemType = item.type; // 'ring', 'motion', 'smartDetectZone', etc.
+      this.homey.app.debug(`[V2 Events WS] type=${eventType} itemType=${itemType} device=${deviceId}`);
+
+      try {
+        const driverCamera = this.homey.drivers.getDriver('protectcamera');
+        const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
+        const deviceCamera = driverCamera.getUnifiDeviceById(deviceId);
+        const deviceDoorbell = driverDoorbell.getUnifiDeviceById(deviceId);
+        const driverSensor = this.homey.drivers.getDriver('protectsensor');
+        const deviceSensor = driverSensor.getUnifiDeviceById(deviceId);
+
+        // Ring event (doorbell)
+        if (itemType === 'ring' && eventType === 'add') {
+          this.homey.app.debug('[V2] doorbell ring event');
+          if (deviceDoorbell) {
+            deviceDoorbell.onDoorbellRinging(item.start);
+          }
         }
-        this._isDisconnectRequested = false;
-        this.disconnectEventListener().then((res) => {
-            this._isDisconnectRequested = false;
-            this.launchNotificationsListener();
-            this.configureNotificationsListener(this);
-        }).catch((error) => {
-            this.homey.error(error);
-        });
-    }
 
-    /*  */
-    shouldProcessEvent(updatePacket) {
-        return true;
-    }
-
-    configureNotificationsListener() {
-        // Only configure the event listener if it exists and it's not already configured.
-        if (!this._eventListener || this._eventListenerConfigured) {
-            return true;
+        // Motion event
+        if (itemType === 'motion') {
+          if (eventType === 'add') {
+            // Motion started
+            this.homey.app.debug(`[V2] motion start on ${deviceId}`);
+            if (deviceCamera) {
+              deviceCamera.onMotionDetected(item.start, true);
+            }
+            if (deviceDoorbell) {
+              deviceDoorbell.onMotionDetected(item.start, true);
+            }
+          } else if (eventType === 'update' && item.end) {
+            // Motion ended
+            this.homey.app.debug(`[V2] motion end on ${deviceId}`);
+            if (deviceCamera) {
+              deviceCamera.onMotionDetected(item.end, false);
+            }
+            if (deviceDoorbell) {
+              deviceDoorbell.onMotionDetected(item.end, false);
+            }
+          }
         }
 
-        // Listen for any messages coming in from our listener.
-        this._eventListener.on('message', (event) => {
-
-            if (!this.shouldProcessEvent(event.toString())) {
-                return;
+        // Smart detection event - zone (person/vehicle/etc.), line-crossing and
+        // loitering all share the same payload shape and are dispatched the same
+        // way. detectionMethod is passed through for a possible future
+        // dedicated trigger/token; SmartDetectionMixin ignores unknown fields today.
+        if (itemType === 'smartDetectZone' || itemType === 'smartDetectLine' || itemType === 'smartDetectLoiterZone') {
+          // A closing frame (item.end) may carry empty types; the mixin keeps the types it already knows.
+          if ((item.smartDetectTypes && item.smartDetectTypes.length > 0) || (item.end && eventType === 'update')) {
+            this.homey.app.debug(`[V2] smart detection (${itemType}): ${JSON.stringify(item.smartDetectTypes)} on ${deviceId}`);
+            const payload = {
+              smartDetectTypes: item.smartDetectTypes || [],
+              start: item.start,
+              end: item.end || null,
+              detectionMethod: itemType,
+            };
+            if (deviceCamera) {
+              driverCamera.onParseWebsocketMessage(deviceCamera, payload, eventType, item.id);
             }
-
-            const eventData = JSON.parse(event.toString());
-
-            this.lastWebsocketMessage = this.homey.app.toLocalTime(new Date()).toISOString().slice(0, 16);
-
-            if (!eventData || !eventData.item || !eventData.item.device) {
-                return;
+            if (deviceDoorbell) {
+              driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, eventType, item.id);
             }
+          }
+        }
 
-            const item = eventData.item;
-            const deviceId = item.device;
-            const eventType = eventData.type; // 'add' or 'update'
-            const itemType = item.type; // 'ring', 'motion', 'smartDetectZone', etc.
-            this.homey.app.debug(`[V2 Events WS] type=${eventType} itemType=${itemType} device=${deviceId}`);
+        // Smart audio detection event - smartDetectTypes may be empty on initial 'add' and filled in on 'update'
+        if (itemType === 'smartAudioDetect') {
+          this.homey.app.debug(`[V2] smart audio detection: ${JSON.stringify(item.smartDetectTypes || [])} on ${deviceId}`);
+          const payload = {
+            smartDetectTypes: item.smartDetectTypes || [],
+            start: item.start,
+            end: item.end || null,
+            score: item.score,
+          };
+          if (deviceCamera) {
+            deviceCamera.onAudioDetection(payload, eventType, item.id);
+          }
+          if (deviceDoorbell) {
+            deviceDoorbell.onAudioDetection(payload, eventType, item.id);
+          }
+        }
 
-            try {
-                const driverCamera = this.homey.drivers.getDriver('protectcamera');
-                const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-                const deviceCamera = driverCamera.getUnifiDeviceById(deviceId);
-                const deviceDoorbell = driverDoorbell.getUnifiDeviceById(deviceId);
-                const driverSensor = this.homey.drivers.getDriver('protectsensor');
-                const deviceSensor = driverSensor.getUnifiDeviceById(deviceId);
+        // Sensor vape detection event (e.g. UP-AirQuality)
+        if (itemType === 'sensorVape') {
+          this.homey.app.debug(`[V2] vape detected on ${deviceId}`);
+          if (deviceSensor) {
+            deviceSensor.onVapeDetected(eventType, item.start, item.end || null);
+          }
+        }
 
-                // Ring event (doorbell)
-                if (itemType === 'ring' && eventType === 'add') {
-                    this.homey.app.debug('[V2] doorbell ring event');
-                    if (deviceDoorbell) {
-                        deviceDoorbell.onDoorbellRinging(item.start);
-                    }
-                }
+        // Sensor extreme-value event (metric went in/out of configured range,
+        // e.g. AQI/CO2/VOC/TVOC/PM on UP-AirQuality). Event-driven only - not a
+        // continuous feed, see specs/unifi-protect-api-notes.md.
+        if (itemType === 'sensorExtremeValues' && item.metadata && item.metadata.sensorType) {
+          const metric = item.metadata.sensorType.text;
+          const value = item.metadata.sensorValue ? item.metadata.sensorValue.text : null;
+          const status = item.metadata.status ? item.metadata.status.text : null;
+          this.homey.app.debug(`[V2] extreme value ${metric}=${value} (${status}) on ${deviceId}`);
+          if (deviceSensor) {
+            deviceSensor.onExtremeValue(metric, value, status);
+          }
+        }
 
-                // Motion event
-                if (itemType === 'motion') {
-                    if (eventType === 'add') {
-                        // Motion started
-                        this.homey.app.debug('[V2] motion start on ' + deviceId);
-                        if (deviceCamera) {
-                            deviceCamera.onMotionDetected(item.start, true);
-                        }
-                        if (deviceDoorbell) {
-                            deviceDoorbell.onMotionDetected(item.start, true);
-                        }
-                    } else if (eventType === 'update' && item.end) {
-                        // Motion ended
-                        this.homey.app.debug('[V2] motion end on ' + deviceId);
-                        if (deviceCamera) {
-                            deviceCamera.onMotionDetected(item.end, false);
-                        }
-                        if (deviceDoorbell) {
-                            deviceDoorbell.onMotionDetected(item.end, false);
-                        }
-                    }
-                }
+        // Sensor alarm event (smoke/CO/glassBreak/tamper/short/cut)
+        if (itemType === 'sensorAlarm' && item.metadata && item.metadata.alarmType) {
+          const alarmType = item.metadata.alarmType.text;
+          this.homey.app.debug(`[V2] sensor alarm ${alarmType} (${eventType}) on ${deviceId}`);
+          if (deviceSensor) {
+            deviceSensor.onSensorAlarm(alarmType, eventType, item.end || null);
+          }
+        }
 
-                // Smart detection event - zone (person/vehicle/etc.), line-crossing and
-                // loitering all share the same payload shape and are dispatched the same
-                // way. detectionMethod is passed through for a possible future
-                // dedicated trigger/token; SmartDetectionMixin ignores unknown fields today.
-                if (itemType === 'smartDetectZone' || itemType === 'smartDetectLine' || itemType === 'smartDetectLoiterZone') {
-                    // A closing frame (item.end) may carry empty types; the mixin keeps the types it already knows.
-                    if ((item.smartDetectTypes && item.smartDetectTypes.length > 0) || (item.end && eventType === 'update')) {
-                        this.homey.app.debug(`[V2] smart detection (${itemType}): ` + JSON.stringify(item.smartDetectTypes) + ' on ' + deviceId);
-                        const payload = {
-                            smartDetectTypes: item.smartDetectTypes || [],
-                            start: item.start,
-                            end: item.end || null,
-                            detectionMethod: itemType,
-                        };
-                        if (deviceCamera) {
-                            driverCamera.onParseWebsocketMessage(deviceCamera, payload, eventType, item.id);
-                        }
-                        if (deviceDoorbell) {
-                            driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, eventType, item.id);
-                        }
-                    }
-                }
+        // Sensor tamper event
+        if (itemType === 'sensorTamper' && eventType === 'add') {
+          this.homey.app.debug(`[V2] tamper detected on ${deviceId}`);
+          if (deviceSensor) {
+            deviceSensor.onTamperDetected(item.start, item.end || null);
+          }
+        }
 
-                // Smart audio detection event - smartDetectTypes may be empty on initial 'add' and filled in on 'update'
-                if (itemType === 'smartAudioDetect') {
-                    this.homey.app.debug('[V2] smart audio detection: ' + JSON.stringify(item.smartDetectTypes || []) + ' on ' + deviceId);
-                    const payload = {
-                        smartDetectTypes: item.smartDetectTypes || [],
-                        start: item.start,
-                        end: item.end || null,
-                        score: item.score,
-                    };
-                    if (deviceCamera) {
-                        deviceCamera.onAudioDetection(payload, eventType, item.id);
-                    }
-                    if (deviceDoorbell) {
-                        deviceDoorbell.onAudioDetection(payload, eventType, item.id);
-                    }
-                }
+        // Sensor battery low event
+        if (itemType === 'sensorBatteryLow' && eventType === 'add') {
+          this.homey.app.debug(`[V2] battery low on ${deviceId}`);
+          if (deviceSensor) {
+            deviceSensor.onBatteryLow();
+          }
+        }
 
-                // Sensor vape detection event (e.g. UP-AirQuality)
-                if (itemType === 'sensorVape') {
-                    this.homey.app.debug('[V2] vape detected on ' + deviceId);
-                    if (deviceSensor) {
-                        deviceSensor.onVapeDetected(eventType, item.start, item.end || null);
-                    }
-                }
+        // NFC card scanned / fingerprint identified (doorbell/camera readers).
+        // V1 has dispatched this for a long time (library/websocket.js:439,457);
+        // the driver/device layer (onNFCCardScanned/onFingerprintIdentified) was
+        // already fully built for it, V2 just never called it.
+        if (itemType === 'nfcCardScanned' || itemType === 'fingerprintIdentified') {
+          this.homey.app.debug(`[V2] ${itemType} on ${deviceId}`);
+          const payload = {
+            type: itemType,
+            start: item.start,
+            end: item.end || null,
+            metadata: item.metadata,
+          };
+          if (deviceDoorbell) {
+            driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, eventType, item.id);
+          }
+          if (deviceCamera) {
+            driverCamera.onParseWebsocketMessage(deviceCamera, payload, eventType, item.id);
+          }
+        }
 
-                // Sensor extreme-value event (metric went in/out of configured range,
-                // e.g. AQI/CO2/VOC/TVOC/PM on UP-AirQuality). Event-driven only - not a
-                // continuous feed, see specs/unifi-protect-api-notes.md.
-                if (itemType === 'sensorExtremeValues' && item.metadata && item.metadata.sensorType) {
-                    const metric = item.metadata.sensorType.text;
-                    const value = item.metadata.sensorValue ? item.metadata.sensorValue.text : null;
-                    const status = item.metadata.status ? item.metadata.status.text : null;
-                    this.homey.app.debug(`[V2] extreme value ${metric}=${value} (${status}) on ${deviceId}`);
-                    if (deviceSensor) {
-                        deviceSensor.onExtremeValue(metric, value, status);
-                    }
-                }
+        // Sensor button pressed (fob remote, alarm hub panel button, or wired
+        // input - see specs/unifi-protect-api-notes.md for the button enum).
+        // Reuse the existing V1 FOB pipeline (library/fob-handler.js) by adapting
+        // this V2 item into the V1 updatePacket shape it expects; FobHandler
+        // already filters on metadata.deviceModelKey === 'fob' + known
+        // button/pressType, so non-fob presses (e.g. alarmHubButton, handled
+        // below via the dedicated alarmHubButtonPress event) are ignored safely.
+        if (itemType === 'sensorButtonPressed') {
+          this.homey.app.debug(`[V2] sensorButtonPressed on ${deviceId}: ${JSON.stringify(item.metadata || {})}`);
+          const v1ShapedPacket = {
+            action: { modelKey: 'event', action: eventType, id: item.id },
+            payload: {
+              type: item.type,
+              device: item.device,
+              start: item.start,
+              end: item.end,
+              metadata: item.metadata,
+            },
+          };
+          this.homey.app.onFobWebsocketMessage(v1ShapedPacket);
+        }
 
-                // Sensor alarm event (smoke/CO/glassBreak/tamper/short/cut)
-                if (itemType === 'sensorAlarm' && item.metadata && item.metadata.alarmType) {
-                    const alarmType = item.metadata.alarmType.text;
-                    this.homey.app.debug(`[V2] sensor alarm ${alarmType} (${eventType}) on ${deviceId}`);
-                    if (deviceSensor) {
-                        deviceSensor.onSensorAlarm(alarmType, eventType, item.end || null);
-                    }
-                }
+        // Alarm-hub zone/peripheral events - see ALARM_HUB_EVENT_TYPES comment.
+        if (ALARM_HUB_EVENT_TYPES.includes(itemType)) {
+          this.homey.app.debug(`[V2] alarm hub zone event ${itemType} on ${deviceId}`);
+          const driverAlarm = this.homey.drivers.getDriver('protect-nvr-alarm');
+          const deviceAlarm = driverAlarm && driverAlarm.getNVRAlarmDevice();
+          if (deviceAlarm && typeof deviceAlarm.onAlarmHubZoneEvent === 'function') {
+            deviceAlarm.onAlarmHubZoneEvent(itemType, item);
+          }
+        }
 
-                // Sensor tamper event
-                if (itemType === 'sensorTamper' && eventType === 'add') {
-                    this.homey.app.debug('[V2] tamper detected on ' + deviceId);
-                    if (deviceSensor) {
-                        deviceSensor.onTamperDetected(item.start, item.end || null);
-                    }
-                }
+        // Smoke-detector sub-events - see SMOKE_SUB_EVENT_TYPES comment.
+        if (SMOKE_SUB_EVENT_TYPES.includes(itemType)) {
+          this.homey.app.debug(`[V2] ${itemType} (${eventType}) on ${deviceId}`);
+          if (deviceSensor) {
+            deviceSensor.onSmokeSubEvent(itemType, eventType, item.end || null);
+          }
+        }
 
-                // Sensor battery low event
-                if (itemType === 'sensorBatteryLow' && eventType === 'add') {
-                    this.homey.app.debug('[V2] battery low on ' + deviceId);
-                    if (deviceSensor) {
-                        deviceSensor.onBatteryLow();
-                    }
-                }
-
-                // NFC card scanned / fingerprint identified (doorbell/camera readers).
-                // V1 has dispatched this for a long time (library/websocket.js:439,457);
-                // the driver/device layer (onNFCCardScanned/onFingerprintIdentified) was
-                // already fully built for it, V2 just never called it.
-                if (itemType === 'nfcCardScanned' || itemType === 'fingerprintIdentified') {
-                    this.homey.app.debug(`[V2] ${itemType} on ${deviceId}`);
-                    const payload = {
-                        type: itemType,
-                        start: item.start,
-                        end: item.end || null,
-                        metadata: item.metadata,
-                    };
-                    if (deviceDoorbell) {
-                        driverDoorbell.onParseWebsocketMessage(deviceDoorbell, payload, eventType, item.id);
-                    }
-                    if (deviceCamera) {
-                        driverCamera.onParseWebsocketMessage(deviceCamera, payload, eventType, item.id);
-                    }
-                }
-
-                // Sensor button pressed (fob remote, alarm hub panel button, or wired
-                // input - see specs/unifi-protect-api-notes.md for the button enum).
-                // Reuse the existing V1 FOB pipeline (library/fob-handler.js) by adapting
-                // this V2 item into the V1 updatePacket shape it expects; FobHandler
-                // already filters on metadata.deviceModelKey === 'fob' + known
-                // button/pressType, so non-fob presses (e.g. alarmHubButton, handled
-                // below via the dedicated alarmHubButtonPress event) are ignored safely.
-                if (itemType === 'sensorButtonPressed') {
-                    this.homey.app.debug(`[V2] sensorButtonPressed on ${deviceId}: ${JSON.stringify(item.metadata || {})}`);
-                    const v1ShapedPacket = {
-                        action: {modelKey: 'event', action: eventType, id: item.id},
-                        payload: {
-                            type: item.type,
-                            device: item.device,
-                            start: item.start,
-                            end: item.end,
-                            metadata: item.metadata,
-                        },
-                    };
-                    this.homey.app.onFobWebsocketMessage(v1ShapedPacket);
-                }
-
-                // Alarm-hub zone/peripheral events - see ALARM_HUB_EVENT_TYPES comment.
-                if (ALARM_HUB_EVENT_TYPES.includes(itemType)) {
-                    this.homey.app.debug(`[V2] alarm hub zone event ${itemType} on ${deviceId}`);
-                    const driverAlarm = this.homey.drivers.getDriver('protect-nvr-alarm');
-                    const deviceAlarm = driverAlarm && driverAlarm.getNVRAlarmDevice();
-                    if (deviceAlarm && typeof deviceAlarm.onAlarmHubZoneEvent === 'function') {
-                        deviceAlarm.onAlarmHubZoneEvent(itemType, item);
-                    }
-                }
-
-                // Smoke-detector sub-events - see SMOKE_SUB_EVENT_TYPES comment.
-                if (SMOKE_SUB_EVENT_TYPES.includes(itemType)) {
-                    this.homey.app.debug(`[V2] ${itemType} (${eventType}) on ${deviceId}`);
-                    if (deviceSensor) {
-                        deviceSensor.onSmokeSubEvent(itemType, eventType, item.end || null);
-                    }
-                }
-
-            } catch (e) {
-                this.homey.app.debug('[V2 Events WS] dispatch error: ' + e);
-            }
-        });
-        this._eventListenerConfigured = true;
-        return true;
-    }
+      } catch (e) {
+        this.homey.app.debug(`[V2 Events WS] dispatch error: ${e}`);
+      }
+    });
+    this._eventListenerConfigured = true;
+    return true;
+  }
 
 }
 

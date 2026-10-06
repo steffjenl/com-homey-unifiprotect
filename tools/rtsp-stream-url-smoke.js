@@ -1,6 +1,7 @@
 'use strict';
 
 const Module = require('module');
+
 const originalLoad = Module._load;
 
 Module._load = function patchedLoad(request, parent, isMain) {
@@ -63,7 +64,7 @@ async function assertResolverBehavior() {
 
   app = createApp({ v2Streams: { high: 'rtsp://nvr/high' }, v1StreamUrl: '' });
   assert(await getRtspStreamUrl(app, camera) === 'rtsp://nvr/high', 'expected V2 fallback when V1 returns no stream');
-  assert(app.calls.some(call => call.api === 'v2'), 'expected V2 to be called after empty V1 result');
+  assert(app.calls.some((call) => call.api === 'v2'), 'expected V2 to be called after empty V1 result');
 
   app = createApp({ v2Streams: { package: 'rtsp://nvr/package' }, v1PackageStreamUrl: 'rtsp://nvr/v1-package' });
   assert(await getRtspStreamUrl(app, camera, { packageCamera: true }) === 'rtsp://nvr/v1-package', 'expected V1 package stream to be preferred when available');
@@ -96,7 +97,7 @@ async function run() {
   console.log('RTSP stream URL smoke test passed');
 }
 
-run().catch(error => {
+run().catch((error) => {
   // eslint-disable-next-line no-console
   console.error(error);
   process.exitCode = 1;

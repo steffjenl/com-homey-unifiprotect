@@ -1,3 +1,5 @@
+'use strict';
+
 const Homey = require('homey');
 
 class BaseClass extends Homey.SimpleClass {
@@ -9,6 +11,6 @@ class BaseClass extends Homey.SimpleClass {
   setHomeyObject(homey) {
     this.homey = homey;
   }
-};
+}
 
 module.exports = BaseClass;

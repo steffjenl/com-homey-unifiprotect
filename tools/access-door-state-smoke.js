@@ -6,6 +6,7 @@
 
 const assert = require('assert');
 const Module = require('module');
+
 const originalLoad = Module._load;
 
 Module._load = function patchedLoad(request, parent, isMain) {
@@ -19,7 +20,9 @@ Module._load = function patchedLoad(request, parent, isMain) {
   return originalLoad.call(this, request, parent, isMain);
 };
 
-const { normalizeDoorState, DOOR_STATE_OPEN, DOOR_STATE_CLOSED, DOOR_STATE_UNKNOWN } = require('../library/door-state');
+const {
+  normalizeDoorState, DOOR_STATE_OPEN, DOOR_STATE_CLOSED, DOOR_STATE_UNKNOWN,
+} = require('../library/door-state');
 const GarageDoorDevice = require('../drivers/access-garagedoor/device');
 
 function testNormalizeDoorState() {
@@ -40,8 +43,12 @@ function createDevice() {
   device._doorState = DOOR_STATE_UNKNOWN;
   device.triggerLog = [];
   device.capabilityLog = [];
-  device.error = (err) => { throw err; };
-  device.setCapabilityValue = async (id, value) => { device.capabilityLog.push([id, value]); };
+  device.error = (err) => {
+    throw err;
+  };
+  device.setCapabilityValue = async (id, value) => {
+    device.capabilityLog.push([id, value]);
+  };
   device.driver = {
     ready: async () => {},
     triggerGarageDoorOpened: () => device.triggerLog.push('opened'),

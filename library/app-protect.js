@@ -4,787 +4,786 @@ const BaseClass = require('./baseclass');
 const UfvConstants = require('./constants');
 
 // 2700000 miliseconds is 45 minutes
-const RefreshCookieTime = 2700000;
 
 class AppProtect extends BaseClass {
 
-    async onInit() {
-        this.homey.app.debug('AppProtect onInit');
-        this._notificationDebounceTimeout = null;
-        this._lastNotificationTimestamp = 0;
-        this._setupConnectionMonitoring();
-        await this.registerFlowAndActionCards();
-    }
+  async onInit() {
+    this.homey.app.debug('AppProtect onInit');
+    this._notificationDebounceTimeout = null;
+    this._lastNotificationTimestamp = 0;
+    this._setupConnectionMonitoring();
+    await this.registerFlowAndActionCards();
+  }
 
-    _setupConnectionMonitoring() {
-        if (this.homey.app.apiV2) {
-            this.homey.app.apiV2.on('protectv2-connection-error', (details) => {
-                this._handleConnectionError('v2', details);
-            });
-            this.homey.app.apiV2.on('protectv2-connection-change', (details) => {
-                if (details.state === 'connected') {
-                    if (this._notificationDebounceTimeout) {
-                        this.homey.clearTimeout(this._notificationDebounceTimeout);
-                        this._notificationDebounceTimeout = null;
-                    }
-                }
-            });
-        }
-        if (this.homey.app.api) {
-            this.homey.app.api.on('protectv1-connection-error', (details) => {
-                this._handleConnectionError('v1', details);
-            });
-        }
-    }
-
-    _handleConnectionError(apiType, details) {
-        if (this._notificationDebounceTimeout) {
-            return;
-        }
-
-        // Debounce notification by 20 seconds
-        this._notificationDebounceTimeout = this.homey.setTimeout(() => {
+  _setupConnectionMonitoring() {
+    if (this.homey.app.apiV2) {
+      this.homey.app.apiV2.on('protectv2-connection-error', (details) => {
+        this._handleConnectionError('v2', details);
+      });
+      this.homey.app.apiV2.on('protectv2-connection-change', (details) => {
+        if (details.state === 'connected') {
+          if (this._notificationDebounceTimeout) {
+            this.homey.clearTimeout(this._notificationDebounceTimeout);
             this._notificationDebounceTimeout = null;
+          }
+        }
+      });
+    }
+    if (this.homey.app.api) {
+      this.homey.app.api.on('protectv1-connection-error', (details) => {
+        this._handleConnectionError('v1', details);
+      });
+    }
+  }
 
-            // Only notify at most once per 10 minutes to avoid spamming
-            const now = Date.now();
-            if (now - this._lastNotificationTimestamp < 600000) {
-                return;
-            }
-            this._lastNotificationTimestamp = now;
-
-            const host = details.host || 'unknown';
-            const port = details.port || (apiType === 'v2' ? '443' : '443');
-
-            try {
-                this.homey.notifications.createNotification({
-                    excerpt: this.homey.__('notification.controller_error_body', { ip: host, port: String(port) }),
-                }).catch(this.error);
-            } catch (err) {
-                this.homey.app.debug('[AppProtect] Failed to create notification: ' + err);
-            }
-        }, 20000);
+  _handleConnectionError(apiType, details) {
+    if (this._notificationDebounceTimeout) {
+      return;
     }
 
-    async registerFlowAndActionCards() {
+    // Debounce notification by 20 seconds
+    this._notificationDebounceTimeout = this.homey.setTimeout(() => {
+      this._notificationDebounceTimeout = null;
 
-        this.homey.app._snapshotTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SNAPSHOT_CREATED);
-        this.homey.app._packageSnapshotTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_PACKAGE_SNAPSHOT_CREATED);
-        this.homey.app._connectionStatusTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_CONNECTION_CHANGED);
-        this.homey.app._doorbellRingingTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOORBELL_RINGING);
-        this.homey.app._smartDetectionTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION);
-        this.homey.app._smartDetectionTriggerPerson = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_PERSON);
-        this.homey.app._smartDetectionTriggerVehicle = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_VEHICLE);
-        this.homey.app._smartDetectionTriggerAnimal = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_ANIMAL);
-        this.homey.app._smartDetectionTriggerPackage = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_PACKAGE);
-        this.homey.app._smartDetectionTriggerLicensePlate = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_LICENSEPLATE);
-        this.homey.app._smartDetectionTriggerFace = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_FACE);
-        this.homey.app._smartDetectionEndedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_ENDED);
-        this.homey.app._fingerPrintIdentifiedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_FINGERPRINT_IDENTIFIED);
-        this.homey.app._fingerPrintUnknownTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_FINGERPRINT_UNKNOWN);
-        this.homey.app._doorAccessTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOOR_ACCESS);
-        this.homey.app._nvrAccessTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_NVR_ACCESS);
-        this.homey.app._nfcCardScannedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_NFC_CARD_SCANNED);
-        this.homey.app._nfcUnknownCardScannedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_NFC_UNKNOWN_CARD_SCANNED);
-        this.homey.app._audioDetectionTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_AUDIO_DETECTION);
-        this.homey.app._fobButtonTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_FOB_BUTTON);
-        this.homey.app._fobButtonDeviceTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_FOB_BUTTON_DEVICE);
+      // Only notify at most once per 10 minutes to avoid spamming
+      const now = Date.now();
+      if (now - this._lastNotificationTimestamp < 600000) {
+        return;
+      }
+      this._lastNotificationTimestamp = now;
 
-        this.homey.app._fobButtonDeviceTrigger.registerArgumentAutocompleteListener('fob', async (query, args) => {
-            const bootstrap = this.homey.app.api.getBootstrap();
-            if (!bootstrap || !Array.isArray(bootstrap.fobs)) {
-                return [];
-            }
+      const host = details.host || 'unknown';
+      const port = details.port || (apiType === 'v2' ? '443' : '443');
 
-            const normalizedQuery = String(query || '').toLowerCase().trim();
+      try {
+        this.homey.notifications.createNotification({
+          excerpt: this.homey.__('notification.controller_error_body', { ip: host, port: String(port) }),
+        }).catch(this.error);
+      } catch (err) {
+        this.homey.app.debug(`[AppProtect] Failed to create notification: ${err}`);
+      }
+    }, 20000);
+  }
 
-            return bootstrap.fobs
-                .map((fob) => {
-                    const fobId = String(fob.id || '');
-                    const fobName = String(fob.name || fob.displayName || fob.mac || fobId);
-                    return { id: fobId, name: fobName };
-                })
-                .filter((item) => item.id !== '' && (normalizedQuery === '' || item.name.toLowerCase().includes(normalizedQuery) || item.id.toLowerCase().includes(normalizedQuery)));
-        });
+  async registerFlowAndActionCards() {
 
-        this.homey.app._fobButtonDeviceTrigger.registerRunListener(async (args, state) => {
-            try {
-                const selectedFobId = String(args.fob && args.fob.id ? args.fob.id : '').trim();
-                const triggerFobId = String(state && state.fob_device_id ? state.fob_device_id : '').trim();
-                return Promise.resolve(selectedFobId !== '' && triggerFobId !== '' && selectedFobId === triggerFobId);
-            } catch (error) {
-                this.error(error);
-            }
+    this.homey.app._snapshotTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SNAPSHOT_CREATED);
+    this.homey.app._packageSnapshotTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_PACKAGE_SNAPSHOT_CREATED);
+    this.homey.app._connectionStatusTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_CONNECTION_CHANGED);
+    this.homey.app._doorbellRingingTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOORBELL_RINGING);
+    this.homey.app._smartDetectionTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION);
+    this.homey.app._smartDetectionTriggerPerson = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_PERSON);
+    this.homey.app._smartDetectionTriggerVehicle = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_VEHICLE);
+    this.homey.app._smartDetectionTriggerAnimal = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_ANIMAL);
+    this.homey.app._smartDetectionTriggerPackage = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_PACKAGE);
+    this.homey.app._smartDetectionTriggerLicensePlate = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_LICENSEPLATE);
+    this.homey.app._smartDetectionTriggerFace = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_FACE);
+    this.homey.app._smartDetectionEndedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_SMART_DETECTION_ENDED);
+    this.homey.app._fingerPrintIdentifiedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_FINGERPRINT_IDENTIFIED);
+    this.homey.app._fingerPrintUnknownTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_FINGERPRINT_UNKNOWN);
+    this.homey.app._doorAccessTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_DOOR_ACCESS);
+    this.homey.app._nvrAccessTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_NVR_ACCESS);
+    this.homey.app._nfcCardScannedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_NFC_CARD_SCANNED);
+    this.homey.app._nfcUnknownCardScannedTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_NFC_UNKNOWN_CARD_SCANNED);
+    this.homey.app._audioDetectionTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_AUDIO_DETECTION);
+    this.homey.app._fobButtonTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_FOB_BUTTON);
+    this.homey.app._fobButtonDeviceTrigger = this.homey.flow.getTriggerCard(UfvConstants.EVENT_FOB_BUTTON_DEVICE);
 
-            return Promise.resolve(false);
-        });
+    this.homey.app._fobButtonDeviceTrigger.registerArgumentAutocompleteListener('fob', async (query, args) => {
+      const bootstrap = this.homey.app.api.getBootstrap();
+      if (!bootstrap || !Array.isArray(bootstrap.fobs)) {
+        return [];
+      }
 
-        // Weather
-        this.homey.app._weatherUpdatedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_WEATHER_UPDATED);
+      const normalizedQuery = String(query || '').toLowerCase().trim();
 
-        const _actionTakeSnapshot = this.homey.flow.getActionCard(UfvConstants.ACTION_TAKE_SNAPSHOT);
-        _actionTakeSnapshot.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                // Get device from camera id
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    device._createSnapshotImage(true);
-                }
-            }
-            return Promise.resolve(true);
-        });
+      return bootstrap.fobs
+        .map((fob) => {
+          const fobId = String(fob.id || '');
+          const fobName = String(fob.name || fob.displayName || fob.mac || fobId);
+          return { id: fobId, name: fobName };
+        })
+        .filter((item) => item.id !== '' && (normalizedQuery === '' || item.name.toLowerCase().includes(normalizedQuery) || item.id.toLowerCase().includes(normalizedQuery)));
+    });
 
-        const _setRecordingMode = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_RECORDING_MODE);
-        _setRecordingMode.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData().id !== 'undefined') {
-                return this.homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode);
-            }
-            return Promise.resolve(true);
-        });
+    this.homey.app._fobButtonDeviceTrigger.registerRunListener(async (args, state) => {
+      try {
+        const selectedFobId = String(args.fob && args.fob.id ? args.fob.id : '').trim();
+        const triggerFobId = String(state && state.fob_device_id ? state.fob_device_id : '').trim();
+        return Promise.resolve(selectedFobId !== '' && triggerFobId !== '' && selectedFobId === triggerFobId);
+      } catch (error) {
+        this.error(error);
+      }
 
-        // V2 Actions
-        const _actionTakeSnapshotV2 = this.homey.flow.getActionCard(UfvConstants.ACTION_TAKE_SNAPSHOT_V2);
-        _actionTakeSnapshotV2.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                // Get device from camera id
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    device._createSnapshotImage(true);
-                }
-            }
-            return Promise.resolve(true);
-        });
+      return Promise.resolve(false);
+    });
 
-        const _setRecordingModeV2 = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_RECORDING_MODE_V2);
-        _setRecordingModeV2.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData().id !== 'undefined') {
-                if (this.homey.app.isV1Available()) {
-                    return this.homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode);
-                } else if (this.homey.app.isV2Available()) {
-                    // V2 does not support changing recording mode directly
-                    this.homey.app.debug('[V2] setRecordingMode not available in V2 Integration API');
-                }
-            }
-            return Promise.resolve(true);
-        });
+    // Weather
+    this.homey.app._weatherUpdatedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_WEATHER_UPDATED);
 
-        const _setChimeVolume = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_CHIME_ONOFF);
-        _setChimeVolume.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData().id !== 'undefined') {
-                let volume = 0;
-                if (args.enabled) {
-                    volume = args.volume;
-                }
-                return this.homey.app.api.setChimeVolume(args.device.getData(), volume);
-            }
-            return Promise.resolve(true);
-        });
+    const _actionTakeSnapshot = this.homey.flow.getActionCard(UfvConstants.ACTION_TAKE_SNAPSHOT);
+    _actionTakeSnapshot.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        // Get device from camera id
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          device._createSnapshotImage(true);
+        }
+      }
+      return Promise.resolve(true);
+    });
 
-        const _setNightVisionMode = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_NIGHT_VISION_MODE);
-        _setNightVisionMode.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData().id !== 'undefined') {
-                return this.homey.app.api.setNightVisionMode(args.device.getData(), args.nightvision_mode);
-            }
-            return Promise.resolve(true);
-        });
+    const _setRecordingMode = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_RECORDING_MODE);
+    _setRecordingMode.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode);
+      }
+      return Promise.resolve(true);
+    });
 
-        const _setLCDMessage = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_LCD_MESSAGE);
-        _setLCDMessage.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.api.setLCDMessage(args.device.getData(), args.message.substring(0, 29))
-                    .then(this.homey.app.debug.bind(this, '[lcd_message.set]'))
-                    .catch(this.error.bind(this, '[lcd_message.set]'));
-            }
-            return Promise.resolve(true);
-        });
+    // V2 Actions
+    const _actionTakeSnapshotV2 = this.homey.flow.getActionCard(UfvConstants.ACTION_TAKE_SNAPSHOT_V2);
+    _actionTakeSnapshotV2.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        // Get device from camera id
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          device._createSnapshotImage(true);
+        }
+      }
+      return Promise.resolve(true);
+    });
 
-        const _setCameraStatusLed = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_CAMERA_STATUS_LED);
-        _setCameraStatusLed.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData().id !== 'undefined') {
-                return this.homey.app.api.setStatusLed(args.device.getData(), args.enabled);
-            }
-            return Promise.resolve(true);
-        });
+    const _setRecordingModeV2 = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_RECORDING_MODE_V2);
+    _setRecordingModeV2.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        if (this.homey.app.isV1Available()) {
+          return this.homey.app.api.setRecordingMode(args.device.getData(), args.recording_mode);
+        } if (this.homey.app.isV2Available()) {
+          // V2 does not support changing recording mode directly
+          this.homey.app.debug('[V2] setRecordingMode not available in V2 Integration API');
+        }
+      }
+      return Promise.resolve(true);
+    });
 
-        const _setDoorbellStatusLed = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DOORBELL_STATUS_LED);
-        _setDoorbellStatusLed.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData().id !== 'undefined') {
-                return this.homey.app.api.setStatusLed(args.device.getData(), args.enabled);
-            }
-            return Promise.resolve(true);
-        });
+    const _setChimeVolume = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_CHIME_ONOFF);
+    _setChimeVolume.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        let volume = 0;
+        if (args.enabled) {
+          volume = args.volume;
+        }
+        return this.homey.app.api.setChimeVolume(args.device.getData(), volume);
+      }
+      return Promise.resolve(true);
+    });
 
-        const _setDoorbellStatusSound = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DOORBELL_STATUS_SOUND);
-        _setDoorbellStatusSound.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData().id !== 'undefined') {
-                return this.homey.app.api.setStatusSound(args.device.getData(), args.enabled);
-            }
-            return Promise.resolve(true);
-        });
+    const _setNightVisionMode = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_NIGHT_VISION_MODE);
+    _setNightVisionMode.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.api.setNightVisionMode(args.device.getData(), args.nightvision_mode);
+      }
+      return Promise.resolve(true);
+    });
 
-        const _setDeviceCameraStatusLed = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_CAMERA_STATUS_LED);
-        _setDeviceCameraStatusLed.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData().id !== 'undefined') {
-                return this.homey.app.api.setStatusLed(args.device.getData(), args.enabled);
-            }
-            return Promise.resolve(true);
-        });
+    const _setLCDMessage = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_LCD_MESSAGE);
+    _setLCDMessage.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.api.setLCDMessage(args.device.getData(), args.message.substring(0, 29))
+          .then(this.homey.app.debug.bind(this, '[lcd_message.set]'))
+          .catch(this.error.bind(this, '[lcd_message.set]'));
+      }
+      return Promise.resolve(true);
+    });
 
-        const _setDeviceDoorbellStatusLed = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_STATUS_LED);
-        _setDeviceDoorbellStatusLed.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData().id !== 'undefined') {
-                return this.homey.app.api.setStatusLed(args.device.getData(), args.enabled);
-            }
-            return Promise.resolve(true);
-        });
+    const _setCameraStatusLed = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_CAMERA_STATUS_LED);
+    _setCameraStatusLed.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.api.setStatusLed(args.device.getData(), args.enabled);
+      }
+      return Promise.resolve(true);
+    });
 
-        const _setDeviceDoorbellStatusSound = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_STATUS_SOUND);
-        _setDeviceDoorbellStatusSound.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData().id !== 'undefined') {
-                return this.homey.app.api.setStatusSound(args.device.getData(), args.enabled);
-            }
-            return Promise.resolve(true);
-        });
+    const _setDoorbellStatusLed = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DOORBELL_STATUS_LED);
+    _setDoorbellStatusLed.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.api.setStatusLed(args.device.getData(), args.enabled);
+      }
+      return Promise.resolve(true);
+    });
 
-        const _actionTakePackageSnapshot = this.homey.flow.getActionCard(UfvConstants.ACTION_TAKE_PACKAGE_SNAPSHOT);
-        _actionTakePackageSnapshot.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                // Get device from camera id
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    return device._createSnapshotPackageImage(true);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _setDoorbellStatusSound = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DOORBELL_STATUS_SOUND);
+    _setDoorbellStatusSound.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.api.setStatusSound(args.device.getData(), args.enabled);
+      }
+      return Promise.resolve(true);
+    });
 
-        const _actionSetCameraBlackout = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_CAMERA_BLACKOUT);
-        _actionSetCameraBlackout.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.debug(`Set Camera Blackout ${args.device.getData().id} to ${args.enabled}`);
-                // Get device from camera id
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    this.homey.app.debug(`Found device ${device.getName()}`);
-                    return this.homey.app.api.setCameraBlackout(device.getData(), args.enabled).catch(this.error);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _setDeviceCameraStatusLed = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_CAMERA_STATUS_LED);
+    _setDeviceCameraStatusLed.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.api.setStatusLed(args.device.getData(), args.enabled);
+      }
+      return Promise.resolve(true);
+    });
 
-        const _actionSetDoorbellBlackout = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_BLACKOUT);
-        _actionSetDoorbellBlackout.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                // Get device from camera id
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    return this.homey.app.api.setCameraBlackout(device.getData(), args.enabled);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _setDeviceDoorbellStatusLed = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_STATUS_LED);
+    _setDeviceDoorbellStatusLed.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.api.setStatusLed(args.device.getData(), args.enabled);
+      }
+      return Promise.resolve(true);
+    });
 
-        const _actionSetCameraPatrolStop = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_PATROL_STOP);
-        _actionSetCameraPatrolStop.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.debug(`Set Patrol Stop ${args.device.getData().id}`);
-                // Get device from camera id
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    this.homey.app.debug(`Found device ${device.getName()}`);
-                    const api = this._getProtectV2ApiOrNull() || this.homey.app.api;
-                    return api.setPatrolStop(device.getData()).catch(this.error);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _setDeviceDoorbellStatusSound = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_STATUS_SOUND);
+    _setDeviceDoorbellStatusSound.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData().id !== 'undefined') {
+        return this.homey.app.api.setStatusSound(args.device.getData(), args.enabled);
+      }
+      return Promise.resolve(true);
+    });
 
-        const _actionSetCameraPatrolStart = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_PATROL_START);
-        _actionSetCameraPatrolStart.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.debug(`Set Patrol Start ${args.device.getData().id} to ${args.presentId}`);
-                // Get device from camera id
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    this.homey.app.debug(`Found device ${device.getName()}`);
-                    const api = this._getProtectV2ApiOrNull() || this.homey.app.api;
-                    return api.setPatrolStart(device.getData(), args.presentId).catch(this.error);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _actionTakePackageSnapshot = this.homey.flow.getActionCard(UfvConstants.ACTION_TAKE_PACKAGE_SNAPSHOT);
+    _actionTakePackageSnapshot.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        // Get device from camera id
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          return device._createSnapshotPackageImage(true);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionSetCameraPTZHome = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_PTZ_HOME);
-        _actionSetCameraPTZHome.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.debug(`PTZ Reset to home position ${args.device.getData().id}`);
-                // Get device from camera id
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    this.homey.app.debug(`Found device ${device.getName()}`);
-                    const api = this._getProtectV2ApiOrNull() || this.homey.app.api;
-                    return api.setPTZHome(device.getData()).catch(this.error);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _actionSetCameraBlackout = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_CAMERA_BLACKOUT);
+    _actionSetCameraBlackout.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.debug(`Set Camera Blackout ${args.device.getData().id} to ${args.enabled}`);
+        // Get device from camera id
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          this.homey.app.debug(`Found device ${device.getName()}`);
+          return this.homey.app.api.setCameraBlackout(device.getData(), args.enabled).catch(this.error);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionSetCameraPTZPreset = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_PTZ_PRESET);
-        _actionSetCameraPTZPreset.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.debug(`PTZ Move to preset ${args.device.getData().id} to ${args.presentId}`);
-                // Get device from camera id
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    this.homey.app.debug(`Found device ${device.getName()}`);
-                    const api = this._getProtectV2ApiOrNull() || this.homey.app.api;
-                    return api.setPTZPreset(device.getData(), args.presentId).catch(this.error);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _actionSetDoorbellBlackout = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_BLACKOUT);
+    _actionSetDoorbellBlackout.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        // Get device from camera id
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          return this.homey.app.api.setCameraBlackout(device.getData(), args.enabled);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionSetColorNightVision = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_SET_COLOR_NIGHT_VISION);
-        _actionSetColorNightVision.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.debug(`Set Color Night Vision ${args.device.getData().id} to ${args.enabled}`);
-                // Get device from camera id
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    this.homey.app.debug(`Found device ${device.getName()}`);
-                    return this.homey.app.api.setColorNightVision(device.getData(), args.enabled).catch(this.error);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _actionSetCameraPatrolStop = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_PATROL_STOP);
+    _actionSetCameraPatrolStop.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.debug(`Set Patrol Stop ${args.device.getData().id}`);
+        // Get device from camera id
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          this.homey.app.debug(`Found device ${device.getName()}`);
+          const api = this._getProtectV2ApiOrNull() || this.homey.app.api;
+          return api.setPatrolStop(device.getData()).catch(this.error);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionSetAutoTracking = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_SET_AUTO_TRACKING);
-        _actionSetAutoTracking.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.debug(`Set Auto Tracking Options ${args.device.getData().id} to ${args.person} and ${args.smart_zoom}`);
-                // Get device from camera id
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    this.homey.app.debug(`Found device ${device.getName()}`);
-                    return this.homey.app.api.setAutoTracking(device.getData(), args.person, args.smart_zoom).catch(this.error);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _actionSetCameraPatrolStart = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_PATROL_START);
+    _actionSetCameraPatrolStart.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.debug(`Set Patrol Start ${args.device.getData().id} to ${args.presentId}`);
+        // Get device from camera id
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          this.homey.app.debug(`Found device ${device.getName()}`);
+          const api = this._getProtectV2ApiOrNull() || this.homey.app.api;
+          return api.setPatrolStart(device.getData(), args.presentId).catch(this.error);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionSetCameraFaceDetection = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_CAMERA_FACE_DETECTION);
-        _actionSetCameraFaceDetection.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.debug(`Set Camera Face Detection ${args.device.getData().id} to ${args.enabled}`);
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    this.homey.app.debug(`Found device ${device.getName()}`);
-                    return this.homey.app.api.setFaceDetection(device.getData(), args.enabled).catch(this.error);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _actionSetCameraPTZHome = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_PTZ_HOME);
+    _actionSetCameraPTZHome.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.debug(`PTZ Reset to home position ${args.device.getData().id}`);
+        // Get device from camera id
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          this.homey.app.debug(`Found device ${device.getName()}`);
+          const api = this._getProtectV2ApiOrNull() || this.homey.app.api;
+          return api.setPTZHome(device.getData()).catch(this.error);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionSetDoorbellFaceDetection = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_FACE_DETECTION);
-        _actionSetDoorbellFaceDetection.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.debug(`Set Doorbell Face Detection ${args.device.getData().id} to ${args.enabled}`);
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    this.homey.app.debug(`Found device ${device.getName()}`);
-                    return this.homey.app.api.setFaceDetection(device.getData(), args.enabled).catch(this.error);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _actionSetCameraPTZPreset = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_PTZ_PRESET);
+    _actionSetCameraPTZPreset.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.debug(`PTZ Move to preset ${args.device.getData().id} to ${args.presentId}`);
+        // Get device from camera id
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          this.homey.app.debug(`Found device ${device.getName()}`);
+          const api = this._getProtectV2ApiOrNull() || this.homey.app.api;
+          return api.setPTZPreset(device.getData(), args.presentId).catch(this.error);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionTestRingtone = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_TEST_RINGTONE);
-        _actionTestRingtone.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.debug(`Test Ringtone on ${args.device.getData().id}`);
-                // Get device from camera id
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    this.homey.app.debug(`Found device ${device.getName()}`);
-                    return this.homey.app.api.testRingtone(device.getData()).catch(this.error);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _actionSetColorNightVision = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_SET_COLOR_NIGHT_VISION);
+    _actionSetColorNightVision.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.debug(`Set Color Night Vision ${args.device.getData().id} to ${args.enabled}`);
+        // Get device from camera id
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          this.homey.app.debug(`Found device ${device.getName()}`);
+          return this.homey.app.api.setColorNightVision(device.getData(), args.enabled).catch(this.error);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionTestSiren = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_TEST_SIREN);
-        _actionTestSiren.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.debug(`Test Siren on ${args.device.getData().id}`);
-                // Get device from camera id
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    this.homey.app.debug(`Found device ${device.getName()}`);
-                    return this.homey.app.api.testSiren(device.getData(), args.volume).catch(this.error);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _actionSetAutoTracking = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_SET_AUTO_TRACKING);
+    _actionSetAutoTracking.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.debug(`Set Auto Tracking Options ${args.device.getData().id} to ${args.person} and ${args.smart_zoom}`);
+        // Get device from camera id
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          this.homey.app.debug(`Found device ${device.getName()}`);
+          return this.homey.app.api.setAutoTracking(device.getData(), args.person, args.smart_zoom).catch(this.error);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionSetDoorbellRingVolume = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_RING_VOLUME);
-        _actionSetDoorbellRingVolume.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.debug(`[AppProtect] Set doorbell ring volume ${args.device.getData().id} to ${args.volume}`);
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    return this.homey.app.api.setDoorbellRingVolume(device.getData(), args.volume).catch(this.error);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _actionSetCameraFaceDetection = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_CAMERA_FACE_DETECTION);
+    _actionSetCameraFaceDetection.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.debug(`Set Camera Face Detection ${args.device.getData().id} to ${args.enabled}`);
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          this.homey.app.debug(`Found device ${device.getName()}`);
+          return this.homey.app.api.setFaceDetection(device.getData(), args.enabled).catch(this.error);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionSetDoorbellSpeakerVolume = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_SPEAKER_VOLUME);
-        _actionSetDoorbellSpeakerVolume.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                this.homey.app.debug(`[AppProtect] Set doorbell speaker volume ${args.device.getData().id} to ${args.volume}`);
-                const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
-                if (device) {
-                    return this.homey.app.api.setDoorbellTalkbackVolume(device.getData(), args.volume).catch(this.error);
-                }
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _actionSetDoorbellFaceDetection = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_FACE_DETECTION);
+    _actionSetDoorbellFaceDetection.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.debug(`Set Doorbell Face Detection ${args.device.getData().id} to ${args.enabled}`);
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          this.homey.app.debug(`Found device ${device.getName()}`);
+          return this.homey.app.api.setFaceDetection(device.getData(), args.enabled).catch(this.error);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionSetDoorbellChimeVolume = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_CHIME_VOLUME);
-        _actionSetDoorbellChimeVolume.registerRunListener(async (args, state) => {
-            if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
-                const doorbellId = String(args.device.getData().id);
-                this.homey.app.debug(`[AppProtect] Set paired chime volume for doorbell ${doorbellId} to ${args.volume}`);
-                const chimes = await this.homey.app.api.getChimes().catch(this.error);
-                if (!chimes) return Promise.reject(new Error('Could not retrieve chimes'));
-                const paired = chimes.filter((chime) => Array.isArray(chime.cameraIds) && chime.cameraIds.map(String).includes(doorbellId));
-                if (paired.length === 0) return Promise.reject(new Error('No paired chime found for this doorbell'));
-                await Promise.all(paired.map((chime) => this.homey.app.api.setChimeVolume(chime, args.volume / 100)));
-                return Promise.resolve(true);
-            }
-            return Promise.reject(new Error('No device found'));
-        });
+    const _actionTestRingtone = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_TEST_RINGTONE);
+    _actionTestRingtone.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.debug(`Test Ringtone on ${args.device.getData().id}`);
+        // Get device from camera id
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          this.homey.app.debug(`Found device ${device.getName()}`);
+          return this.homey.app.api.testRingtone(device.getData()).catch(this.error);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionPulseRelay = this.homey.flow.getActionCard(UfvConstants.ACTION_PULSE_DEVICE_RELAY);
-        _actionPulseRelay.registerRunListener(async (args, state) => {
-            if (args.device && typeof args.device.pulseRelay === 'function') {
-                const pulseDuration = Number(args.pulse_duration);
-                const safeDuration = Number.isFinite(pulseDuration) && pulseDuration > 0 ? Math.round(pulseDuration) : 1000;
-                await args.device.pulseRelay(safeDuration);
-                return Promise.resolve(true);
-            }
+    const _actionTestSiren = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_TEST_SIREN);
+    _actionTestSiren.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.debug(`Test Siren on ${args.device.getData().id}`);
+        // Get device from camera id
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          this.homey.app.debug(`Found device ${device.getName()}`);
+          return this.homey.app.api.testSiren(device.getData(), args.volume).catch(this.error);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-            return Promise.reject(new Error('No relay device found'));
-        });
+    const _actionSetDoorbellRingVolume = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_RING_VOLUME);
+    _actionSetDoorbellRingVolume.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.debug(`[AppProtect] Set doorbell ring volume ${args.device.getData().id} to ${args.volume}`);
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          return this.homey.app.api.setDoorbellRingVolume(device.getData(), args.volume).catch(this.error);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionStartSiren = this.homey.flow.getActionCard(UfvConstants.ACTION_START_DEVICE_SIREN);
-        _actionStartSiren.registerRunListener(async (args, state) => {
-            if (args.device && typeof args.device.startSiren === 'function') {
-                return args.device.startSiren(args.duration).then(() => true);
-            }
-            return Promise.reject(new Error('No siren device found'));
-        });
+    const _actionSetDoorbellSpeakerVolume = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_SPEAKER_VOLUME);
+    _actionSetDoorbellSpeakerVolume.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        this.homey.app.debug(`[AppProtect] Set doorbell speaker volume ${args.device.getData().id} to ${args.volume}`);
+        const device = args.device.driver.getUnifiDeviceById(args.device.getData().id);
+        if (device) {
+          return this.homey.app.api.setDoorbellTalkbackVolume(device.getData(), args.volume).catch(this.error);
+        }
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _actionStopSiren = this.homey.flow.getActionCard(UfvConstants.ACTION_STOP_DEVICE_SIREN);
-        _actionStopSiren.registerRunListener(async (args, state) => {
-            if (args.device && typeof args.device.stopSiren === 'function') {
-                return args.device.stopSiren().then(() => true);
-            }
-            return Promise.reject(new Error('No siren device found'));
-        });
+    const _actionSetDoorbellChimeVolume = this.homey.flow.getActionCard(UfvConstants.ACTION_SET_DEVICE_DOORBELL_CHIME_VOLUME);
+    _actionSetDoorbellChimeVolume.registerRunListener(async (args, state) => {
+      if (typeof args.device.getData === 'function' && typeof args.device.getData().id !== 'undefined') {
+        const doorbellId = String(args.device.getData().id);
+        this.homey.app.debug(`[AppProtect] Set paired chime volume for doorbell ${doorbellId} to ${args.volume}`);
+        const chimes = await this.homey.app.api.getChimes().catch(this.error);
+        if (!chimes) return Promise.reject(new Error('Could not retrieve chimes'));
+        const paired = chimes.filter((chime) => Array.isArray(chime.cameraIds) && chime.cameraIds.map(String).includes(doorbellId));
+        if (paired.length === 0) return Promise.reject(new Error('No paired chime found for this doorbell'));
+        await Promise.all(paired.map((chime) => this.homey.app.api.setChimeVolume(chime, args.volume / 100)));
+        return Promise.resolve(true);
+      }
+      return Promise.reject(new Error('No device found'));
+    });
 
-        const _conditionGarageIsOpen = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_GARAGE_IS_OPEN);
-        _conditionGarageIsOpen.registerRunListener(async (args, state) => {
-            try {
-                if (args.device && typeof args.device.isRelayStatusOpen === 'function') {
-                    return Promise.resolve(args.device.isRelayStatusOpen());
-                }
-            } catch (error) {
-                this.error(error);
-            }
+    const _actionPulseRelay = this.homey.flow.getActionCard(UfvConstants.ACTION_PULSE_DEVICE_RELAY);
+    _actionPulseRelay.registerRunListener(async (args, state) => {
+      if (args.device && typeof args.device.pulseRelay === 'function') {
+        const pulseDuration = Number(args.pulse_duration);
+        const safeDuration = Number.isFinite(pulseDuration) && pulseDuration > 0 ? Math.round(pulseDuration) : 1000;
+        await args.device.pulseRelay(safeDuration);
+        return Promise.resolve(true);
+      }
 
-            return Promise.resolve(false);
-        });
+      return Promise.reject(new Error('No relay device found'));
+    });
 
-        const _conditionGarageIsClosed = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_GARAGE_IS_CLOSED);
-        _conditionGarageIsClosed.registerRunListener(async (args, state) => {
-            try {
-                if (args.device && typeof args.device.isRelayStatusClosed === 'function') {
-                    return Promise.resolve(args.device.isRelayStatusClosed());
-                }
-            } catch (error) {
-                this.error(error);
-            }
+    const _actionStartSiren = this.homey.flow.getActionCard(UfvConstants.ACTION_START_DEVICE_SIREN);
+    _actionStartSiren.registerRunListener(async (args, state) => {
+      if (args.device && typeof args.device.startSiren === 'function') {
+        return args.device.startSiren(args.duration).then(() => true);
+      }
+      return Promise.reject(new Error('No siren device found'));
+    });
 
-            return Promise.resolve(false);
-        });
+    const _actionStopSiren = this.homey.flow.getActionCard(UfvConstants.ACTION_STOP_DEVICE_SIREN);
+    _actionStopSiren.registerRunListener(async (args, state) => {
+      if (args.device && typeof args.device.stopSiren === 'function') {
+        return args.device.stopSiren().then(() => true);
+      }
+      return Promise.reject(new Error('No siren device found'));
+    });
 
-        const _conditionRelayIsOpen = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_RELAY_IS_OPEN);
-        _conditionRelayIsOpen.registerRunListener(async (args, state) => {
-            try {
-                if (args.device && typeof args.device.isRelayStatusOpen === 'function') {
-                    return Promise.resolve(args.device.isRelayStatusOpen());
-                }
-            } catch (error) {
-                this.error(error);
-            }
+    const _conditionGarageIsOpen = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_GARAGE_IS_OPEN);
+    _conditionGarageIsOpen.registerRunListener(async (args, state) => {
+      try {
+        if (args.device && typeof args.device.isRelayStatusOpen === 'function') {
+          return Promise.resolve(args.device.isRelayStatusOpen());
+        }
+      } catch (error) {
+        this.error(error);
+      }
 
-            return Promise.resolve(false);
-        });
+      return Promise.resolve(false);
+    });
 
-        const _conditionRelayIsClosed = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_RELAY_IS_CLOSED);
-        _conditionRelayIsClosed.registerRunListener(async (args, state) => {
-            try {
-                if (args.device && typeof args.device.isRelayStatusClosed === 'function') {
-                    return Promise.resolve(args.device.isRelayStatusClosed());
-                }
-            } catch (error) {
-                this.error(error);
-            }
+    const _conditionGarageIsClosed = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_GARAGE_IS_CLOSED);
+    _conditionGarageIsClosed.registerRunListener(async (args, state) => {
+      try {
+        if (args.device && typeof args.device.isRelayStatusClosed === 'function') {
+          return Promise.resolve(args.device.isRelayStatusClosed());
+        }
+      } catch (error) {
+        this.error(error);
+      }
 
-            return Promise.resolve(false);
-        });
+      return Promise.resolve(false);
+    });
 
-        const _conditionFobButtonIs = this.homey.flow.getConditionCard(UfvConstants.CONDITION_FOB_BUTTON_IS);
-        _conditionFobButtonIs.registerRunListener(async (args, state) => {
-            try {
-                const expectedButton = String(args.button || '').trim();
-                const actualButton = String((state && (state.fob_button || state.ufp_fob_button)) || '').trim();
-                return Promise.resolve(expectedButton !== '' && actualButton !== '' && expectedButton === actualButton);
-            } catch (error) {
-                this.error(error);
-            }
+    const _conditionRelayIsOpen = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_RELAY_IS_OPEN);
+    _conditionRelayIsOpen.registerRunListener(async (args, state) => {
+      try {
+        if (args.device && typeof args.device.isRelayStatusOpen === 'function') {
+          return Promise.resolve(args.device.isRelayStatusOpen());
+        }
+      } catch (error) {
+        this.error(error);
+      }
 
-            return Promise.resolve(false);
-        });
+      return Promise.resolve(false);
+    });
 
-        const _conditionFobPressTypeIs = this.homey.flow.getConditionCard(UfvConstants.CONDITION_FOB_PRESS_TYPE_IS);
-        _conditionFobPressTypeIs.registerRunListener(async (args, state) => {
-            try {
-                const expectedPressType = String(args.press_type || '').trim();
-                const actualPressType = String((state && (state.fob_press_type || state.ufp_fob_press_type)) || '').trim();
-                return Promise.resolve(expectedPressType !== '' && actualPressType !== '' && expectedPressType === actualPressType);
-            } catch (error) {
-                this.error(error);
-            }
+    const _conditionRelayIsClosed = this.homey.flow.getConditionCard(UfvConstants.CONDITION_DEVICE_RELAY_IS_CLOSED);
+    _conditionRelayIsClosed.registerRunListener(async (args, state) => {
+      try {
+        if (args.device && typeof args.device.isRelayStatusClosed === 'function') {
+          return Promise.resolve(args.device.isRelayStatusClosed());
+        }
+      } catch (error) {
+        this.error(error);
+      }
 
-            return Promise.resolve(false);
-        });
+      return Promise.resolve(false);
+    });
 
+    const _conditionFobButtonIs = this.homey.flow.getConditionCard(UfvConstants.CONDITION_FOB_BUTTON_IS);
+    _conditionFobButtonIs.registerRunListener(async (args, state) => {
+      try {
+        const expectedButton = String(args.button || '').trim();
+        const actualButton = String((state && (state.fob_button || state.ufp_fob_button)) || '').trim();
+        return Promise.resolve(expectedButton !== '' && actualButton !== '' && expectedButton === actualButton);
+      } catch (error) {
+        this.error(error);
+      }
+
+      return Promise.resolve(false);
+    });
+
+    const _conditionFobPressTypeIs = this.homey.flow.getConditionCard(UfvConstants.CONDITION_FOB_PRESS_TYPE_IS);
+    _conditionFobPressTypeIs.registerRunListener(async (args, state) => {
+      try {
+        const expectedPressType = String(args.press_type || '').trim();
+        const actualPressType = String((state && (state.fob_press_type || state.ufp_fob_press_type)) || '').trim();
+        return Promise.resolve(expectedPressType !== '' && actualPressType !== '' && expectedPressType === actualPressType);
+      } catch (error) {
+        this.error(error);
+      }
+
+      return Promise.resolve(false);
+    });
+
+  }
+
+  _getProtectV2ApiOrNull() {
+    const tokens = this.homey.settings.get('ufp:tokens') || {};
+    if (!tokens.protectV2ApiKey) {
+      return null;
     }
 
-    _getProtectV2ApiOrNull() {
-        const tokens = this.homey.settings.get('ufp:tokens') || {};
-        if (!tokens.protectV2ApiKey) {
-            return null;
-        }
+    this.homey.app._initProtectV2Stack();
+    return this.homey.app.apiV2;
+  }
 
-        this.homey.app._initProtectV2Stack();
-        return this.homey.app.apiV2;
+  async loginToProtectV2() {
+    // Validate Protect V2 address, this is configured separately from the V1 settings
+    const { host, port } = this.homey.app.getV2Connection();
+    const cloud = this.homey.app.getProtectCloudConnection();
+    if (!cloud.enabled && !host) {
+      this.log('Protect V2 IP address not set.');
+      return;
     }
 
-    async loginToProtectV2() {
-        // Validate Protect V2 address, this is configured separately from the V1 settings
-        const {host, port} = this.homey.app.getV2Connection();
-        const cloud = this.homey.app.getProtectCloudConnection();
-        if (!cloud.enabled && !host) {
-            this.log('Protect V2 IP address not set.');
-            return;
-        }
-
-        if (cloud.enabled && !cloud.consoleId) {
-            this.log('Protect V2 Cloud API console ID not set.');
-            return;
-        }
-
-        // Validate NVR credentials
-        const tokens = this.homey.settings.get('ufp:tokens');
-        if (!tokens) {
-            this.log('Tokens not set.');
-            return;
-        }
-
-        if (!tokens.protectV2ApiKey || tokens.protectV2ApiKey === '' || tokens.protectV2ApiKey === 'undefined') {
-            this.log('Protect V2 API Key not set.');
-            return;
-        }
-
-        this.homey.app.apiV2.setSettings(host, port, tokens.protectV2ApiKey, {
-            cloudEnabled: cloud.enabled,
-            consoleId: cloud.consoleId,
-        });
-
-        if (cloud.enabled) {
-            this.homey.app.apiV2.websocket.disconnectEventListener().catch(this.error);
-            this.homey.app.apiV2.websocketDevices.disconnectEventListener().catch(this.error);
-            this.homey.app.apiV2.websocket.loggedInStatus = 'Disabled (Cloud API)';
-            this.homey.app.apiV2.websocketDevices.loggedInStatus = 'Disabled (Cloud API)';
-            this.homey.app.debug('[Protect V2] Cloud API enabled; realtime websocket listeners are disabled.');
-            this.homey.app.apiV2.loggedInStatus = 'Connected';
-            return;
-        }
-
-        this.homey.app.apiV2.websocket.reconnectNotificationsListener();
-        this.homey.app.apiV2.websocketDevices.reconnectNotificationsListener();
-
-        this.homey.app.apiV2.loggedInStatus = 'Connected';
+    if (cloud.enabled && !cloud.consoleId) {
+      this.log('Protect V2 Cloud API console ID not set.');
+      return;
     }
 
-    _appLogin() {
-        this.homey.app.debug('Protect Logging in...');
+    // Validate NVR credentials
+    const tokens = this.homey.settings.get('ufp:tokens');
+    if (!tokens) {
+      this.log('Tokens not set.');
+      return;
+    }
 
-        // Validate NVR IP address
-        const nvrip = this.homey.settings.get('ufp:nvrip');
-        if (!nvrip) {
-            this.homey.app.debug('NVR IP address not set.');
-            return;
-        }
+    if (!tokens.protectV2ApiKey || tokens.protectV2ApiKey === '' || tokens.protectV2ApiKey === 'undefined') {
+      this.log('Protect V2 API Key not set.');
+      return;
+    }
 
-        // Setting NVR Port when set
-        const nvrport = this.homey.settings.get('ufp:nvrport');
+    this.homey.app.apiV2.setSettings(host, port, tokens.protectV2ApiKey, {
+      cloudEnabled: cloud.enabled,
+      consoleId: cloud.consoleId,
+    });
 
-        // Validate NVR credentials
+    if (cloud.enabled) {
+      this.homey.app.apiV2.websocket.disconnectEventListener().catch(this.error);
+      this.homey.app.apiV2.websocketDevices.disconnectEventListener().catch(this.error);
+      this.homey.app.apiV2.websocket.loggedInStatus = 'Disabled (Cloud API)';
+      this.homey.app.apiV2.websocketDevices.loggedInStatus = 'Disabled (Cloud API)';
+      this.homey.app.debug('[Protect V2] Cloud API enabled; realtime websocket listeners are disabled.');
+      this.homey.app.apiV2.loggedInStatus = 'Connected';
+      return;
+    }
+
+    this.homey.app.apiV2.websocket.reconnectNotificationsListener();
+    this.homey.app.apiV2.websocketDevices.reconnectNotificationsListener();
+
+    this.homey.app.apiV2.loggedInStatus = 'Connected';
+  }
+
+  _appLogin() {
+    this.homey.app.debug('Protect Logging in...');
+
+    // Validate NVR IP address
+    const nvrip = this.homey.settings.get('ufp:nvrip');
+    if (!nvrip) {
+      this.homey.app.debug('NVR IP address not set.');
+      return;
+    }
+
+    // Setting NVR Port when set
+    const nvrport = this.homey.settings.get('ufp:nvrport');
+
+    // Validate NVR credentials
+    const credentials = this.homey.settings.get('ufp:credentials');
+    if (!credentials) {
+      this.homey.app.debug('Credentials not set.');
+      return;
+    }
+
+    // Log in to NVR
+    this.homey.app.api.login(nvrip, nvrport, credentials.username, credentials.password)
+      .then(() => {
+        this.homey.app.api.getBootstrapInfo()
+          .then(() => {
+            this.homey.app.debug('Bootstrap loaded.');
+            this.debuggedIn = true;
+            this.nvrIp = nvrip;
+            this.nvrPort = nvrport;
+            this.nvrUsername = credentials.username;
+            this.nvrPassword = credentials.password;
+
+            this.homey.app.debug('Logged in.');
+          })
+          .catch((error) => this.error(error));
+      })
+      .catch((error) => this.error(error));
+  }
+
+  cleanDeviceStorage() {
+    const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
+    const driverCamera = this.homey.drivers.getDriver('protectcamera');
+
+    driverDoorbell.getDevices().forEach((device) => {
+      device.cleanSmartDetectionEvents();
+    });
+
+    driverCamera.getDevices().forEach((device) => {
+      device.cleanSmartDetectionEvents();
+    });
+
+  }
+
+  _refreshCookie() {
+    this.homey.app.api._lastUpdateId = null;
+
+    // Validate NVR IP address
+    const nvrip = this.homey.settings.get('ufp:nvrip');
+    if (!nvrip) {
+      this.homey.app.debug('NVR IP address not set.');
+      return;
+    }
+
+    // Setting NVR Port when set
+    const nvrport = this.homey.settings.get('ufp:nvrport');
+
+    // Validate NVR credentials
+    const credentials = this.homey.settings.get('ufp:credentials');
+    if (!credentials) {
+      this.homey.app.debug('Credentials not set.');
+      return;
+    }
+
+    this.homey.app.api.login(nvrip, nvrport, credentials.username, credentials.password)
+      .then(() => {
+        this.homey.app.debug('Logged in again to refresh cookie.');
+        this.homey.app.api.getBootstrapInfo()
+          .then(() => {
+            this.homey.app.debug('Bootstrap loaded.');
+            this.debuggedIn = true;
+          })
+          .catch((error) => this.error(error));
+      })
+      .catch((error) => this.error(error));
+    // }
+
+    // clean Device Storage
+    // this.cleanDeviceStorage();
+
+    // // _refreshCookie after 1 hour
+    // const timeOutFunction = function () {
+    //     this._refreshCookie();
+    // }.bind(this);
+    // this.homey.setTimeout(timeOutFunction, RefreshCookieTime);
+  }
+
+  _registerSnapshotToken() {
+    // Register snapshot image token
+    this.homey.flow.createToken('ufv_snapshot', {
+      type: 'image',
+      title: 'Snapshot',
+    });
+  }
+
+  async refreshAuthTokens() {
+    // Clear any existing interval to prevent duplicates on app restart
+    if (this._refreshAuthTokensInterval) {
+      this.homey.clearInterval(this._refreshAuthTokensInterval);
+      this._refreshAuthTokensInterval = null;
+    }
+
+    // Store the interval handle on instance so it can be cleared later
+    this._refreshAuthTokensInterval = this.homey.setInterval(() => {
+      try {
+        this.homey.app.debug('Refreshing auth tokens');
+
+        // Only refresh V1 (username/password) if credentials are configured
         const credentials = this.homey.settings.get('ufp:credentials');
-        if (!credentials) {
-            this.homey.app.debug('Credentials not set.');
-            return;
+        if (credentials && credentials.username && credentials.password) {
+          this.homey.app.api._lastUpdateId = null;
+          this._appLogin();
         }
-
-        // Log in to NVR
-        this.homey.app.api.login(nvrip, nvrport, credentials.username, credentials.password)
-            .then(() => {
-                this.homey.app.api.getBootstrapInfo()
-                    .then(() => {
-                        this.homey.app.debug('Bootstrap loaded.');
-                        this.debuggedIn = true;
-                        this.nvrIp = nvrip;
-                        this.nvrPort = nvrport;
-                        this.nvrUsername = credentials.username;
-                        this.nvrPassword = credentials.password;
-
-                        this.homey.app.debug('Logged in.');
-                    })
-                    .catch((error) => this.error(error));
-            })
-            .catch((error) => this.error(error));
-    }
-
-    cleanDeviceStorage() {
-        const driverDoorbell = this.homey.drivers.getDriver('protectdoorbell');
-        const driverCamera = this.homey.drivers.getDriver('protectcamera');
-
-        driverDoorbell.getDevices().forEach((device) => {
-            device.cleanSmartDetectionEvents();
-        });
-
-        driverCamera.getDevices().forEach((device) => {
-            device.cleanSmartDetectionEvents();
-        });
-
-    }
-
-    _refreshCookie() {
-        this.homey.app.api._lastUpdateId = null;
-
-        // Validate NVR IP address
-        const nvrip = this.homey.settings.get('ufp:nvrip');
-        if (!nvrip) {
-            this.homey.app.debug('NVR IP address not set.');
-            return;
-        }
-
-        // Setting NVR Port when set
-        const nvrport = this.homey.settings.get('ufp:nvrport');
-
-        // Validate NVR credentials
-        const credentials = this.homey.settings.get('ufp:credentials');
-        if (!credentials) {
-            this.homey.app.debug('Credentials not set.');
-            return;
-        }
-
-        this.homey.app.api.login(nvrip, nvrport, credentials.username, credentials.password)
-            .then(() => {
-                this.homey.app.debug('Logged in again to refresh cookie.');
-                this.homey.app.api.getBootstrapInfo()
-                    .then(() => {
-                        this.homey.app.debug('Bootstrap loaded.');
-                        this.debuggedIn = true;
-                    })
-                    .catch((error) => this.error(error));
-            })
-            .catch((error) => this.error(error));
-        // }
 
         // clean Device Storage
-        // this.cleanDeviceStorage();
+        this.cleanDeviceStorage();
 
-        // // _refreshCookie after 1 hour
-        // const timeOutFunction = function () {
-        //     this._refreshCookie();
-        // }.bind(this);
-        // this.homey.setTimeout(timeOutFunction, RefreshCookieTime);
-    }
-
-    _registerSnapshotToken() {
-        // Register snapshot image token
-        this.homey.flow.createToken('ufv_snapshot', {
-            type: 'image',
-            title: 'Snapshot',
-        });
-    }
-
-    async refreshAuthTokens() {
-        // Clear any existing interval to prevent duplicates on app restart
-        if (this._refreshAuthTokensInterval) {
-            this.homey.clearInterval(this._refreshAuthTokensInterval);
-            this._refreshAuthTokensInterval = null;
+        const tokens = this.homey.settings.get('ufp:tokens');
+        if (tokens) {
+          this.accessApiKey = tokens.accessApiKey;
+          this.protectV2ApiKey = tokens.protectV2ApiKey;
         }
 
-        // Store the interval handle on instance so it can be cleared later
-        this._refreshAuthTokensInterval = this.homey.setInterval(() => {
-            try {
-                this.homey.app.debug('Refreshing auth tokens');
-
-                // Only refresh V1 (username/password) if credentials are configured
-                const credentials = this.homey.settings.get('ufp:credentials');
-                if (credentials && credentials.username && credentials.password) {
-                    this.homey.app.api._lastUpdateId = null;
-                    this._appLogin();
-                }
-
-                // clean Device Storage
-                this.cleanDeviceStorage();
-
-                const tokens = this.homey.settings.get('ufp:tokens');
-                if (tokens) {
-                    this.accessApiKey = tokens.accessApiKey;
-                    this.protectV2ApiKey = tokens.protectV2ApiKey;
-                }
-
-                if (
-                    tokens && typeof tokens.protectV2ApiKey !== 'undefined'
+        if (
+          tokens && typeof tokens.protectV2ApiKey !== 'undefined'
                     && tokens.protectV2ApiKey !== ''
-                ) {
-                    this.homey.app._initProtectV2Stack();
-                    if (!this.homey.app.apiV2.websocket.isWebsocketConnected()) {
-                        this.homey.app.appProtect.loginToProtectV2().catch(this.error);
-                    }
-                }
+        ) {
+          this.homey.app._initProtectV2Stack();
+          if (!this.homey.app.apiV2.websocket.isWebsocketConnected()) {
+            this.homey.app.appProtect.loginToProtectV2().catch(this.error);
+          }
+        }
 
-                if (
-                    tokens && typeof tokens.accessApiKey !== 'undefined'
+        if (
+          tokens && typeof tokens.accessApiKey !== 'undefined'
                     && tokens.accessApiKey !== ''
-                ) {
-                    this.homey.app._initAccessStack()
-                        .then(() => this.homey.app.appAccess.loginToAccess())
-                        .catch(this.error);
-                }
-            } catch (error) {
-                this.homey.error(`${JSON.stringify(error)}`);
-            }
-        }, this.homey.app._refreshAuthTokensnterval);
-    }
+        ) {
+          this.homey.app._initAccessStack()
+            .then(() => this.homey.app.appAccess.loginToAccess())
+            .catch(this.error);
+        }
+      } catch (error) {
+        this.homey.error(`${JSON.stringify(error)}`);
+      }
+    }, this.homey.app._refreshAuthTokensnterval);
+  }
 }
 
 module.exports = AppProtect;

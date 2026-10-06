@@ -1,7 +1,6 @@
 'use strict';
 
 const Homey = require('homey');
-const UfvConstants = require('../../library/constants');
 const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 class Chime extends Homey.Device {
@@ -50,11 +49,11 @@ class Chime extends Homey.Device {
   }
 
   async initChime() {
-    this.registerCapabilityListener("onoff", (value) => {
+    this.registerCapabilityListener('onoff', (value) => {
       return this.homey.app.api.setChimeVolume(this.getData(), (value === true ? this.getCapabilityValue('volume_set') : 0));
     });
 
-    this.registerCapabilityListener("volume_set", (value) => {
+    this.registerCapabilityListener('volume_set', (value) => {
       return this.homey.app.api.setChimeVolume(this.getData(), value);
     });
 
@@ -86,10 +85,10 @@ class Chime extends Homey.Device {
       bootstrapData.chimes.forEach((chime) => {
         if (chime.id === this.getData().id) {
           if (this.hasCapability('onoff')) {
-            this.setCapabilityValue('onoff', (chime.volume > 0));
+            this.setCapabilityValue('onoff', (chime.volume > 0)).catch(this.error);
           }
           if (this.hasCapability('volume_set')) {
-            this.setCapabilityValue('volume_set', chime.volume / 100);
+            this.setCapabilityValue('volume_set', chime.volume / 100).catch(this.error);
           }
         }
       });
@@ -98,10 +97,10 @@ class Chime extends Homey.Device {
 
   onIsChimeOn(volume) {
     if (this.hasCapability('onoff')) {
-      this.setCapabilityValue('onoff', (volume > 0));
+      this.setCapabilityValue('onoff', (volume > 0)).catch(this.error);
     }
     if (this.hasCapability('volume_set')) {
-      this.setCapabilityValue('volume_set', volume / 100);
+      this.setCapabilityValue('volume_set', volume / 100).catch(this.error);
     }
   }
 }

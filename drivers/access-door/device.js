@@ -3,7 +3,9 @@
 const Homey = require('homey');
 const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 const UfvConstants = require('../../library/constants');
-const { DOOR_STATE_OPEN, DOOR_STATE_CLOSED, DOOR_STATE_UNKNOWN, normalizeDoorState } = require('../../library/door-state');
+const {
+  DOOR_STATE_OPEN, DOOR_STATE_CLOSED, DOOR_STATE_UNKNOWN, normalizeDoorState,
+} = require('../../library/door-state');
 
 class MyDevice extends Homey.Device {
 

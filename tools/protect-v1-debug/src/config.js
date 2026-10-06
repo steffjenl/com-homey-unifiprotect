@@ -13,7 +13,7 @@ function toInt(value, fallback) {
 function getRequiredEnv(name) {
   const value = process.env[name];
   if (!value || String(value).trim() === '') {
-    throw new Error('Missing required environment variable: ' + name);
+    throw new Error(`Missing required environment variable: ${name}`);
   }
   return String(value).trim();
 }

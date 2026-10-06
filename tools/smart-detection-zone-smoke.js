@@ -24,7 +24,7 @@ assert.deepStrictEqual(listZones(homey, {}, '').map((z) => z.id), ['any']);
 
 // Mixin passes zone ids as trigger state and keeps them for the ended trigger
 const states = [];
-const device2 = Object.assign({}, SmartDetectionMixin);
+const device2 = { ...SmartDetectionMixin };
 device2.homey = {
   app: {
     debug: () => {},
@@ -36,7 +36,11 @@ device2.homey = {
     _smartDetectionEndedTrigger: { trigger: async () => {} },
   },
 };
-const card = { trigger: async (d, t, state) => { states.push(state); } };
+const card = {
+  trigger: async (d, t, state) => {
+    states.push(state);
+  },
+};
 device2.driver = {
   _deviceSmartDetectionTrigger: card,
   _deviceSmartDetectionTriggerPerson: card,
@@ -46,9 +50,13 @@ device2._smartDetectZones = [{ id: 1, name: 'Driveway' }, { id: 2, name: 'Street
 device2.getName = () => 'Cam';
 device2.getData = () => ({ id: 'cam-1' });
 device2.setCapabilityValue = () => Promise.resolve();
-device2.error = (e) => { throw e; };
+device2.error = (e) => {
+  throw e;
+};
 
-device2.onSmartDetection({ smartDetectTypes: ['person'], start: 1000, score: 70, metadata: { zonesStatus: { 1: { status: 'enter' }, 2: { status: 'none' } } } }, 'add', 'e1');
+device2.onSmartDetection({
+  smartDetectTypes: ['person'], start: 1000, score: 70, metadata: { zonesStatus: { 1: { status: 'enter' }, 2: { status: 'none' } } },
+}, 'add', 'e1');
 device2.onSmartDetection({ smartDetectTypes: [], end: 5000 }, 'update', 'e1'); // no metadata on closing frame
 assert.deepStrictEqual(states[0], { zone_ids: ['1'] });
 assert.deepStrictEqual(states[states.length - 1], { zone_ids: ['1'] }, 'ended trigger keeps zone ids');

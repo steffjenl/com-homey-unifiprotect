@@ -71,79 +71,81 @@ class UniFiCameraDriver extends Homey.Driver {
     });
   }
 
-        async onRepair(session, device) {
-        const homey = this.homey;
+  async onRepair(session, device) {
+    const { homey } = this;
 
-        session.setHandler('get_repair_data', async () => {
-            const v2Conn = homey.app.getV2Connection();
-            const nvrip = homey.settings.get('ufp:nvrip');
-            const tokens = homey.settings.get('ufp:tokens') || {};
-            const isV2 = !!(tokens.protectV2ApiKey);
-            const host = v2Conn.host || nvrip || '';
-            const port = v2Conn.port || 443;
-            const connected = homey.app.isControllerReachable(isV2 ? 'v2' : 'v1');
-            const status = isV2 
-                ? (homey.app.apiV2 && homey.app.apiV2.websocket ? homey.app.apiV2.websocket.loggedInStatus : 'Disconnected')
-                : (homey.app.api ? homey.app.api.loggedInStatus : 'Disconnected');
+    session.setHandler('get_repair_data', async () => {
+      const v2Conn = homey.app.getV2Connection();
+      const nvrip = homey.settings.get('ufp:nvrip');
+      const tokens = homey.settings.get('ufp:tokens') || {};
+      const isV2 = !!(tokens.protectV2ApiKey);
+      const host = v2Conn.host || nvrip || '';
+      const port = v2Conn.port || 443;
+      const connected = homey.app.isControllerReachable(isV2 ? 'v2' : 'v1');
+      let status = 'Disconnected';
+      if (isV2) {
+        if (homey.app.apiV2 && homey.app.apiV2.websocket) status = homey.app.apiV2.websocket.loggedInStatus;
+      } else if (homey.app.api) {
+        status = homey.app.api.loggedInStatus;
+      }
 
-            return {
-                deviceName: device ? device.getName() : 'UniFi Protect',
-                apiType: 'protect',
-                host,
-                port,
-                isV2,
-                apiKey: tokens.protectV2ApiKey || '',
-                connected,
-                status,
-            };
-        });
+      return {
+        deviceName: device ? device.getName() : 'UniFi Protect',
+        apiType: 'protect',
+        host,
+        port,
+        isV2,
+        apiKey: tokens.protectV2ApiKey || '',
+        connected,
+        status,
+      };
+    });
 
-        session.setHandler('save_repair_data', async (data) => {
-            try {
-                const host = data.host;
-                const port = data.port || '443';
-                const token = data.token;
+    session.setHandler('save_repair_data', async (data) => {
+      try {
+        const { host } = data;
+        const port = data.port || '443';
+        const { token } = data;
 
-                const tokens = homey.settings.get('ufp:tokens') || {};
-                if (token) {
-                    tokens.protectV2ApiKey = token;
-                    homey.settings.set('ufp:tokens', tokens);
-                }
+        const tokens = homey.settings.get('ufp:tokens') || {};
+        if (token) {
+          tokens.protectV2ApiKey = token;
+          homey.settings.set('ufp:tokens', tokens);
+        }
 
-                homey.settings.set('ufp:v2nvr', { nvrip: host, nvrport: port });
-                homey.settings.set('ufp:nvrip', host);
-                homey.settings.set('ufp:nvrport', port);
+        homey.settings.set('ufp:v2nvr', { nvrip: host, nvrport: port });
+        homey.settings.set('ufp:nvrip', host);
+        homey.settings.set('ufp:nvrport', port);
 
-                if (tokens.protectV2ApiKey) {
-                    homey.app._initProtectV2Stack();
-                    await homey.app.appProtect.loginToProtectV2();
-                } else {
-                    homey.app.appProtect._appLogin();
-                }
+        if (tokens.protectV2ApiKey) {
+          homey.app._initProtectV2Stack();
+          await homey.app.appProtect.loginToProtectV2();
+        } else {
+          homey.app.appProtect._appLogin();
+        }
 
-                if (device) {
-                    await device.setAvailable().catch(homey.error);
-                    if (typeof device.initDevice === 'function') {
-                        await device.initDevice().catch(homey.error);
-                    }
-                }
+        if (device) {
+          await device.setAvailable().catch(homey.error);
+          if (typeof device.initDevice === 'function') {
+            await device.initDevice().catch(homey.error);
+          }
+        }
 
-                return { status: 'ok', message: 'Connection restored' };
-            } catch (error) {
-                homey.app.debug('[onRepair] save_repair_data error: ' + error);
-                return { status: 'failure', error: error.message || String(error) };
-            }
-        });
+        return { status: 'ok', message: 'Connection restored' };
+      } catch (error) {
+        homey.app.debug(`[onRepair] save_repair_data error: ${error}`);
+        return { status: 'failure', error: error.message || String(error) };
+      }
+    });
 
-        session.setHandler('validate', async () => {
-            return 'ok';
-        });
-    }
+    session.setHandler('validate', async () => {
+      return 'ok';
+    });
+  }
 
-    async repair(session, device) {
-        return this.onRepair(session, device);
-    }
-
+  async repair(session, device) {
+    return this.onRepair(session, device);
+  }
 
   /**
    * Fetch the cameras from whichever Protect API is available.
@@ -161,52 +163,52 @@ class UniFiCameraDriver extends Homey.Driver {
 
   onParseWebsocketMessage(camera, payload, actionType = null, eventId = null) {
     if (Object.prototype.hasOwnProperty.call(camera, '_events')) {
-      if (payload.hasOwnProperty('isRecording')) {
+      if (Object.prototype.hasOwnProperty.call(payload, 'isRecording')) {
         camera.onIsRecording(payload.isRecording);
       }
 
-      if (payload.hasOwnProperty('isMicEnabled')) {
+      if (Object.prototype.hasOwnProperty.call(payload, 'isMicEnabled')) {
         camera.onIsMicEnabled(payload.isMicEnabled);
       }
 
-      if (payload.hasOwnProperty('micVolume')) {
+      if (Object.prototype.hasOwnProperty.call(payload, 'micVolume')) {
         camera.onMicVolume(payload.micVolume);
       }
 
-      if (payload.hasOwnProperty('isConnected')) {
+      if (Object.prototype.hasOwnProperty.call(payload, 'isConnected')) {
         camera.onIsConnected(payload.isConnected);
       }
 
-      if (payload.hasOwnProperty('recordingSettings') && payload.recordingSettings.hasOwnProperty('mode')) {
+      if (Object.prototype.hasOwnProperty.call(payload, 'recordingSettings') && Object.prototype.hasOwnProperty.call(payload.recordingSettings, 'mode')) {
         camera.onRecordingMode(payload.recordingSettings.mode);
       }
 
-      if (payload.hasOwnProperty('lastMotion')) {
+      if (Object.prototype.hasOwnProperty.call(payload, 'lastMotion')) {
         camera.onMotionDetected(payload.lastMotion, payload.isMotionDetected);
       }
 
-      if (payload.hasOwnProperty('isDark')) {
+      if (Object.prototype.hasOwnProperty.call(payload, 'isDark')) {
         camera.onIsDark(payload.isDark);
       }
 
-      if (payload.hasOwnProperty('ispSettings') && payload.ispSettings.hasOwnProperty('irLedMode')) {
+      if (Object.prototype.hasOwnProperty.call(payload, 'ispSettings') && Object.prototype.hasOwnProperty.call(payload.ispSettings, 'irLedMode')) {
         camera.onNightVisionMode(payload.ispSettings.irLedMode);
       }
 
-      if (payload.hasOwnProperty('smartDetectTypes')) {
+      if (Object.prototype.hasOwnProperty.call(payload, 'smartDetectTypes')) {
         this.homey.app.debug(`onParseWebsocketMessage ${JSON.stringify(payload)}`);
         camera.onSmartDetection(payload, actionType, eventId);
-      } else if (payload.hasOwnProperty('end') && payload.end && actionType === 'update' && eventId) {
+      } else if (Object.prototype.hasOwnProperty.call(payload, 'end') && payload.end && actionType === 'update' && eventId) {
         // Closing frame without smartDetectTypes (V1)
         camera.onSmartDetectionEnd(payload, eventId);
       }
 
-      if (payload.hasOwnProperty('type') && payload.type === 'nfcCardScanned') {
+      if (Object.prototype.hasOwnProperty.call(payload, 'type') && payload.type === 'nfcCardScanned') {
         this.homey.app.debug(`nfcCardScanned ${JSON.stringify(payload)}`);
         camera.onNFCCardScanned(payload, actionType, eventId).catch(this.error);
       }
 
-      if (payload.hasOwnProperty('type') && payload.type === 'fingerprintIdentified') {
+      if (Object.prototype.hasOwnProperty.call(payload, 'type') && payload.type === 'fingerprintIdentified') {
         this.homey.app.debug(`fingerprintIdentified ${JSON.stringify(payload)}`);
         camera.onFingerprintIdentified(payload, actionType, eventId).catch(this.error);
       }

@@ -9,27 +9,37 @@ const SmartDetectionMixin = require('../library/SmartDetectionMixin');
 
 function createFakeDevice() {
   const fired = { app: [], device: [] };
-  const device = Object.assign({}, SmartDetectionMixin);
+  const device = { ...SmartDetectionMixin };
   device.homey = {
     app: {
       debug: () => {},
       getUnixTimestamp: () => Date.now(),
       toLocalTime: (d) => d,
       isV1Available: () => false,
-      _smartDetectionEndedTrigger: { trigger: async (t) => { fired.app.push(t); } },
+      _smartDetectionEndedTrigger: {
+        trigger: async (t) => {
+          fired.app.push(t);
+        },
+      },
       _smartDetectionTrigger: { trigger: async () => {} },
       _smartDetectionTriggerPerson: { trigger: async () => {} },
     },
   };
   device.driver = {
-    _deviceSmartDetectionEndedTrigger: { trigger: async (d, t) => { fired.device.push(t); } },
+    _deviceSmartDetectionEndedTrigger: {
+      trigger: async (d, t) => {
+        fired.device.push(t);
+      },
+    },
     _deviceSmartDetectionTrigger: { trigger: async () => {} },
     _deviceSmartDetectionTriggerPerson: { trigger: async () => {} },
   };
   device.getName = () => 'Test Camera';
   device.getData = () => ({ id: 'cam-1' });
   device.setCapabilityValue = () => Promise.resolve();
-  device.error = (err) => { throw err; };
+  device.error = (err) => {
+    throw err;
+  };
   return { device, fired };
 }
 

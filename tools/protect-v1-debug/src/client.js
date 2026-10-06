@@ -14,7 +14,7 @@ function requestJson(options, body) {
           : null;
 
         if (res.statusCode === 401 || res.statusCode === 403) {
-          return reject(new Error('Authentication/authorization failed (' + res.statusCode + ').'));
+          return reject(new Error(`Authentication/authorization failed (${res.statusCode}).`));
         }
 
         if (res.statusCode === 429) {
@@ -22,7 +22,7 @@ function requestJson(options, body) {
         }
 
         if (res.statusCode < 200 || res.statusCode >= 300) {
-          return reject(new Error('Request failed: ' + options.method + ' ' + options.path + ' (' + res.statusCode + ') ' + text));
+          return reject(new Error(`Request failed: ${options.method} ${options.path} (${res.statusCode}) ${text}`));
         }
 
         let parsed = null;
@@ -30,7 +30,7 @@ function requestJson(options, body) {
           try {
             parsed = JSON.parse(text);
           } catch (error) {
-            return reject(new Error('Invalid JSON response for ' + options.path + ': ' + error.message));
+            return reject(new Error(`Invalid JSON response for ${options.path}: ${error.message}`));
           }
         }
 

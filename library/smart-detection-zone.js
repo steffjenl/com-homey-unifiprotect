@@ -39,4 +39,6 @@ function registerZoneListeners(homey, cards) {
   }
 }
 
-module.exports = { ANY_ZONE_ID, matchesZone, listZones, registerZoneListeners };
+module.exports = {
+  ANY_ZONE_ID, matchesZone, listZones, registerZoneListeners,
+};

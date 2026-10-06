@@ -7,6 +7,7 @@
 // specs/protect-integration-v2-openapi.json (API v7.1.87). No real console/hardware needed.
 
 const Module = require('module');
+
 const originalLoad = Module._load;
 
 Module._load = function patchedLoad(request, parent, isMain) {
@@ -38,15 +39,21 @@ function createFakeSensorDevice() {
   };
 
   device.hasCapability = (name) => device.capabilities.has(name);
-  device.addCapability = async (name) => { device.capabilities.add(name); };
-  device.removeCapability = async (name) => { device.capabilities.delete(name); };
+  device.addCapability = async (name) => {
+    device.capabilities.add(name);
+  };
+  device.removeCapability = async (name) => {
+    device.capabilities.delete(name);
+  };
   device.setCapabilityValue = (name, value) => {
     device.capabilityValues[name] = value;
     return Promise.resolve();
   };
   device.getName = () => 'Test AirQuality Sensor';
   device.getData = () => ({ id: 'sensor-1' });
-  device.error = (err) => { throw err; };
+  device.error = (err) => {
+    throw err;
+  };
 
   return device;
 }

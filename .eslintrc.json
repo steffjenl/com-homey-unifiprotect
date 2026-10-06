@@ -1,3 +1,56 @@
 {
-  "extends": "athom/homey-app"
+  "extends": "athom/homey-app",
+  "overrides": [
+    {
+      "files": [
+        "settings/**/*.js"
+      ],
+      "env": {
+        "browser": true
+      },
+      "globals": {
+        "Homey": "readonly"
+      },
+      "rules": {
+        "no-use-before-define": [
+          "error",
+          {
+            "functions": false
+          }
+        ],
+        "no-nested-ternary": "off",
+        "max-len": "off",
+        "func-names": "off",
+        "@typescript-eslint/no-floating-promises": "off"
+      }
+    },
+    {
+      "files": [
+        "tools/**/*.js"
+      ],
+      "rules": {
+        "no-console": "off",
+        "no-process-exit": "off",
+        "max-classes-per-file": "off",
+        "homey-app/global-timers": "off",
+        "@typescript-eslint/no-floating-promises": "off",
+        "@typescript-eslint/no-misused-promises": "off",
+        "no-use-before-define": [
+          "error",
+          {
+            "functions": false
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "library/protectapi.js"
+      ],
+      "rules": {
+        "@typescript-eslint/no-floating-promises": "off",
+        "@typescript-eslint/no-misused-promises": "off"
+      }
+    }
+  ]
 }

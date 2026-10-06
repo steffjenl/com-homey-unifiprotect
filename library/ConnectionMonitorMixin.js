@@ -2,10 +2,10 @@
 
 /**
  * ConnectionMonitorMixin - Mixin for device classes to monitor controller connectivity
- * 
+ *
  * Provides debounced unavailability tracking when the controller becomes unreachable.
  * Devices using this mixin should call _startConnectionMonitoring() in their onInit() method.
- * 
+ *
  * Usage:
  *   class MyDevice extends Homey.Device {
  *     onInit() {
@@ -48,7 +48,7 @@ const ConnectionMonitorMixin = {
    */
   _onConnectionError(apiType, details) {
     this._connectionErrorTimestamp = Date.now();
-    
+
     // Clear any pending unavailable mark timeout
     if (this._unavailableMarkTimeout) {
       this.homey.clearTimeout(this._unavailableMarkTimeout);
@@ -72,9 +72,9 @@ const ConnectionMonitorMixin = {
         this.homey.clearTimeout(this._unavailableMarkTimeout);
         this._unavailableMarkTimeout = null;
       }
-      
+
       this._connectionErrorTimestamp = null;
-      
+
       // Restore device availability
       try {
         this.setAvailable();
@@ -84,11 +84,11 @@ const ConnectionMonitorMixin = {
     } else if (details.state === 'disconnected') {
       // Connection lost - schedule marking unavailable after debounce
       this._connectionErrorTimestamp = Date.now();
-      
+
       if (this._unavailableMarkTimeout) {
         this.homey.clearTimeout(this._unavailableMarkTimeout);
       }
-      
+
       this._unavailableMarkTimeout = this.homey.setTimeout(() => {
         this._markUnavailable(apiType, details);
       }, this._connectionMonitorDebounceMs);
@@ -117,12 +117,12 @@ const ConnectionMonitorMixin = {
       this.homey.clearTimeout(this._unavailableMarkTimeout);
       this._unavailableMarkTimeout = null;
     }
-    
+
     if (this._connectionErrorTimeout) {
       this.homey.clearTimeout(this._connectionErrorTimeout);
       this._connectionErrorTimeout = null;
     }
-    
+
     if (apiType === 'v2' && this.homey.app.apiV2) {
       this.homey.app.apiV2.removeAllListeners('protectv2-connection-error');
       this.homey.app.apiV2.removeAllListeners('protectv2-connection-change');

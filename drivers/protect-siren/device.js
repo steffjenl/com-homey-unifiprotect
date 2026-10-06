@@ -1,27 +1,26 @@
 'use strict';
 
 const Homey = require('homey');
-const UfvConstants = require('../../library/constants');
 const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 class Siren extends Homey.Device {
-    /**
+  /**
      * onInit is called when the device is initialized.
      */
-    async onInit() {
+  async onInit() {
     this._startConnectionMonitoring('v2');
-        await this.waitForBootstrap();
-        this.homey.app.debug('UniFiSiren Device has been initialized');
-    }
+    await this.waitForBootstrap();
+    this.homey.app.debug('UniFiSiren Device has been initialized');
+  }
 
-    /**
+  /**
      * onAdded is called when the user adds the device, called just after pairing.
      */
-    async onAdded() {
-        this.homey.app.debug('UniFiSiren Device has been added');
-    }
+  async onAdded() {
+    this.homey.app.debug('UniFiSiren Device has been added');
+  }
 
-    /**
+  /**
      * onSettings is called when the user updates the device's settings.
      * @param {object} event the onSettings event data
      * @param {object} event.oldSettings The old settings object
@@ -29,91 +28,91 @@ class Siren extends Homey.Device {
      * @param {string[]} event.changedKeys An array of keys changed since the previous version
      * @returns {Promise<string|void>} return a custom message that will be displayed
      */
-    async onSettings({oldSettings, newSettings, changedKeys}) {
-        this.homey.app.debug('UniFiSiren Device settings where changed');
-    }
+  async onSettings({ oldSettings, newSettings, changedKeys }) {
+    this.homey.app.debug('UniFiSiren Device settings where changed');
+  }
 
-    /**
+  /**
      * onRenamed is called when the user updates the device's name.
      * This method can be used this to synchronise the name to the device.
      * @param {string} name The new name
      */
-    async onRenamed(name) {
-        this.homey.app.debug('UnifiChime Device was renamed');
-    }
+  async onRenamed(name) {
+    this.homey.app.debug('UnifiChime Device was renamed');
+  }
 
-    /**
+  /**
      * onDeleted is called when the user deleted the device.
      */
-    async onDeleted() {
-        this.homey.app.debug('UnifiChime Device has been deleted');
+  async onDeleted() {
+    this.homey.app.debug('UnifiChime Device has been deleted');
+  }
+
+  async initSiren() {
+    this.registerCapabilityListener('siren_volume_set', (value) => {
+      return this.homey.app.api.setSirenVolume(this.getData(), value);
+    });
+
+    await this._createMissingCapabilities();
+    await this._initSirenData();
+  }
+
+  async waitForBootstrap() {
+    const v1Ready = typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null;
+    const v2Ready = this.homey.app.isV2Available();
+
+    if (v1Ready || v2Ready) {
+      await this.initSiren();
+    } else {
+      this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
     }
+  }
 
-    async initSiren() {
-        this.registerCapabilityListener("siren_volume_set", (value) => {
-            return this.homey.app.api.setSirenVolume(this.getData(), value);
-        });
-
-        await this._createMissingCapabilities();
-        await this._initSirenData();
+  async _createMissingCapabilities() {
+    if (this.getClass() !== 'siren') {
+      this.homey.app.debug(`changed class to siren for ${this.getName()}`);
+      await this.setClass('siren');
     }
+  }
 
-    async waitForBootstrap() {
-        const v1Ready = typeof this.homey.app.api.getLastUpdateId() !== 'undefined' && this.homey.app.api.getLastUpdateId() !== null;
-        const v2Ready = this.homey.app.isV2Available();
-
-        if (v1Ready || v2Ready) {
-            await this.initSiren();
-        } else {
-            this.homey.setTimeout(this.waitForBootstrap.bind(this), 250);
+  async _initSirenData() {
+    const bootstrapData = this.homey.app.api.getBootstrap();
+    if (bootstrapData) {
+      bootstrapData.sirens.forEach((siren) => {
+        if (siren.id === this.getData().id) {
+          if (this.hasCapability('siren_volume_set')) {
+            this.setCapabilityValue('siren_volume_set', siren.volume / 100).catch(this.error);
+          }
         }
+      });
+    }
+  }
+
+  async startSiren(duration) {
+    const sirenId = this.getData().id;
+
+    if (this.homey.app.isV2Available()) {
+      return this.homey.app.apiV2.playSiren(sirenId, duration);
     }
 
-    async _createMissingCapabilities() {
-        if (this.getClass() !== 'siren') {
-            this.homey.app.debug(`changed class to siren for ${this.getName()}`);
-            await this.setClass('siren');
-        }
+    return Promise.reject(new Error('Siren start/stop requires the UniFi Protect V2 (API key) connection'));
+  }
+
+  async stopSiren() {
+    const sirenId = this.getData().id;
+
+    if (this.homey.app.isV2Available()) {
+      return this.homey.app.apiV2.stopSiren(sirenId);
     }
 
-    async _initSirenData() {
-        const bootstrapData = this.homey.app.api.getBootstrap();
-        if (bootstrapData) {
-            bootstrapData.sirens.forEach((siren) => {
-                if (siren.id === this.getData().id) {
-                    if (this.hasCapability('siren_volume_set')) {
-                        this.setCapabilityValue('siren_volume_set', siren.volume / 100);
-                    }
-                }
-            });
-        }
+    return Promise.reject(new Error('Siren start/stop requires the UniFi Protect V2 (API key) connection'));
+  }
+
+  onIsSirenOn(volume) {
+    if (this.hasCapability('siren_volume_set')) {
+      this.setCapabilityValue('siren_volume_set', volume / 100).catch(this.error);
     }
-
-    async startSiren(duration) {
-        const sirenId = this.getData().id;
-
-        if (this.homey.app.isV2Available()) {
-            return this.homey.app.apiV2.playSiren(sirenId, duration);
-        }
-
-        return Promise.reject(new Error('Siren start/stop requires the UniFi Protect V2 (API key) connection'));
-    }
-
-    async stopSiren() {
-        const sirenId = this.getData().id;
-
-        if (this.homey.app.isV2Available()) {
-            return this.homey.app.apiV2.stopSiren(sirenId);
-        }
-
-        return Promise.reject(new Error('Siren start/stop requires the UniFi Protect V2 (API key) connection'));
-    }
-
-    onIsSirenOn(volume) {
-        if (this.hasCapability('siren_volume_set')) {
-            this.setCapabilityValue('siren_volume_set', volume / 100);
-        }
-    }
+  }
 }
 
 Object.assign(Siren.prototype, ConnectionMonitorMixin);

@@ -1,7 +1,6 @@
 'use strict';
 
 const Homey = require('homey');
-const UfvConstants = require('../../library/constants');
 const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 
 class Light extends Homey.Device {
@@ -50,38 +49,44 @@ class Light extends Homey.Device {
   }
 
   async initLight() {
-    this.registerCapabilityListener("onoff", (value) => {
+    this.registerCapabilityListener('onoff', (value) => {
       if (this.homey.app.isV1Available()) {
         return this.homey.app.api.setLightOn(this.getData(), value);
-      } else if (this.homey.app.isV2Available()) {
+      }
+      if (this.homey.app.isV2Available()) {
         return this.homey.app.apiV2.setLight(this.getData().id, { isLightForceEnabled: value });
       }
+      return undefined;
     });
 
-    this.registerCapabilityListener("dim", (value) => {
+    this.registerCapabilityListener('dim', (value) => {
       if (this.homey.app.isV1Available()) {
         return this.homey.app.api.setLightLevel(this.getData(), this.translateLedLevel(value, true));
-      } else if (this.homey.app.isV2Available()) {
+      }
+      if (this.homey.app.isV2Available()) {
         return this.homey.app.apiV2.setLight(this.getData().id, {
-          lightDeviceSettings: { ledLevel: this.translateLedLevel(value, true) }
+          lightDeviceSettings: { ledLevel: this.translateLedLevel(value, true) },
         });
       }
+      return undefined;
     });
 
-    this.registerCapabilityListener("light_mode_unifi", (value) => {
+    this.registerCapabilityListener('light_mode_unifi', (value) => {
       if (this.homey.app.isV1Available()) {
         return this.homey.app.api.setLightMode(this.getData(), value);
-      } else if (this.homey.app.isV2Available()) {
+      }
+      if (this.homey.app.isV2Available()) {
         let lightModeSettings = {};
-        if (value === "motion") {
-          lightModeSettings = { mode: "motion", enableAt: "fulltime" };
-        } else if (value === "dark") {
-          lightModeSettings = { mode: "motion", enableAt: "dark" };
+        if (value === 'motion') {
+          lightModeSettings = { mode: 'motion', enableAt: 'fulltime' };
+        } else if (value === 'dark') {
+          lightModeSettings = { mode: 'motion', enableAt: 'dark' };
         } else {
-          lightModeSettings = { mode: value, enableAt: "dark" };
+          lightModeSettings = { mode: value, enableAt: 'dark' };
         }
         return this.homey.app.apiV2.setLight(this.getData().id, { lightModeSettings });
       }
+      return undefined;
     });
 
     await this._createMissingCapabilities();
@@ -118,7 +123,7 @@ class Light extends Homey.Device {
     if (this.homey.app.isV1Available()) {
       const bootstrapData = this.homey.app.api.getBootstrap();
       if (bootstrapData && bootstrapData.lights) {
-        light = bootstrapData.lights.find(l => l.id === this.getData().id);
+        light = bootstrapData.lights.find((l) => l.id === this.getData().id);
       }
     }
 
@@ -133,57 +138,57 @@ class Light extends Homey.Device {
 
     if (light) {
       if (this.hasCapability('onoff')) {
-        this.setCapabilityValue('onoff', light.isLightOn);
+        this.setCapabilityValue('onoff', light.isLightOn).catch(this.error);
       }
       if (this.hasCapability('dim') && light.lightDeviceSettings) {
-        this.setCapabilityValue('dim', this.translateLedLevel(light.lightDeviceSettings.ledLevel, false));
+        this.setCapabilityValue('dim', this.translateLedLevel(light.lightDeviceSettings.ledLevel, false)).catch(this.error);
       }
       if (this.hasCapability('light_mode_unifi') && light.lightModeSettings) {
-        this.setCapabilityValue('light_mode_unifi', this.translateLightMode(light.lightModeSettings));
+        this.setCapabilityValue('light_mode_unifi', this.translateLightMode(light.lightModeSettings)).catch(this.error);
       }
     }
   }
 
   onMotionStart() {
     this.homey.app.debug('onMotionStart');
-    this.setCapabilityValue('alarm_motion', true);
+    this.setCapabilityValue('alarm_motion', true).catch(this.error);
   }
 
   onMotionEnd() {
     this.homey.app.debug('onMotionEnd');
-    this.setCapabilityValue('alarm_motion', false);
+    this.setCapabilityValue('alarm_motion', false).catch(this.error);
   }
 
   onIsLightOn(isLightOn) {
     if (this.hasCapability('onoff')) {
-      this.setCapabilityValue('onoff', isLightOn);
+      this.setCapabilityValue('onoff', isLightOn).catch(this.error);
     }
   }
 
   onLedLevelChange(ledLevel) {
     this.homey.app.debug('onLedLevelChange');
     if (this.hasCapability('dim')) {
-      this.setCapabilityValue('dim', this.translateLedLevel(ledLevel, false));
+      this.setCapabilityValue('dim', this.translateLedLevel(ledLevel, false)).catch(this.error);
     }
   }
 
   onLightModeChange(settings) {
     this.homey.app.debug('onLightModeChange');
     if (this.hasCapability('light_mode_unifi')) {
-      this.setCapabilityValue('light_mode_unifi', this.translateLightMode(settings));
+      this.setCapabilityValue('light_mode_unifi', this.translateLightMode(settings)).catch(this.error);
     }
   }
 
   translateLightMode(settings) {
-      if (settings.mode === "motion" && settings.enableAt === "fulltime") {
-        return "motion";
-      }
-      else if (settings.mode === "motion" && settings.enableAt === "dark") {
-        return "dark";
-      }
-      else {
-        return settings.mode;
-      }
+    if (settings.mode === 'motion' && settings.enableAt === 'fulltime') {
+      return 'motion';
+    }
+    if (settings.mode === 'motion' && settings.enableAt === 'dark') {
+      return 'dark';
+    }
+
+    return settings.mode;
+
   }
 
   translateLedLevel(ledLevel, homey) {
@@ -191,42 +196,41 @@ class Light extends Homey.Device {
       if (ledLevel <= 0.16) {
         return 1;
       }
-      else if(ledLevel <= 0.32) {
+      if (ledLevel <= 0.32) {
         return 2;
       }
-      else if(ledLevel <= 0.48) {
+      if (ledLevel <= 0.48) {
         return 3;
       }
-      else if(ledLevel <= 0.64) {
+      if (ledLevel <= 0.64) {
         return 4;
       }
-      else if(ledLevel <= 0.80) {
+      if (ledLevel <= 0.80) {
         return 5;
       }
-      else {
-        return 6;
-      }
+
+      return 6;
+
     }
-    else {
-      if (ledLevel === 1) {
-        return 0.16;
-      }
-      else if(ledLevel === 2) {
-        return 0.32;
-      }
-      else if(ledLevel === 3) {
-        return 0.48;
-      }
-      else if(ledLevel === 4) {
-        return 0.64;
-      }
-      else if(ledLevel === 5) {
-        return 0.80;
-      }
-      else {
-        return 1;
-      }
+
+    if (ledLevel === 1) {
+      return 0.16;
     }
+    if (ledLevel === 2) {
+      return 0.32;
+    }
+    if (ledLevel === 3) {
+      return 0.48;
+    }
+    if (ledLevel === 4) {
+      return 0.64;
+    }
+    if (ledLevel === 5) {
+      return 0.80;
+    }
+
+    return 1;
+
   }
 
   onMotionDetected(lastMotionTime, isMotionDetected) {
@@ -235,7 +239,7 @@ class Light extends Homey.Device {
     if (!lastMotionAt) {
       this.homey.app.debug(`set last_motion_at to last datetime: ${this.getData().id}`);
       this.setCapabilityValue('last_motion_at', lastMotionTime)
-          .catch(this.error);
+        .catch(this.error);
       return;
     }
 
@@ -245,18 +249,18 @@ class Light extends Homey.Device {
       this.homey.app.debug(`new motion detected on light: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
 
       this.setCapabilityValue('last_motion_at', lastMotionTime)
-          .catch(this.error);
+        .catch(this.error);
       this.setCapabilityValue('last_motion_date', lastMotion.toLocaleDateString())
-          .catch(this.error);
+        .catch(this.error);
       this.setCapabilityValue('last_motion_time', lastMotion.toLocaleTimeString())
-          .catch(this.error);
+        .catch(this.error);
       this.onMotionStart();
     } else if (!isMotionDetected && lastMotionTime > lastMotionAt) {
       const lastMotion = this.homey.app.toLocalTime(new Date(lastMotionTime));
       this.homey.app.debug(`motion detected ended on light: ${this.getData().id} on ${lastMotion.toLocaleString()}`);
       this.onMotionEnd();
       this.setCapabilityValue('last_motion_at', lastMotionTime)
-          .catch(this.error);
+        .catch(this.error);
     }
   }
 }

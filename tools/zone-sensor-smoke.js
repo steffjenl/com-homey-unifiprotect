@@ -25,15 +25,23 @@ function createSensor(zoneId, enabledTypes) {
   const device = Object.create(ZoneSensorDevice.prototype);
   device.homey = {
     app: { debug: () => {} },
-    setTimeout: (fn) => { timerId += 1; timers.set(timerId, fn); return timerId; },
-    clearTimeout: (id) => { timers.delete(id); },
+    setTimeout: (fn) => {
+      timerId += 1; timers.set(timerId, fn); return timerId;
+    },
+    clearTimeout: (id) => {
+      timers.delete(id);
+    },
   };
   device.values = { alarm_motion: false };
   device.getData = () => ({ id: `cam-1:${zoneId}`, cameraId: 'cam-1', zoneId });
   device.getSetting = (key) => enabledTypes.includes(key.replace('ufp:type_', ''));
   device.getCapabilityValue = (name) => device.values[name];
-  device.setCapabilityValue = (name, value) => { device.values[name] = value; return Promise.resolve(); };
-  device.error = (e) => { throw e; };
+  device.setCapabilityValue = (name, value) => {
+    device.values[name] = value; return Promise.resolve();
+  };
+  device.error = (e) => {
+    throw e;
+  };
   device._openEvents = new Map();
   return device;
 }
@@ -78,7 +86,7 @@ function createSensor(zoneId, enabledTypes) {
   const driver = Object.create(ZoneSensorDriver.prototype);
   driver.getDevices = () => [sensor];
 
-  const cam = Object.assign({}, SmartDetectionMixin);
+  const cam = { ...SmartDetectionMixin };
   cam.homey = {
     app: {
       debug: () => {},
@@ -97,9 +105,13 @@ function createSensor(zoneId, enabledTypes) {
   cam.getName = () => 'Cam';
   cam.getData = () => ({ id: 'cam-1' });
   cam.setCapabilityValue = () => Promise.resolve();
-  cam.error = (e) => { throw e; };
+  cam.error = (e) => {
+    throw e;
+  };
 
-  cam.onSmartDetection({ smartDetectTypes: ['person'], start: 1, score: 60, metadata: { zonesStatus: { 1: { status: 'enter' } } } }, 'add', 'ev');
+  cam.onSmartDetection({
+    smartDetectTypes: ['person'], start: 1, score: 60, metadata: { zonesStatus: { 1: { status: 'enter' } } },
+  }, 'add', 'ev');
   assert.strictEqual(sensor.values.alarm_motion, true);
   cam.onSmartDetection({ smartDetectTypes: [], end: 9 }, 'update', 'ev');
   assert.strictEqual(sensor.values.alarm_motion, false);

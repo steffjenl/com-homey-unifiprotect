@@ -13,14 +13,14 @@ async function main() {
   const bootstrapResult = await getBootstrap(config, cookie);
   cookie = bootstrapResult.cookie;
 
-  const bootstrap = bootstrapResult.bootstrap;
+  const { bootstrap } = bootstrapResult;
   const bootstrapPath = logger.writeBootstrap(bootstrap);
 
   const nvrName = bootstrap && bootstrap.nvr && bootstrap.nvr.name ? bootstrap.nvr.name : 'unknown-nvr';
   console.log('[debug] Login OK. NVR:', nvrName);
   console.log('[debug] Bootstrap saved:', bootstrapPath);
 
-  let lastUpdateId = bootstrap.lastUpdateId;
+  let { lastUpdateId } = bootstrap;
   if (!lastUpdateId) {
     throw new Error('bootstrap.lastUpdateId is missing; cannot start websocket updates listener.');
   }
@@ -54,8 +54,8 @@ async function main() {
 
     socket = connectUpdates({
       host: config.host,
-      lastUpdateId: lastUpdateId,
-      cookie: cookie,
+      lastUpdateId,
+      cookie,
       onOpen: () => {
         console.log('[debug] Websocket connected');
       },
@@ -68,9 +68,9 @@ async function main() {
         }
 
         logger.writeDecoded({
-          receivedAt: receivedAt,
-          packetLength: packetLength,
-          decoded: decoded,
+          receivedAt,
+          packetLength,
+          decoded,
         });
       },
       onError: (error) => {

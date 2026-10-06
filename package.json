@@ -3,6 +3,7 @@
   "version": "1.5.0",
   "main": "app.js",
   "scripts": {
+    "lint": "eslint . --resolve-plugins-relative-to node_modules/eslint-config-athom",
     "test:fob-pipeline": "node tools/fob-pipeline-smoke.js",
     "test:sensor-events": "node tools/sensor-event-smoke.js",
     "test:access-door-state": "node tools/access-door-state-smoke.js",

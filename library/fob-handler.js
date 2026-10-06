@@ -26,7 +26,7 @@ class FobHandler extends BaseClass {
         return null;
       }
 
-      const payload = updatePacket.payload;
+      const { payload } = updatePacket;
       if (payload.type !== 'sensorButtonPressed') {
         return null;
       }
@@ -36,23 +36,23 @@ class FobHandler extends BaseClass {
         return null;
       }
 
-      const button = String(metadata.button && metadata.button.text || '').trim();
-      const pressType = String(metadata.buttonPressType && metadata.buttonPressType.text || '').trim();
-      const sensorName = String(metadata.sensorName && metadata.sensorName.text || '').trim();
+      const button = String((metadata.button && metadata.button.text) || '').trim();
+      const pressType = String((metadata.buttonPressType && metadata.buttonPressType.text) || '').trim();
+      const sensorName = String((metadata.sensorName && metadata.sensorName.text) || '').trim();
       const timestamp = Number(payload.start || payload.end || Date.now());
-      const deviceId = String(payload.device || metadata.sensorId && metadata.sensorId.text || updatePacket.action.id || '');
+      const deviceId = String(payload.device || (metadata.sensorId && metadata.sensorId.text) || updatePacket.action.id || '');
 
       if (!deviceId || !Number.isFinite(timestamp)) {
         return null;
       }
 
       if (!UfvConstants.FOB_BUTTONS.includes(button)) {
-        this.homey.app.debug('[FobHandler] Unsupported button ignored: ' + button);
+        this.homey.app.debug(`[FobHandler] Unsupported button ignored: ${button}`);
         return null;
       }
 
       if (!UfvConstants.FOB_PRESS_TYPES.includes(pressType)) {
-        this.homey.app.debug('[FobHandler] Unsupported pressType ignored: ' + pressType);
+        this.homey.app.debug(`[FobHandler] Unsupported pressType ignored: ${pressType}`);
         return null;
       }
 
@@ -66,7 +66,7 @@ class FobHandler extends BaseClass {
       };
 
       if (this._isDuplicate(event)) {
-        this.homey.app.debug('[FobHandler] Duplicate FOB event ignored: ' + JSON.stringify(event));
+        this.homey.app.debug(`[FobHandler] Duplicate FOB event ignored: ${JSON.stringify(event)}`);
         return null;
       }
 
@@ -103,5 +103,3 @@ class FobHandler extends BaseClass {
 }
 
 module.exports = FobHandler;
-
-

@@ -17,7 +17,6 @@ class SmartDetectionEvent {
     this.triggered = new Set();
   }
 
-
 }
 
 module.exports = SmartDetectionEvent;

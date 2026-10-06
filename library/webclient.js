@@ -70,7 +70,6 @@ class ProtectWebClient extends BaseClass {
       if (!this._serverHost) reject(new Error('Invalid host.'));
       if (!this._cookieToken) reject(new Error('Not logged in.'));
 
-
       const options = {
         method: 'GET',
         hostname: this._serverHost,

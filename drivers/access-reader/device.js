@@ -102,11 +102,11 @@ class Reader extends Homey.Device {
   }
 
   onMobileButtonConfigChange(value) {
-    this.setCapabilityValue('reader_mobile-button_enabled', value);
+    this.setCapabilityValue('reader_mobile-button_enabled', value).catch(this.error);
   }
 
   onMobileTapConfigChange(value) {
-    this.setCapabilityValue('reader_mobile-tap_enabled', value);
+    this.setCapabilityValue('reader_mobile-tap_enabled', value).catch(this.error);
   }
 
 }

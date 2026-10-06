@@ -47,6 +47,7 @@ module.exports = {
           const chunks = [];
           res.on('data', (chunk) => chunks.push(chunk));
           res.on('end', () => resolve(`data:image/jpeg;base64,${Buffer.concat(chunks).toString('base64')}`));
+          return undefined;
         },
       );
       req.setTimeout(5000, () => req.destroy(new Error('snapshot request timed out')));

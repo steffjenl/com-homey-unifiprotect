@@ -56,7 +56,7 @@ class Relay extends Homey.Device {
 
     if (garageRelay) {
       if (this.getClass() !== 'garagedoor') {
-        this.homey.app.debug('[RelayDevice] changed class to garagedoor for ' + this.getName());
+        this.homey.app.debug(`[RelayDevice] changed class to garagedoor for ${this.getName()}`);
         await this.setClass('garagedoor');
       }
 
@@ -69,7 +69,7 @@ class Relay extends Homey.Device {
       }
     } else {
       if (this.getClass() !== 'socket') {
-        this.homey.app.debug('[RelayDevice] changed class to socket for ' + this.getName());
+        this.homey.app.debug(`[RelayDevice] changed class to socket for ${this.getName()}`);
         await this.setClass('socket');
       }
 
@@ -105,7 +105,7 @@ class Relay extends Homey.Device {
   }
 
   getOutputId() {
-    const outputId = this.getData().outputId;
+    const { outputId } = this.getData();
     if (typeof outputId === 'number' && !Number.isNaN(outputId)) {
       return outputId;
     }
@@ -121,7 +121,7 @@ class Relay extends Homey.Device {
   }
 
   isGarageDoorOutput() {
-    const classOverride = this.getData().classOverride;
+    const { classOverride } = this.getData();
     if (classOverride === 'garagedoor') {
       return true;
     }
@@ -323,5 +323,3 @@ class Relay extends Homey.Device {
 Object.assign(Relay.prototype, ConnectionMonitorMixin);
 
 module.exports = Relay;
-
-

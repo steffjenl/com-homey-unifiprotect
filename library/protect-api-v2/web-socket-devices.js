@@ -27,7 +27,7 @@ class ProtectWebSocket extends BaseClass {
             this._eventListener.ping();
           }
         } catch (error) {
-          this.homey.app.log('[V2 Devices WS] heartbeat ping failed: ' + error);
+          this.homey.app.log(`[V2 Devices WS] heartbeat ping failed: ${error}`);
         }
       }, 30000);
     }
@@ -46,7 +46,7 @@ class ProtectWebSocket extends BaseClass {
     }
 
     const baseReconnectDelayMs = Math.min(
-      this._reconnectMinDelayMs * Math.pow(2, this._reconnectAttempt),
+      this._reconnectMinDelayMs * 2 ** this._reconnectAttempt,
       this._reconnectMaxDelayMs,
     );
     const jitterRangeMs = Math.floor(baseReconnectDelayMs * this._reconnectJitterRatio);
@@ -58,7 +58,7 @@ class ProtectWebSocket extends BaseClass {
       Math.max(this._reconnectMinDelayMs, baseReconnectDelayMs + jitterOffsetMs),
     );
     const reconnectAttempt = this._reconnectAttempt + 1;
-    this.homey.app.log('[V2 Devices WS] WebSocket disconnected, reconnect attempt #' + reconnectAttempt + ' in ' + (reconnectDelayMs / 1000) + 's');
+    this.homey.app.log(`[V2 Devices WS] WebSocket disconnected, reconnect attempt #${reconnectAttempt} in ${reconnectDelayMs / 1000}s`);
 
     this._reconnectAttempt += 1;
     this._reconnectTimeout = this.homey.setTimeout(() => {
@@ -81,7 +81,7 @@ class ProtectWebSocket extends BaseClass {
   }
 
   notificationsUrl() {
-    const webclient = this.homey.app.apiV2.webclient;
+    const { webclient } = this.homey.app.apiV2;
     const path = webclient.buildApiPath('subscribe/devices');
     return `wss://${webclient.getRequestHost()}:${webclient.getRequestPort()}${path}`;
   }
@@ -106,7 +106,7 @@ class ProtectWebSocket extends BaseClass {
 
       const _ws = new WebSocketEvents(this.notificationsUrl(), {
         headers: {
-            'X-API-KEY': `${this.homey.app.apiV2.webclient._apiToken}`,
+          'X-API-KEY': `${this.homey.app.apiV2.webclient._apiToken}`,
         },
         rejectUnauthorized: false,
         perMessageDeflate: false,
@@ -127,7 +127,7 @@ class ProtectWebSocket extends BaseClass {
         this.loggedInStatus = 'Connected';
         this._reconnectAttempt = 0;
         this._clearReconnectTimeout();
-        this.homey.app.apiV2.emit('protectv2-connection-change', {state: 'connected', host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort});
+        this.homey.app.apiV2.emit('protectv2-connection-change', { state: 'connected', host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort });
         this.heartbeat();
       });
 
@@ -141,7 +141,7 @@ class ProtectWebSocket extends BaseClass {
         this._eventListenerConfigured = false;
         this.homey.clearInterval(this.pingTimeout);
         this.loggedInStatus = 'Disconnected';
-        this.homey.app.apiV2.emit('protectv2-connection-change', {state: 'disconnected', host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort});
+        this.homey.app.apiV2.emit('protectv2-connection-change', { state: 'disconnected', host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort });
         this._scheduleReconnect();
       });
 
@@ -150,7 +150,7 @@ class ProtectWebSocket extends BaseClass {
         // If we're closing before fully established it's because we're shutting down the API - ignore it.
         if (error.message !== 'WebSocket was closed before the connection was established') {
           this.homey.app.log(`${this.homey.app.apiV2.webclient._serverHost}: ${error}`);
-          this.homey.emit('protectv2-connection-error', {error, host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort});
+          this.homey.emit('protectv2-connection-error', { error, host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort });
         }
 
         this.loggedInStatus = error.message;
@@ -220,17 +220,17 @@ class ProtectWebSocket extends BaseClass {
 
       this.lastWebsocketMessage = this.homey.app.toLocalTime(new Date()).toISOString().slice(0, 16);
 
-      this.homey.app.debug('Websocket V2 Devices event received: ' + JSON.stringify(eventData));
+      this.homey.app.debug(`Websocket V2 Devices event received: ${JSON.stringify(eventData)}`);
 
       if (!eventData || !eventData.item || !eventData.item.modelKey) {
         return;
       }
 
       const payload = eventData.item;
-      const modelKey = payload.modelKey;
+      const { modelKey } = payload;
       const deviceId = payload.id;
 
-      this.homey.app.debug('[V2 Devices WS] ' + modelKey + ' ' + deviceId + ' ' + eventData.type);
+      this.homey.app.debug(`[V2 Devices WS] ${modelKey} ${deviceId} ${eventData.type}`);
 
       try {
         if (modelKey === 'camera') {
@@ -321,7 +321,7 @@ class ProtectWebSocket extends BaseClass {
           }
         }
       } catch (e) {
-        this.homey.app.debug('[V2 Devices WS] dispatch error: ' + e);
+        this.homey.app.debug(`[V2 Devices WS] dispatch error: ${e}`);
       }
 
     });

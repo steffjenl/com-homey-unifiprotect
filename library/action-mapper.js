@@ -56,7 +56,7 @@ class FobActionMapper extends BaseClass {
     const action = actionMap[event.button];
 
     if (!action) {
-      this.homey.app.debug('[FobActionMapper] No action mapped for button=' + event.button + ' pressType=' + pressType);
+      this.homey.app.debug(`[FobActionMapper] No action mapped for button=${event.button} pressType=${pressType}`);
       return false;
     }
 
@@ -90,4 +90,3 @@ class FobActionMapper extends BaseClass {
 }
 
 module.exports = FobActionMapper;
-

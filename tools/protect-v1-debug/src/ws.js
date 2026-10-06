@@ -61,7 +61,7 @@ function decodeUpdatePacket(packet) {
 }
 
 function connectUpdates(options) {
-  const wsUrl = 'wss://' + options.host + '/proxy/protect/ws/updates?lastUpdateId=' + encodeURIComponent(options.lastUpdateId);
+  const wsUrl = `wss://${options.host}/proxy/protect/ws/updates?lastUpdateId=${encodeURIComponent(options.lastUpdateId)}`;
 
   const socket = new WebSocket(wsUrl, {
     headers: {
@@ -99,7 +99,7 @@ function connectUpdates(options) {
       options.onMessage({
         receivedAt: new Date().toISOString(),
         packetLength: packet.length,
-        decoded: decoded,
+        decoded,
       });
     }
   });

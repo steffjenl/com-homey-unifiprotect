@@ -32,7 +32,7 @@ class SpeakerService extends BaseClass {
 
     const speakers = await this._getSpeakers();
     if (speakers.length === 0) {
-      this.homey.app.debug('[SpeakerService] No speaker devices found. Message not sent: ' + text);
+      this.homey.app.debug(`[SpeakerService] No speaker devices found. Message not sent: ${text}`);
       return false;
     }
 
@@ -78,9 +78,8 @@ class SpeakerService extends BaseClass {
 
     // Abstract fallback: log intent when no transport is configured.
     const speakerId = speaker && speaker.id ? String(speaker.id) : 'unknown';
-    this.homey.app.debug('[SpeakerService] send speaker message (abstract) speaker=' + speakerId + ' message=' + message + ' options=' + JSON.stringify(options));
+    this.homey.app.debug(`[SpeakerService] send speaker message (abstract) speaker=${speakerId} message=${message} options=${JSON.stringify(options)}`);
   }
 }
 
 module.exports = SpeakerService;
-

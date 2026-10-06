@@ -1,306 +1,305 @@
 'use strict';
 
 const https = require('https');
-const ProtectWebClient = require('./library/webclient');
 const UfvConstants = require('./library/constants');
 
 function buildProtectV2TestOptions(body) {
-    const cloudEnabled = body.cloudEnabled === true;
-    const integrationPath = `${UfvConstants.PROTECT_V2_API_BASE_PATH}/${UfvConstants.PROTECT_V2_API_VERSION}/cameras`;
+  const cloudEnabled = body.cloudEnabled === true;
+  const integrationPath = `${UfvConstants.PROTECT_V2_API_BASE_PATH}/${UfvConstants.PROTECT_V2_API_VERSION}/cameras`;
 
-    if (cloudEnabled) {
-        const consoleId = String(body.consoleId || '').trim();
-        if (!consoleId) {
-            throw new Error('Console ID is required when using the UniFi Cloud API.');
-        }
-
-        return {
-            hostname: 'api.ui.com',
-            port: 443,
-            path: `/v1/connector/consoles/${encodeURIComponent(consoleId)}${integrationPath}`,
-        };
-    }
-
-    if (!body.host) {
-        throw new Error('Protect V2 IP address is required.');
+  if (cloudEnabled) {
+    const consoleId = String(body.consoleId || '').trim();
+    if (!consoleId) {
+      throw new Error('Console ID is required when using the UniFi Cloud API.');
     }
 
     return {
-        hostname: body.host,
-        port: body.port || 443,
-        path: integrationPath,
+      hostname: 'api.ui.com',
+      port: 443,
+      path: `/v1/connector/consoles/${encodeURIComponent(consoleId)}${integrationPath}`,
     };
+  }
+
+  if (!body.host) {
+    throw new Error('Protect V2 IP address is required.');
+  }
+
+  return {
+    hostname: body.host,
+    port: body.port || 443,
+    path: integrationPath,
+  };
 }
 
 function getLastWebsocketMessageTime(websocket) {
-    if (websocket && typeof websocket.getLastWebsocketMessageTime === 'function') {
-        return websocket.getLastWebsocketMessageTime();
-    }
+  if (websocket && typeof websocket.getLastWebsocketMessageTime === 'function') {
+    return websocket.getLastWebsocketMessageTime();
+  }
 
-    return 'Not initialized';
+  return 'Not initialized';
 }
 
 function getWebsocketStatus(websocket) {
-    if (!websocket || typeof websocket.isWebsocketConnected !== 'function') {
-        return 'Not initialized';
-    }
+  if (!websocket || typeof websocket.isWebsocketConnected !== 'function') {
+    return 'Not initialized';
+  }
 
-    return websocket.isWebsocketConnected() ? 'Connected' : 'Unknown';
+  return websocket.isWebsocketConnected() ? 'Connected' : 'Unknown';
 }
 
 module.exports = {
-    async getStatus({homey, query}) {
-        // Return status based on which API is available
-        if (homey.app.isV1Available()) {
-            return homey.app.api.loggedInStatus;
-        }
-        if (homey.app.isV2Available()) {
-            return homey.app.apiV2.loggedInStatus || 'Connected (V2)';
-        }
-        return homey.app.api ? homey.app.api.loggedInStatus || 'Not configured' : 'Not configured';
-    },
-    async getWebsocketStatus({homey, query}) {
-        return getWebsocketStatus(homey.app.api && homey.app.api.ws);
-    },
-    async getLastWebsocketMessageTime({homey, query}) {
-        return getLastWebsocketMessageTime(homey.app.api && homey.app.api.ws);
-    },
-    async getAccessWebsocketStatus({homey, query}) {
-        const tokens = homey.settings.get('ufp:tokens');
-        if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
-            return getWebsocketStatus(homey.app.accessApi && homey.app.accessApi.websocket);
-        } else {
-            return 'No API Key found';
-        }
-    },
-    async getLastAccessWebsocketMessageTime({homey, query}) {
-        return getLastWebsocketMessageTime(homey.app.accessApi && homey.app.accessApi.websocket);
-    },
-    async getProtectV2WebsocketStatus({homey, query}) {
-        const tokens = homey.settings.get('ufp:tokens');
-        if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
-            if (homey.app.isProtectCloudApiEnabled && homey.app.isProtectCloudApiEnabled()) {
-                return 'Disabled (Cloud API)';
+  async getStatus({ homey, query }) {
+    // Return status based on which API is available
+    if (homey.app.isV1Available()) {
+      return homey.app.api.loggedInStatus;
+    }
+    if (homey.app.isV2Available()) {
+      return homey.app.apiV2.loggedInStatus || 'Connected (V2)';
+    }
+    return homey.app.api ? homey.app.api.loggedInStatus || 'Not configured' : 'Not configured';
+  },
+  async getWebsocketStatus({ homey, query }) {
+    return getWebsocketStatus(homey.app.api && homey.app.api.ws);
+  },
+  async getLastWebsocketMessageTime({ homey, query }) {
+    return getLastWebsocketMessageTime(homey.app.api && homey.app.api.ws);
+  },
+  async getAccessWebsocketStatus({ homey, query }) {
+    const tokens = homey.settings.get('ufp:tokens');
+    if (tokens && typeof tokens.accessApiKey !== 'undefined' && tokens.accessApiKey !== '') {
+      return getWebsocketStatus(homey.app.accessApi && homey.app.accessApi.websocket);
+    }
+    return 'No API Key found';
+
+  },
+  async getLastAccessWebsocketMessageTime({ homey, query }) {
+    return getLastWebsocketMessageTime(homey.app.accessApi && homey.app.accessApi.websocket);
+  },
+  async getProtectV2WebsocketStatus({ homey, query }) {
+    const tokens = homey.settings.get('ufp:tokens');
+    if (tokens && typeof tokens.protectV2ApiKey !== 'undefined' && tokens.protectV2ApiKey !== '') {
+      if (homey.app.isProtectCloudApiEnabled && homey.app.isProtectCloudApiEnabled()) {
+        return 'Disabled (Cloud API)';
+      }
+      return getWebsocketStatus(homey.app.apiV2 && homey.app.apiV2.websocket);
+    }
+    return 'No API Key found';
+
+  },
+  async getLastProtectV2WebsocketMessageTime({ homey, query }) {
+    return getLastWebsocketMessageTime(homey.app.apiV2 && homey.app.apiV2.websocket);
+  },
+  async testCredentials({ homey, body }) {
+    // Test V1 (username/password) credentials
+    if (body.user && body.pass) {
+      try {
+        return new Promise((resolve, reject) => {
+          const credentials = JSON.stringify({
+            username: body.user,
+            password: body.pass,
+          });
+
+          const options = {
+            method: 'POST',
+            hostname: body.host,
+            port: body.port,
+            path: '/api/auth/login',
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+              Accept: 'application/json',
+            },
+            maxRedirects: 20,
+            rejectUnauthorized: false,
+            timeout: 2000,
+            keepAlive: true,
+          };
+
+          const req = https.request(options, (res) => {
+            if (res.statusCode === 401) {
+              reject(new Error('Invalid credentials (401)'));
+              return;
             }
-            return getWebsocketStatus(homey.app.apiV2 && homey.app.apiV2.websocket);
-        } else {
-            return 'No API Key found';
-        }
-    },
-    async getLastProtectV2WebsocketMessageTime({homey, query}) {
-        return getLastWebsocketMessageTime(homey.app.apiV2 && homey.app.apiV2.websocket);
-    },
-    async testCredentials({homey, body}) {
-        // Test V1 (username/password) credentials
-        if (body.user && body.pass) {
-            try {
-                return new Promise((resolve, reject) => {
-                    const credentials = JSON.stringify({
-                        username: body.user,
-                        password: body.pass,
-                    });
-
-                    const options = {
-                        method: 'POST',
-                        hostname: body.host,
-                        port: body.port,
-                        path: '/api/auth/login',
-                        headers: {
-                            'Content-Type': 'application/json; charset=utf-8',
-                            Accept: 'application/json',
-                        },
-                        maxRedirects: 20,
-                        rejectUnauthorized: false,
-                        timeout: 2000,
-                        keepAlive: true,
-                    };
-
-                    const req = https.request(options, (res) => {
-                        if (res.statusCode === 401) {
-                            reject(new Error('Invalid credentials (401)'));
-                            return;
-                        }
-                        if (res.statusCode === 403) {
-                            reject(new Error('Invalid credentials (403)'));
-                            return;
-                        }
-                        if (res.statusCode === 429) {
-                            reject(new Error('Invalid credentials (429 - Too many attempts, please wait)'));
-                            return;
-                        }
-                        if (res.statusCode !== 200) {
-                            reject(new Error(`Invalid credentials (${res.statusCode})`));
-                            return;
-                        }
-                        const body = [];
-
-                        res.on('data', (chunk) => body.push(chunk));
-                        resolve('Valid credentials');
-                    });
-
-                    req.on('error', (error) => {
-                        reject(new Error(`Invalid credentials (${error.message})`));
-                    });
-
-                    req.write(credentials);
-                    req.end();
-                }).then((result) => {
-                    return {
-                        status: 'success',
-                        message: 'V1 credentials valid',
-                    };
-                }).catch((error) => {
-                    return {
-                        status: 'failure',
-                        error,
-                    };
-                });
-            } catch (error) {
-                homey.log('testCredentials error', error);
-                return {
-                    status: 'failure',
-                    error: error.message,
-                };
+            if (res.statusCode === 403) {
+              reject(new Error('Invalid credentials (403)'));
+              return;
             }
-        }
+            if (res.statusCode === 429) {
+              reject(new Error('Invalid credentials (429 - Too many attempts, please wait)'));
+              return;
+            }
+            if (res.statusCode !== 200) {
+              reject(new Error(`Invalid credentials (${res.statusCode})`));
+              return;
+            }
+            const body = [];
 
-        return {
+            res.on('data', (chunk) => body.push(chunk));
+            resolve('Valid credentials');
+          });
+
+          req.on('error', (error) => {
+            reject(new Error(`Invalid credentials (${error.message})`));
+          });
+
+          req.write(credentials);
+          req.end();
+        }).then((result) => {
+          return {
+            status: 'success',
+            message: 'V1 credentials valid',
+          };
+        }).catch((error) => {
+          return {
             status: 'failure',
-            error: 'No credentials provided',
+            error,
+          };
+        });
+      } catch (error) {
+        homey.log('testCredentials error', error);
+        return {
+          status: 'failure',
+          error: error.message,
         };
-    },
-    async testV2ApiKey({homey, body}) {
+      }
+    }
+
+    return {
+      status: 'failure',
+      error: 'No credentials provided',
+    };
+  },
+  async testV2ApiKey({ homey, body }) {
+    try {
+      return new Promise((resolve, reject) => {
+        let testOptions;
         try {
-            return new Promise((resolve, reject) => {
-                let testOptions;
-                try {
-                    testOptions = buildProtectV2TestOptions(body);
-                } catch (error) {
-                    reject(error);
-                    return;
-                }
-
-                const options = {
-                    method: 'GET',
-                    hostname: testOptions.hostname,
-                    port: testOptions.port,
-                    path: testOptions.path,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8',
-                        Accept: '*/*',
-                        'X-API-KEY': body.protectV2ApiKey,
-                    },
-                    maxRedirects: 20,
-                    rejectUnauthorized: false,
-                    timeout: 5000,
-                    keepAlive: true,
-                };
-
-                const req = https.request(options, (res) => {
-                    const data = [];
-                    res.on('data', (chunk) => data.push(chunk));
-                    res.on('end', () => {
-                        if (res.statusCode === 401) {
-                            reject(new Error('Invalid API key (401)'));
-                            return;
-                        }
-                        if (res.statusCode === 403) {
-                            reject(new Error('Invalid API key (403)'));
-                            return;
-                        }
-                        if (res.statusCode !== 200) {
-                            reject(new Error(`API key test failed (${res.statusCode})`));
-                            return;
-                        }
-                        resolve('Valid V2 API key');
-                    });
-                });
-
-                req.on('error', (error) => {
-                    reject(new Error(`V2 API key test failed (${error.message})`));
-                });
-
-                req.end();
-            }).then((result) => {
-                return {
-                    status: 'success',
-                    message: 'V2 API key valid',
-                };
-            }).catch((error) => {
-                return {
-                    status: 'failure',
-                    error,
-                };
-            });
+          testOptions = buildProtectV2TestOptions(body);
         } catch (error) {
-            homey.log('testV2ApiKey error', error);
-            return {
-                status: 'failure',
-                error: error.message,
-            };
+          reject(error);
+          return;
         }
-    },
-    async testAccessApiKey({homey, body}) {
-        try {
-            return new Promise((resolve, reject) => {
-                const options = {
-                    method: 'GET',
-                    hostname: body.host,
-                    port: body.port || 12445,
-                    path: '/api/v1/developer/doors',
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8',
-                        Accept: '*/*',
-                        Authorization: `Bearer ${body.accessApiKey}`,
-                    },
-                    maxRedirects: 20,
-                    rejectUnauthorized: false,
-                    timeout: 5000,
-                    keepAlive: true,
-                };
 
-                const req = https.request(options, (res) => {
-                    const data = [];
-                    res.on('data', (chunk) => data.push(chunk));
-                    res.on('end', () => {
-                        if (res.statusCode === 401) {
-                            reject(new Error('Invalid API key (401)'));
-                            return;
-                        }
-                        if (res.statusCode === 403) {
-                            reject(new Error('Invalid API key (403)'));
-                            return;
-                        }
-                        if (res.statusCode !== 200) {
-                            reject(new Error(`API key test failed (${res.statusCode})`));
-                            return;
-                        }
-                        resolve('Valid Access API key');
-                    });
-                });
+        const options = {
+          method: 'GET',
+          hostname: testOptions.hostname,
+          port: testOptions.port,
+          path: testOptions.path,
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            Accept: '*/*',
+            'X-API-KEY': body.protectV2ApiKey,
+          },
+          maxRedirects: 20,
+          rejectUnauthorized: false,
+          timeout: 5000,
+          keepAlive: true,
+        };
 
-                req.on('error', (error) => {
-                    reject(new Error(`Access API key test failed (${error.message})`));
-                });
+        const req = https.request(options, (res) => {
+          const data = [];
+          res.on('data', (chunk) => data.push(chunk));
+          res.on('end', () => {
+            if (res.statusCode === 401) {
+              reject(new Error('Invalid API key (401)'));
+              return;
+            }
+            if (res.statusCode === 403) {
+              reject(new Error('Invalid API key (403)'));
+              return;
+            }
+            if (res.statusCode !== 200) {
+              reject(new Error(`API key test failed (${res.statusCode})`));
+              return;
+            }
+            resolve('Valid V2 API key');
+          });
+        });
 
-                req.end();
-            }).then((result) => {
-                return {
-                    status: 'success',
-                    message: 'Access API key valid',
-                };
-            }).catch((error) => {
-                return {
-                    status: 'failure',
-                    error,
-                };
-            });
-        } catch (error) {
-            homey.log('testAccessApiKey error', error);
-            return {
-                status: 'failure',
-                error: error.message,
-            };
-        }
-    },
+        req.on('error', (error) => {
+          reject(new Error(`V2 API key test failed (${error.message})`));
+        });
+
+        req.end();
+      }).then((result) => {
+        return {
+          status: 'success',
+          message: 'V2 API key valid',
+        };
+      }).catch((error) => {
+        return {
+          status: 'failure',
+          error,
+        };
+      });
+    } catch (error) {
+      homey.log('testV2ApiKey error', error);
+      return {
+        status: 'failure',
+        error: error.message,
+      };
+    }
+  },
+  async testAccessApiKey({ homey, body }) {
+    try {
+      return new Promise((resolve, reject) => {
+        const options = {
+          method: 'GET',
+          hostname: body.host,
+          port: body.port || 12445,
+          path: '/api/v1/developer/doors',
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            Accept: '*/*',
+            Authorization: `Bearer ${body.accessApiKey}`,
+          },
+          maxRedirects: 20,
+          rejectUnauthorized: false,
+          timeout: 5000,
+          keepAlive: true,
+        };
+
+        const req = https.request(options, (res) => {
+          const data = [];
+          res.on('data', (chunk) => data.push(chunk));
+          res.on('end', () => {
+            if (res.statusCode === 401) {
+              reject(new Error('Invalid API key (401)'));
+              return;
+            }
+            if (res.statusCode === 403) {
+              reject(new Error('Invalid API key (403)'));
+              return;
+            }
+            if (res.statusCode !== 200) {
+              reject(new Error(`API key test failed (${res.statusCode})`));
+              return;
+            }
+            resolve('Valid Access API key');
+          });
+        });
+
+        req.on('error', (error) => {
+          reject(new Error(`Access API key test failed (${error.message})`));
+        });
+
+        req.end();
+      }).then((result) => {
+        return {
+          status: 'success',
+          message: 'Access API key valid',
+        };
+      }).catch((error) => {
+        return {
+          status: 'failure',
+          error,
+        };
+      });
+    } catch (error) {
+      homey.log('testAccessApiKey error', error);
+      return {
+        status: 'failure',
+        error: error.message,
+      };
+    }
+  },
 };
