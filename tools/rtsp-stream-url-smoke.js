@@ -41,8 +41,11 @@ function createApp(options) {
       },
     },
     api: {
-      getStreamUrl: async (camera) => {
-        calls.push({ api: 'v1', cameraId: camera.id, packageCamera: false });
+      getStreamUrl: async (camera, packageCamera, quality) => {
+        calls.push({ api: 'v1', cameraId: camera.id, packageCamera: false, quality });
+        if (options.v1ByQuality) {
+          return options.v1ByQuality[quality || 'auto'] || '';
+        }
         return options.v1StreamUrl || '';
       },
       getPackageStreamUrl: async (camera) => {
@@ -76,6 +79,25 @@ async function assertResolverBehavior() {
   assert(await getRtspStreamUrl(app, camera, { packageCamera: true }) === 'rtsp://nvr/package', 'expected V2 package fallback when V1 package is missing');
 }
 
+async function assertQualityBehavior() {
+  const camera = { id: 'camera-1', name: 'Front Door' };
+  let app = createApp({ v1ByQuality: { auto: 'rtsp://nvr/auto', low: 'rtsp://nvr/low' } });
+  assert(await getRtspStreamUrl(app, camera, { quality: 'low' }) === 'rtsp://nvr/low', 'expected V1 low stream');
+
+  app = createApp({ v1ByQuality: { auto: 'rtsp://nvr/auto' } });
+  assert(await getRtspStreamUrl(app, camera, { quality: 'medium' }) === 'rtsp://nvr/auto', 'expected auto fallback when V1 quality missing');
+
+  app = createApp({ v1Available: false, v2Streams: { medium: 'rtsp://nvr/medium', high: 'rtsp://nvr/high' } });
+  assert(await getRtspStreamUrl(app, camera, { quality: 'medium' }) === 'rtsp://nvr/medium', 'expected V2 medium stream');
+  assert(app.calls[0].qualities.length === 1 && app.calls[0].qualities[0] === 'medium', 'expected V2 to request only medium');
+
+  app = createApp({ v1Available: false, v2Streams: { high: 'rtsp://nvr/high' } });
+  assert(await getRtspStreamUrl(app, camera, { quality: 'low' }) === 'rtsp://nvr/high', 'expected V2 auto fallback when quality missing');
+
+  app = createApp({ v1ByQuality: { auto: 'rtsp://nvr/auto' } });
+  assert(await getRtspStreamUrl(app, camera, { quality: 'auto' }) === 'rtsp://nvr/auto', 'expected auto to behave as before');
+}
+
 async function assertV1MissingChannelsBehavior() {
   const api = new ProtectAPI();
   api.webclient = { getServerHost: () => 'nvr.example' };
@@ -87,10 +109,21 @@ async function assertV1MissingChannelsBehavior() {
 
   api.findCameraById = async () => ({ channels: [{ name: 'High', isRtspEnabled: false, rtspAlias: 'disabled' }] });
   assert(await api.getStreamUrl({ id: 'camera-1' }) === '', 'expected empty URL when V1 channels are disabled');
+
+  api.findCameraById = async () => ({
+    channels: [
+      { name: 'High', isRtspEnabled: true, rtspAlias: 'hi' },
+      { name: 'Low', isRtspEnabled: true, rtspAlias: 'lo' },
+    ],
+  });
+  assert(await api.getStreamUrl({ id: 'camera-1' }, false, 'low') === 'rtsp://nvr.example:7447/lo', 'expected low channel');
+  assert(await api.getStreamUrl({ id: 'camera-1' }, false, 'medium') === '', 'expected empty URL for missing medium channel');
+  assert(await api.getStreamUrl({ id: 'camera-1' }) === 'rtsp://nvr.example:7447/hi', 'expected first channel in auto');
 }
 
 async function run() {
   await assertResolverBehavior();
+  await assertQualityBehavior();
   await assertV1MissingChannelsBehavior();
 
   // eslint-disable-next-line no-console

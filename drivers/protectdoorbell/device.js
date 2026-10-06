@@ -6,6 +6,7 @@ const https = require('https');
 const SmartDetectionMixin = require('../../library/SmartDetectionMixin');
 const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 const { getRtspStreamUrl } = require('../../library/rtsp-stream-url');
+const { SETTING_STREAM_QUALITY } = require('../../library/constants');
 
 function requestByUrl(url, options, onResponse) {
   const parsedUrl = new URL(url);
@@ -148,6 +149,10 @@ class Doorbell extends Homey.Device {
   async onSettings({ oldSettings, newSettings, changedKeys }) {
     if (changedKeys.includes('useCameraSnapshot')) {
       this.settings.useCameraSnapshot = newSettings.useCameraSnapshot;
+    }
+    if (changedKeys.includes(SETTING_STREAM_QUALITY)) {
+      this.rtspUrl = await getRtspStreamUrl(this.homey.app, this.getData(), { quality: newSettings[SETTING_STREAM_QUALITY] });
+      this.homey.app.debug(`Stream quality for ${this.getName()} set to ${newSettings[SETTING_STREAM_QUALITY]}`);
     }
     this.homey.app.debug('UnifiDoorbell Device settings where changed');
   }
@@ -699,7 +704,7 @@ class Doorbell extends Homey.Device {
         };
       });
 
-      this.rtspUrl = await getRtspStreamUrl(this.homey.app, this.getData());
+      this.rtspUrl = await getRtspStreamUrl(this.homey.app, this.getData(), { quality: this.getSetting(SETTING_STREAM_QUALITY) });
       if (this.rtspUrl) {
         this.log(`RTSP URL configured for doorbell ${this.getName()}.`);
       }
@@ -796,7 +801,7 @@ class Doorbell extends Homey.Device {
 
     if (triggerFlow) {
       const getStreamUrl = async () => {
-        return this.rtspUrl || getRtspStreamUrl(this.homey.app, this.getData());
+        return this.rtspUrl || getRtspStreamUrl(this.homey.app, this.getData(), { quality: this.getSetting(SETTING_STREAM_QUALITY) });
       };
 
       try {

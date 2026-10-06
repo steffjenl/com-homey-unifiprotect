@@ -611,7 +611,7 @@ class ProtectAPI extends BaseClass {
     return (widthInPixels / 16) * 9;
   }
 
-  getStreamUrl(camera, packageCamera = false) {
+  getStreamUrl(camera, packageCamera = false, quality = null) {
     return new Promise((resolve, reject) => {
       this.findCameraById(camera.id)
         .then((cameraInfo) => {
@@ -619,7 +619,8 @@ class ProtectAPI extends BaseClass {
             return resolve('');
           }
 
-          const channel = cameraInfo.channels.find((item) => item.isRtspEnabled && item.name !== 'Package Camera');
+          const channel = cameraInfo.channels.find((item) => item.isRtspEnabled && item.name !== 'Package Camera'
+            && (!quality || String(item.name).toLowerCase() === quality));
           if (channel) {
             return resolve(`rtsp://${this.webclient.getServerHost()}:${this._rtspPort}/${channel.rtspAlias}`);
           }

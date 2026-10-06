@@ -1,5 +1,7 @@
 'use strict';
 
+const { STREAM_QUALITIES, STREAM_QUALITY_AUTO } = require('./constants');
+
 const NORMAL_STREAM_QUALITIES = ['high', 'medium', 'low'];
 const PACKAGE_STREAM_QUALITIES = ['package'];
 
@@ -47,7 +49,7 @@ async function _getV2StreamUrl(app, camera, qualities) {
   }
 }
 
-async function _getV1StreamUrl(app, camera, packageCamera) {
+async function _getV1StreamUrl(app, camera, packageCamera, quality) {
   if (!app || !app.isV1Available || !app.isV1Available() || !app.api) {
     return '';
   }
@@ -57,11 +59,21 @@ async function _getV1StreamUrl(app, camera, packageCamera) {
       return await app.api.getPackageStreamUrl(camera) || '';
     }
 
-    return await app.api.getStreamUrl(camera) || '';
+    return await app.api.getStreamUrl(camera, false, quality) || '';
   } catch (error) {
     _debug(app, `[rtsp-stream-url] V1 stream lookup failed for ${_getCameraName(camera)}: ${error}`);
     return '';
   }
+}
+
+async function _resolveStreamUrl(app, camera, packageCamera, quality, qualities) {
+  const v1StreamUrl = await _getV1StreamUrl(app, camera, packageCamera, quality);
+
+  if (v1StreamUrl) {
+    return v1StreamUrl;
+  }
+
+  return _getV2StreamUrl(app, camera, qualities);
 }
 
 async function getRtspStreamUrl(app, camera, options = {}) {
@@ -70,20 +82,25 @@ async function getRtspStreamUrl(app, camera, options = {}) {
   }
 
   const packageCamera = options.packageCamera === true;
-  const qualities = packageCamera ? PACKAGE_STREAM_QUALITIES : NORMAL_STREAM_QUALITIES;
-  const v1StreamUrl = await _getV1StreamUrl(app, camera, packageCamera);
+  const quality = !packageCamera && STREAM_QUALITIES.includes(options.quality) ? options.quality : null;
 
-  if (v1StreamUrl) {
-    return v1StreamUrl;
+  if (quality) {
+    const preferred = await _resolveStreamUrl(app, camera, false, quality, [quality]);
+
+    if (preferred) {
+      return preferred;
+    }
+
+    _debug(app, `[rtsp-stream-url] ${quality} stream unavailable for ${_getCameraName(camera)}, falling back to ${STREAM_QUALITY_AUTO}`);
   }
 
-  const v2StreamUrl = await _getV2StreamUrl(app, camera, qualities);
-
-  if (v2StreamUrl) {
-    return v2StreamUrl;
-  }
-
-  return '';
+  return _resolveStreamUrl(
+    app,
+    camera,
+    packageCamera,
+    null,
+    packageCamera ? PACKAGE_STREAM_QUALITIES : NORMAL_STREAM_QUALITIES,
+  );
 }
 
 module.exports = {

@@ -249,3 +249,7 @@ module.exports.PROTECT_SENSOR_MOTION_TIMER_WAIT_IN_SEC = 10 * 1000;
 
 module.exports.PROTECT_V2_API_BASE_PATH = '/proxy/protect/integration';
 module.exports.PROTECT_V2_API_VERSION = 'v1';
+
+module.exports.SETTING_STREAM_QUALITY = 'ufp:stream_quality';
+module.exports.STREAM_QUALITY_AUTO = 'auto';
+module.exports.STREAM_QUALITIES = ['high', 'medium', 'low'];
