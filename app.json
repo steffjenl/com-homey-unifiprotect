@@ -10881,6 +10881,92 @@
               }
             }
           ]
+        },
+        {
+          "type": "dropdown",
+          "id": "ufp:video_codec",
+          "label": {
+            "en": "Video codec",
+            "nl": "Videocodec",
+            "da": "Videocodec",
+            "de": "Video-Codec",
+            "fr": "Codec vidéo",
+            "it": "Codec video",
+            "es": "Códec de vídeo",
+            "pl": "Kodek wideo",
+            "sv": "Videokodek",
+            "ko": "비디오 코덱",
+            "no": "Videokodek",
+            "ru": "Видеокодек"
+          },
+          "hint": {
+            "en": "Codec used to decode the live stream. Automatic uses H.265 when UniFi Protect reports it (Enhanced Encoding), otherwise H.264. Override if the live video stays black.",
+            "nl": "Codec voor het decoderen van de livestream. Automatisch gebruikt H.265 als UniFi Protect dit meldt (Enhanced Encoding), anders H.264. Overschrijf als het livebeeld zwart blijft.",
+            "da": "Codec til afkodning af livestreamen. Automatisk bruger H.265, når UniFi Protect rapporterer det (Enhanced Encoding), ellers H.264. Tilsidesæt, hvis livevideoen forbliver sort.",
+            "de": "Codec zum Dekodieren des Livestreams. Automatisch verwendet H.265, wenn UniFi Protect dies meldet (Enhanced Encoding), sonst H.264. Überschreiben, wenn das Livebild schwarz bleibt.",
+            "fr": "Codec utilisé pour décoder le flux en direct. Automatique utilise H.265 si UniFi Protect l'indique (Enhanced Encoding), sinon H.264. Forcez-le si l'image reste noire.",
+            "it": "Codec usato per decodificare lo stream live. Automatico usa H.265 se UniFi Protect lo segnala (Enhanced Encoding), altrimenti H.264. Forzalo se il video resta nero.",
+            "es": "Códec usado para decodificar la transmisión en vivo. Automático usa H.265 si UniFi Protect lo indica (Enhanced Encoding), si no H.264. Fuércelo si el vídeo sigue negro.",
+            "pl": "Kodek do dekodowania strumienia na żywo. Automatyczny używa H.265, gdy UniFi Protect to zgłasza (Enhanced Encoding), w przeciwnym razie H.264. Zmień, jeśli obraz pozostaje czarny.",
+            "sv": "Kodek för avkodning av livestreamen. Automatisk använder H.265 när UniFi Protect rapporterar det (Enhanced Encoding), annars H.264. Åsidosätt om livebilden förblir svart.",
+            "ko": "라이브 스트림 디코딩에 사용하는 코덱입니다. 자동은 UniFi Protect가 H.265(Enhanced Encoding)를 보고하면 H.265를, 아니면 H.264를 사용합니다. 화면이 검게 나오면 직접 지정하세요.",
+            "no": "Kodek for avkoding av direktestrømmen. Automatisk bruker H.265 når UniFi Protect rapporterer det (Enhanced Encoding), ellers H.264. Overstyr hvis bildet forblir svart.",
+            "ru": "Кодек для декодирования прямой трансляции. Автоматически используется H.265, если его сообщает UniFi Protect (Enhanced Encoding), иначе H.264. Задайте вручную, если изображение остаётся чёрным."
+          },
+          "value": "auto",
+          "values": [
+            {
+              "id": "auto",
+              "label": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "da": "Automatisk",
+                "de": "Automatisch",
+                "fr": "Automatique",
+                "it": "Automatico",
+                "es": "Automático",
+                "pl": "Automatyczny",
+                "sv": "Automatisk",
+                "ko": "자동",
+                "no": "Automatisk",
+                "ru": "Автоматически"
+              }
+            },
+            {
+              "id": "h264",
+              "label": {
+                "en": "H.264",
+                "nl": "H.264",
+                "da": "H.264",
+                "de": "H.264",
+                "fr": "H.264",
+                "it": "H.264",
+                "es": "H.264",
+                "pl": "H.264",
+                "sv": "H.264",
+                "ko": "H.264",
+                "no": "H.264",
+                "ru": "H.264"
+              }
+            },
+            {
+              "id": "hevc",
+              "label": {
+                "en": "H.265 (HEVC)",
+                "nl": "H.265 (HEVC)",
+                "da": "H.265 (HEVC)",
+                "de": "H.265 (HEVC)",
+                "fr": "H.265 (HEVC)",
+                "it": "H.265 (HEVC)",
+                "es": "H.265 (HEVC)",
+                "pl": "H.265 (HEVC)",
+                "sv": "H.265 (HEVC)",
+                "ko": "H.265 (HEVC)",
+                "no": "H.265 (HEVC)",
+                "ru": "H.265 (HEVC)"
+              }
+            }
+          ]
         }
       ]
     },
@@ -11133,6 +11219,92 @@
                 "ko": "낮음",
                 "no": "Lav",
                 "ru": "Низкое"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dropdown",
+          "id": "ufp:video_codec",
+          "label": {
+            "en": "Video codec",
+            "nl": "Videocodec",
+            "da": "Videocodec",
+            "de": "Video-Codec",
+            "fr": "Codec vidéo",
+            "it": "Codec video",
+            "es": "Códec de vídeo",
+            "pl": "Kodek wideo",
+            "sv": "Videokodek",
+            "ko": "비디오 코덱",
+            "no": "Videokodek",
+            "ru": "Видеокодек"
+          },
+          "hint": {
+            "en": "Codec used to decode the live stream. Automatic uses H.265 when UniFi Protect reports it (Enhanced Encoding), otherwise H.264. Override if the live video stays black.",
+            "nl": "Codec voor het decoderen van de livestream. Automatisch gebruikt H.265 als UniFi Protect dit meldt (Enhanced Encoding), anders H.264. Overschrijf als het livebeeld zwart blijft.",
+            "da": "Codec til afkodning af livestreamen. Automatisk bruger H.265, når UniFi Protect rapporterer det (Enhanced Encoding), ellers H.264. Tilsidesæt, hvis livevideoen forbliver sort.",
+            "de": "Codec zum Dekodieren des Livestreams. Automatisch verwendet H.265, wenn UniFi Protect dies meldet (Enhanced Encoding), sonst H.264. Überschreiben, wenn das Livebild schwarz bleibt.",
+            "fr": "Codec utilisé pour décoder le flux en direct. Automatique utilise H.265 si UniFi Protect l'indique (Enhanced Encoding), sinon H.264. Forcez-le si l'image reste noire.",
+            "it": "Codec usato per decodificare lo stream live. Automatico usa H.265 se UniFi Protect lo segnala (Enhanced Encoding), altrimenti H.264. Forzalo se il video resta nero.",
+            "es": "Códec usado para decodificar la transmisión en vivo. Automático usa H.265 si UniFi Protect lo indica (Enhanced Encoding), si no H.264. Fuércelo si el vídeo sigue negro.",
+            "pl": "Kodek do dekodowania strumienia na żywo. Automatyczny używa H.265, gdy UniFi Protect to zgłasza (Enhanced Encoding), w przeciwnym razie H.264. Zmień, jeśli obraz pozostaje czarny.",
+            "sv": "Kodek för avkodning av livestreamen. Automatisk använder H.265 när UniFi Protect rapporterar det (Enhanced Encoding), annars H.264. Åsidosätt om livebilden förblir svart.",
+            "ko": "라이브 스트림 디코딩에 사용하는 코덱입니다. 자동은 UniFi Protect가 H.265(Enhanced Encoding)를 보고하면 H.265를, 아니면 H.264를 사용합니다. 화면이 검게 나오면 직접 지정하세요.",
+            "no": "Kodek for avkoding av direktestrømmen. Automatisk bruker H.265 når UniFi Protect rapporterer det (Enhanced Encoding), ellers H.264. Overstyr hvis bildet forblir svart.",
+            "ru": "Кодек для декодирования прямой трансляции. Автоматически используется H.265, если его сообщает UniFi Protect (Enhanced Encoding), иначе H.264. Задайте вручную, если изображение остаётся чёрным."
+          },
+          "value": "auto",
+          "values": [
+            {
+              "id": "auto",
+              "label": {
+                "en": "Automatic",
+                "nl": "Automatisch",
+                "da": "Automatisk",
+                "de": "Automatisch",
+                "fr": "Automatique",
+                "it": "Automatico",
+                "es": "Automático",
+                "pl": "Automatyczny",
+                "sv": "Automatisk",
+                "ko": "자동",
+                "no": "Automatisk",
+                "ru": "Автоматически"
+              }
+            },
+            {
+              "id": "h264",
+              "label": {
+                "en": "H.264",
+                "nl": "H.264",
+                "da": "H.264",
+                "de": "H.264",
+                "fr": "H.264",
+                "it": "H.264",
+                "es": "H.264",
+                "pl": "H.264",
+                "sv": "H.264",
+                "ko": "H.264",
+                "no": "H.264",
+                "ru": "H.264"
+              }
+            },
+            {
+              "id": "hevc",
+              "label": {
+                "en": "H.265 (HEVC)",
+                "nl": "H.265 (HEVC)",
+                "da": "H.265 (HEVC)",
+                "de": "H.265 (HEVC)",
+                "fr": "H.265 (HEVC)",
+                "it": "H.265 (HEVC)",
+                "es": "H.265 (HEVC)",
+                "pl": "H.265 (HEVC)",
+                "sv": "H.265 (HEVC)",
+                "ko": "H.265 (HEVC)",
+                "no": "H.265 (HEVC)",
+                "ru": "H.265 (HEVC)"
               }
             }
           ]

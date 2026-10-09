@@ -240,7 +240,7 @@
     },
     "notification": {
         "controller_error_title": "Controller UniFi Protect non raggiungibile",
-        "controller_error_body": "Il controller su {ip}:{port} non risponde. Verifica la tua rete e configurazione IP.",
+        "controller_error_body": "Il controller su __ip__:__port__ non risponde. Verifica la tua rete e configurazione IP.",
         "repair_action": "Apri impostazioni"
     },
     "flow": {

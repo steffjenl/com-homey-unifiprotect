@@ -152,7 +152,15 @@ class UniFiCameraDriver extends Homey.Driver {
    */
   async _listUnifiCameras() {
     if (this.homey.app.isV1Available()) {
-      return this.homey.app.api.getCameras();
+      // V1 may be logged in with an account without Protect access: fall back to V2 when it returns nothing.
+      const cameras = await this.homey.app.api.getCameras().catch((error) => {
+        this.error('[protectcamera] V1 getCameras failed', error);
+        return [];
+      });
+      if ((cameras && Object.keys(cameras).length > 0) || !this.homey.app.isV2Available()) {
+        return cameras;
+      }
+      this.homey.app.debug('[protectcamera] V1 returned no cameras, falling back to V2');
     }
     if (this.homey.app.isV2Available()) {
       return this.homey.app.apiV2.getCamerasNonDoorbell();

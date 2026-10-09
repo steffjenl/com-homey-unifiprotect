@@ -240,7 +240,7 @@
     },
     "notification": {
         "controller_error_title": "Контроллер UniFi Protect недоступен",
-        "controller_error_body": "Контроллер на {ip}:{port} не отвечает. Проверьте сеть и настройки IP.",
+        "controller_error_body": "Контроллер на __ip__:__port__ не отвечает. Проверьте сеть и настройки IP.",
         "repair_action": "Открыть настройки"
     },
     "flow": {

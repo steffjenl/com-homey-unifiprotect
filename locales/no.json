@@ -240,7 +240,7 @@
     },
     "notification": {
         "controller_error_title": "UniFi Protect-kontroller utilgjengelig",
-        "controller_error_body": "Kontrolleren på {ip}:{port} svarer ikke. Sjekk nettverket og IP-konfigurasjonen.",
+        "controller_error_body": "Kontrolleren på __ip__:__port__ svarer ikke. Sjekk nettverket og IP-konfigurasjonen.",
         "repair_action": "Åpne innstillinger"
     },
     "flow": {

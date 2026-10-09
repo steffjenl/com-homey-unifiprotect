@@ -246,7 +246,7 @@
     },
     "notification": {
         "controller_error_title": "UniFi Protect Controller nicht erreichbar",
-        "controller_error_body": "Controller unter {ip}:{port} antwortet nicht. Überprüfen Sie Ihre Netzwerk- und IP-Konfiguration.",
+        "controller_error_body": "Controller unter __ip__:__port__ antwortet nicht. Überprüfen Sie Ihre Netzwerk- und IP-Konfiguration.",
         "repair_action": "Einstellungen öffnen"
     },
     "flow": {

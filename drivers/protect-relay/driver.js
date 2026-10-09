@@ -38,7 +38,11 @@ class UniFiRelayDriver extends Homey.Driver {
       let relays;
 
       if (homey.app.isV1Available()) {
-        relays = await homey.app.api.getRelays();
+        relays = await homey.app.api.getRelays().catch(() => ({}));
+        if (Object.keys(relays || {}).length === 0 && homey.app.isV2Available()) {
+          homey.app.debug('[protect-relay] V1 returned no relays, falling back to V2');
+          relays = await homey.app.apiV2.getRelays();
+        }
       } else if (homey.app.isV2Available()) {
         relays = await homey.app.apiV2.getRelays();
       } else {

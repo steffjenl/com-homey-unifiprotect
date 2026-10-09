@@ -20,7 +20,11 @@ class UniFiSensorDriver extends Homey.Driver {
     session.setHandler('list_devices', async (data) => {
       let sensors;
       if (homey.app.isV1Available()) {
-        sensors = await homey.app.api.getSensors();
+        sensors = await homey.app.api.getSensors().catch(() => ({}));
+        if (Object.keys(sensors || {}).length === 0 && homey.app.isV2Available()) {
+          homey.app.debug('[protectsensor] V1 returned no sensors, falling back to V2');
+          sensors = await homey.app.apiV2.getSensors();
+        }
       } else if (homey.app.isV2Available()) {
         sensors = await homey.app.apiV2.getSensors();
       } else {

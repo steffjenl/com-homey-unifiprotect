@@ -5,8 +5,9 @@ const http = require('http');
 const https = require('https');
 const SmartDetectionMixin = require('../../library/SmartDetectionMixin');
 const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
+const RtspUrlMixin = require('../../library/RtspUrlMixin');
 const { getRtspStreamUrl } = require('../../library/rtsp-stream-url');
-const { SETTING_STREAM_QUALITY } = require('../../library/constants');
+const { SETTING_STREAM_QUALITY, SETTING_VIDEO_CODEC } = require('../../library/constants');
 
 function requestByUrl(url, options, onResponse) {
   const parsedUrl = new URL(url);
@@ -147,8 +148,14 @@ class Camera extends Homey.Device {
     if (changedKeys.includes('useCameraSnapshot')) {
       this.settings.useCameraSnapshot = newSettings.useCameraSnapshot;
     }
+    if (changedKeys.includes(SETTING_VIDEO_CODEC)) {
+      // getSetting still returns the old value inside onSettings, so apply after it has been stored
+      this.homey.setTimeout(() => {
+        this._createMainVideo().catch((error) => this.error(error));
+      }, 0);
+    }
     if (changedKeys.includes(SETTING_STREAM_QUALITY)) {
-      this.rtspUrl = await getRtspStreamUrl(this.homey.app, this.getData(), { quality: newSettings[SETTING_STREAM_QUALITY] });
+      await this._refreshRtspUrl(newSettings[SETTING_STREAM_QUALITY]);
       this.homey.app.debug(`Stream quality for ${this.getName()} set to ${newSettings[SETTING_STREAM_QUALITY]}`);
     }
   }
@@ -166,6 +173,7 @@ class Camera extends Homey.Device {
      * onDeleted is called when the user deleted the device.
      */
   async onDeleted() {
+    this._clearRtspRetry();
     this.homey.app.debug('UnifiCamera Device has been deleted');
   }
 
@@ -545,30 +553,8 @@ class Camera extends Homey.Device {
   async _setVideoUrl() {
     this.homey.app.debug(`Getting rtsp Url for camera ${this.getName()}.`);
     try {
-      this.video = await this.homey.videos.createVideoRTSP({
-        allowInvalidCertificates: true,
-        demuxer: 'h264',
-      });
-
-      this.video.registerVideoUrlListener(async () => {
-        return {
-          url: this.rtspUrl,
-        };
-      });
-
-      this.rtspUrl = await getRtspStreamUrl(this.homey.app, this.getData(), { quality: this.getSetting(SETTING_STREAM_QUALITY) });
-      if (this.rtspUrl) {
-        this.log(`RTSP URL configured for camera ${this.getName()}.`);
-      }
-
-      if (!this.rtspUrl) {
-        this.setWarning(this.homey.__('warnings.no_rtsp_url')).catch(this.error);
-        this.homey.app.debug(`No RTSP URL available for camera ${this.getName()}.`);
-      } else {
-        this.setWarning(null).catch(this.error);
-      }
-
-      this.setCameraVideo('snapshot', `${this.getName()} Video`, this.video);
+      await this._refreshRtspUrl();
+      await this._createMainVideo();
     } catch (err) {
       this.error('Error creating camera:', err);
     }
@@ -649,6 +635,6 @@ class Camera extends Homey.Device {
 
 }
 
-Object.assign(Camera.prototype, SmartDetectionMixin, ConnectionMonitorMixin);
+Object.assign(Camera.prototype, SmartDetectionMixin, ConnectionMonitorMixin, RtspUrlMixin);
 
 module.exports = Camera;

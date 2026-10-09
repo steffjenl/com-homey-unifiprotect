@@ -5,8 +5,9 @@ const http = require('http');
 const https = require('https');
 const SmartDetectionMixin = require('../../library/SmartDetectionMixin');
 const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
+const RtspUrlMixin = require('../../library/RtspUrlMixin');
 const { getRtspStreamUrl } = require('../../library/rtsp-stream-url');
-const { SETTING_STREAM_QUALITY } = require('../../library/constants');
+const { SETTING_STREAM_QUALITY, SETTING_VIDEO_CODEC } = require('../../library/constants');
 
 function requestByUrl(url, options, onResponse) {
   const parsedUrl = new URL(url);
@@ -150,8 +151,14 @@ class Doorbell extends Homey.Device {
     if (changedKeys.includes('useCameraSnapshot')) {
       this.settings.useCameraSnapshot = newSettings.useCameraSnapshot;
     }
+    if (changedKeys.includes(SETTING_VIDEO_CODEC)) {
+      // getSetting still returns the old value inside onSettings, so apply after it has been stored
+      this.homey.setTimeout(() => {
+        this._createMainVideo().catch((error) => this.error(error));
+      }, 0);
+    }
     if (changedKeys.includes(SETTING_STREAM_QUALITY)) {
-      this.rtspUrl = await getRtspStreamUrl(this.homey.app, this.getData(), { quality: newSettings[SETTING_STREAM_QUALITY] });
+      await this._refreshRtspUrl(newSettings[SETTING_STREAM_QUALITY]);
       this.homey.app.debug(`Stream quality for ${this.getName()} set to ${newSettings[SETTING_STREAM_QUALITY]}`);
     }
     this.homey.app.debug('UnifiDoorbell Device settings where changed');
@@ -170,6 +177,7 @@ class Doorbell extends Homey.Device {
      * onDeleted is called when the user deleted the device.
      */
   async onDeleted() {
+    this._clearRtspRetry();
     this.homey.app.debug('UnifiDoorbell Device has been deleted');
   }
 
@@ -691,32 +699,8 @@ class Doorbell extends Homey.Device {
   async _setVideoUrl() {
     this.homey.app.debug(`Getting rtsp Url for camera ${this.getName()}.`);
     try {
-      // Create the video object
-      this.video = await this.homey.videos.createVideoRTSP({
-        allowInvalidCertificates: true,
-        demuxer: 'h264',
-      });
-
-      // Register the video url listener
-      this.video.registerVideoUrlListener(async () => {
-        return {
-          url: this.rtspUrl,
-        };
-      });
-
-      this.rtspUrl = await getRtspStreamUrl(this.homey.app, this.getData(), { quality: this.getSetting(SETTING_STREAM_QUALITY) });
-      if (this.rtspUrl) {
-        this.log(`RTSP URL configured for doorbell ${this.getName()}.`);
-      }
-
-      if (!this.rtspUrl) {
-        this.setWarning(this.homey.__('warnings.no_rtsp_url')).catch(this.error);
-        this.homey.app.debug(`No RTSP URL available for camera ${this.getName()}.`);
-      } else {
-        this.setWarning(null).catch(this.error);
-      }
-
-      this.setCameraVideo('snapshot', `${this.getName()} Video`, this.video);
+      await this._refreshRtspUrl();
+      await this._createMainVideo();
 
       // Package camera
       // Create the video object
@@ -739,8 +723,6 @@ class Doorbell extends Homey.Device {
 
       if (!this.rtspPackageUrl) {
         this.homey.app.debug(`No RTSP URL available for package camera ${this.getName()}.`);
-      } else if (this.rtspUrl) {
-        this.setWarning(null).catch(this.error);
       }
 
       this.setCameraVideo('package-snapshot', `${this.getName()} Package Video`, this.packageVideo);
@@ -901,6 +883,6 @@ class Doorbell extends Homey.Device {
 
 }
 
-Object.assign(Doorbell.prototype, SmartDetectionMixin, ConnectionMonitorMixin);
+Object.assign(Doorbell.prototype, SmartDetectionMixin, ConnectionMonitorMixin, RtspUrlMixin);
 
 module.exports = Doorbell;

@@ -251,5 +251,7 @@ module.exports.PROTECT_V2_API_BASE_PATH = '/proxy/protect/integration';
 module.exports.PROTECT_V2_API_VERSION = 'v1';
 
 module.exports.SETTING_STREAM_QUALITY = 'ufp:stream_quality';
+module.exports.SETTING_VIDEO_CODEC = 'ufp:video_codec';
+module.exports.VIDEO_CODEC_AUTO = 'auto';
 module.exports.STREAM_QUALITY_AUTO = 'auto';
 module.exports.STREAM_QUALITIES = ['high', 'medium', 'low'];

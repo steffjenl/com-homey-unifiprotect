@@ -240,7 +240,7 @@
     },
     "notification": {
         "controller_error_title": "UniFi Protect-styreenhed ikke tilgængelig",
-        "controller_error_body": "Styreenheden på {ip}:{port} svarer ikke. Tjek dit netværk og IP-konfiguration.",
+        "controller_error_body": "Styreenheden på __ip__:__port__ svarer ikke. Tjek dit netværk og IP-konfiguration.",
         "repair_action": "Åbn indstillinger"
     },
     "flow": {

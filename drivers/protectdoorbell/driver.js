@@ -157,7 +157,15 @@ class UniFiDoorbellDriver extends Homey.Driver {
      */
   async _listUnifiDoorbells() {
     if (this.homey.app.isV1Available()) {
-      return this.homey.app.api.getDoorbells();
+      // V1 may be logged in with an account without Protect access: fall back to V2 when it returns nothing.
+      const doorbells = await this.homey.app.api.getDoorbells().catch((error) => {
+        this.error('[protectdoorbell] V1 getDoorbells failed', error);
+        return [];
+      });
+      if ((doorbells && Object.keys(doorbells).length > 0) || !this.homey.app.isV2Available()) {
+        return doorbells;
+      }
+      this.homey.app.debug('[protectdoorbell] V1 returned no doorbells, falling back to V2');
     }
     if (this.homey.app.isV2Available()) {
       return this.homey.app.apiV2.getDoorbells();

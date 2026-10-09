@@ -246,7 +246,7 @@
     },
     "notification": {
         "controller_error_title": "UniFi Protect Controller Onbereikbaar",
-        "controller_error_body": "Controller op {ip}:{port} reageert niet. Controleer je netwerk- en IP-configuratie.",
+        "controller_error_body": "Controller op __ip__:__port__ reageert niet. Controleer je netwerk- en IP-configuratie.",
         "repair_action": "Instellingen openen"
     },
     "flow": {

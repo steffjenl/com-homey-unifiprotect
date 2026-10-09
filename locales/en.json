@@ -241,7 +241,8 @@
     },
     "warnings": {
         "unifi_access": "Warning: UniFi Access features are in early beta. Use with caution and report any issues to the developer.",
-        "no_rtsp_url": "Warning: No RTSP URL available for this camera. Please Enable 'Share Livestream' -> 'Enable Secure RTSPS Output' in the camera settings in UniFi Protect to use livestream features. Instructions: https://github.com/steffjenl/com-homey-unifiprotect/blob/develop/wiki/rtsp-setup.md"
+        "no_rtsp_url": "Warning: No RTSP URL available for this camera. Please Enable 'Share Livestream' -> 'Enable Secure RTSPS Output' in the camera settings in UniFi Protect to use livestream features. Instructions: https://github.com/steffjenl/com-homey-unifiprotect/blob/develop/wiki/rtsp-setup.md",
+        "h265_stream": "Warning: This camera streams H.265. Disable 'Enhanced Encoding' for this camera in UniFi Protect to use live video in Homey."
     },
     "msg": {
         "controller_unreachable": "Controller unreachable. Check IP address in settings.",
@@ -250,7 +251,7 @@
     },
     "notification": {
         "controller_error_title": "UniFi Protect Controller Unreachable",
-        "controller_error_body": "Controller at {ip}:{port} is not responding. Check your network and IP configuration.",
+        "controller_error_body": "Controller at __ip__:__port__ is not responding. Check your network and IP configuration.",
         "repair_action": "Fix Settings"
     },
     "flow": {
