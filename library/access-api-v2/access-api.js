@@ -39,71 +39,51 @@ class AccessAPI extends BaseClient {
     });
   }
 
+  /**
+   * Fetch all Access devices. The API returns `data` as groups of devices (one group per door/location),
+   * so every group must be read, not only the first one. A flat list is accepted as well.
+   */
+  async _getAllDevices() {
+    const response = await this.webclient.get('devices');
+    const result = JSON.parse(response);
+    const groups = result && Array.isArray(result.data) ? result.data : [];
+    const devices = [];
+    const seen = new Set();
+
+    for (const device of groups.flat(Infinity)) {
+      if (!device || typeof device !== 'object') {
+        continue;
+      }
+      const key = String(device.unique_id || device.id || device.mac || '');
+      if (key && seen.has(key)) {
+        continue;
+      }
+      seen.add(key);
+      devices.push(device);
+    }
+    return devices;
+  }
+
+  static _hasCapability(device, capability) {
+    return Array.isArray(device.capabilities) && device.capabilities.includes(capability);
+  }
+
   async getHubs() {
-    return new Promise((resolve, reject) => {
-      this.webclient.get('devices')
-        .then((response) => {
-          const result = JSON.parse(response);
-
-          const hubs = [];
-          for (const device of result.data[0]) {
-            if (device.capabilities.includes('is_hub')) {
-              hubs.push(device);
-            }
-          }
-
-          if (hubs) {
-            return resolve(hubs);
-          }
-          return reject(new Error('Error obtaining hubs.'));
-
-        })
-        .catch((error) => reject(error));
-    });
+    const devices = await this._getAllDevices();
+    return devices.filter((device) => AccessAPI._hasCapability(device, 'is_hub'));
   }
 
   async getReaders() {
-    return new Promise((resolve, reject) => {
-      this.webclient.get('devices')
-        .then((response) => {
-          const result = JSON.parse(response);
-
-          const readers = [];
-          for (const device of result.data[0]) {
-            if (device.capabilities.includes('is_reader')) {
-              readers.push(device);
-            }
-          }
-
-          if (readers) {
-            return resolve(readers);
-          }
-          return reject(new Error('Error obtaining readers.'));
-
-        })
-        .catch((error) => reject(error));
-    });
+    const devices = await this._getAllDevices();
+    return devices.filter((device) => AccessAPI._hasCapability(device, 'is_reader'));
   }
 
   async getIntercoms() {
-    return new Promise((resolve, reject) => {
-      this.webclient.get('devices')
-        .then((response) => {
-          const result = JSON.parse(response);
-          const intercoms = [];
-          for (const device of result.data[0]) {
-            if (
-              device.capabilities.includes('is_intercom')
-                            || (device.device_type && device.device_type.toLowerCase().includes('intercom'))
-                            || (device.display_model && device.display_model.toLowerCase().includes('intercom'))
-            ) {
-              intercoms.push(device);
-            }
-          }
-          return resolve(intercoms);
-        })
-        .catch((error) => reject(error));
-    });
+    const devices = await this._getAllDevices();
+    return devices.filter((device) => AccessAPI._hasCapability(device, 'is_intercom')
+      || String(device.device_type || '').toLowerCase().includes('intercom')
+      || String(device.display_model || '').toLowerCase().includes('intercom')
+      || String(device.model || '').toLowerCase().includes('intercom'));
   }
 
   async getDevice(deviceId) {

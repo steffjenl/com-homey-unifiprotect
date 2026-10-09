@@ -399,6 +399,6 @@
     "en": "Fix doorbell crash on smart detection events"
   },
   "1.13.2": {
-    "en": "Fix controller error notification showing {ip}:{port}, retry RTSP URL lookup when the controller is not ready yet, clear the RTSP warning once a URL is found, fall back to the API key (V2) when pairing finds no devices via V1, use the HEVC demuxer automatically for H.265 cameras (V1 login), and add a Video codec setting to camera and doorbell to override it."
+    "en": "Fix controller error notification showing {ip}:{port}, retry RTSP URL lookup when the controller is not ready yet, clear the RTSP warning once a URL is found, fall back to the API key (V2) when pairing finds no devices via V1, use the HEVC demuxer automatically for H.265 cameras (V1 login), and add a Video codec setting to camera and doorbell to override it. Fix Access devices (such as the UA G3 Intercom) not being found when they are not in the first device group."
   }
 }

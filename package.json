@@ -7,6 +7,7 @@
     "test:fob-pipeline": "node tools/fob-pipeline-smoke.js",
     "test:sensor-events": "node tools/sensor-event-smoke.js",
     "test:access-door-state": "node tools/access-door-state-smoke.js",
+    "test:access-devices": "node tools/access-devices-smoke.js",
     "test:v2-rtsp-stream": "node tools/v2-rtsp-stream-smoke.js",
     "test:rtsp-stream-url": "node tools/rtsp-stream-url-smoke.js",
     "test:rtsp-url-mixin": "node tools/rtsp-url-mixin-smoke.js",
