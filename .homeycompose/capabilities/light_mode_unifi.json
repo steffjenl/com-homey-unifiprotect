@@ -7,6 +7,7 @@
   "getable": true,
   "setable": true,
   "uiComponent": "picker",
+  "icon": "/assets/capabilities/light_mode_unifi.svg",
   "values": [
     {
       "id": "motion",

@@ -11,5 +11,6 @@
   "getable": true,
   "setable": false,
   "insights": true,
-  "decimals": 0
+  "decimals": 0,
+  "icon": "/assets/capabilities/measure_pm4.svg"
 }

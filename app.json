@@ -11617,7 +11617,8 @@
       "uiComponent": "sensor",
       "getable": true,
       "setable": false,
-      "insights": true
+      "insights": true,
+      "icon": "/assets/capabilities/alarm_co_fault.svg"
     },
     "alarm_glassbreak": {
       "type": "boolean",
@@ -11628,7 +11629,8 @@
       "uiComponent": "sensor",
       "getable": true,
       "setable": false,
-      "insights": true
+      "insights": true,
+      "icon": "/assets/capabilities/alarm_glassbreak.svg"
     },
     "alarm_ptz_autotracking_thermal": {
       "type": "boolean",
@@ -11639,7 +11641,8 @@
       "uiComponent": "sensor",
       "getable": true,
       "setable": false,
-      "insights": true
+      "insights": true,
+      "icon": "/assets/capabilities/alarm_ptz_autotracking_thermal.svg"
     },
     "alarm_ptz_lens_thermal": {
       "type": "boolean",
@@ -11650,7 +11653,8 @@
       "uiComponent": "sensor",
       "getable": true,
       "setable": false,
-      "insights": true
+      "insights": true,
+      "icon": "/assets/capabilities/alarm_ptz_lens_thermal.svg"
     },
     "alarm_ptz_motor_fault": {
       "type": "boolean",
@@ -11661,7 +11665,8 @@
       "uiComponent": "sensor",
       "getable": true,
       "setable": false,
-      "insights": true
+      "insights": true,
+      "icon": "/assets/capabilities/alarm_ptz_motor_fault.svg"
     },
     "alarm_ptz_motor_overheated": {
       "type": "boolean",
@@ -11672,7 +11677,8 @@
       "uiComponent": "sensor",
       "getable": true,
       "setable": false,
-      "insights": true
+      "insights": true,
+      "icon": "/assets/capabilities/alarm_ptz_motor_overheated.svg"
     },
     "alarm_smoke_end_of_life": {
       "type": "boolean",
@@ -11683,7 +11689,8 @@
       "uiComponent": "sensor",
       "getable": true,
       "setable": false,
-      "insights": true
+      "insights": true,
+      "icon": "/assets/capabilities/alarm_smoke_end_of_life.svg"
     },
     "alarm_smoke_fault": {
       "type": "boolean",
@@ -11694,7 +11701,8 @@
       "uiComponent": "sensor",
       "getable": true,
       "setable": false,
-      "insights": true
+      "insights": true,
+      "icon": "/assets/capabilities/alarm_smoke_fault.svg"
     },
     "alarm_smoke_needs_cleaning": {
       "type": "boolean",
@@ -11705,7 +11713,8 @@
       "uiComponent": "sensor",
       "getable": true,
       "setable": false,
-      "insights": true
+      "insights": true,
+      "icon": "/assets/capabilities/alarm_smoke_needs_cleaning.svg"
     },
     "alarm_smoke_test": {
       "type": "boolean",
@@ -11716,7 +11725,8 @@
       "uiComponent": "sensor",
       "getable": true,
       "setable": false,
-      "insights": true
+      "insights": true,
+      "icon": "/assets/capabilities/alarm_smoke_test.svg"
     },
     "alarm_vape": {
       "type": "boolean",
@@ -11727,7 +11737,8 @@
       "uiComponent": "sensor",
       "getable": true,
       "setable": false,
-      "insights": true
+      "insights": true,
+      "icon": "/assets/capabilities/alarm_vape.svg"
     },
     "camera_brightness_auto": {
       "type": "boolean",
@@ -11737,7 +11748,8 @@
       },
       "getable": true,
       "setable": true,
-      "uiComponent": "toggle"
+      "uiComponent": "toggle",
+      "icon": "/assets/capabilities/camera_brightness_auto.svg"
     },
     "camera_brightness_set": {
       "type": "number",
@@ -11750,7 +11762,8 @@
       "uiComponent": "slider",
       "min": 0,
       "max": 100,
-      "step": 1
+      "step": 1,
+      "icon": "/assets/capabilities/camera_brightness_set.svg"
     },
     "camera_connection_status": {
       "type": "boolean",
@@ -11888,7 +11901,8 @@
       },
       "uiComponent": "sensor",
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/camera_smoke_cover_mode.svg"
     },
     "doorbell_ring_volume": {
       "type": "number",
@@ -11947,7 +11961,8 @@
       "getable": true,
       "setable": true,
       "uiComponent": "toggle",
-      "uiQuickAction": true
+      "uiQuickAction": true,
+      "icon": "/assets/capabilities/garagedoor_closed.svg"
     },
     "ip_address": {
       "type": "string",
@@ -11957,7 +11972,8 @@
       },
       "uiComponent": null,
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/ip_address.svg"
     },
     "last_fingerprint_identified_at": {
       "type": "number",
@@ -11967,7 +11983,8 @@
       },
       "uiComponent": null,
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/last_fingerprint_identified_at.svg"
     },
     "last_motion_at": {
       "type": "number",
@@ -11977,7 +11994,8 @@
       },
       "uiComponent": null,
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/last_motion_at.svg"
     },
     "last_motion_date": {
       "type": "string",
@@ -11986,7 +12004,8 @@
         "nl": "Laatste beweging op"
       },
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/last_motion_at.svg"
     },
     "last_motion_heatmap": {
       "type": "string",
@@ -11995,7 +12014,8 @@
         "nl": "Laatste beweging hittemap"
       },
       "getable": false,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/last_motion_heatmap.svg"
     },
     "last_motion_score": {
       "type": "number",
@@ -12004,7 +12024,8 @@
         "nl": "Laatste beweging score"
       },
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/last_smart_detection_score.svg"
     },
     "last_motion_thumbnail": {
       "type": "string",
@@ -12013,7 +12034,8 @@
         "nl": "Laatste beweging afbeelding"
       },
       "getable": false,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/last_motion_thumbnail.svg"
     },
     "last_motion_time": {
       "type": "string",
@@ -12022,7 +12044,8 @@
         "nl": "Laatste beweging om"
       },
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/last_motion_at.svg"
     },
     "last_nfc_card_scanned_at": {
       "type": "number",
@@ -12032,7 +12055,8 @@
       },
       "uiComponent": null,
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/last_nfc_card_scanned_at.svg"
     },
     "last_ring_at": {
       "type": "number",
@@ -12042,7 +12066,8 @@
       },
       "uiComponent": null,
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/last_ring_at.svg"
     },
     "last_smart_detection_at": {
       "type": "number",
@@ -12052,7 +12077,8 @@
       },
       "uiComponent": null,
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/last_smart_detection_at.svg"
     },
     "last_smart_detection_date": {
       "type": "string",
@@ -12061,7 +12087,8 @@
         "nl": "Laatste slimme detectie op"
       },
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/last_smart_detection_at.svg"
     },
     "last_smart_detection_score": {
       "type": "number",
@@ -12070,7 +12097,8 @@
         "nl": "Laatste slimme detectie score"
       },
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/last_smart_detection_score.svg"
     },
     "last_smart_detection_time": {
       "type": "string",
@@ -12079,7 +12107,8 @@
         "nl": "Laatste slimme detectie om"
       },
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/last_smart_detection_at.svg"
     },
     "light_mode_unifi": {
       "type": "enum",
@@ -12090,6 +12119,7 @@
       "getable": true,
       "setable": true,
       "uiComponent": "picker",
+      "icon": "/assets/capabilities/light_mode_unifi.svg",
       "values": [
         {
           "id": "motion",
@@ -12125,7 +12155,8 @@
       },
       "uiComponent": null,
       "getable": true,
-      "setable": false
+      "setable": false,
+      "icon": "/assets/capabilities/liveview.svg"
     },
     "locked": {
       "type": "boolean",
@@ -12147,7 +12178,8 @@
       "getable": true,
       "setable": true,
       "uiComponent": "toggle",
-      "uiQuickAction": true
+      "uiQuickAction": true,
+      "icon": "/assets/capabilities/locked.svg"
     },
     "measure_pm4": {
       "type": "number",
@@ -12162,7 +12194,8 @@
       "getable": true,
       "setable": false,
       "insights": true,
-      "decimals": 0
+      "decimals": 0,
+      "icon": "/assets/capabilities/measure_pm4.svg"
     },
     "nvr_cpu_load": {
       "type": "number",
@@ -12250,7 +12283,8 @@
       },
       "getable": true,
       "setable": true,
-      "uiComponent": "toggle"
+      "uiComponent": "toggle",
+      "icon": "/assets/capabilities/reader_mobile-button_enabled.svg"
     },
     "reader_mobile-tap_enabled": {
       "type": "boolean",
@@ -12260,7 +12294,8 @@
       },
       "getable": true,
       "setable": true,
-      "uiComponent": "toggle"
+      "uiComponent": "toggle",
+      "icon": "/assets/capabilities/reader_mobile-tap_enabled.svg"
     },
     "reader_nfc_enabled": {
       "type": "boolean",
@@ -12270,7 +12305,8 @@
       },
       "getable": true,
       "setable": true,
-      "uiComponent": "toggle"
+      "uiComponent": "toggle",
+      "icon": "/assets/capabilities/reader_nfc_enabled.svg"
     },
     "reader_touch-pass_enabled": {
       "type": "boolean",
@@ -12280,7 +12316,8 @@
       },
       "getable": true,
       "setable": true,
-      "uiComponent": "toggle"
+      "uiComponent": "toggle",
+      "icon": "/assets/capabilities/reader_touch-pass_enabled.svg"
     },
     "reader_wave_enabled": {
       "type": "boolean",
@@ -12290,7 +12327,8 @@
       },
       "getable": true,
       "setable": true,
-      "uiComponent": "toggle"
+      "uiComponent": "toggle",
+      "icon": "/assets/capabilities/reader_wave_enabled.svg"
     },
     "siren_volume_set": {
       "title": {
@@ -12339,7 +12377,8 @@
       "color": "#9033FC",
       "setable": true,
       "getable": true,
-      "uiComponent": "slider"
+      "uiComponent": "slider",
+      "icon": "/assets/capabilities/siren_volume_set.svg"
     },
     "weather_condition": {
       "type": "string",
