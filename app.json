@@ -8464,6 +8464,82 @@
         ]
       },
       {
+        "id": "ufv_garagedoor_open_in",
+        "title": {
+          "en": "Open gate (In)",
+          "nl": "Poort openen (In)",
+          "de": "Tor öffnen (Ein)",
+          "fr": "Ouvrir le portail (Entrée)",
+          "it": "Apri cancello (Ingresso)",
+          "sv": "Öppna grind (In)",
+          "no": "Åpne port (Inn)",
+          "es": "Abrir portón (Entrada)",
+          "da": "Åbn port (Ind)",
+          "ru": "Открыть ворота (Въезд)",
+          "pl": "Otwórz bramę (Wjazd)",
+          "ko": "게이트 열기 (입구)"
+        },
+        "titleFormatted": {
+          "en": "Open gate (In)",
+          "nl": "Poort openen (In)",
+          "de": "Tor öffnen (Ein)",
+          "fr": "Ouvrir le portail (Entrée)",
+          "it": "Apri cancello (Ingresso)",
+          "sv": "Öppna grind (In)",
+          "no": "Åpne port (Inn)",
+          "es": "Abrir portón (Entrada)",
+          "da": "Åbn port (Ind)",
+          "ru": "Открыть ворота (Въезд)",
+          "pl": "Otwórz bramę (Wjazd)",
+          "ko": "게이트 열기 (입구)"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
+        "id": "ufv_garagedoor_open_out",
+        "title": {
+          "en": "Open gate (Out)",
+          "nl": "Poort openen (Uit)",
+          "de": "Tor öffnen (Aus)",
+          "fr": "Ouvrir le portail (Sortie)",
+          "it": "Apri cancello (Uscita)",
+          "sv": "Öppna grind (Ut)",
+          "no": "Åpne port (Ut)",
+          "es": "Abrir portón (Salida)",
+          "da": "Åbn port (Ud)",
+          "ru": "Открыть ворота (Выезд)",
+          "pl": "Otwórz bramę (Wyjazd)",
+          "ko": "게이트 열기 (출구)"
+        },
+        "titleFormatted": {
+          "en": "Open gate (Out)",
+          "nl": "Poort openen (Uit)",
+          "de": "Tor öffnen (Aus)",
+          "fr": "Ouvrir le portail (Sortie)",
+          "it": "Apri cancello (Uscita)",
+          "sv": "Öppna grind (Ut)",
+          "no": "Åpne port (Ut)",
+          "es": "Abrir portón (Salida)",
+          "da": "Åbn port (Ud)",
+          "ru": "Открыть ворота (Выезд)",
+          "pl": "Otwórz bramę (Wyjazd)",
+          "ko": "게이트 열기 (출구)"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
         "id": "ufv_intercom_unlock_door",
         "title": {
           "en": "Unlock intercom door",

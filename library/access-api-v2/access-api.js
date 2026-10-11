@@ -233,12 +233,17 @@ class AccessAPI extends BaseClient {
     });
   }
 
-  async setDoorUnLock(deviceId) {
+  /**
+   * @param {string} deviceId Door id
+   * @param {string} [entryMethod] 'in' | 'out' — selects the motor on a UGT in Double Driveway Mode
+   */
+  async setDoorUnLock(deviceId, entryMethod) {
     return new Promise((resolve, reject) => {
       const params = {
 
       };
-      this.webclient.put(`doors/${deviceId}/unlock`, params)
+      const query = entryMethod ? { entry_method: entryMethod } : {};
+      this.webclient.put(`doors/${deviceId}/unlock`, params, query)
         .then((response) => {
           const result = JSON.parse(response);
 

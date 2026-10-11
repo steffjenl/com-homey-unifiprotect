@@ -118,8 +118,20 @@ class AppAccess extends BaseClass {
       }
       return Promise.resolve(true);
     });
+    // UGT in Double Driveway Mode: entry_method selects which gate motor fires
+    [
+      [UfvConstants.ACTION_ACCESS_GARAGEDOOR_OPEN_IN, UfvConstants.ACCESS_ENTRY_METHOD_IN],
+      [UfvConstants.ACTION_ACCESS_GARAGEDOOR_OPEN_OUT, UfvConstants.ACCESS_ENTRY_METHOD_OUT],
+    ].forEach(([cardId, entryMethod]) => {
+      this.homey.flow.getActionCard(cardId).registerRunListener(async (args) => {
+        if (typeof args.device.getData().id !== 'undefined') {
+          return this.homey.app.accessApi.setDoorUnLock(args.device.getData().id, entryMethod);
+        }
+        return Promise.resolve(true);
+      });
+    });
 
-    const _conditionDoorIsOpen = this.homey.flow.getConditionCard(UfvConstants.CONDITION_ACCESS_DOOR_IS_OPEN);
+    const _conditionDoorIsOpen =this.homey.flow.getConditionCard(UfvConstants.CONDITION_ACCESS_DOOR_IS_OPEN);
     _conditionDoorIsOpen.registerRunListener(async (args, state) => {
       try {
         if (args.device && typeof args.device.isDoorOpen === 'function') {
