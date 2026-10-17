@@ -177,6 +177,7 @@ class Doorbell extends Homey.Device {
      * onDeleted is called when the user deleted the device.
      */
   async onDeleted() {
+    this._initialized = false;
     this._clearRtspRetry();
     this.homey.app.debug('UnifiDoorbell Device has been deleted');
   }
@@ -224,6 +225,7 @@ class Doorbell extends Homey.Device {
     await this._createSnapshotImage();
     await this._setVideoUrl();
     await this._initDoorbellData();
+    this._initialized = true;
   }
 
   async waitForBootstrap() {
@@ -646,54 +648,54 @@ class Doorbell extends Homey.Device {
     });
   }
 
+  /**
+   * Set a capability value only when the device is fully initialised and owns the capability.
+   * WS events can arrive before capabilities are created or after the device is gone.
+   */
+  _safeSetCapability(capability, value) {
+    if (!this._initialized || !this.hasCapability(capability)) return;
+    this.setCapabilityValue(capability, value).catch((error) => {
+      if (error && String(error.message).includes('Invalid Capability')) {
+        this.homey.app.debug(`[DoorbellDevice] skipped ${capability}: ${error.message}`);
+        return;
+      }
+      this.error(error);
+    });
+  }
+
   onIsRecording(isRecording) {
-    // Debug information about playload
-    if (this.hasCapability('camera_recording_status')) {
-      this.setCapabilityValue('camera_recording_status', isRecording).catch(this.error);
-    }
+    this._safeSetCapability('camera_recording_status', isRecording);
   }
 
   onIsMicEnabled(isMicEnabled) {
-    // Debug information about playload
-    if (this.hasCapability('camera_microphone_status')) {
-      this.setCapabilityValue('camera_microphone_status', isMicEnabled).catch(this.error);
-    }
+    this._safeSetCapability('camera_microphone_status', isMicEnabled);
   }
 
   onIsConnected(isConnected) {
     // Debug information about playload
+    if (!this._initialized || !this.hasCapability('camera_connection_status')) return;
     if (this.getCapabilityValue('camera_connection_status') !== isConnected) {
       this.onConnectionChanged(isConnected);
     }
-    this.setCapabilityValue('camera_connection_status', isConnected).catch(this.error);
+    this._safeSetCapability('camera_connection_status', isConnected);
   }
 
   onMicVolume(micVolume) {
-    // Debug information about playload
-    if (this.hasCapability('camera_microphone_volume')) {
-      this.setCapabilityValue('camera_microphone_volume', micVolume).catch(this.error);
-    }
+    this._safeSetCapability('camera_microphone_volume', micVolume);
   }
 
   onRingVolume(volume) {
-    if (this.hasCapability('doorbell_ring_volume')) {
-      this.setCapabilityValue('doorbell_ring_volume', volume).catch(this.error);
-    }
+    this._safeSetCapability('doorbell_ring_volume', volume);
   }
 
   onSpeakerVolume(volume) {
-    if (this.hasCapability('doorbell_speaker_volume')) {
-      this.setCapabilityValue('doorbell_speaker_volume', volume).catch(this.error);
-    }
+    this._safeSetCapability('doorbell_speaker_volume', volume);
   }
 
   onRecordingMode(mode) {
-    // Debug information about playload
-    if (this.hasCapability('camera_recording_mode')) {
-      this.setCapabilityValue('camera_recording_mode',
-        this.homey.__(`events.Doorbell.${String(mode)
-          .toLowerCase()}`)).catch(this.error);
-    }
+    this._safeSetCapability('camera_recording_mode',
+      this.homey.__(`events.Doorbell.${String(mode)
+        .toLowerCase()}`));
   }
 
   async _setVideoUrl() {
