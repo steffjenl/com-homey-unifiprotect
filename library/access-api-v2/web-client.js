@@ -51,11 +51,9 @@ class WebClient extends BaseClient {
     });
   }
 
-  async put(resource, payload = {}) {
+  async put(resource, payload = {}, params = {}) {
     return new Promise((resolve, reject) => {
       const body = JSON.stringify(payload);
-
-      const params = {};
 
       const options = {
         method: 'PUT',

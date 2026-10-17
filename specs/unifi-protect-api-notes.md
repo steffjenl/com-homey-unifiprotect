@@ -610,6 +610,25 @@ Example payload (hub with no door position sensor wired up):
 ```
 
 
+### UniFi Access — UGT Double Driveway Mode (`entry_method`)
+
+A UA Hub Gate (UGT) in Double Driveway Mode drives two gate motors from **one** door id. The
+motor is selected with a query parameter on the normal unlock endpoint (confirmed from
+`py-unifi-access` 1.6.1 / `imhotep/hass-unifi-access` 3.0.15):
+
+```
+PUT /api/v1/developer/doors/:id/unlock?entry_method=in    # first motor
+PUT /api/v1/developer/doors/:id/unlock?entry_method=out   # second motor
+```
+
+- Query string, **not** body. `control_cmd` is a different parameter (open/close/stop, three-button mode).
+- Access exposes no field saying a door is wired dual-relay, so the app cannot detect the mode;
+  the "Open gate (In)" / "Open gate (Out)" flow cards (`ufv_garagedoor_open_in/out`) are always
+  offered on Access garage door devices. Plain `ufv_set_reader_garagedoor_unlock` is unchanged.
+- Devices stay keyed on the door UUID; the UGT hub `location_id` may differ from it, so the
+  unlock call must use the door id, never the hub id.
+
+
 ## Camera Zone Motion Sensor (`protect-zone-sensor`)
 
 - Virtual device, one per camera detection zone (paired from `smartDetectZones`; device data `{ id: "<cameraId>:<zoneId>", cameraId, zoneId }`). Capability `alarm_motion`, class `sensor`; checkboxes `ufp:type_<type>` choose which detection types count (default person, vehicle, animal).

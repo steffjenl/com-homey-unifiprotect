@@ -158,6 +158,10 @@ module.exports.CONDITION_ACCESS_GARAGEDOOR_IS_CLOSED = 'ufv_reader_garagedoor_is
 // How often, in milliseconds, to poll the door position for Access doors/garage doors/intercoms.
 // Gate/garage motors take time to move, so the dps websocket event can lag behind the toggle action.
 module.exports.ACCESS_DOOR_POLL_INTERVAL_MS = 30000;
+module.exports.ACTION_ACCESS_GARAGEDOOR_OPEN_IN = 'ufv_garagedoor_open_in';
+module.exports.ACTION_ACCESS_GARAGEDOOR_OPEN_OUT = 'ufv_garagedoor_open_out';
+module.exports.ACCESS_ENTRY_METHOD_IN = 'in';
+module.exports.ACCESS_ENTRY_METHOD_OUT = 'out';
 
 // NVR Alarm Manager
 module.exports.EVENT_NVR_ALARM_STATE_CHANGED = 'ufp_nvr_alarm_state_changed';
