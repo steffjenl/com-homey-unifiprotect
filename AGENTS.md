@@ -122,11 +122,11 @@ this.log('API key: ' + this.homey.app.apiV2.webclient._apiToken);
 
 ## 5. Testing Rules
 
-> No framework exists yet (March 2026). Follow these when adding tests.
+> Jest is set up (`npm test`). Tests live in `test/unit/`; shared fakes in `test/mocks/`.
 
 1. Every new driver/device → at least one integration test
 2. Every bug fix → a regression test
-3. Use `jest` + `nock` — add to `devDependencies` when introducing
+3. Use `jest` (installed); add `nock` to `devDependencies` with the first HTTP test
 4. Mock the Homey SDK — never require a real Homey in tests
 5. Fixtures in `test/fixtures/`
 6. Unit tests in `test/unit/`, integration tests in `test/integration/`

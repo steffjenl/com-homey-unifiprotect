@@ -1,6 +1,6 @@
 # FOB Pipeline Smoke Test
 
-This smoke test validates the new FOB event pipeline:
+This test (`test/unit/fob-pipeline.test.js`) validates the new FOB event pipeline:
 
 1. Parse websocket `sensorButtonPressed` payload into normalized `fob.button`
 2. Map `doublePress` action handling
@@ -9,6 +9,6 @@ This smoke test validates the new FOB event pipeline:
 Run:
 
 ```bash
-node tools/fob-pipeline-smoke.js
+npx jest test/unit/fob-pipeline.test.js
 ```
 

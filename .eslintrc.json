@@ -51,6 +51,35 @@
         "@typescript-eslint/no-floating-promises": "off",
         "@typescript-eslint/no-misused-promises": "off"
       }
+    },
+    {
+      "files": [
+        "test/**/*.js"
+      ],
+      "env": {
+        "jest": true,
+        "mocha": false
+      },
+      "rules": {
+        "mocha/no-exclusive-tests": "off",
+        "mocha/no-global-tests": "off",
+        "mocha/handle-done-callback": "off",
+        "mocha/max-top-level-suites": "off",
+        "mocha/no-identical-title": "off",
+        "mocha/no-mocha-arrows": "off",
+        "mocha/no-nested-tests": "off",
+        "mocha/no-pending-tests": "off",
+        "mocha/no-return-and-callback": "off",
+        "mocha/no-return-from-async": "off",
+        "mocha/no-setup-in-describe": "off",
+        "mocha/no-sibling-hooks": "off",
+        "mocha/no-skipped-tests": "off",
+        "mocha/no-top-level-hooks": "off",
+        "mocha/no-async-describe": "off",
+        "no-console": "off",
+        "homey-app/global-timers": "off",
+        "max-classes-per-file": "off"
+      }
     }
   ]
 }

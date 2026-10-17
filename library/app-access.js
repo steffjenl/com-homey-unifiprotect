@@ -131,7 +131,7 @@ class AppAccess extends BaseClass {
       });
     });
 
-    const _conditionDoorIsOpen =this.homey.flow.getConditionCard(UfvConstants.CONDITION_ACCESS_DOOR_IS_OPEN);
+    const _conditionDoorIsOpen = this.homey.flow.getConditionCard(UfvConstants.CONDITION_ACCESS_DOOR_IS_OPEN);
     _conditionDoorIsOpen.registerRunListener(async (args, state) => {
       try {
         if (args.device && typeof args.device.isDoorOpen === 'function') {

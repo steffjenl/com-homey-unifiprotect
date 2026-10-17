@@ -1,6 +1,6 @@
 # Testing Strategy
 
-> **Current state (March 2026):** No test framework exists. `package.json` has no `test` script or test dependencies. This spec defines what to add when introducing tests.
+> **Current state (October 2026):** Jest is set up (`npm test`, config in `jest.config.js`). The `homey` SDK is mapped to `test/mocks/homey.mock.js`; shared fakes live in `test/mocks/` (e.g. `fake-sensor-device.js`). Tests: `test/unit/`. `nock` is not installed yet — add it with the first HTTP test.
 
 ---
 
@@ -134,9 +134,11 @@ Once tests are added, extend `.github/workflows/homey-validation.yml`:
 
 ## Priority
 
-1. `web-socket-events.js` event parsing (highest failure risk)
-2. Each driver's `onParseWebsocketMessage`
-3. `_createMissingCapabilities` migration logic
-4. Bootstrap parsing in `protectapi.js`
-5. NVR alarm state transitions in `protect-nvr-alarm` driver
+Done (`test/unit/`): V2 events + devices websocket routing (harness: `test/mocks/fake-v2-websocket.js`), V1 `websocket.js` (frame decoding, filtering, NVR alarm / fob / camera routing), `onParseWebsocketMessage` for all Protect and Access drivers, NVR alarm state transitions, `protectapi.js` bootstrap/arm helpers, sensor `_createMissingCapabilities`.
 
+Bugs found while testing are tracked in `test/KNOWN_ISSUES.md`; their tests use `test.failing`, so fixing the bug turns the test red until `.failing` is removed.
+
+Next:
+1. `_createMissingCapabilities` migration logic for the other drivers
+2. Remaining V1 `websocket.js` handler branches (motion/ring/sensor/light/relay model updates)
+3. `protect-api-v2/protect-api.js` request methods (with `nock`)
