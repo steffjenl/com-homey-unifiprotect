@@ -1,7 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-  <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8">
-    <circle cx="11" cy="12" r="4" />
-    <path d="M11 2v2m0 16v2M1 12h2m16 0h2M4 5l1.5 1.5m11 11L18 19M18 5l-1.5 1.5M5.5 17.5 4 19" />
-    <path d="M16 9a7 7 0 0 1 4 7m0 0-2-1m2 1 1-2" />
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="mdi-brightness-auto" viewBox="0 0 24 24"><path d="M14.3,16L13.6,14H10.4L9.7,16H7.8L11,7H13L16.2,16H14.3M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69M10.85,12.65H13.15L12,9L10.85,12.65Z" /></svg>

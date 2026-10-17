@@ -1,6 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-  <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8">
-    <circle cx="12" cy="8" r="3.5" />
-    <path d="M12 1v1m0 12v1M5 8H4m16 0h-1M7 3 6 2m12 12-1-1M17 3l1-1M6 14l1-1M4 20h16m-12-3v6m8-6v6" />
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="mdi-brightness-6" viewBox="0 0 24 24"><path d="M12,18V6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,15.31L23.31,12L20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31Z" /></svg>

@@ -66,3 +66,5 @@ Thank you for using this app!
 ## Attributions
 
 Icons made by [Google](https://www.flaticon.com/authors/google) from [Flaticon](https://www.flaticon.com/)
+
+Capability icons from [Material Design Icons](https://pictogrammers.com/library/mdi/) by Pictogrammers, licensed under [Apache-2.0](https://github.com/Templarian/MaterialDesign/blob/master/LICENSE)
