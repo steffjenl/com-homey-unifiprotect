@@ -8,38 +8,7 @@ const { createFakeSensorDevice, createFakeBootstrapDevice } = require('../mocks/
 // Structurally identical to a real UP-AirQuality bootstrap capture (id/mac/host scrubbed),
 // used to verify _createMissingCapabilities/_initSensorData against real field shapes rather
 // than hand-guessed ones.
-const AIRQUALITY_BOOTSTRAP_SENSOR = {
-  id: 'airquality-1',
-  type: 'UP-AirQuality',
-  name: 'UP Air Living',
-  modelKey: 'sensor',
-  isOpened: null,
-  motionSettings: { isEnabled: false, sensitivity: 100, sensitivityWhenArmed: 50 },
-  alarmSettings: { isEnabled: false },
-  glassBreakSettings: { isEnabled: false, sensitivity: 25, sensitivityWhenArmed: 50 },
-  stats: {
-    light: { value: null, status: 'unknown' },
-    humidity: { value: null, status: 'unknown' },
-    temperature: { value: null, status: 'unknown' },
-  },
-  airQuality: {
-    aqi: { value: 0, status: 'neutral' },
-    vape: { value: 0, status: 'neutral' },
-    tvoc: { value: 11.6, status: 'neutral' },
-    pm1p0: { value: 0, status: 'neutral' },
-    pm2p5: { value: 0, status: 'neutral' },
-    pm4p0: { value: 0, status: 'neutral' },
-    pm10p0: { value: 0, status: 'neutral' },
-    humidity: { value: 40.2, status: 'neutral' },
-    temperature: { value: 28.07, status: 'neutral' },
-    voc: { value: 74, status: 'neutral' },
-    co2: { value: 494, status: 'neutral' },
-  },
-  smokeStatus: {
-    enabled: false, smokeAlarm: false, coAlarm: false, batteryLow: false,
-  },
-  batteryStatus: { percentage: null, isLow: false, modelKey: 'sensorBatteryStatus' },
-};
+const AIRQUALITY_BOOTSTRAP_SENSOR = require('../fixtures/bootstrap-sensor-airquality.json');
 
 describe('protectsensor events', () => {
   test('vape event toggles alarm_vape and lazily creates the capability', async () => {

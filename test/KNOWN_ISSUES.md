@@ -29,3 +29,7 @@ fixed, so remove the `.failing` then) or an explicit "known gap" test title.
 9. **V1 message handler has no dispatch try/catch** (minor) — `library/websocket.js`
    `configureUpdatesListener`: unlike the V2 handlers, `getDriver(...)` / device calls are not
    wrapped, so a missing driver or throwing device handler escapes the `message` handler.
+10. **V1 chime/siren updates are filtered out** — `library/websocket.js` `shouldProcessEvent` has no
+    `chime` / `siren` case, so the matching branches in `configureUpdatesListener` are dead code on
+    V1 (V2 routes them fine). Needs a decision: add the cases, or confirm V1 never sends them.
+    Test: `web-socket-v1-routing.test.js` (`test.failing`).

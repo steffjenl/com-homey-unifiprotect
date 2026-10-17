@@ -1,6 +1,6 @@
 # Testing Strategy
 
-> **Current state (October 2026):** Jest is set up (`npm test`, config in `jest.config.js`). The `homey` SDK is mapped to `test/mocks/homey.mock.js`; shared fakes live in `test/mocks/` (e.g. `fake-sensor-device.js`). Tests: `test/unit/`. `nock` is not installed yet — add it with the first HTTP test.
+> **Current state (October 2026):** Jest is set up (`npm test`, config in `jest.config.js`). The `homey` SDK is mapped to `test/mocks/homey.mock.js`; shared fakes live in `test/mocks/` (e.g. `fake-sensor-device.js`). Tests: `test/unit/`. `nock` (v13) is installed for HTTP tests (`test/unit/v2-web-client.test.js`); fixtures live in `test/fixtures/`.
 
 ---
 
@@ -134,11 +134,12 @@ Once tests are added, extend `.github/workflows/homey-validation.yml`:
 
 ## Priority
 
-Done (`test/unit/`): V2 events + devices websocket routing (harness: `test/mocks/fake-v2-websocket.js`), V1 `websocket.js` (frame decoding, filtering, NVR alarm / fob / camera routing), `onParseWebsocketMessage` for all Protect and Access drivers, NVR alarm state transitions, `protectapi.js` bootstrap/arm helpers, sensor `_createMissingCapabilities`.
+Done (`test/unit/`): V2 events + devices websocket routing (`test/mocks/fake-v2-websocket.js`), V1 `websocket.js` (frame decoding, filtering, all event/model routes; `test/mocks/fake-v1-websocket.js`), `onParseWebsocketMessage` for all Protect and Access drivers, NVR alarm state transitions, `protectapi.js` bootstrap/arm helpers, v2 `web-client.js` (nock) and `protect-api.js`, capability registry check (every capability added/declared exists; `_createMissingCapabilities` idempotent), sensor capability gating.
 
 Bugs found while testing are tracked in `test/KNOWN_ISSUES.md`; their tests use `test.failing`, so fixing the bug turns the test red until `.failing` is removed.
 
 Next:
-1. `_createMissingCapabilities` migration logic for the other drivers
-2. Remaining V1 `websocket.js` handler branches (motion/ring/sensor/light/relay model updates)
-3. `protect-api-v2/protect-api.js` request methods (with `nock`)
+1. v1 `webclient.js` (cookie/CSRF login) with nock
+2. Device-level `onInit`/`initDevice` flows (bootstrap polling with fake timers)
+3. Flow card registration in `app-protect.js`
+4. `SYSTEM` capability list in `capabilities-registry.test.js` is assumed — verify against the Homey docs

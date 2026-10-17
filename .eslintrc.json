@@ -78,7 +78,8 @@
         "mocha/no-async-describe": "off",
         "no-console": "off",
         "homey-app/global-timers": "off",
-        "max-classes-per-file": "off"
+        "max-classes-per-file": "off",
+        "node/no-unpublished-require": "off"
       }
     }
   ]
