@@ -356,7 +356,7 @@ class ProtectWebSocket extends BaseClass {
         }
 
         // Sensor tamper event
-        if (itemType === 'sensorTamper' && eventType === 'add') {
+        if (itemType === 'sensorTamper' && (eventType === 'add' || (eventType === 'update' && item.end))) {
           this.homey.app.debug(`[V2] tamper detected on ${deviceId}`);
           if (deviceSensor) {
             deviceSensor.onTamperDetected(item.start, item.end || null);

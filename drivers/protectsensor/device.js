@@ -338,6 +338,11 @@ class Sensor extends Homey.Device {
           if (this.hasCapability('alarm_contact')) {
             this.setCapabilityValue('alarm_contact', sensor.isOpened).catch(this.error);
           }
+          // tamperingDetectedAt is null once tamper is cleared in Protect; without this
+          // alarm_tamper stays true forever (the tamper event only ever set it).
+          if (this.hasCapability('alarm_tamper')) {
+            this.setCapabilityValue('alarm_tamper', !!sensor.tamperingDetectedAt).catch(this.error);
+          }
 
           for (const [metric, capability] of Object.entries(AIR_QUALITY_METRIC_CAPABILITIES)) {
             if (this.hasCapability(capability) && airQuality && airQuality[metric]) {
@@ -632,9 +637,11 @@ class Sensor extends Homey.Device {
     this.setCapabilityValue(capability, isActive).catch(this.error);
   }
 
-  async onTamperDetected() {
+  async onTamperDetected(start, end) {
     await this._ensureCapability('alarm_tamper');
-    this.setCapabilityValue('alarm_tamper', true).catch(this.error);
+    const isTampered = !end;
+    this.homey.app.debug(`[SensorDevice] alarm_tamper -> ${isTampered} for ${this.getName()}`);
+    this.setCapabilityValue('alarm_tamper', isTampered).catch(this.error);
   }
 
   onBatteryLow() {

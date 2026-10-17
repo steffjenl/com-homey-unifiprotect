@@ -508,7 +508,7 @@ UP-AirQuality unit, `readingInterval: 1`s in that capture):
 | `sensorVape` | `sensorVapeEvent` | `{id, modelKey, type, start, end, device}` | Sensor detected vape (UP-AirQuality) |
 | `sensorAlarm` | `sensorAlarmEvent` | `+ metadata.alarmType.text` | Alarm state started/ended. `alarmType.text` enum extended to: `smoke`, `CO`, `glassBreak`, `sensorButtonPress`, `tamper`, `short`, `cut` (previously only `smoke`/`CO`/`sensorButtonPress`) |
 | `sensorExtremeValues` | `sensorExtremeValueEvent` | `+ metadata.sensorType.text`, `metadata.sensorValue.text`, `metadata.status.text` | A metric went in/out of its configured range. `sensorType.text` enum extended with UP-AirQuality metrics: `aqi`, `vape`, `tvoc`, `pm1p0`, `pm2p5`, `pm4p0`, `pm10p0`, `co2`, `voc` (previously only `temperature`/`light`/`humidity`) |
-| `sensorTamper` | `sensorTamperEvent` | `{id, modelKey, type, start, end, device}` | Tamper detected |
+| `sensorTamper` | `sensorTamperEvent` | `{id, modelKey, type, start, end, device}` | Tamper detected (`add`); cleared when an `update` carries `end`. Bootstrap `sensor.tamperingDetectedAt` is `null` when not tampered and is used to resync `alarm_tamper` on start / every sensor update |
 | `sensorBatteryLow` | `sensorBatteryLowEvent` | `{id, modelKey, type, start, end, device}` | Battery low |
 
 None of these are currently routed by `library/protect-api-v2/web-socket-events.js` — that file

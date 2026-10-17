@@ -606,7 +606,8 @@ class ProtectWebSocket extends BaseClass {
         updatePacket.action.modelKey === 'event'
                 && typeof updatePacket.payload.type !== 'undefined'
                 && updatePacket.payload.type === 'sensorTamper'
-                && updatePacket.action.action === 'add'
+                && (updatePacket.action.action === 'add'
+                    || (updatePacket.action.action === 'update' && updatePacket.payload.end))
       ) {
         // Was V2-only until now. alarm_tamper has no continuous fallback.
         this.homey.app.debug(`sensorTamper event: ${JSON.stringify(updatePacket.payload)}`);
