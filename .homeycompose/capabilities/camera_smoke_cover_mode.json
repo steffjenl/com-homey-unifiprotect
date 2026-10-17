@@ -6,5 +6,6 @@
   },
   "uiComponent": "sensor",
   "getable": true,
-  "setable": false
+  "setable": false,
+  "icon": "/assets/capabilities/camera_smoke_cover_mode.svg"
 }

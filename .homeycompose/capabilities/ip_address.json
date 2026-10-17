@@ -6,5 +6,6 @@
   },
   "uiComponent": null,
   "getable": true,
-  "setable": false
+  "setable": false,
+  "icon": "/assets/capabilities/ip_address.svg"
 }

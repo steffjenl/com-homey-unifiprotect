@@ -5,5 +5,6 @@
     "nl": "Laatste slimme detectie op"
   },
   "getable": true,
-  "setable": false
+  "setable": false,
+  "icon": "/assets/capabilities/last_smart_detection_at.svg"
 }

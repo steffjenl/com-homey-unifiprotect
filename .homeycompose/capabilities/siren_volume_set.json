@@ -46,6 +46,7 @@
   "setable": true,
   "getable": true,
   "uiComponent": "slider",
+  "icon": "/assets/capabilities/siren_volume_set.svg",
   "$flow": {
     "triggers": [
       {

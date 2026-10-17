@@ -18,5 +18,6 @@
   "getable": true,
   "setable": true,
   "uiComponent": "toggle",
-  "uiQuickAction": true
+  "uiQuickAction": true,
+  "icon": "/assets/capabilities/locked.svg"
 }

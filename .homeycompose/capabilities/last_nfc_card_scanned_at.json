@@ -6,5 +6,6 @@
   },
   "uiComponent": null,
   "getable": true,
-  "setable": false
+  "setable": false,
+  "icon": "/assets/capabilities/last_nfc_card_scanned_at.svg"
 }

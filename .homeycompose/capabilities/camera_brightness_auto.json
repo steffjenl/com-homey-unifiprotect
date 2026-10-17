@@ -6,5 +6,6 @@
   },
   "getable": true,
   "setable": true,
-  "uiComponent": "toggle"
+  "uiComponent": "toggle",
+  "icon": "/assets/capabilities/camera_brightness_auto.svg"
 }
