@@ -403,5 +403,8 @@
   },
   "1.13.3": {
     "en": "Fix \"Invalid Capability\" errors on cameras and doorbells when websocket updates arrive before the device is fully initialised. Fix the tamper alarm on sensors staying on after the tamper is cleared in Protect."
+  },
+  "1.13.4": {
+    "en": "Arming and disarming the NVR alarm now uses the v1 endpoints first and falls back to v2 (it used v2 first). Fix chime and siren updates being ignored with a V1 login, the 'Apple pass' reader setting not updating, UA Intercom lock and door state with empty values, a camera without feature flags breaking camera discovery (V1), and the light's last motion being cleared by updates without a timestamp. A malformed websocket message no longer causes an error."
   }
 }

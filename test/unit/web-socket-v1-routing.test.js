@@ -28,9 +28,7 @@ describe('V1 model updates are routed by action.modelKey and action.id', () => {
     expect(d.onParseWebsocketMessage).toHaveBeenCalledWith(device, payload);
   });
 
-  // KNOWN ISSUE (test/KNOWN_ISSUES.md #10): shouldProcessEvent has no chime/siren case, so these
-  // updates are filtered out before reaching their (dead) routing branches.
-  test.failing.each([
+  test.each([
     ['chime', 'protectchime'],
     ['siren', 'protect-siren'],
   ])('%s -> %s', (modelKey, driverId) => {

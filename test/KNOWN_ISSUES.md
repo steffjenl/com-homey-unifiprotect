@@ -1,35 +1,37 @@
 # Known issues found while writing tests
 
-Not fixed yet. Tests documenting them use `test.failing` (passes while the bug exists, fails once
-fixed, so remove the `.failing` then) or an explicit "known gap" test title.
+Bugs that tests exposed. Fixed ones keep a regression test; open ones use `test.failing` (passes
+while the bug exists, turns red once fixed, then drop the `.failing`).
 
-1. **`JSON.parse` outside try/catch** — `library/protect-api-v2/web-socket-events.js` and
-   `web-socket-devices.js`: a malformed websocket frame throws out of the `message` handler.
-   Test: `web-socket-events.test.js` "invalid JSON throws out of the handler".
-2. **access-reader `apple_pass` copy/paste** — `drivers/access-reader/driver.js`
-   `onParseWebsocketMessage`: the `apple_pass` branch calls `onTouchPassConfigChange` with
-   `access_method.touch_pass` instead of `apple_pass`. Test: `driver-parse-access.test.js`.
-3. **access-intercom uses truthiness** (minor inconsistency) — `if (payload.state.lock)` /
-   `if (payload.state.dps)` instead of `hasOwnProperty` like door/garagedoor, so an empty-string
-   `dps` is skipped. Probably harmless.
-4. **protectlight motion token** (minor) — `onMotionDetected(payload.lastMotion, ...)` is called
-   even when the payload has no `lastMotion` (undefined timestamp).
-5. **`getCameras` crashes without `featureFlags`** — `library/protectapi.js` `getCameras()` does
-   `obj.featureFlags.isDoorbell` with no guard (TypeError rejects via the JSON/filter path), while
-   `getDoorbells()` uses `?.`. Test: `protectapi-bootstrap.test.js` (`test.failing`).
-6. **Doc/code mismatch (AGENTS.md §2 "Dual API Stack")** — AGENTS.md says NVR alarm control uses
-   the dedicated v1 `arm/enable|disable` endpoints; `setNvrAwayMode` actually tries the v2 alarm
-   profile endpoints first and only uses v1 as fallback. Decide which is right and align.
-7. **`_findArmProfileIdByName` shadowing** (minor) — `library/protectapi.js`: `find()` stops at the
-   first profile whose name matches, even when it has no `id`, so a later matching profile with an
-   `id` is ignored. Test: `protectapi-bootstrap.test.js` (`test.failing`).
-8. **V1 `decodeUpdateFrame` throws on corrupt JSON** — `library/websocket.js`: `JSON.parse` /
-   `zlib.inflateSync` run outside the try/catch in `decodeUpdatePacket`, so a correctly-sized but
-   corrupt frame throws out of the `message` handler. Test: `web-socket-v1.test.js` (`test.failing`).
-9. **V1 message handler has no dispatch try/catch** (minor) — `library/websocket.js`
-   `configureUpdatesListener`: unlike the V2 handlers, `getDriver(...)` / device calls are not
-   wrapped, so a missing driver or throwing device handler escapes the `message` handler.
-10. **V1 chime/siren updates are filtered out** — `library/websocket.js` `shouldProcessEvent` has no
-    `chime` / `siren` case, so the matching branches in `configureUpdatesListener` are dead code on
-    V1 (V2 routes them fine). Needs a decision: add the cases, or confirm V1 never sends them.
-    Test: `web-socket-v1-routing.test.js` (`test.failing`).
+## Open
+
+None.
+
+## Fixed
+
+1. `JSON.parse` outside try/catch in the V2 events/devices websockets — malformed frames are now
+   ignored and logged. Tests: `web-socket-events.test.js`, `web-socket-devices.test.js`.
+2. access-reader `apple_pass` read `touch_pass` — now reads `apple_pass`.
+   Test: `driver-parse-access.test.js`.
+3. access-intercom used truthiness checks — now `hasOwnProperty` like door/garagedoor.
+   Test: `driver-parse-access.test.js`.
+4. protectlight wrote `undefined` into `last_motion_at` when a PIR update had no `lastMotion` —
+   now skipped. Test: `protectlight-device.test.js`.
+5. `getCameras` (v1) crashed on a camera without `featureFlags` — now treated as a camera.
+   Test: `protectapi-bootstrap.test.js`.
+7. `_findArmProfileIdByName` matched a profile without id and ignored a later valid one — profiles
+   without id are skipped. Test: `protectapi-bootstrap.test.js`.
+8. V1 `decodeUpdatePacket` threw on corrupt JSON / deflate inside a correctly sized frame — now
+   returns null. Test: `web-socket-v1.test.js`.
+9. V1 message handler had no dispatch try/catch — body moved to `_handleUpdateMessage`, wrapped
+   like the V2 handlers. Test: `web-socket-v1.test.js`.
+10. V1 `shouldProcessEvent` dropped `chime` / `siren` updates (their routing branches were dead
+    code) — both now accepted. Test: `web-socket-v1-routing.test.js`.
+    Behaviour change: chime/siren volume updates on V1 now reach the devices; confirm on a real
+    Homey with a V1-only setup.
+6. NVR alarm control is now v1 first (`arm/enable|disable`), v2 alarm profiles as fallback, which
+   matches AGENTS.md; AGENTS.md and `specs/unifi-protect-api-notes.md` were updated to describe
+   the fallback. Auth errors are never retried. `_canFallbackToV1FromV2Error` was removed.
+   Tests: `protectapi-bootstrap.test.js` ("setNvrAwayMode (v1 first, v2 fallback)").
+7b. `_findV2AlarmProfileIdByName` matched a profile whose id was not a UUID and ignored a later
+    valid one — only profiles with a UUID id can match now. Test: `protectapi-bootstrap.test.js`.

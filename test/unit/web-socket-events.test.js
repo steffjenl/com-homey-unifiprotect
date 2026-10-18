@@ -47,9 +47,11 @@ describe('V2 events websocket routing', () => {
       expect(s.ws.getLastWebsocketMessageTime()).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/);
     });
 
-    test('invalid JSON throws out of the handler (JSON.parse is outside the try/catch)', () => {
+    test('malformed JSON is ignored and logged, not thrown', () => {
       const s = createSetup();
-      expect(() => s.emit('not json')).toThrow(SyntaxError);
+      expect(() => s.emit('not json')).not.toThrow();
+      expect(s.debugLog.some((m) => m.includes('malformed websocket message'))).toBe(true);
+      expect(s.ws.getLastWebsocketMessageTime()).toBeNull();
     });
 
     test('handler error in a device is swallowed and logged', () => {

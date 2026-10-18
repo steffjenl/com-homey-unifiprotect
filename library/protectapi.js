@@ -349,7 +349,7 @@ class ProtectAPI extends BaseClass {
       this.webclient.get('cameras')
         .then((response) => {
           let result = JSON.parse(response);
-          result = result.filter((obj) => obj.featureFlags.isDoorbell !== true);
+          result = result.filter((obj) => !obj.featureFlags || obj.featureFlags.isDoorbell !== true);
           if (result) {
             return resolve(result);
           }
@@ -1177,45 +1177,39 @@ class ProtectAPI extends BaseClass {
       return Promise.reject(new Error(`Unsupported arm mode: ${mode}`));
     }
 
-    const attemptV2Night = () => this._setNvrModeV2('night')
-      .catch((v2Error) => {
-        if (this._isAuthError(v2Error)) {
-          throw v2Error;
-        }
-        if (this.homey && this.homey.app) {
-          this.homey.app.debug(`[ProtectAPI] v2 alarm night endpoint failed, falling back to v1: ${v2Error.message}`);
-        }
-        return null;
-      });
-
+    // v1 arm/enable is the primary endpoint; the v2 alarm profile endpoints are the fallback.
     const armProfileId = this._findArmProfileIdByName('night');
-    if (!armProfileId) {
-      return attemptV2Night().then((result) => {
-        if (result) {
-          if (this.homey && this.homey.app) {
-            this.homey.app.debug(`[ProtectAPI] arming night mode via v2 endpoint: ${result.endpoint}`);
-          }
-          return result.message;
-        }
-        throw new Error('No night arm profile found in bootstrap.');
-      });
-    }
-
-    return attemptV2Night().then((result) => {
-      if (result) {
-        if (this.homey && this.homey.app) {
-          this.homey.app.debug(`[ProtectAPI] arming night mode via v2 endpoint: ${result.endpoint}`);
-        }
-        return result.message;
+    const attemptV1 = () => {
+      if (!armProfileId) {
+        return Promise.reject(new Error('No night arm profile found in bootstrap.'));
       }
       if (this.homey && this.homey.app) {
         this.homey.app.debug('[ProtectAPI] arming via v1 endpoint: /proxy/protect/api/arm/enable (night profile)');
       }
-      return new Promise((resolve, reject) => {
-        return this.webclient.post('arm/enable', { armProfileId })
-          .then(() => resolve('NVR night mode enabled successfully.'))
-          .catch((error) => reject(new Error(`Error enabling night mode: ${error}`)));
-      });
+      return this.webclient.post('arm/enable', { armProfileId })
+        .then(() => 'NVR night mode enabled successfully.')
+        .catch((error) => {
+          throw new Error(`Error enabling night mode: ${error}`);
+        });
+    };
+
+    return attemptV1().catch((v1Error) => {
+      if (this._isAuthError(v1Error)) {
+        throw v1Error;
+      }
+      if (this.homey && this.homey.app) {
+        this.homey.app.debug(`[ProtectAPI] v1 night mode failed, falling back to v2: ${v1Error.message}`);
+      }
+      return this._setNvrModeV2('night')
+        .then((result) => {
+          if (this.homey && this.homey.app) {
+            this.homey.app.debug(`[ProtectAPI] arming night mode via v2 endpoint: ${result.endpoint}`);
+          }
+          return result.message;
+        })
+        .catch((v2Error) => {
+          throw new Error(`${v1Error.message}; v2 fallback failed: ${v2Error.message}`);
+        });
     });
   }
 
@@ -1237,7 +1231,7 @@ class ProtectAPI extends BaseClass {
       }
 
       const profile = profiles.find((item) => {
-        if (!item || typeof item !== 'object') {
+        if (!item || typeof item !== 'object' || !item.id) {
           return false;
         }
 
@@ -1360,7 +1354,9 @@ class ProtectAPI extends BaseClass {
       }
 
       const profile = profiles.find((item) => {
-        if (!item || typeof item !== 'object') {
+        // Only a profile with a usable (UUID) id can match, so a nameless/id-less duplicate
+        // earlier in the list does not shadow a valid one.
+        if (!item || typeof item !== 'object' || !this._isUuid(this._extractProfileId(item))) {
           return false;
         }
 
@@ -1583,25 +1579,6 @@ class ProtectAPI extends BaseClass {
       .catch((error) => reject(new Error(`Error disarming NVR: ${error}`))));
   }
 
-  _canFallbackToV1FromV2Error(error) {
-    if (!error) {
-      return false;
-    }
-
-    if (this._isAuthError(error)) {
-      return false;
-    }
-
-    const message = error.message ? String(error.message) : String(error);
-    return message.includes('/api/v2/alarms/profiles') && (
-      message.includes('status code: 404')
-      || message.includes('status code: 405')
-      || message.includes('status code: 500')
-      || message.includes('No alarm profiles returned')
-      || message.includes('Unable to resolve v2 alarm profile id')
-    );
-  }
-
   _setNvrModeV2(mode) {
     const normalizedMode = String(mode || '').toLowerCase();
 
@@ -1626,29 +1603,34 @@ class ProtectAPI extends BaseClass {
       }));
   }
 
+  // v1 arm/enable|disable is the primary endpoint; the v2 alarm profile endpoints are the
+  // fallback (e.g. no armProfileId in the bootstrap). Auth errors are never retried.
   setNvrAwayMode(isAway) {
-    return this._setNvrAwayModeV2(isAway)
-      .then((result) => {
-        if (this.homey && this.homey.app) {
-          this.homey.app.debug(`[ProtectAPI] ${isAway ? 'arm' : 'disarm'} via v2 endpoint: ${result.endpoint}`);
-        }
-        return result.message;
-      })
-      .catch((v2Error) => {
-        if (this._isAuthError(v2Error)) {
-          throw v2Error;
-        }
+    const action = isAway ? 'arm' : 'disarm';
 
-        if (!this._canFallbackToV1FromV2Error(v2Error)) {
-          this.homey.app.error(`[ProtectAPI] v2 alarm ${isAway ? 'arm' : 'disarm'} failed and no v1 fallback available: ${v2Error.message}`);
-          throw v2Error;
-        }
+    return this._setNvrAwayModeV1(isAway).catch((v1Error) => {
+      if (this._isAuthError(v1Error)) {
+        throw v1Error;
+      }
 
-        if (this.homey && this.homey.app) {
-          this.homey.app.debug(`[ProtectAPI] v2 profile discovery unavailable, falling back to v1 for ${isAway ? 'arm' : 'disarm'}: ${v2Error.message}`);
-        }
-        return this._setNvrAwayModeV1(isAway);
-      });
+      if (this.homey && this.homey.app) {
+        this.homey.app.debug(`[ProtectAPI] v1 ${action} failed, falling back to v2: ${v1Error.message}`);
+      }
+
+      return this._setNvrAwayModeV2(isAway)
+        .then((result) => {
+          if (this.homey && this.homey.app) {
+            this.homey.app.debug(`[ProtectAPI] ${action} via v2 endpoint: ${result.endpoint}`);
+          }
+          return result.message;
+        })
+        .catch((v2Error) => {
+          if (this.homey && this.homey.app) {
+            this.homey.app.error(`[ProtectAPI] ${action} failed on v1 and v2: v1: ${v1Error.message}; v2: ${v2Error.message}`);
+          }
+          throw new Error(`${v1Error.message}; v2 fallback failed: ${v2Error.message}`);
+        });
+    });
   }
 
   getNvrArmState() {

@@ -43,6 +43,17 @@ describe.each([
   });
 });
 
+describe('access-intercom presence checks', () => {
+  const handlers = ['onLockChange', 'onDoorChange'];
+
+  test('falsy-but-present state values are still dispatched (same as door/garagedoor)', () => {
+    const { driver, device } = createDriverHarness(IntercomDriver, handlers);
+    driver.onParseWebsocketMessage(device, { state: { lock: '', dps: '', dps_connected: false } });
+    expect(device.onLockChange).toHaveBeenCalledWith(false);
+    expect(device.onDoorChange).toHaveBeenCalledWith('', false);
+  });
+});
+
 describe('access-hub', () => {
   test('first location state lock is dispatched', () => {
     const { driver, device } = createDriverHarness(HubDriver, ['onLocationLockChange']);
@@ -80,10 +91,8 @@ describe('access-reader access methods', () => {
     expect(device[handler]).toHaveBeenLastCalledWith(false);
   });
 
-  // KNOWN BUG (test/KNOWN_ISSUES.md #2): the apple_pass branch reads access_method.touch_pass
-  // (copy/paste) instead of apple_pass, so an apple_pass-only update reports "no".
-  // test.failing passes while the bug exists and starts failing once it is fixed.
-  test.failing('apple_pass-only update reports its own value', () => {
+  // Regression: the apple_pass branch used to read access_method.touch_pass (copy/paste).
+  test('apple_pass-only update reports its own value', () => {
     const { driver, device } = createDriverHarness(ReaderDriver, handlers);
     driver.onParseWebsocketMessage(device, { access_method: { apple_pass: 'yes' } });
     expect(device.onTouchPassConfigChange).toHaveBeenLastCalledWith(true);

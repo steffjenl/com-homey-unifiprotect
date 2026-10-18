@@ -232,7 +232,13 @@ class ProtectWebSocket extends BaseClass {
         return;
       }
 
-      const eventData = JSON.parse(event.toString());
+      let eventData;
+      try {
+        eventData = JSON.parse(event.toString());
+      } catch (e) {
+        this.homey.app.debug(`[V2 Events WS] ignoring malformed websocket message: ${e.message}`);
+        return;
+      }
 
       this.lastWebsocketMessage = this.homey.app.toLocalTime(new Date()).toISOString().slice(0, 16);
 

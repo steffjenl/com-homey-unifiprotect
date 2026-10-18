@@ -118,7 +118,7 @@ module.exports = class ReaderDriver extends Homey.Driver {
           device.onTouchPassConfigChange(payload.access_method.touch_pass === 'yes');
         }
         if (Object.prototype.hasOwnProperty.call(payload.access_method, 'apple_pass')) {
-          device.onTouchPassConfigChange(payload.access_method.touch_pass === 'yes');
+          device.onTouchPassConfigChange(payload.access_method.apple_pass === 'yes');
         }
       }
     }

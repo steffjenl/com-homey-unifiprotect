@@ -237,9 +237,12 @@ class Light extends Homey.Device {
     const lastMotionAt = this.getCapabilityValue('last_motion_at');
 
     if (!lastMotionAt) {
-      this.homey.app.debug(`set last_motion_at to last datetime: ${this.getData().id}`);
-      this.setCapabilityValue('last_motion_at', lastMotionTime)
-        .catch(this.error);
+      // Websocket updates can report isPirMotionDetected without a lastMotion timestamp.
+      if (typeof lastMotionTime === 'number') {
+        this.homey.app.debug(`set last_motion_at to last datetime: ${this.getData().id}`);
+        this.setCapabilityValue('last_motion_at', lastMotionTime)
+          .catch(this.error);
+      }
       return;
     }
 

@@ -119,6 +119,12 @@ describe('V2 devices websocket routing', () => {
       expect(driver.getUnifiDeviceById).not.toHaveBeenCalled();
     });
 
+    test('malformed JSON is ignored and logged, not thrown', () => {
+      const { emit, debugLog } = createWebSocketHarness(ProtectWebSocket, {});
+      expect(() => emit('not json')).not.toThrow();
+      expect(debugLog.some((m) => m.includes('malformed websocket message'))).toBe(true);
+    });
+
     test('unknown modelKey is ignored', () => {
       const { emit, ws } = createWebSocketHarness(ProtectWebSocket, {});
       expect(() => emit({ type: 'update', item: { id: 'x', modelKey: 'hologram' } })).not.toThrow();

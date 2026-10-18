@@ -342,7 +342,7 @@ Notes:
 - These calls use cookie + CSRF auth (same as v1 web session), not `X-API-KEY`.
 - Current app behavior: try profile-specific v2 endpoint first, then fallback.
 
-### Legacy v1 fallback endpoints
+### v1 endpoints (primary; v2 profiles above are the fallback)
 
 | Method | Path | Description |
 |--------|------|-------------|
@@ -350,7 +350,7 @@ Notes:
 | `POST` | `/proxy/protect/api/arm/disable` | Disable away mode (disarm) |
 
 > ⚠️ **Important**: Do NOT use `PATCH /proxy/protect/api/nvr` with `isAway` for alarm control.  
-> Use alarm action endpoints only (`/api/v2/alarms/...` preferred, `arm/enable|disable` fallback).
+> Use alarm action endpoints only: `arm/enable|disable` (v1) first, `/api/v2/alarms/...` as fallback (`ProtectAPI.setNvrAwayMode` / `setNvrArmMode`). 401/403 are never retried.
 
 ### State sources used by the app
 

@@ -65,7 +65,7 @@ Last updated: March 2026
 - Do not break the v1 (cookie) API — legacy devices depend on it
 - New features target **v2** when possible
 - v2 API key is optional — app degrades gracefully
-    - **NVR alarm control** uses dedicated v1 ARM endpoints (`POST /proxy/protect/api/arm/enable` and `POST /proxy/protect/api/arm/disable`) — do NOT use `PATCH nvr` with `isAway`
+    - **NVR alarm control** uses dedicated v1 ARM endpoints (`POST /proxy/protect/api/arm/enable` and `POST /proxy/protect/api/arm/disable`) — do NOT use `PATCH nvr` with `isAway`. v1 is tried first; the v2 alarm profile endpoints (`/api/v2/alarms/profiles/{id}/actions/arm|disarm`) are the fallback (e.g. no `armProfileId` in the bootstrap). Auth errors (401/403) are never retried
 
 ### New Driver Checklist
 - [ ] `driver.js` — `onInit`, `onPair`, `onParseWebsocketMessage`, `getUnifiDeviceById`

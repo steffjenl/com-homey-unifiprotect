@@ -74,9 +74,7 @@ describe('camera / doorbell listing', () => {
     expect(result.map((c) => c.id)).toEqual(['bell', 'chime-cam', 'hint-type', 'hint-market']);
   });
 
-  // KNOWN ISSUE (test/KNOWN_ISSUES.md #5): getCameras dereferences featureFlags without a guard,
-  // unlike getDoorbells (optional chaining). test.failing flips to failing once fixed.
-  test.failing('getCameras tolerates a camera without featureFlags', async () => {
+  test('getCameras tolerates a camera without featureFlags', async () => {
     const result = await apiWithCameras([{ id: 'odd' }]).getCameras();
     expect(result.map((c) => c.id)).toEqual(['odd']);
   });
@@ -102,9 +100,7 @@ describe('arm profile helpers', () => {
     expect(api._findArmProfileIdByName('night')).toBe('12');
   });
 
-  // KNOWN ISSUE (test/KNOWN_ISSUES.md #7): find() returns the first name match even if it has no
-  // id, so a later matching profile that does have an id is never reached.
-  test.failing('_findArmProfileIdByName skips a matching profile without id', () => {
+  test('_findArmProfileIdByName skips a matching profile without id', () => {
     const api = createApi({ nvr: { armProfiles: [{ name: 'night' }, { id: 'good', mode: 'night' }] } });
     expect(api._findArmProfileIdByName('night')).toBe('good');
   });
@@ -142,7 +138,7 @@ describe('arm profile helpers', () => {
   });
 });
 
-describe('_isAuthError / _canFallbackToV1FromV2Error', () => {
+describe('_isAuthError', () => {
   const api = createApi();
 
   test.each([
@@ -154,23 +150,6 @@ describe('_isAuthError / _canFallbackToV1FromV2Error', () => {
     [null, false],
   ])('_isAuthError(%p) -> %p', (error, expected) => {
     expect(api._isAuthError(error)).toBe(expected);
-  });
-
-  test.each([
-    ['/api/v2/alarms/profiles status code: 404', true],
-    ['/api/v2/alarms/profiles status code: 405', true],
-    ['/api/v2/alarms/profiles status code: 500', true],
-    ['/api/v2/alarms/profiles No alarm profiles returned', true],
-    ['/api/v2/alarms/profiles Unable to resolve v2 alarm profile id', true],
-    ['/api/v2/alarms/profiles status code: 401', false], // auth: never retry
-    ['status code: 404', false], // different endpoint
-    ['/api/v2/alarms/profiles timeout', false],
-  ])('%s -> %p', (message, expected) => {
-    expect(api._canFallbackToV1FromV2Error(new Error(message))).toBe(expected);
-  });
-
-  test('null error cannot fall back', () => {
-    expect(api._canFallbackToV1FromV2Error(null)).toBe(false);
   });
 });
 
@@ -219,77 +198,135 @@ describe('setNvrArmMode', () => {
     await expect(create().setNvrArmMode(mode)).rejects.toThrow('Unsupported arm mode');
   });
 
-  test('night without a profile in bootstrap and v2 failure rejects', async () => {
-    const api = create();
-    api._setNvrModeV2 = jest.fn(async () => {
-      throw new Error('v2 broke');
-    });
-    await expect(api.setNvrArmMode('night')).rejects.toThrow('No night arm profile found');
+  const NIGHT_BOOTSTRAP = { nvr: { armProfiles: [{ id: 'night-id', name: 'night' }] } };
+
+  test('night uses v1 arm/enable with the profile id first (v2 not touched)', async () => {
+    const api = createApi(NIGHT_BOOTSTRAP);
+    api._setNvrModeV2 = jest.fn();
+    api.webclient = { post: jest.fn(async () => '{}') };
+    await expect(api.setNvrArmMode('night')).resolves.toBe('NVR night mode enabled successfully.');
+    expect(api.webclient.post).toHaveBeenCalledWith('arm/enable', { armProfileId: 'night-id' });
+    expect(api._setNvrModeV2).not.toHaveBeenCalled();
   });
 
-  test('night uses the v2 endpoint when it works', async () => {
-    const api = create();
+  test('night falls back to v2 when v1 fails', async () => {
+    const api = createApi(NIGHT_BOOTSTRAP);
+    api.webclient = {
+      post: jest.fn(async () => {
+        throw new Error('status code: 500');
+      }),
+    };
     api._setNvrModeV2 = jest.fn(async () => ({ endpoint: '/x', message: 'night via v2' }));
     await expect(api.setNvrArmMode('night')).resolves.toBe('night via v2');
   });
 
-  test('night falls back to v1 arm/enable with the profile id', async () => {
-    const api = createApi({ nvr: { armProfiles: [{ id: 'night-id', name: 'night' }] } });
+  test('night without a bootstrap profile goes straight to v2', async () => {
+    const api = create();
+    api.webclient = { post: jest.fn() };
+    api._setNvrModeV2 = jest.fn(async () => ({ endpoint: '/x', message: 'night via v2' }));
+    await expect(api.setNvrArmMode('night')).resolves.toBe('night via v2');
+    expect(api.webclient.post).not.toHaveBeenCalled();
+  });
+
+  test('night fails with both reasons when v1 and v2 fail', async () => {
+    const api = create();
     api._setNvrModeV2 = jest.fn(async () => {
       throw new Error('v2 broke');
     });
-    api.webclient = { post: jest.fn(async () => '{}') };
-    await expect(api.setNvrArmMode('night')).resolves.toBe('NVR night mode enabled successfully.');
-    expect(api.webclient.post).toHaveBeenCalledWith('arm/enable', { armProfileId: 'night-id' });
+    await expect(api.setNvrArmMode('night')).rejects.toThrow(/No night arm profile found.*v2 fallback failed: v2 broke/);
   });
 
-  test('night does not fall back on auth errors', async () => {
-    const api = createApi({ nvr: { armProfiles: [{ id: 'night-id', name: 'night' }] } });
-    api._setNvrModeV2 = jest.fn(async () => {
-      throw new Error('status code: 401');
-    });
-    api.webclient = { post: jest.fn() };
+  test('night does not fall back on v1 auth errors', async () => {
+    const api = createApi(NIGHT_BOOTSTRAP);
+    api.webclient = {
+      post: jest.fn(async () => {
+        throw new Error('status code: 401');
+      }),
+    };
+    api._setNvrModeV2 = jest.fn();
     await expect(api.setNvrArmMode('night')).rejects.toThrow('401');
-    expect(api.webclient.post).not.toHaveBeenCalled();
+    expect(api._setNvrModeV2).not.toHaveBeenCalled();
   });
 });
 
-describe('setNvrAwayMode', () => {
-  test('uses v2 result message', async () => {
-    const api = createApi();
-    api._setNvrAwayModeV2 = jest.fn(async () => ({ endpoint: '/e', message: 'armed v2' }));
-    api._setNvrAwayModeV1 = jest.fn();
-    await expect(api.setNvrAwayMode(true)).resolves.toBe('armed v2');
-    expect(api._setNvrAwayModeV1).not.toHaveBeenCalled();
+describe('setNvrAwayMode (v1 first, v2 fallback)', () => {
+  const ARMED_BOOTSTRAP = { nvr: { armMode: { armProfileId: 'p1' } } };
+
+  function create(bootstrap = ARMED_BOOTSTRAP) {
+    const api = createApi(bootstrap);
+    api.webclient = { post: jest.fn(async () => '{}') };
+    api._setNvrAwayModeV2 = jest.fn(async () => ({ endpoint: '/e', message: 'via v2' }));
+    return api;
+  }
+
+  test('arm uses v1 arm/enable with the bootstrap profile id', async () => {
+    const api = create();
+    await expect(api.setNvrAwayMode(true)).resolves.toBe('NVR armed successfully.');
+    expect(api.webclient.post).toHaveBeenCalledWith('arm/enable', { armProfileId: 'p1' });
+    expect(api._setNvrAwayModeV2).not.toHaveBeenCalled();
   });
 
-  test('falls back to v1 when v2 profile discovery is unavailable', async () => {
-    const api = createApi();
-    api._setNvrAwayModeV2 = jest.fn(async () => {
-      throw new Error('/api/v2/alarms/profiles status code: 404');
+  test('disarm uses v1 arm/disable', async () => {
+    const api = create();
+    await expect(api.setNvrAwayMode(false)).resolves.toBe('NVR disarmed successfully.');
+    expect(api.webclient.post).toHaveBeenCalledWith('arm/disable', {});
+    expect(api._setNvrAwayModeV2).not.toHaveBeenCalled();
+  });
+
+  test('arm without armProfileId in bootstrap falls back to v2', async () => {
+    const api = create({ nvr: {} });
+    await expect(api.setNvrAwayMode(true)).resolves.toBe('via v2');
+    expect(api.webclient.post).not.toHaveBeenCalled();
+  });
+
+  test('v1 request failure falls back to v2', async () => {
+    const api = create();
+    api.webclient.post = jest.fn(async () => {
+      throw new Error('status code: 404');
     });
-    api._setNvrAwayModeV1 = jest.fn(async () => 'armed v1');
-    await expect(api.setNvrAwayMode(true)).resolves.toBe('armed v1');
+    await expect(api.setNvrAwayMode(false)).resolves.toBe('via v2');
   });
 
-  test('auth errors are rethrown without v1 fallback', async () => {
-    const api = createApi();
-    api._setNvrAwayModeV2 = jest.fn(async () => {
-      throw new Error('status code: 403');
+  test.each([401, 403])('v1 auth error %s is rethrown without v2 fallback', async (code) => {
+    const api = create();
+    api.webclient.post = jest.fn(async () => {
+      throw new Error(`status code: ${code}`);
     });
-    api._setNvrAwayModeV1 = jest.fn();
-    await expect(api.setNvrAwayMode(false)).rejects.toThrow('403');
-    expect(api._setNvrAwayModeV1).not.toHaveBeenCalled();
+    await expect(api.setNvrAwayMode(true)).rejects.toThrow(`${code}`);
+    expect(api._setNvrAwayModeV2).not.toHaveBeenCalled();
   });
 
-  test('other v2 errors are logged and rethrown without fallback', async () => {
-    const api = createApi();
-    api._setNvrAwayModeV2 = jest.fn(async () => {
+  test('both failing reports both reasons and logs an error', async () => {
+    const api = create();
+    api.webclient.post = jest.fn(async () => {
       throw new Error('socket hang up');
     });
-    api._setNvrAwayModeV1 = jest.fn();
-    await expect(api.setNvrAwayMode(true)).rejects.toThrow('socket hang up');
+    api._setNvrAwayModeV2 = jest.fn(async () => {
+      throw new Error('v2 down');
+    });
+    await expect(api.setNvrAwayMode(true)).rejects.toThrow(/socket hang up.*v2 fallback failed: v2 down/);
     expect(api.homey.app.error).toHaveBeenCalled();
-    expect(api._setNvrAwayModeV1).not.toHaveBeenCalled();
+  });
+});
+
+describe('_findV2AlarmProfileIdByName', () => {
+  const UUID_A = '123e4567-e89b-12d3-a456-426614174000';
+  const UUID_B = '123e4567-e89b-12d3-a456-426614174111';
+
+  test('returns the UUID of the profile matching by name', () => {
+    const api = createApi({ nvr: { armProfiles: [{ id: UUID_A, name: 'Night' }] } });
+    expect(api._findV2AlarmProfileIdByName('night')).toBe(UUID_A);
+  });
+
+  // Regression (#7b): the first name match used to win even when its id was not a UUID.
+  test('skips a matching profile without a UUID id and uses a later valid one', () => {
+    const api = createApi({ nvr: { armProfiles: [{ id: 'legacy', name: 'night' }, { name: 'night' }, { id: UUID_B, mode: 'night' }] } });
+    expect(api._findV2AlarmProfileIdByName('night')).toBe(UUID_B);
+  });
+
+  test('null when nothing matches', () => {
+    const api = createApi({ nvr: { armProfiles: [{ id: UUID_A, name: 'away' }] } });
+    expect(api._findV2AlarmProfileIdByName('night')).toBeNull();
+    expect(createApi(null)._findV2AlarmProfileIdByName('night')).toBeNull();
   });
 });

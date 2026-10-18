@@ -108,10 +108,10 @@ class AccessIntercomeDriver extends Homey.Driver {
   onParseWebsocketMessage(device, payload) {
     if (Object.prototype.hasOwnProperty.call(device, '_events')) {
       if (payload.state) {
-        if (payload.state.lock) {
+        if (Object.prototype.hasOwnProperty.call(payload.state, 'lock')) {
           device.onLockChange(payload.state.lock === 'locked');
         }
-        if (payload.state.dps) {
+        if (Object.prototype.hasOwnProperty.call(payload.state, 'dps')) {
           device.onDoorChange(payload.state.dps, payload.state.dps_connected);
         }
       }

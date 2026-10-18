@@ -54,9 +54,7 @@ describe('decodeUpdatePacket', () => {
     expect(ws.decodeUpdatePacket(Buffer.alloc(3))).toBeNull();
   });
 
-  // KNOWN ISSUE (test/KNOWN_ISSUES.md #8): corrupt JSON inside a correctly-sized frame throws
-  // out of decodeUpdateFrame (outside the try/catch), so the 'message' handler throws.
-  test.failing('corrupt JSON body returns null instead of throwing', () => {
+  test('corrupt JSON body returns null instead of throwing', () => {
     const packet = Buffer.concat([frame(1, 1, Buffer.from('{not json')), frame(2, 1, json(payload))]);
     expect(ws.decodeUpdatePacket(packet)).toBeNull();
   });
@@ -163,6 +161,24 @@ describe('message handler (V1 events)', () => {
     const { ws, send } = createListeningWs();
     send({ action: 'update', modelKey: 'bridge' }, { name: 'x' });
     expect(ws.getLastWebsocketMessageTime()).toBeNull();
+  });
+
+  test('an exception while dispatching is logged, not thrown out of the ws emitter', () => {
+    const cam = {
+      getUnifiDeviceById: () => ({}),
+      onParseWebsocketMessage: () => {
+        throw new Error('boom');
+      },
+    };
+    const { send, debugLog } = createListeningWs({ drivers: { protectcamera: cam } });
+    expect(() => send({ action: 'update', modelKey: 'camera', id: 'c1' }, { isRecording: true })).not.toThrow();
+    expect(debugLog.some((m) => m.includes('dispatch error') && m.includes('boom'))).toBe(true);
+  });
+
+  test('a missing driver is logged, not thrown', () => {
+    const { send, debugLog } = createListeningWs({ drivers: {} });
+    expect(() => send({ action: 'update', modelKey: 'light', id: 'l1' }, { isLightOn: true })).not.toThrow();
+    expect(debugLog.some((m) => m.includes('dispatch error'))).toBe(true);
   });
 
   test('sensorButtonPressed events go to the fob pipeline as-is', () => {
