@@ -148,6 +148,13 @@ describe('snapshots and streams', () => {
     expect(get).toHaveBeenCalledWith('cameras/c1/snapshot', {}, true);
   });
 
+  test('getSnapshot passes the channel when requested', async () => {
+    const get = jest.fn(async () => Buffer.from([1]));
+    const a = createApi({ get });
+    await a.getSnapshot('c1', { channel: 'package' });
+    expect(get).toHaveBeenCalledWith('cameras/c1/snapshot', { channel: 'package' }, true);
+  });
+
   test('getRtspsStream posts the requested qualities (default high)', async () => {
     const post = jest.fn(async () => '{"high":"rtsps://h:7441/x?enableSrtp"}');
     const a = createApi({ post });

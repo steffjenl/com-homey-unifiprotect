@@ -559,6 +559,8 @@ All paths relative to `https://<NVR_IP>:<port>/proxy/protect/api/`.
 | `PATCH` | `nvr` | **Update NVR settings (e.g. `isAway`)** |
 | `GET` | `cameras` | Camera list |
 | `PATCH` | `cameras/{id}` | Update camera |
+| `GET` | `cameras/{id}/snapshot` | Camera snapshot |
+| `GET` | `cameras/{id}/package-snapshot` | Package camera snapshot |
 | `GET` | `sirens` | Siren list |
 | `PATCH` | `sirens/{id}` | Update siren |
 
@@ -572,6 +574,21 @@ All paths relative to `https://<NVR_IP>:<port>/proxy/protect/api/`.
 - WebSocket connections need a **ping every 30 seconds** to prevent timeout
 - The v2 `/subscribe/devices` NVR item does NOT include `isAway` in its official schema
 - Newer firmware can emit alarm transitions as `event` (`recordModel: nvr`, `type: armed|disarmed`) and `externalArmProfile` updates instead of only `nvr.armMode` updates
+
+### Snapshots: v1 vs v2 (observed on UDM SE, Protect 7.3.70)
+
+| Camera | v1 `snapshot` (any `w`/`h`) | v2 `snapshot` (no params) | v2 `highQuality=true` |
+|--------|------|------|------|
+| G3 / G3 Dome (max 1920x1080) | 640x360 | 1920x1080 | 1920x1080 (no difference) |
+| G4 Doorbell Pro (max 1600x1200) | 480x360 | 1600x1200 | 1600x1200 (no difference) |
+| G4 Doorbell Pro package camera | 480x360 (`package-snapshot`) | 960x720 (`channel=package`) | 960x720 (no difference) |
+| G5 Flex (max 2688x1512) | 640x360 | 640x360 | **400** `Camera does not support full HD snapshot` |
+
+Notes:
+- v1 always returns the low stream and ignores `w`, `h` and `highQuality`.
+- v2 returns the highest stream by default. `highQuality=true` adds nothing and fails on cameras without full HD snapshot support, so the app does not send it.
+- v2 `channel=package` returns the package camera image.
+- Current app behavior: v2 first for snapshots (unlike the usual v1-first order), v1 as fallback on any error.
 
 ### UniFi Access — door position (`dps`) vs. lock relay
 
