@@ -38,6 +38,8 @@ class UniFiDoorbellDriver extends Homey.Driver {
     this._deviceFingerprintIdentifiedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_FINGERPRINT_IDENTIFIED);
     this._deviceFingerprintUnknownTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_FINGERPRINT_UNKNOWN);
     this._deviceDoorAccessTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_DOOR_ACCESS);
+    this.homey.flow.getActionCard(UfvConstants.ACTION_GET_DEVICE_DOORBELL_CAMERA_IMAGE)
+      .registerRunListener(async (args) => ({ ufp_camera_image: await args.device.createFrozenSnapshotImage(args.minutes) }));
     this._deviceNFCCardScannedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_NFC_CARD_SCANNED);
     this._deviceNFCUnknownCardScannedTrigger = this.homey.flow.getDeviceTriggerCard(UfvConstants.EVENT_DEVICE_NFC_UNKNOWN_CARD_SCANNED);
     //
