@@ -764,19 +764,28 @@ class Doorbell extends Homey.Device {
           }
         }
 
+        // V1 ignores the requested size and only returns the low stream
+        let v2Error = null;
+        if (this.homey.app.isV2Available()) {
+          try {
+            const snapshotBuffer = await this.homey.app.apiV2.getSnapshot(this.getData().id);
+            this.homey.app.debug(`[DoorbellDevice] V2 snapshot for ${this.getName()}: ${snapshotBuffer.length} bytes`);
+            stream.end(snapshotBuffer);
+            return stream;
+          } catch (error) {
+            v2Error = error;
+            this.homey.app.debug(`[DoorbellDevice] V2 snapshot failed for ${this.getName()}, falling back to V1: ${error.message}`);
+          }
+        }
+
         if (this.homey.app.isV1Available()) {
           const snapshotBuffer = await this.homey.app.api.snapshot(this.getData().id);
+          this.homey.app.debug(`[DoorbellDevice] V1 snapshot for ${this.getName()}: ${snapshotBuffer.length} bytes`);
           stream.end(snapshotBuffer);
           return stream;
         }
 
-        if (this.homey.app.isV2Available()) {
-          const snapshotBuffer = await this.homey.app.apiV2.getSnapshot(this.getData().id);
-          stream.end(snapshotBuffer);
-          return stream;
-        }
-
-        throw new Error('No API available for snapshot retrieval.');
+        throw v2Error || new Error('No API available for snapshot retrieval.');
       } catch (error) {
         this.homey.app.debug(`[DoorbellDevice] Snapshot retrieval failed for ${this.getName()}: ${error.message}`);
         throw error;
@@ -838,20 +847,28 @@ class Doorbell extends Homey.Device {
           }
         }
 
+        // V1 ignores the requested size and only returns the low stream
+        let v2Error = null;
+        if (this.homey.app.isV2Available()) {
+          try {
+            const snapshotBuffer = await this.homey.app.apiV2.getSnapshot(this.getData().id, { channel: 'package' });
+            this.homey.app.debug(`[DoorbellDevice] V2 package snapshot for ${this.getName()}: ${snapshotBuffer.length} bytes`);
+            stream.end(snapshotBuffer);
+            return stream;
+          } catch (error) {
+            v2Error = error;
+            this.homey.app.debug(`[DoorbellDevice] V2 package snapshot failed for ${this.getName()}, falling back to V1: ${error.message}`);
+          }
+        }
+
         if (this.homey.app.isV1Available()) {
           const snapshotBuffer = await this.homey.app.api.packageSnapshot(this.getData().id);
+          this.homey.app.debug(`[DoorbellDevice] V1 package snapshot for ${this.getName()}: ${snapshotBuffer.length} bytes`);
           stream.end(snapshotBuffer);
           return stream;
         }
 
-        if (this.homey.app.isV2Available()) {
-          // V2 package camera has no dedicated endpoint; use standard snapshot endpoint.
-          const snapshotBuffer = await this.homey.app.apiV2.getSnapshot(this.getData().id);
-          stream.end(snapshotBuffer);
-          return stream;
-        }
-
-        throw new Error('No API available for package snapshot retrieval.');
+        throw v2Error || new Error('No API available for package snapshot retrieval.');
       } catch (error) {
         this.homey.app.debug(`[DoorbellDevice] Package snapshot retrieval failed for ${this.getName()}: ${error.message}`);
         throw new Error(error.message || 'Could not fetch snapshot image.');

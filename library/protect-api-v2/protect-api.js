@@ -413,9 +413,11 @@ class ProtectAPI extends BaseClass {
     };
   }
 
-  async getSnapshot(cameraId) {
+  async getSnapshot(cameraId, { channel = null } = {}) {
+    const params = channel ? { channel } : {};
+
     return new Promise((resolve, reject) => {
-      this.webclient.get(`cameras/${cameraId}/snapshot`, {}, true)
+      this.webclient.get(`cameras/${cameraId}/snapshot`, params, true)
         .then((buffer) => resolve(buffer))
         .catch((error) => reject(error));
     });
