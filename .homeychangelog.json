@@ -406,5 +406,8 @@
   },
   "1.13.4": {
     "en": "Arming and disarming the NVR alarm now uses the v1 endpoints first and falls back to v2 (it used v2 first). Fix chime and siren updates being ignored with a V1 login, the 'Apple pass' reader setting not updating, UA Intercom lock and door state with empty values, a camera without feature flags breaking camera discovery (V1), and the light's last motion being cleared by updates without a timestamp. A malformed websocket message no longer causes an error."
+  },
+  "1.13.5": {
+    "en": "Camera and doorbell snapshots now use the V2 API first (higher resolution) and fall back to V1; the package camera snapshot uses the package channel. Add a 'Get the current camera image' action card for the doorbell that returns a frozen image tag, usable for 1-999 minutes (default 30)."
   }
 }
