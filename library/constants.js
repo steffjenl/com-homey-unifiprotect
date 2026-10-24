@@ -38,6 +38,7 @@ module.exports.ACTION_SET_DEVICE_SET_COLOR_NIGHT_VISION = 'ufv_set_device_camera
 module.exports.ACTION_SET_DEVICE_SET_AUTO_TRACKING = 'ufv_set_device_camera_set_auto_tracking';
 module.exports.ACTION_SET_DEVICE_CAMERA_FACE_DETECTION = 'ufv_set_device_camera_face_detection';
 module.exports.ACTION_SET_DEVICE_DOORBELL_FACE_DETECTION = 'ufv_set_device_doorbell_face_detection';
+module.exports.ACTION_GET_DEVICE_DOORBELL_CAMERA_IMAGE = 'ufp_get_device_doorbell_camera_image';
 module.exports.ACTION_SET_DEVICE_TEST_RINGTONE = 'ufv_set_device_doorbell_test_ringtone';
 module.exports.ACTION_SET_DEVICE_TEST_SIREN = 'ufv_set_device_doorbell_test_siren';
 module.exports.ACTION_SET_DEVICE_TEST_CHIME_TONE = 'ufv_set_device_chime_test_tone';
@@ -250,6 +251,9 @@ module.exports.PROTECT_MQTT_TOPIC = 'unifi/protect';
 module.exports.PROTECT_NVR_UNIFIOS_REFRESH_INTERVAL = 10;
 
 module.exports.PROTECT_SENSOR_MOTION_TIMER_WAIT_IN_SEC = 10 * 1000;
+// Lifetime of a "Get the current camera image" tag when the card's minutes field is left empty, and the field's maximum
+module.exports.CAMERA_IMAGE_TOKEN_DEFAULT_MINUTES = 30;
+module.exports.CAMERA_IMAGE_TOKEN_MAX_MINUTES = 999;
 
 module.exports.PROTECT_V2_API_BASE_PATH = '/proxy/protect/integration';
 module.exports.PROTECT_V2_API_VERSION = 'v1';

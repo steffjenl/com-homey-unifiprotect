@@ -9709,6 +9709,114 @@
             }
           }
         ]
+      },
+      {
+        "id": "ufp_get_device_doorbell_camera_image",
+        "title": {
+          "en": "Get the current camera image",
+          "nl": "Haal het huidige camerabeeld op",
+          "de": "Aktuelles Kamerabild abrufen",
+          "fr": "Récupérer l'image actuelle de la caméra",
+          "it": "Ottieni l'immagine attuale della telecamera",
+          "sv": "Hämta den aktuella kamerabilden",
+          "no": "Hent gjeldende kamerabilde",
+          "es": "Obtener la imagen actual de la cámara",
+          "da": "Hent det aktuelle kamerabillede",
+          "ru": "Получить текущее изображение с камеры",
+          "pl": "Pobierz bieżący obraz z kamery",
+          "ko": "현재 카메라 이미지 가져오기"
+        },
+        "titleFormatted": {
+          "en": "Get the current camera image, usable for [[minutes]] minutes",
+          "nl": "Haal het huidige camerabeeld op, bruikbaar voor [[minutes]] minuten",
+          "de": "Aktuelles Kamerabild abrufen, nutzbar für [[minutes]] Minuten",
+          "fr": "Récupérer l'image actuelle de la caméra, utilisable pendant [[minutes]] minutes",
+          "it": "Ottieni l'immagine attuale della telecamera, utilizzabile per [[minutes]] minuti",
+          "sv": "Hämta den aktuella kamerabilden, användbar i [[minutes]] minuter",
+          "no": "Hent gjeldende kamerabilde, brukbart i [[minutes]] minutter",
+          "es": "Obtener la imagen actual de la cámara, utilizable durante [[minutes]] minutos",
+          "da": "Hent det aktuelle kamerabillede, brugbart i [[minutes]] minutter",
+          "ru": "Получить текущее изображение с камеры, доступно [[minutes]] мин.",
+          "pl": "Pobierz bieżący obraz z kamery, dostępny przez [[minutes]] min",
+          "ko": "현재 카메라 이미지 가져오기, [[minutes]]분 동안 사용 가능"
+        },
+        "hint": {
+          "en": "Gives the picture as a tag. Every card that uses this tag sees the same picture. After the set number of minutes the tag no longer has a picture. Nothing is saved in Protect.",
+          "nl": "Geeft het beeld als tag. Elke kaart die deze tag gebruikt ziet hetzelfde beeld. Na het ingestelde aantal minuten heeft de tag geen beeld meer. Er wordt niets opgeslagen in Protect.",
+          "de": "Gibt das Bild als Tag aus. Jede Karte, die diesen Tag verwendet, sieht dasselbe Bild. Nach der eingestellten Anzahl Minuten enthält der Tag kein Bild mehr. In Protect wird nichts gespeichert.",
+          "fr": "Fournit l'image sous forme de tag. Chaque carte qui utilise ce tag voit la même image. Après le nombre de minutes choisi, le tag ne contient plus d'image. Rien n'est enregistré dans Protect.",
+          "it": "Fornisce l'immagine come tag. Ogni scheda che usa questo tag vede la stessa immagine. Dopo il numero di minuti impostato il tag non contiene più l'immagine. Non viene salvato nulla in Protect.",
+          "sv": "Ger bilden som en tagg. Alla kort som använder taggen ser samma bild. Efter det inställda antalet minuter har taggen ingen bild längre. Inget sparas i Protect.",
+          "no": "Gir bildet som en tag. Alle kort som bruker denne taggen ser det samme bildet. Etter angitt antall minutter har taggen ikke lenger noe bilde. Ingenting lagres i Protect.",
+          "es": "Devuelve la imagen como etiqueta. Todas las tarjetas que usan esta etiqueta ven la misma imagen. Pasados los minutos indicados la etiqueta ya no tiene imagen. No se guarda nada en Protect.",
+          "da": "Giver billedet som et tag. Alle kort, der bruger dette tag, ser det samme billede. Efter det angivne antal minutter har tagget ikke længere et billede. Intet gemmes i Protect.",
+          "ru": "Возвращает изображение в виде тега. Все карточки, использующие этот тег, видят одно и то же изображение. По истечении заданного числа минут тег больше не содержит изображения. В Protect ничего не сохраняется.",
+          "pl": "Zwraca obraz jako tag. Każda karta używająca tego tagu widzi ten sam obraz. Po ustawionej liczbie minut tag nie zawiera już obrazu. Nic nie jest zapisywane w Protect.",
+          "ko": "이미지를 태그로 제공합니다. 이 태그를 사용하는 모든 카드는 같은 이미지를 봅니다. 설정한 시간이 지나면 태그에 더 이상 이미지가 없습니다. Protect에는 아무것도 저장되지 않습니다."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=protectdoorbell"
+          },
+          {
+            "type": "number",
+            "name": "minutes",
+            "required": false,
+            "min": 1,
+            "max": 999,
+            "step": 1,
+            "title": {
+              "en": "Minutes",
+              "nl": "Minuten",
+              "de": "Minuten",
+              "fr": "Minutes",
+              "it": "Minuti",
+              "sv": "Minuter",
+              "no": "Minutter",
+              "es": "Minutos",
+              "da": "Minutter",
+              "ru": "Минуты",
+              "pl": "Minuty",
+              "ko": "분"
+            },
+            "placeholder": {
+              "en": "30",
+              "nl": "30",
+              "de": "30",
+              "fr": "30",
+              "it": "30",
+              "sv": "30",
+              "no": "30",
+              "es": "30",
+              "da": "30",
+              "ru": "30",
+              "pl": "30",
+              "ko": "30"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "ufp_camera_image",
+            "type": "image",
+            "title": {
+              "en": "Camera image",
+              "nl": "Camerabeeld",
+              "de": "Kamerabild",
+              "fr": "Image de la caméra",
+              "it": "Immagine della telecamera",
+              "sv": "Kamerabild",
+              "no": "Kamerabilde",
+              "es": "Imagen de la cámara",
+              "da": "Kamerabillede",
+              "ru": "Изображение с камеры",
+              "pl": "Obraz z kamery",
+              "ko": "카메라 이미지"
+            }
+          }
+        ]
       }
     ]
   },

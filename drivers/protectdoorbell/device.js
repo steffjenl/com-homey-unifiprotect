@@ -7,7 +7,9 @@ const SmartDetectionMixin = require('../../library/SmartDetectionMixin');
 const ConnectionMonitorMixin = require('../../library/ConnectionMonitorMixin');
 const RtspUrlMixin = require('../../library/RtspUrlMixin');
 const { getRtspStreamUrl } = require('../../library/rtsp-stream-url');
-const { SETTING_STREAM_QUALITY, SETTING_VIDEO_CODEC } = require('../../library/constants');
+const {
+  SETTING_STREAM_QUALITY, SETTING_VIDEO_CODEC, CAMERA_IMAGE_TOKEN_DEFAULT_MINUTES, CAMERA_IMAGE_TOKEN_MAX_MINUTES,
+} = require('../../library/constants');
 
 function requestByUrl(url, options, onResponse) {
   const parsedUrl = new URL(url);
@@ -452,6 +454,39 @@ class Doorbell extends Homey.Device {
       this.setCapabilityValue('last_ring_at', lastRing)
         .catch(this.error);
     }
+  }
+
+  async createFrozenSnapshotImage(minutes) {
+    // Number fields can also get a tag in Advanced Flow, so the value is not guaranteed to be in range
+    const lifetimeMinutes = Number.isFinite(minutes) && minutes > 0
+      ? Math.min(minutes, CAMERA_IMAGE_TOKEN_MAX_MINUTES)
+      : CAMERA_IMAGE_TOKEN_DEFAULT_MINUTES;
+    // Read once and serve the same bytes on every pipe, so all cards using the tag see one frame
+    const buffer = await this._readSnapshotBuffer();
+    const image = await this.homey.images.createImage();
+    image.setStream(async (stream) => {
+      stream.end(buffer);
+      return stream;
+    });
+    this.homey.setTimeout(() => image.unregister().catch(this.error), lifetimeMinutes * 60 * 1000);
+    return image;
+  }
+
+  async _readSnapshotBuffer() {
+    if (!this._snapshotImage) {
+      throw new Error('Snapshot image is not ready yet.');
+    }
+    const stream = await this._snapshotImage.getStream();
+    const buffer = await new Promise((resolve, reject) => {
+      const chunks = [];
+      stream.on('data', (chunk) => chunks.push(chunk));
+      stream.on('end', () => resolve(Buffer.concat(chunks)));
+      stream.on('error', reject);
+    });
+    if (buffer.length === 0) {
+      throw new Error('Snapshot is empty.');
+    }
+    return buffer;
   }
 
   onMotionDetected(lastMotionTime, isMotionDetected) {
