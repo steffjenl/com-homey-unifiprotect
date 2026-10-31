@@ -646,6 +646,31 @@ PUT /api/v1/developer/doors/:id/unlock?entry_method=out   # second motor
   unlock call must use the door id, never the hub id.
 
 
+### UniFi Access — UGT gate control buttons (`control_cmd`)
+
+A UA Hub Gate whose **Gate Control Mode** is *Two-Button Control (Open and Close)* or
+*Three-Button Control (Open, Stop, and Close)* has a separate gate operator output per action.
+The output is selected with another query parameter on the same unlock endpoint (Access API
+reference §7.9, UniFi Access **4.2.16+**):
+
+```
+PUT /api/v1/developer/doors/:id/unlock?control_cmd=open
+PUT /api/v1/developer/doors/:id/unlock?control_cmd=close
+PUT /api/v1/developer/doors/:id/unlock?control_cmd=stop
+```
+
+- The reference only documents it for three-button mode. Verified on a real UGT (Access 4.3.22)
+  that `open`/`close` also work in **two-button** mode. Without `control_cmd` the hub fires its
+  default (Open) output, so a plain unlock cannot close a two/three-button gate.
+- Access does not expose the hub's Gate Control Mode, so it is a per-device setting
+  `ufp:gate_control_mode` (`single` default / `two_button` / `three_button`) on Access garage
+  door devices. Two/three-button adds device-view buttons (`gate_open_button`,
+  `gate_stop_button`, `gate_close_button`, order Open | Stop | Close like the Access app) and
+  makes the `garagedoor_closed` toggle send `open`/`close` by requested state.
+- Flow cards `ufv_garagedoor_gate_open/close/stop` are always offered (like the In/Out cards).
+- Logic: `library/gate-control.js`; tests: `test/unit/gate-control.test.js`, `test/unit/access-api.test.js`.
+
+
 ## Camera Zone Motion Sensor (`protect-zone-sensor`)
 
 - Virtual device, one per camera detection zone (paired from `smartDetectZones`; device data `{ id: "<cameraId>:<zoneId>", cameraId, zoneId }`). Capability `alarm_motion`, class `sensor`; checkboxes `ufp:type_<type>` choose which detection types count (default person, vehicle, animal).

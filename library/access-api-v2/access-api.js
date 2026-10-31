@@ -236,13 +236,20 @@ class AccessAPI extends BaseClient {
   /**
    * @param {string} deviceId Door id
    * @param {string} [entryMethod] 'in' | 'out' — selects the motor on a UGT in Double Driveway Mode
+   * @param {string} [controlCmd] 'open' | 'close' | 'stop' — UA Hub Gate in multi-button
+   *   gate control mode (Access API 7.9, UniFi Access 4.2.16+)
    */
-  async setDoorUnLock(deviceId, entryMethod) {
+  async setDoorUnLock(deviceId, entryMethod, controlCmd) {
+    if (controlCmd && !['open', 'close', 'stop'].includes(controlCmd)) {
+      throw new Error(`Invalid control_cmd "${controlCmd}" (expected open, close or stop)`);
+    }
     return new Promise((resolve, reject) => {
       const params = {
 
       };
-      const query = entryMethod ? { entry_method: entryMethod } : {};
+      const query = {};
+      if (entryMethod) query.entry_method = entryMethod;
+      if (controlCmd) query.control_cmd = controlCmd;
       this.webclient.put(`doors/${deviceId}/unlock`, params, query)
         .then((response) => {
           const result = JSON.parse(response);

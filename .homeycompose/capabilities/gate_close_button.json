@@ -1,0 +1,21 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Close",
+    "nl": "Sluiten",
+    "de": "Schließen",
+    "fr": "Fermer",
+    "it": "Chiudi",
+    "sv": "Stäng",
+    "no": "Lukk",
+    "es": "Cerrar",
+    "da": "Luk",
+    "ru": "Закрыть",
+    "pl": "Zamknij",
+    "ko": "닫기"
+  },
+  "getable": false,
+  "setable": true,
+  "uiComponent": "button",
+  "icon": "/assets/capabilities/gate_close_button.svg"
+}

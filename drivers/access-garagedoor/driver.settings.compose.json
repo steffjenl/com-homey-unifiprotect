@@ -1,0 +1,80 @@
+[
+  {
+    "type": "dropdown",
+    "id": "ufp:gate_control_mode",
+    "label": {
+      "en": "Gate Control Mode",
+      "nl": "Poortbedieningsmodus",
+      "de": "Torsteuerungsmodus",
+      "fr": "Mode de commande du portail",
+      "it": "Modalità di controllo del cancello",
+      "sv": "Grindstyrningsläge",
+      "no": "Portstyringsmodus",
+      "es": "Modo de control del portón",
+      "da": "Portstyringstilstand",
+      "ru": "Режим управления воротами",
+      "pl": "Tryb sterowania bramą",
+      "ko": "게이트 제어 모드"
+    },
+    "hint": {
+      "en": "Choose the same Gate Control Mode as the UA Hub Gate in UniFi Access. Single-Button: the toggle sends one unlock pulse. Two-Button: adds Open / Close buttons and the toggle sends Open or Close explicitly. Three-Button: also adds a Stop button.",
+      "nl": "Kies dezelfde Gate Control Mode als de UA Hub Gate in UniFi Access. Single-Button Control = één knop: de schakelaar stuurt één ontgrendelpuls. Two-Button Control = twee knoppen: Open/Sluiten-knoppen en de schakelaar stuurt expliciet Open of Sluiten. Three-Button Control = drie knoppen: ook een Stop-knop.",
+      "de": "Denselben Gate Control Mode wie beim UA Hub Gate in UniFi Access wählen. Single-Button Control = eine Taste: der Schalter sendet einen Entriegelungsimpuls. Two-Button Control = zwei Tasten: Auf/Zu-Tasten, der Schalter sendet gezielt Auf oder Zu. Three-Button Control = drei Tasten: zusätzlich eine Stopp-Taste.",
+      "pl": "Wybierz ten sam tryb co Gate Control Mode huba UA Hub Gate w UniFi Access. Single-Button Control = jeden przycisk: przełącznik wysyła jeden impuls odblokowania. Two-Button Control = dwa przyciski: przyciski Otwórz / Zamknij, a przełącznik wysyła wprost Otwórz lub Zamknij. Three-Button Control = trzy przyciski: dodatkowo przycisk Stop."
+    },
+    "value": "single",
+    "values": [
+      {
+        "id": "single",
+        "label": {
+          "en": "Single-Button Control (Open or Close)",
+          "nl": "Bediening met één knop (Openen of Sluiten)",
+          "de": "Ein-Tasten-Steuerung (Öffnen oder Schließen)",
+          "fr": "Commande à un bouton (Ouvrir ou Fermer)",
+          "it": "Controllo a un pulsante (Apri o Chiudi)",
+          "sv": "Enknappsstyrning (Öppna eller Stäng)",
+          "no": "Énknappsstyring (Åpne eller Lukk)",
+          "es": "Control de un botón (Abrir o Cerrar)",
+          "da": "Enkeltknapsstyring (Åbn eller Luk)",
+          "ru": "Управление одной кнопкой (Открыть или Закрыть)",
+          "pl": "Sterowanie jednym przyciskiem (Otwórz lub Zamknij)",
+          "ko": "단일 버튼 제어 (열기 또는 닫기)"
+        }
+      },
+      {
+        "id": "two_button",
+        "label": {
+          "en": "Two-Button Control (Open and Close)",
+          "nl": "Bediening met twee knoppen (Openen en Sluiten)",
+          "de": "Zwei-Tasten-Steuerung (Öffnen und Schließen)",
+          "fr": "Commande à deux boutons (Ouvrir et Fermer)",
+          "it": "Controllo a due pulsanti (Apri e Chiudi)",
+          "sv": "Tvåknappsstyrning (Öppna och Stäng)",
+          "no": "Toknappsstyring (Åpne og Lukk)",
+          "es": "Control de dos botones (Abrir y Cerrar)",
+          "da": "Toknapsstyring (Åbn og Luk)",
+          "ru": "Управление двумя кнопками (Открыть и Закрыть)",
+          "pl": "Sterowanie dwoma przyciskami (Otwórz i Zamknij)",
+          "ko": "2버튼 제어 (열기 및 닫기)"
+        }
+      },
+      {
+        "id": "three_button",
+        "label": {
+          "en": "Three-Button Control (Open, Stop, and Close)",
+          "nl": "Bediening met drie knoppen (Openen, Stoppen en Sluiten)",
+          "de": "Drei-Tasten-Steuerung (Öffnen, Stopp und Schließen)",
+          "fr": "Commande à trois boutons (Ouvrir, Arrêter et Fermer)",
+          "it": "Controllo a tre pulsanti (Apri, Ferma e Chiudi)",
+          "sv": "Treknappsstyrning (Öppna, Stopp och Stäng)",
+          "no": "Treknappsstyring (Åpne, Stopp og Lukk)",
+          "es": "Control de tres botones (Abrir, Detener y Cerrar)",
+          "da": "Treknapsstyring (Åbn, Stop og Luk)",
+          "ru": "Управление тремя кнопками (Открыть, Стоп и Закрыть)",
+          "pl": "Sterowanie trzema przyciskami (Otwórz, Stop i Zamknij)",
+          "ko": "3버튼 제어 (열기, 정지 및 닫기)"
+        }
+      }
+    ]
+  }
+]

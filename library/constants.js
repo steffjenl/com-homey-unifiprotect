@@ -163,6 +163,22 @@ module.exports.ACTION_ACCESS_GARAGEDOOR_OPEN_IN = 'ufv_garagedoor_open_in';
 module.exports.ACTION_ACCESS_GARAGEDOOR_OPEN_OUT = 'ufv_garagedoor_open_out';
 module.exports.ACCESS_ENTRY_METHOD_IN = 'in';
 module.exports.ACCESS_ENTRY_METHOD_OUT = 'out';
+// UA Hub Gate in two/three-button gate control mode: control_cmd picks the gate operator output
+module.exports.ACTION_ACCESS_GARAGEDOOR_GATE_OPEN = 'ufv_garagedoor_gate_open';
+module.exports.ACTION_ACCESS_GARAGEDOOR_GATE_CLOSE = 'ufv_garagedoor_gate_close';
+module.exports.ACTION_ACCESS_GARAGEDOOR_GATE_STOP = 'ufv_garagedoor_gate_stop';
+module.exports.ACCESS_CONTROL_CMD_OPEN = 'open';
+module.exports.ACCESS_CONTROL_CMD_CLOSE = 'close';
+module.exports.ACCESS_CONTROL_CMD_STOP = 'stop';
+// Per-device setting (Access Garage door): opt in to two/three-button gate control
+module.exports.SETTING_GATE_CONTROL_MODE = 'ufp:gate_control_mode';
+module.exports.GATE_MODE_SINGLE = 'single';
+module.exports.GATE_MODE_TWO_BUTTON = 'two_button';
+module.exports.GATE_MODE_THREE_BUTTON = 'three_button';
+// Device-view buttons shown in two-button (open/close) and three-button (+ stop) mode
+module.exports.CAPABILITY_GATE_OPEN_BUTTON = 'gate_open_button';
+module.exports.CAPABILITY_GATE_CLOSE_BUTTON = 'gate_close_button';
+module.exports.CAPABILITY_GATE_STOP_BUTTON = 'gate_stop_button';
 
 // NVR Alarm Manager
 module.exports.EVENT_NVR_ALARM_STATE_CHANGED = 'ufp_nvr_alarm_state_changed';

@@ -54,4 +54,29 @@ describe('AccessAPI.setDoorUnLock', () => {
     expect(calls[1].query.entry_method).toBe('in');
     expect(calls[2].query.entry_method).toBe('out');
   });
+
+  test('passes control_cmd for multi-button gate control and rejects unknown commands', async () => {
+    const api = new AccessAPI();
+    const calls = [];
+    api.webclient = {
+      put: async (resource, payload, query) => {
+        calls.push({ resource, payload, query });
+        return JSON.stringify({ code: 'SUCCESS' });
+      },
+    };
+
+    await api.setDoorUnLock('gate-1', undefined, 'open');
+    await api.setDoorUnLock('gate-1', undefined, 'close');
+    await api.setDoorUnLock('gate-1', undefined, 'stop');
+
+    expect(calls.map((c) => c.query)).toEqual([
+      { control_cmd: 'open' },
+      { control_cmd: 'close' },
+      { control_cmd: 'stop' },
+    ]);
+    expect(calls.every((c) => c.resource === 'doors/gate-1/unlock')).toBe(true);
+
+    await expect(api.setDoorUnLock('gate-1', undefined, 'reverse')).rejects.toThrow(/control_cmd/);
+    expect(calls).toHaveLength(3);
+  });
 });
