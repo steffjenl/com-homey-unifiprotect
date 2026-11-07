@@ -409,5 +409,8 @@
   },
   "1.13.5": {
     "en": "Camera and doorbell snapshots now use the V2 API first (higher resolution) and fall back to V1; the package camera snapshot uses the package channel. Add a 'Get the current camera image' action card for the doorbell that returns a frozen image tag, usable for 1-999 minutes (default 30)."
+  },
+  "1.13.6": {
+    "en": "Fix deps, UX Gate and more fixes"
   }
 }
