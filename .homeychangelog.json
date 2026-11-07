@@ -412,5 +412,8 @@
   },
   "1.13.6": {
     "en": "Fix deps, UX Gate and more fixes"
+  },
+  "1.13.7": {
+    "en": "License Plate fix for V2"
   }
 }
