@@ -1,17 +1,28 @@
 # UniFi Protect API Notes
 
 Source: Official API documentation, cross-checked against
-`specs/protect-integration-v2-openapi.json` downloaded from
-`https://developer.ui.com/protect/v7.2.105/openapi.json`.  
-**API version: v7.2.105 spec** — Local base URL: `https://YOUR_CONSOLE_IP/proxy/protect/integration`.
+`specs/protect-integration-v2-openapi.json` downloaded from the console itself
+(`https://YOUR_CONSOLE_IP/proxy/protect/api-docs/integration.json`, needs a logged-in session; Redoc UI at
+`/unifi-api/protect`).  
+**API version: v7.3.74 spec** — Local base URL: `https://YOUR_CONSOLE_IP/proxy/protect/integration`.
 Cloud connector base URL: `https://api.ui.com/v1/connector/consoles/{consoleId}/proxy/protect/integration`.
 
 Local and cloud Protect V2 expose the same REST endpoint set. The app treats cloud as REST-only:
 WebSocket/realtime device and event updates remain local-only until a supported cloud realtime path is adopted.
 
-Verified 2026-09-09: `specs/protect-integration-v2-openapi.json` in this repo is byte-identical
-to a fresh download of `https://developer.ui.com/protect/v7.2.105/openapi.json` (55 paths, 298
-schemas, full diff match) — the checked-in spec file is current.
+Updated 2026-11-07: `specs/protect-integration-v2-openapi.json` replaced with the spec served by a
+console running Protect 7.3.74 (`info.version` 7.3.74; 55 paths / 74 operations, 302 schemas). Compared to
+v7.2.105 there are **no new or removed endpoints**; only schema additions (all optional for the app, none used
+by current code):
+- `fob`: new required `armControlSettings` (`fobArmControlSettings`: `enabled`, `armProfileId`,
+  `nightProfileId` — external arm profiles armed by Arm/Night buttons) and `keypadSettings`
+  (`fobKeypadSettings`: `beepEnabled`, `beepVolume` 0-100); `fobFeatureFlags.hasKeypad`.
+- `linkStation`: new required `threadState` (`linkStationThreadState` → nullable `network`
+  `linkStationThreadNetwork`: `status` ready|error, `role`, `networkName`, `channel`, `panId`,
+  `extendedPanId`, `joinedDeviceCount`, `errorReason`, `lastUpdatedAt`). Only on Thread-capable gateways.
+- `alarmHubStatus.deviceTamperStatus` (tampered|restored); `alarmHubDeviceTamper` event
+  `metadata.userName` (string).
+- `posTransactionResponse` now `additionalProperties: true`.
 
 ---
 
@@ -188,8 +199,8 @@ All paths are relative to either `https://<NVR_IP>:443/proxy/protect/integration
   }
 }
 ```
-`type` is a discriminator with **37** possible values (per `components.schemas.event` in
-`specs/protect-integration-v2-openapi.json`, spec v7.2.105). The table below is the full spec
+`type` is a discriminator with **38** possible values (per `components.schemas.event` in
+`specs/protect-integration-v2-openapi.json`, spec v7.3.74). The table below is the full spec
 catalogue — the "Handled" column shows which are actually dispatched today by
 `library/protect-api-v2/web-socket-events.js` (checked via `itemType === '...'`). Unhandled
 types currently arrive over the socket and are silently ignored by the app.
@@ -241,7 +252,7 @@ shared `onParseWebsocketMessage` handlers.
 | `alarmHubGlassBreak` | Alarm hub zone | `pin.text`, `status`, `alarmType`, `deviceId`, `deviceName` | ❌ (B, spec-only) | ✅ (B, added) |
 | `alarmHubButtonPress` | Alarm hub zone | `pin.text`, `status`, `button`, `alarmType`, `deviceId`, `deviceName` | ❌ (B, spec-only) | ✅ (B, added) |
 | `alarmHubTamper` | Alarm hub zone | `pin.text`, `status`, `alarmType`, `deviceId`, `deviceName` | ❌ (B, spec-only) | ✅ (B, added) |
-| `alarmHubDeviceTamper` | Alarm hub zone | `status`, `deviceId`, `deviceName` | ❌ (B, spec-only) | ✅ (B, added) |
+| `alarmHubDeviceTamper` | Alarm hub zone | `status`, `deviceId`, `deviceName`, `userName` (7.3.74) | ❌ (B, spec-only) | ✅ (B, added) |
 | `alarmHubRelaySwitched` | Alarm hub zone | — | ❌ (B, spec-only) | ✅ (B, added) |
 | `alarmHubBatteryLow` | Alarm hub zone | — | ❌ (B, spec-only) | ✅ (B, added) |
 | `alarmHubBatteryConnected` | Alarm hub zone | — | ❌ (B, spec-only) | ✅ (B, added) |

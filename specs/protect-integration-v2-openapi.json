@@ -2,28 +2,11 @@
   "openapi": "3.1.0",
   "info": {
     "title": "UniFi Protect API",
-    "version": "0.0.0"
+    "version": "7.3.74"
   },
   "servers": [
     {
-      "url": "https://api.ui.com/v1/connector/consoles/{consoleId}/proxy/protect/integration",
-      "description": "UniFi API Cloud Connector",
-      "variables": {
-        "consoleId": {
-          "default": "942A6FF664C0000000000964970E0000000009E710560000000068A9873F:9999999999",
-          "description": "ID of the console to proxy requests to"
-        }
-      }
-    },
-    {
-      "url": "https://{consoleIP}/proxy/protect/integration",
-      "description": "Local Console",
-      "variables": {
-        "consoleIP": {
-          "default": "192.168.0.1",
-          "description": "IP address of the console on the local network"
-        }
-      }
+      "url": "/integration"
     }
   ],
   "paths": {
@@ -3691,6 +3674,7 @@
             "description": "Id of the created (or previously created) event"
           }
         },
+        "additionalProperties": true,
         "description": "Result of POS transaction ingestion",
         "title": "posTransactionResponse"
       },
@@ -6353,6 +6337,12 @@
           "featureFlags": {
             "$ref": "#/components/schemas/fobFeatureFlags"
           },
+          "armControlSettings": {
+            "$ref": "#/components/schemas/fobArmControlSettings"
+          },
+          "keypadSettings": {
+            "$ref": "#/components/schemas/fobKeypadSettings"
+          },
           "wirelessConnectionState": {
             "$ref": "#/components/schemas/wirelessConnectionState"
           }
@@ -6368,6 +6358,8 @@
           "awayState",
           "buttonLabels",
           "featureFlags",
+          "armControlSettings",
+          "keypadSettings",
           "wirelessConnectionState"
         ],
         "title": "fob"
@@ -6419,10 +6411,15 @@
         "properties": {
           "buttons": {
             "$ref": "#/components/schemas/fobButtons"
+          },
+          "hasKeypad": {
+            "type": "boolean",
+            "description": "Whether the device has a PIN keypad."
           }
         },
         "required": [
-          "buttons"
+          "buttons",
+          "hasKeypad"
         ],
         "description": "Feature flags for the fob.",
         "examples": [
@@ -6431,7 +6428,8 @@
               "arm",
               "disarm",
               "panic"
-            ]
+            ],
+            "hasKeypad": false
           }
         ],
         "title": "fobFeatureFlags"
@@ -6463,6 +6461,57 @@
           ]
         ],
         "title": "fobButtons"
+      },
+      "fobArmControlSettings": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether this fob may arm and disarm external arm profiles."
+          },
+          "armProfileId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "External arm profile armed by the Arm button, and disarmed by the Disarm button."
+          },
+          "nightProfileId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "External arm profile armed by the Night button, and disarmed by the Disarm button."
+          }
+        },
+        "required": [
+          "enabled",
+          "armProfileId",
+          "nightProfileId"
+        ],
+        "description": "Which external arm profiles this fob may arm and disarm, per mode button.",
+        "title": "fobArmControlSettings"
+      },
+      "fobKeypadSettings": {
+        "type": "object",
+        "properties": {
+          "beepEnabled": {
+            "type": "boolean",
+            "description": "Whether a keypress beeps."
+          },
+          "beepVolume": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Keypress beep volume, 0-100%."
+          }
+        },
+        "required": [
+          "beepEnabled",
+          "beepVolume"
+        ],
+        "description": "On-device keypad feedback settings. Only meaningful when featureFlags.hasKeypad.",
+        "title": "fobKeypadSettings"
       },
       "relay": {
         "type": "object",
@@ -6957,6 +7006,9 @@
           },
           "alarmHub": {
             "$ref": "#/components/schemas/alarmHubStatus"
+          },
+          "threadState": {
+            "$ref": "#/components/schemas/linkStationThreadState"
           }
         },
         "required": [
@@ -6969,7 +7021,8 @@
           "mac",
           "isAlarmHub",
           "ledSettings",
-          "lastEvent"
+          "lastEvent",
+          "threadState"
         ],
         "title": "linkStation"
       },
@@ -7211,6 +7264,13 @@
                 ]
               }
             }
+          },
+          "deviceTamperStatus": {
+            "type": "string",
+            "enum": [
+              "tampered",
+              "restored"
+            ]
           },
           "currentMeterChannelStatus": {
             "type": "object",
@@ -7828,6 +7888,110 @@
         ],
         "description": "Alarm hub status and configuration. Only present when isAlarmHub is true.",
         "title": "alarmHubStatus"
+      },
+      "linkStationThreadState": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/linkStationThreadNetwork"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "network"
+        ],
+        "description": "Thread mesh runtime state. Populated only on Thread-capable gateway SKUs.",
+        "title": "linkStationThreadState"
+      },
+      "linkStationThreadNetwork": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "error"
+            ]
+          },
+          "role": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "disabled",
+              "detached",
+              "child",
+              "router",
+              "leader"
+            ]
+          },
+          "networkName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "channel": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 11,
+            "maximum": 26
+          },
+          "panId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9a-fA-F]+$",
+            "minLength": 4,
+            "maxLength": 4
+          },
+          "extendedPanId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9a-fA-F]+$",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "joinedDeviceCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "errorReason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "lastUpdatedAt": {
+            "type": "number",
+            "description": "Wall-clock unix-epoch milliseconds when the gateway last refreshed this status."
+          }
+        },
+        "required": [
+          "status",
+          "role",
+          "networkName",
+          "channel",
+          "panId",
+          "extendedPanId",
+          "joinedDeviceCount",
+          "errorReason",
+          "lastUpdatedAt"
+        ],
+        "description": "Latest Thread network status reported by the gateway.",
+        "title": "linkStationThreadNetwork"
       },
       "deviceUpdate": {
         "type": "object",
@@ -8503,6 +8667,12 @@
           "featureFlags": {
             "$ref": "#/components/schemas/fobFeatureFlags"
           },
+          "armControlSettings": {
+            "$ref": "#/components/schemas/fobArmControlSettings"
+          },
+          "keypadSettings": {
+            "$ref": "#/components/schemas/fobKeypadSettings"
+          },
           "wirelessConnectionState": {
             "$ref": "#/components/schemas/wirelessConnectionState"
           }
@@ -8681,6 +8851,9 @@
           },
           "alarmHub": {
             "$ref": "#/components/schemas/alarmHubStatus"
+          },
+          "threadState": {
+            "$ref": "#/components/schemas/linkStationThreadState"
           }
         },
         "required": [
@@ -9810,6 +9983,12 @@
               "featureFlags": {
                 "$ref": "#/components/schemas/fobFeatureFlags"
               },
+              "armControlSettings": {
+                "$ref": "#/components/schemas/fobArmControlSettings"
+              },
+              "keypadSettings": {
+                "$ref": "#/components/schemas/fobKeypadSettings"
+              },
               "wirelessConnectionState": {
                 "$ref": "#/components/schemas/wirelessConnectionState"
               }
@@ -9825,6 +10004,8 @@
               "awayState",
               "buttonLabels",
               "featureFlags",
+              "armControlSettings",
+              "keypadSettings",
               "wirelessConnectionState"
             ],
             "title": "fob"
@@ -10056,6 +10237,9 @@
               },
               "alarmHub": {
                 "$ref": "#/components/schemas/alarmHubStatus"
+              },
+              "threadState": {
+                "$ref": "#/components/schemas/linkStationThreadState"
               }
             },
             "required": [
@@ -10068,7 +10252,8 @@
               "mac",
               "isAlarmHub",
               "ledSettings",
-              "lastEvent"
+              "lastEvent",
+              "threadState"
             ],
             "title": "linkStation"
           }
@@ -10785,6 +10970,12 @@
               "featureFlags": {
                 "$ref": "#/components/schemas/fobFeatureFlags"
               },
+              "armControlSettings": {
+                "$ref": "#/components/schemas/fobArmControlSettings"
+              },
+              "keypadSettings": {
+                "$ref": "#/components/schemas/fobKeypadSettings"
+              },
               "wirelessConnectionState": {
                 "$ref": "#/components/schemas/wirelessConnectionState"
               }
@@ -11003,6 +11194,9 @@
               },
               "alarmHub": {
                 "$ref": "#/components/schemas/alarmHubStatus"
+              },
+              "threadState": {
+                "$ref": "#/components/schemas/linkStationThreadState"
               }
             },
             "required": [
@@ -14284,6 +14478,9 @@
                     "text": "Alarm Hub"
                   }
                 ]
+              },
+              "userName": {
+                "type": "string"
               }
             },
             "required": [
