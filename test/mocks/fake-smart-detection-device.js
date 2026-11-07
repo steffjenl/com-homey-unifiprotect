@@ -20,6 +20,8 @@ function createSmartDetectionDevice({ appCards = {}, driverCards = {}, homey = {
       _smartDetectionEndedTrigger: noop,
       ...appCards,
     },
+    setTimeout: (fn, ms) => setTimeout(fn, ms),
+    clearTimeout: (t) => clearTimeout(t),
     ...homey,
   };
   device.driver = {

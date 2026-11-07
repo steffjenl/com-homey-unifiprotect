@@ -71,4 +71,56 @@ describe('license plate and direction', () => {
     device.onSmartDetection({ smartDetectTypes: ['person'], start: 1, score: 50 }, 'add', 'd2');
     expect(calls.generic[0].direction).toBe('');
   });
+
+  describe('V2 frames without plate text (grace timer + V1 lookup)', () => {
+    beforeEach(() => jest.useFakeTimers());
+    afterEach(() => jest.useRealTimers());
+
+    function createWithApi(getEvent) {
+      const ctx = create();
+      ctx.device.homey.app.isV1Available = () => true;
+      ctx.device.homey.app.api = { getEvent };
+      return ctx;
+    }
+
+    test('fires once with text from V1 lookup, without an end frame', async () => {
+      const getEvent = jest.fn().mockResolvedValue({ metadata: { licensePlate: { name: 'XY-99-Z' } } });
+      const { device, calls } = createWithApi(getEvent);
+      device.onSmartDetection({ smartDetectTypes: ['licensePlate'], start: 1, score: 90 }, 'add', 'v1');
+      device.onSmartDetection({ smartDetectTypes: ['licensePlate'] }, 'update', 'v1');
+      expect(calls.plate).toHaveLength(0);
+      await jest.advanceTimersByTimeAsync(3000);
+      expect(getEvent).toHaveBeenCalledWith('v1');
+      expect(calls.plate).toHaveLength(1);
+      expect(calls.plate[0].license_plate).toBe('XY-99-Z');
+      await jest.advanceTimersByTimeAsync(20000);
+      expect(calls.plate).toHaveLength(1);
+    });
+
+    test('lookup finds nothing: fires once with empty text after retries, no end frame', async () => {
+      const getEvent = jest.fn().mockResolvedValue({ metadata: {} });
+      const { device, calls } = createWithApi(getEvent);
+      device.onSmartDetection({ smartDetectTypes: ['licensePlate'], start: 1, score: 90 }, 'add', 'v2');
+      await jest.advanceTimersByTimeAsync(20000);
+      expect(getEvent).toHaveBeenCalledTimes(3);
+      expect(calls.plate).toHaveLength(1);
+      expect(calls.plate[0].license_plate).toBe('');
+    });
+
+    test('no V1 api: fires empty after grace period, end frame afterwards does not double fire', async () => {
+      const { device, calls } = create();
+      device.onSmartDetection({ smartDetectTypes: ['licensePlate'], start: 1, score: 90 }, 'add', 'v3');
+      await jest.advanceTimersByTimeAsync(20000);
+      expect(calls.plate).toHaveLength(1);
+      device.onSmartDetection({ smartDetectTypes: [], end: 9 }, 'update', 'v3');
+      expect(calls.plate).toHaveLength(1);
+    });
+
+    test('lookup error still fires the trigger', async () => {
+      const { device, calls } = createWithApi(jest.fn().mockRejectedValue(new Error('boom')));
+      device.onSmartDetection({ smartDetectTypes: ['licensePlate'], start: 1, score: 90 }, 'add', 'v4');
+      await jest.advanceTimersByTimeAsync(3000);
+      expect(calls.plate).toHaveLength(1);
+    });
+  });
 });

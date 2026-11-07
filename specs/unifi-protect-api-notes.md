@@ -317,7 +317,7 @@ documented beyond this note — `web-socket-devices.js` assumes a single `item` 
 
 ### License plate and direction tokens
 
-- `metadata.licensePlate.name` (V1) often arrives on a later frame than the `licensePlate` type. The plate trigger waits for the text; if the detection ends without it, the trigger fires once with an empty `license_plate`. V2 frames carry no metadata, so the token is empty there.
+- `metadata.licensePlate.name` (V1) often arrives on a later frame than the `licensePlate` type, and V2 websocket frames carry no metadata at all (official `cameraSmartDetectZoneEvent` has no plate field). When the type is seen without text, a 3 s grace timer starts (`_scheduleLicensePlateFallback`): it asks the V1 API (`GET events/{id}` via `api.getEvent`, when V1 is available) up to 3 times, 3 s apart, reads `metadata.licensePlate.name`, then fires the plate trigger once with whatever is known (empty if nothing). The closing frame also flushes, so the trigger never depends on the `end` frame alone. Unverified on real hardware that the V1 event carries the plate: check the debug log.
 - `direction` token (generic + ended triggers): taken from `metadata.direction` when it is a non-empty string, remembered on the event, empty otherwise. The field name comes from the `ProtectEventMetadataInterface` types of the reference project; no real line-crossing sample is in the repo yet, so verify the values on real hardware (the issue reporter offered measurements). V2 has no direction.
 
 ### Zone argument on smart detection triggers

@@ -602,6 +602,20 @@ class ProtectAPI extends BaseClass {
     });
   }
 
+  getEvent(eventId) {
+    return new Promise((resolve, reject) => {
+      this.webclient.get(`events/${encodeURIComponent(eventId)}`)
+        .then((response) => {
+          const result = JSON.parse(response);
+          if (result) {
+            return resolve(result);
+          }
+          return reject(new Error('Error obtaining event.'));
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
   getAspectRatioHeight(cameraId, widthInPixels) {
     const camera = this._bootstrap.cameras.find((c) => c.id === cameraId);
     if (!camera) return undefined;

@@ -2,6 +2,10 @@
 
 const SmartDetectionEvent = require('./Models/SmartDetectionEvent');
 
+// Plate text often never arrives on the websocket (V2): wait this long, then ask the V1 API, max retries+1 times.
+const PLATE_LOOKUP_DELAY_MS = 3000;
+const PLATE_LOOKUP_RETRIES = 2;
+
 /**
  * SmartDetectionMixin
  *
@@ -108,6 +112,71 @@ const SmartDetectionMixin = {
   },
 
   /**
+   * Fire the license plate trigger once per event, with whatever plate text is known.
+   * Safe to call from the frame handler, the fallback timer and the end flush.
+   */
+  _fireLicensePlate(event) {
+    if (event.triggered.has('licensePlate')) {
+      return;
+    }
+    event.triggered.add('licensePlate');
+    if (event.plateTimer) {
+      this.homey.clearTimeout(event.plateTimer);
+      event.plateTimer = null;
+    }
+    this.triggerSmartDetectionTriggerLicensePlate(
+      typeof event.detectionScore === 'number' ? event.detectionScore : 0,
+      event.zones || '',
+      event.licensePlate || '',
+      event.zoneIds || [],
+      event.direction || '',
+    );
+  },
+
+  /**
+   * Plate text did not arrive on a frame (always the case for V2 websocket events).
+   * Do not depend on the closing frame: after a grace period try the V1 event lookup
+   * (when available) and fire the trigger once with whatever text is known.
+   */
+  _scheduleLicensePlateFallback(event, eventId) {
+    if (event.plateTimer || event.plateFallbackStarted) {
+      return;
+    }
+    event.plateFallbackStarted = true;
+    const attempt = (remaining) => {
+      event.plateTimer = null;
+      if (event.triggered.has('licensePlate')) {
+        return;
+      }
+      this._lookupLicensePlate(eventId)
+        .then((plate) => {
+          if (plate) {
+            event.licensePlate = plate;
+          }
+          if (event.licensePlate || remaining <= 0) {
+            this._fireLicensePlate(event);
+            return;
+          }
+          event.plateTimer = this.homey.setTimeout(() => attempt(remaining - 1), PLATE_LOOKUP_DELAY_MS);
+        })
+        .catch((error) => {
+          this.homey.app.debug(`[SmartDetection] plate lookup failed [${eventId}]: ${error}`);
+          this._fireLicensePlate(event);
+        });
+    };
+    event.plateTimer = this.homey.setTimeout(() => attempt(PLATE_LOOKUP_RETRIES), PLATE_LOOKUP_DELAY_MS);
+  },
+
+  async _lookupLicensePlate(eventId) {
+    if (!this.homey.app.isV1Available() || typeof this.homey.app.api.getEvent !== 'function') {
+      return '';
+    }
+    const result = await this.homey.app.api.getEvent(eventId);
+    const plate = result && result.metadata && result.metadata.licensePlate && result.metadata.licensePlate.name;
+    return typeof plate === 'string' ? plate : '';
+  },
+
+  /**
    * Smart detection closed by Protect (payload.end). Protect repeats the closing
    * frame two or three times, so fire the ended trigger once per event id.
    */
@@ -131,9 +200,8 @@ const SmartDetectionMixin = {
     event.endTime = payload.end;
 
     // Plate type seen but its text never arrived: still fire the plate trigger once, with an empty token.
-    if (event.detectionTypes.includes('licensePlate') && !event.triggered.has('licensePlate')) {
-      event.triggered.add('licensePlate');
-      this.triggerSmartDetectionTriggerLicensePlate(typeof event.detectionScore === 'number' ? event.detectionScore : 0, event.zones || '', '', event.zoneIds || [], event.direction || '');
+    if (event.detectionTypes.includes('licensePlate')) {
+      this._fireLicensePlate(event);
     }
 
     const score = typeof event.detectionScore === 'number' ? event.detectionScore : 0;
@@ -227,6 +295,12 @@ const SmartDetectionMixin = {
         }
         // The plate text often arrives on a later frame: wait for it (onSmartDetectionEnd flushes if it never comes).
         if (type === 'licensePlate' && !licensePlateText) {
+          this._scheduleLicensePlateFallback(event, eventId);
+          continue;
+        }
+        if (type === 'licensePlate') {
+          this.homey.app.debug(`[SmartDetection] type=${type} device=${this.getData().id}`);
+          this._fireLicensePlate(event);
           continue;
         }
         event.triggered.add(type);
@@ -239,8 +313,6 @@ const SmartDetectionMixin = {
           this.triggerSmartDetectionTriggerAnimal(score, zones, zoneIds, direction);
         } else if (type === 'package') {
           this.triggerSmartDetectionTriggerPackage(score, zones, zoneIds, direction);
-        } else if (type === 'licensePlate') {
-          this.triggerSmartDetectionTriggerLicensePlate(score, zones, licensePlateText, zoneIds, direction);
         } else if (type === 'face') {
           this.triggerSmartDetectionTriggerFace(score, zones, zoneIds, direction);
         } else {
