@@ -25,7 +25,9 @@ class FakeImage {
     const stream = new PassThrough();
     const chunks = [];
     stream.on('data', (chunk) => chunks.push(chunk));
-    const ended = new Promise((resolve) => stream.on('end', resolve));
+    const ended = new Promise((resolve) => {
+      stream.on('end', resolve);
+    });
     await this.source(stream);
     await ended;
     return Buffer.concat(chunks).toString();

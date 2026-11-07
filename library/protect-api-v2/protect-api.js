@@ -24,7 +24,7 @@ function normalizeRtspsStreamUrl(streamUrl) {
     }
 
     return parsedUrl.toString();
-  } catch (error) {
+  } catch {
     return streamUrl
       .replace(/^rtsps:\/\//i, 'rtsp://')
       .replace(':7441/', ':7447/')

@@ -43,7 +43,7 @@ function decodeUpdatePacket(packet) {
     if (packet.length !== expectedLength) {
       throw new Error('Packet length does not match header information.');
     }
-  } catch (error) {
+  } catch {
     return null;
   }
 

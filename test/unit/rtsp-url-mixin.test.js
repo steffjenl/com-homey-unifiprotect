@@ -55,7 +55,9 @@ describe('RtspUrlMixin', () => {
     expect(device.timers).toHaveLength(1); // retry scheduled
 
     await device.timers[0].fn();
-    await new Promise((resolve) => setImmediate(resolve));
+    await new Promise((resolve) => {
+      setImmediate(resolve);
+    });
     expect(device.rtspUrl).toMatch(/^rtsp/);
     expect(lastWarning(device)).toBeNull();
   });

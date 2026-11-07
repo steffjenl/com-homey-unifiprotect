@@ -407,7 +407,7 @@ class UniFiProtect extends Homey.App {
         if (fobDevice) {
           fobDevice.onFobButtonEvent(event).catch((error) => this.error(error));
         }
-      } catch (error) {
+      } catch {
         // Driver may not be paired/installed yet.
       }
 

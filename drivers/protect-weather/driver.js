@@ -110,7 +110,7 @@ class WeatherDriver extends Homey.Driver {
       const devices = this.getDevices();
       const device = devices.find((d) => String(d.getData().id) === String(deviceId));
       return device || false;
-    } catch (e) {
+    } catch {
       return false;
     }
   }

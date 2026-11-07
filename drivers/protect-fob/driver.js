@@ -162,7 +162,7 @@ class ProtectFobDriver extends Homey.Driver {
       const devices = this.getDevices();
       const device = devices.find((item) => String(item.getData().id) === String(deviceId));
       return device || false;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

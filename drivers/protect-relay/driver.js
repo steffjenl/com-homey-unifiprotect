@@ -179,7 +179,7 @@ class UniFiRelayDriver extends Homey.Driver {
       const device = devices.find((device) => String(device.getData().id) === String(deviceId));
       if (!device) return false;
       return device;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -188,7 +188,7 @@ class UniFiRelayDriver extends Homey.Driver {
     try {
       const devices = this.getDevices();
       return devices.filter((device) => String(device.getRelayId()) === String(relayId));
-    } catch (error) {
+    } catch {
       return [];
     }
   }

@@ -128,7 +128,7 @@ class AccessIntercomeDriver extends Homey.Driver {
       const device = devices.find((d) => String(d.getData().id) === String(deviceId));
       if (!device) return false;
       return device;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -139,7 +139,7 @@ class AccessIntercomeDriver extends Homey.Driver {
       const device = devices.find((d) => String(d.getData().mac || '').toLowerCase() === String(mac).toLowerCase());
       if (!device) return false;
       return device;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

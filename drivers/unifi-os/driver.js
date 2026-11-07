@@ -125,7 +125,7 @@ module.exports = class UniFiOSDriver extends Homey.Driver {
       const device = devices.find((device) => String(device.getData().id) === String(deviceId));
       if (!device) return false;
       return device;
-    } catch (Error) {
+    } catch {
       return false;
     }
   }

@@ -78,7 +78,7 @@ class ZoneSensorDriver extends Homey.Driver {
   _getDevicesForCamera(cameraId) {
     try {
       return this.getDevices().filter((device) => String(device.getData().cameraId) === String(cameraId));
-    } catch (error) {
+    } catch {
       return [];
     }
   }

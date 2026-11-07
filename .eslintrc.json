@@ -1,5 +1,15 @@
 {
   "extends": "athom/homey-app",
+  "rules": {
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": {
+          "inheritedMethods": false
+        }
+      }
+    ]
+  },
   "overrides": [
     {
       "files": [

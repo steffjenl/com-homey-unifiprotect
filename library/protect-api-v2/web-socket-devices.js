@@ -312,7 +312,7 @@ class ProtectWebSocket extends BaseClass {
             if (alarmDevice) {
               alarmDriver.onParseWebsocketMessage(alarmDevice, payload);
             }
-          } catch (e) {
+          } catch {
             // driver may not be installed
           }
 
@@ -322,7 +322,7 @@ class ProtectWebSocket extends BaseClass {
             if (unifiOsDevice) {
               unifiOsDriver.onParseWebsocketMessage(unifiOsDevice, payload);
             }
-          } catch (e) {
+          } catch {
             // driver may not be installed
           }
         }

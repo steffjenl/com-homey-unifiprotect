@@ -146,7 +146,7 @@ class NVRAlarmDriver extends Homey.Driver {
       const devices = this.getDevices();
       const device = devices.find((d) => String(d.getData().id) === String(deviceId));
       return device || false;
-    } catch (e) {
+    } catch {
       return false;
     }
   }
@@ -155,7 +155,7 @@ class NVRAlarmDriver extends Homey.Driver {
     try {
       const devices = this.getDevices();
       return devices.length > 0 ? devices[0] : false;
-    } catch (e) {
+    } catch {
       return false;
     }
   }

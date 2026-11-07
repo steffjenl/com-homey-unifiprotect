@@ -393,7 +393,7 @@ class ProtectAPI extends BaseClass {
         ext: '.jpg',
       };
 
-      return this.webclient.download(`cameras/${id}/snapshot`, params)
+      this.webclient.download(`cameras/${id}/snapshot`, params)
         .then((buffer) => resolve(buffer))
         .catch((error) => reject(new Error(`Error obtaining snapshot buffer: ${error}`)));
     });
@@ -410,7 +410,7 @@ class ProtectAPI extends BaseClass {
         ext: '.jpg',
       };
 
-      return this.webclient.download(`cameras/${id}/package-snapshot`, params)
+      this.webclient.download(`cameras/${id}/package-snapshot`, params)
         .then((buffer) => resolve(buffer))
         .catch((error) => reject(new Error(`Error obtaining package snapshot buffer: ${error}`)));
     });
@@ -429,7 +429,7 @@ class ProtectAPI extends BaseClass {
         ext: '.jpg',
       };
 
-      return resolve(`https://${this.webclient.getServerHost()}:${this.webclient.getServerPort()}${UFV_API_ENDPOINT}/cameras/${camera.id}/snapshot${this.webclient.toQueryString(params)}`);
+      resolve(`https://${this.webclient.getServerHost()}:${this.webclient.getServerPort()}${UFV_API_ENDPOINT}/cameras/${camera.id}/snapshot${this.webclient.toQueryString(params)}`);
     });
   }
 
@@ -446,7 +446,7 @@ class ProtectAPI extends BaseClass {
         ext: '.jpg',
       };
 
-      return resolve(`https://${this.webclient.getServerHost()}:${this.webclient.getServerPort()}${UFV_API_ENDPOINT}/cameras/${camera.id}/package-snapshot${this.webclient.toQueryString(params)}`);
+      resolve(`https://${this.webclient.getServerHost()}:${this.webclient.getServerPort()}${UFV_API_ENDPOINT}/cameras/${camera.id}/package-snapshot${this.webclient.toQueryString(params)}`);
     });
   }
 
@@ -571,7 +571,7 @@ class ProtectAPI extends BaseClass {
           resetAt,
         },
       };
-      return this.webclient.patch(`cameras/${camera.id}`, params)
+      this.webclient.patch(`cameras/${camera.id}`, params)
         .then(() => resolve('LCD message successfully set.'))
         .catch((error) => reject(new Error(`Error setting lcd message: ${error}`)));
     });
@@ -713,7 +713,7 @@ class ProtectAPI extends BaseClass {
         }
       }
 
-      return this.webclient.patch(`chimes/${chime.id}`, params)
+      this.webclient.patch(`chimes/${chime.id}`, params)
         .then(() => resolve('volume successfully set.'))
         .catch((error) => reject(new Error(`Error setting volume: ${error}`)));
     });
@@ -725,7 +725,7 @@ class ProtectAPI extends BaseClass {
         volume: Math.round(volumeLevel * 100),
       };
 
-      return this.webclient.patch(`speakers/${speaker.id}`, params)
+      this.webclient.patch(`speakers/${speaker.id}`, params)
         .then(() => resolve('Speaker volume successfully set.'))
         .catch((error) => reject(new Error(`Error setting speaker volume: ${error}`)));
     });
@@ -821,7 +821,7 @@ class ProtectAPI extends BaseClass {
       const duration = Number(pulseDuration);
       const safeDuration = Number.isFinite(duration) && duration > 0 ? Math.round(duration) : 1000;
 
-      return this.webclient.post(`relays/${relayId}/outputs/${outputId}/activate`, { pulseDuration: safeDuration })
+      this.webclient.post(`relays/${relayId}/outputs/${outputId}/activate`, { pulseDuration: safeDuration })
         .then(() => resolve('Relay output successfully pulsed.'))
         .catch((error) => reject(new Error(`Error pulsing relay output: ${error}`)));
     });
@@ -836,7 +836,7 @@ class ProtectAPI extends BaseClass {
         isLightOn,
         lightOnSettings: isLedForceOn,
       };
-      return this.webclient.patch(`lights/${light.id}`, params)
+      this.webclient.patch(`lights/${light.id}`, params)
         .then(() => resolve('isLightOn successfully set.'))
         .catch((error) => reject(new Error(`Error setting isLightOn: ${error}`)));
     });
@@ -851,7 +851,7 @@ class ProtectAPI extends BaseClass {
       const params = {
         lightDeviceSettings: isLedForceOn,
       };
-      return this.webclient.patch(`lights/${light.id}`, params)
+      this.webclient.patch(`lights/${light.id}`, params)
         .then(() => resolve('setLightLevel successfully set.'))
         .catch((error) => reject(new Error(`Error setting setLightLevel: ${error}`)));
     });
@@ -883,7 +883,7 @@ class ProtectAPI extends BaseClass {
       const params = {
         lightModeSettings,
       };
-      return this.webclient.patch(`lights/${light.id}`, params)
+      this.webclient.patch(`lights/${light.id}`, params)
         .then(() => resolve('setLightMode successfully set.'))
         .catch((error) => reject(new Error(`Error setting setLightMode: ${error}`)));
     });
@@ -984,7 +984,7 @@ class ProtectAPI extends BaseClass {
           isEnabled: enabled,
         },
       };
-      return this.webclient.patch(`cameras/${camera.id}`, params)
+      this.webclient.patch(`cameras/${camera.id}`, params)
         .then(() => resolve('Status Led successfully set.'))
         .catch((error) => reject(new Error(`Error setting status led: ${error}`)));
     });
@@ -997,7 +997,7 @@ class ProtectAPI extends BaseClass {
           areSystemSoundsEnabled: enabled,
         },
       };
-      return this.webclient.patch(`cameras/${camera.id}`, params)
+      this.webclient.patch(`cameras/${camera.id}`, params)
         .then(() => resolve('Status Sound successfully set.'))
         .catch((error) => reject(new Error(`Error setting status sound: ${error}`)));
     });
@@ -1010,7 +1010,7 @@ class ProtectAPI extends BaseClass {
           ringVolume: Math.round(volumeLevel),
         },
       };
-      return this.webclient.patch(`cameras/${camera.id}`, params)
+      this.webclient.patch(`cameras/${camera.id}`, params)
         .then(() => resolve('Doorbell ring volume successfully set.'))
         .catch((error) => reject(new Error(`Error setting doorbell ring volume: ${error}`)));
     });
@@ -1023,7 +1023,7 @@ class ProtectAPI extends BaseClass {
           speakerVolume: Math.round(volumeLevel),
         },
       };
-      return this.webclient.patch(`cameras/${camera.id}`, params)
+      this.webclient.patch(`cameras/${camera.id}`, params)
         .then(() => resolve('Doorbell speaker volume successfully set.'))
         .catch((error) => reject(new Error(`Error setting doorbell speaker volume: ${error}`)));
     });
@@ -1031,7 +1031,7 @@ class ProtectAPI extends BaseClass {
 
   setPatrolStop(camera) {
     return new Promise((resolve, reject) => {
-      return this.webclient.post(`cameras/${camera.id}/ptz/patrol/stop`, {})
+      this.webclient.post(`cameras/${camera.id}/ptz/patrol/stop`, {})
         .then(() => resolve('setPatrolStop successfully set.'))
         .catch((error) => reject(new Error(`Error setting setPatrolStop: ${error}`)));
     });
@@ -1039,7 +1039,7 @@ class ProtectAPI extends BaseClass {
 
   setPatrolStart(camera, presetId) {
     return new Promise((resolve, reject) => {
-      return this.webclient.post(`cameras/${camera.id}/ptz/patrol/start/${presetId}`, {})
+      this.webclient.post(`cameras/${camera.id}/ptz/patrol/start/${presetId}`, {})
         .then(() => resolve('setPatrolStart successfully set.'))
         .catch((error) => reject(new Error(`Error setting setPatrolStart: ${error}`)));
     });
@@ -1047,7 +1047,7 @@ class ProtectAPI extends BaseClass {
 
   setPTZHome(camera) {
     return new Promise((resolve, reject) => {
-      return this.webclient.post(`cameras/${camera.id}/ptz/goto/-1`, {})
+      this.webclient.post(`cameras/${camera.id}/ptz/goto/-1`, {})
         .then(() => resolve('setPTZHome successfully set.'))
         .catch((error) => reject(new Error(`Error setting setPTZHome: ${error}`)));
     });
@@ -1055,7 +1055,7 @@ class ProtectAPI extends BaseClass {
 
   setPTZPreset(camera, presetId) {
     return new Promise((resolve, reject) => {
-      return this.webclient.post(`cameras/${camera.id}/ptz/goto/${(presetId - 1)}`, {})
+      this.webclient.post(`cameras/${camera.id}/ptz/goto/${(presetId - 1)}`, {})
         .then(() => resolve('setPTZPreset successfully set.'))
         .catch((error) => reject(new Error(`Error setting setPTZPreset: ${error}`)));
     });
@@ -1068,7 +1068,7 @@ class ProtectAPI extends BaseClass {
           isColorNightVisionEnabled: enabled,
         },
       };
-      return this.webclient.patch(`cameras/${camera.id}`, params)
+      this.webclient.patch(`cameras/${camera.id}`, params)
         .then(() => resolve('Color Night Vision successfully set.'))
         .catch((error) => reject(new Error(`Error setting Color Night Vision: ${error}`)));
     });
@@ -1086,7 +1086,7 @@ class ProtectAPI extends BaseClass {
           autoTrackingObjectTypes,
         },
       };
-      return this.webclient.patch(`cameras/${camera.id}`, params)
+      this.webclient.patch(`cameras/${camera.id}`, params)
         .then(() => resolve('Auto Tracking successfully set.'))
         .catch((error) => reject(new Error(`Error setting Auto Tracking: ${error}`)));
     });
@@ -1114,7 +1114,7 @@ class ProtectAPI extends BaseClass {
 
   testRingtone(camera) {
     return new Promise((resolve, reject) => {
-      return this.webclient.post(`cameras/${camera.id}/test-ringtone`, {})
+      this.webclient.post(`cameras/${camera.id}/test-ringtone`, {})
         .then(() => resolve('Ringtone successfully played.'))
         .catch((error) => reject(new Error(`Error playing ringtone: ${error}`)));
     });
@@ -1122,7 +1122,7 @@ class ProtectAPI extends BaseClass {
 
   playChimeTone(chime) {
     return new Promise((resolve, reject) => {
-      return this.webclient.post(`chimes/${chime.id}/play-speaker`, {})
+      this.webclient.post(`chimes/${chime.id}/play-speaker`, {})
         .then(() => resolve('Chime test tone successfully played.'))
         .catch((error) => reject(new Error(`Error playing chime test tone: ${error}`)));
     });
@@ -1148,7 +1148,7 @@ class ProtectAPI extends BaseClass {
       const params = {
         volume: volumeLevel * 100,
       };
-      return this.webclient.patch(`sirens/${siren.id}`, params)
+      this.webclient.patch(`sirens/${siren.id}`, params)
         .then(() => resolve('volume successfully set.'))
         .catch((error) => reject(new Error(`Error setting volume: ${error}`)));
     });
@@ -1156,7 +1156,7 @@ class ProtectAPI extends BaseClass {
 
   testSiren(siren, volumeLevel) {
     return new Promise((resolve, reject) => {
-      return this.webclient.post(`sirens/${siren.id}/test-sound`, {})
+      this.webclient.post(`sirens/${siren.id}/test-sound`, {})
         .then(() => resolve('Siren Test successfully send.'))
         .catch((error) => reject(new Error(`Error send test siren: ${error}`)));
     });
@@ -1395,10 +1395,10 @@ class ProtectAPI extends BaseClass {
   _postAbsolutePath(path, payload = {}) {
     return new Promise((resolve, reject) => {
       if (!this.webclient.getServerHost()) {
-        return reject(new Error('Invalid host.'));
+        reject(new Error('Invalid host.'));
       }
       if (!this.webclient.getCookieToken()) {
-        return reject(new Error('Not logged in.'));
+        reject(new Error('Not logged in.'));
       }
 
       const body = JSON.stringify(payload);
@@ -1440,17 +1440,16 @@ class ProtectAPI extends BaseClass {
       req.on('error', (error) => reject(error));
       req.write(body);
       req.end();
-      return undefined;
     });
   }
 
   _getAbsolutePath(path) {
     return new Promise((resolve, reject) => {
       if (!this.webclient.getServerHost()) {
-        return reject(new Error('Invalid host.'));
+        reject(new Error('Invalid host.'));
       }
       if (!this.webclient.getCookieToken()) {
-        return reject(new Error('Not logged in.'));
+        reject(new Error('Not logged in.'));
       }
 
       const options = {
@@ -1488,7 +1487,6 @@ class ProtectAPI extends BaseClass {
 
       req.on('error', (error) => reject(error));
       req.end();
-      return undefined;
     });
   }
 
@@ -1565,18 +1563,22 @@ class ProtectAPI extends BaseClass {
         this.homey.app.debug('[ProtectAPI] arming via v1 endpoint: /proxy/protect/api/arm/enable');
       }
 
-      return new Promise((resolve, reject) => this.webclient.post('arm/enable', { armProfileId })
-        .then(() => resolve('NVR armed successfully.'))
-        .catch((error) => reject(new Error(`Error arming NVR: ${error}`))));
+      return this.webclient.post('arm/enable', { armProfileId })
+        .then(() => 'NVR armed successfully.')
+        .catch((error) => {
+          throw new Error(`Error arming NVR: ${error}`);
+        });
     }
 
     if (this.homey && this.homey.app) {
       this.homey.app.debug('[ProtectAPI] disarming via v1 endpoint: /proxy/protect/api/arm/disable');
     }
 
-    return new Promise((resolve, reject) => this.webclient.post('arm/disable', {})
-      .then(() => resolve('NVR disarmed successfully.'))
-      .catch((error) => reject(new Error(`Error disarming NVR: ${error}`))));
+    return this.webclient.post('arm/disable', {})
+      .then(() => 'NVR disarmed successfully.')
+      .catch((error) => {
+        throw new Error(`Error disarming NVR: ${error}`);
+      });
   }
 
   _setNvrModeV2(mode) {
@@ -1638,7 +1640,7 @@ class ProtectAPI extends BaseClass {
     // Shape: { status: 'armed'|'disarmed', armProfileId: '...', armedAt: ..., ... }
     return new Promise((resolve, reject) => {
       if (this._bootstrap && this._bootstrap.nvr && this._bootstrap.nvr.armMode) {
-        return resolve(this._bootstrap.nvr.armMode);
+        resolve(this._bootstrap.nvr.armMode);
       }
       if (
         this._bootstrap
@@ -1646,13 +1648,13 @@ class ProtectAPI extends BaseClass {
         && typeof this._bootstrap.nvr.isAway !== 'undefined'
       ) {
         const isAway = this._bootstrap.nvr.isAway === true;
-        return resolve({
+        resolve({
           status: isAway ? 'armed' : 'disarmed',
           isAway,
         });
       }
       // No live GET endpoint exists for arm state — only POST arm/enable and POST arm/disable
-      return reject(new Error('NVR arm state not available in bootstrap'));
+      reject(new Error('NVR arm state not available in bootstrap'));
     });
   }
 }

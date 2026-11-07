@@ -183,7 +183,7 @@ class AccessWebSocket extends BaseClass {
         this._eventListener.removeAllListeners();
         try {
           this._eventListener.close();
-        } catch (error) {
+        } catch {
           // Socket was closed before the connection was established - safe to ignore.
         }
         delete this._eventListener;
