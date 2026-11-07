@@ -244,6 +244,7 @@
         "repair_action": "Åbn indstillinger"
     },
     "flow": {
-        "any_zone": "Enhver zone"
+        "any_zone": "Enhver zone",
+        "zones_need_v1": "Zoneliste kræver UniFi OS-login (ikke tilgængelig med kun API-nøgle)"
     }
 }

@@ -250,6 +250,7 @@
         "repair_action": "Instellingen openen"
     },
     "flow": {
-        "any_zone": "Elke zone"
+        "any_zone": "Elke zone",
+        "zones_need_v1": "Zonelijst vereist de UniFi OS-login (niet beschikbaar met alleen een API-sleutel)"
     }
 }

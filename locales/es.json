@@ -250,6 +250,7 @@
         "repair_action": "Abrir configuración"
     },
     "flow": {
-        "any_zone": "Cualquier zona"
+        "any_zone": "Cualquier zona",
+        "zones_need_v1": "La lista de zonas requiere el inicio de sesión de UniFi OS (no disponible solo con clave API)"
     }
 }

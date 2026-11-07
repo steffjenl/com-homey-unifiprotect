@@ -244,6 +244,7 @@
         "repair_action": "Åpne innstillinger"
     },
     "flow": {
-        "any_zone": "Hvilken som helst sone"
+        "any_zone": "Hvilken som helst sone",
+        "zones_need_v1": "Soneliste krever UniFi OS-pålogging (ikke tilgjengelig med bare API-nøkkel)"
     }
 }

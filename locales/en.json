@@ -255,6 +255,7 @@
         "repair_action": "Fix Settings"
     },
     "flow": {
-        "any_zone": "Any zone"
+        "any_zone": "Any zone",
+        "zones_need_v1": "Zone list needs the UniFi OS login (not available with API key only)"
     }
 }

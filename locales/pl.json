@@ -244,6 +244,7 @@
         "repair_action": "Otwórz ustawienia"
     },
     "flow": {
-        "any_zone": "Dowolna strefa"
+        "any_zone": "Dowolna strefa",
+        "zones_need_v1": "Lista stref wymaga logowania UniFi OS (niedostępna tylko z kluczem API)"
     }
 }

@@ -244,6 +244,7 @@
         "repair_action": "Apri impostazioni"
     },
     "flow": {
-        "any_zone": "Qualsiasi zona"
+        "any_zone": "Qualsiasi zona",
+        "zones_need_v1": "L'elenco delle zone richiede l'accesso a UniFi OS (non disponibile solo con chiave API)"
     }
 }

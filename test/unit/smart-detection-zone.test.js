@@ -31,8 +31,32 @@ describe('listZones', () => {
     expect(listZones(homey, device, 'drive').map((z) => z.id)).toEqual(['1']);
   });
 
-  test('device without zones only offers any', () => {
-    expect(listZones(homey, {}, '').map((z) => z.id)).toEqual(['any']);
+  test('device without zones only offers any, with a hint', () => {
+    const results = listZones({ __: (k) => k }, {}, '');
+    expect(results.map((z) => z.id)).toEqual(['any']);
+    expect(results[0].description).toBe('flow.zones_need_v1');
+  });
+
+  test('no hint when zones exist', () => {
+    expect(listZones(homey, device, '')[0].description).toBeUndefined();
+  });
+
+  test('live V1 bootstrap zones win over the init snapshot', () => {
+    const live = {
+      __: () => 'Any zone',
+      app: { isV1Available: () => true, api: { getBootstrap: () => ({ cameras: [{ id: 'c1', smartDetectZones: [{ id: 9, name: 'Garden' }] }] }) } },
+    };
+    const dev = { ...device, getData: () => ({ id: 'c1' }) };
+    expect(listZones(live, dev, '').map((z) => z.name)).toEqual(['Any zone', 'Garden']);
+  });
+
+  test('bootstrap without the camera falls back to the snapshot', () => {
+    const live = {
+      __: () => 'Any zone',
+      app: { isV1Available: () => true, api: { getBootstrap: () => ({ cameras: [] }) } },
+    };
+    const dev = { ...device, getData: () => ({ id: 'c1' }) };
+    expect(listZones(live, dev, '').map((z) => z.name)).toEqual(['Any zone', 'Driveway', 'Street']);
   });
 });
 

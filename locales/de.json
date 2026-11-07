@@ -250,6 +250,7 @@
         "repair_action": "Einstellungen öffnen"
     },
     "flow": {
-        "any_zone": "Beliebige Zone"
+        "any_zone": "Beliebige Zone",
+        "zones_need_v1": "Die Zonenliste benötigt die UniFi-OS-Anmeldung (nicht nur mit API-Schlüssel verfügbar)"
     }
 }

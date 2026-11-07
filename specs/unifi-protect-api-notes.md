@@ -324,6 +324,7 @@ documented beyond this note — `web-socket-devices.js` assumes a single `item` 
 
 - Device triggers (camera + doorbell, all smart detection types and ended) have an optional autocomplete `zone` argument ("Any zone" + the camera's `smartDetectZones` names). Flows without it match every zone.
 - Matching uses zone **ids** from `metadata.zonesStatus` (entries whose `status !== 'none'`), passed as trigger state `{ zone_ids }`; logic in `library/smart-detection-zone.js`. The `zones` text token is unchanged.
+- The autocomplete list reads zones live from the V1 bootstrap (fallback: snapshot `_smartDetectZones` from device init). The official V2 API exposes no detection zones, so with an API key only the list shows just "Any zone" (with a hint, `flow.zones_need_v1`).
 - V2 (API key) frames carry no `metadata`, so `zone_ids` is empty there: a specific zone never matches, "Any zone" always does. Zone filtering needs the V1 login.
 
 ## NVR Alarm / Away Mode
