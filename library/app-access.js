@@ -130,6 +130,20 @@ class AppAccess extends BaseClass {
         return Promise.resolve(true);
       });
     });
+    // UA Hub Gate in two/three-button gate control mode: control_cmd selects the operator output
+    [
+      [UfvConstants.ACTION_ACCESS_GARAGEDOOR_GATE_OPEN, UfvConstants.ACCESS_CONTROL_CMD_OPEN],
+      [UfvConstants.ACTION_ACCESS_GARAGEDOOR_GATE_CLOSE, UfvConstants.ACCESS_CONTROL_CMD_CLOSE],
+      [UfvConstants.ACTION_ACCESS_GARAGEDOOR_GATE_STOP, UfvConstants.ACCESS_CONTROL_CMD_STOP],
+    ].forEach(([cardId, controlCmd]) => {
+      this.homey.flow.getActionCard(cardId).registerRunListener(async (args) => {
+        if (typeof args.device.getData().id !== 'undefined') {
+          this.homey.app.debug(`[AppAccess] gate control_cmd=${controlCmd} door=${args.device.getData().id}`);
+          return this.homey.app.accessApi.setDoorUnLock(args.device.getData().id, undefined, controlCmd);
+        }
+        return Promise.resolve(true);
+      });
+    });
 
     const _conditionDoorIsOpen = this.homey.flow.getConditionCard(UfvConstants.CONDITION_ACCESS_DOOR_IS_OPEN);
     _conditionDoorIsOpen.registerRunListener(async (args, state) => {

@@ -267,6 +267,99 @@
         "pl": "Otwórz bramę (Wyjazd)",
         "ko": "게이트 열기 (출구)"
       }
+    },
+    {
+      "id": "ufv_garagedoor_gate_open",
+      "title": {
+        "en": "Open gate (Open button)",
+        "nl": "Poort openen (Open-knop)",
+        "de": "Tor öffnen (Auf-Taste)",
+        "fr": "Ouvrir le portail (bouton Ouvrir)",
+        "it": "Apri cancello (pulsante Apri)",
+        "sv": "Öppna grind (Öppna-knapp)",
+        "no": "Åpne port (Åpne-knapp)",
+        "es": "Abrir portón (botón Abrir)",
+        "da": "Åbn port (Åbn-knap)",
+        "ru": "Открыть ворота (кнопка Открыть)",
+        "pl": "Otwórz bramę (przycisk Otwórz)",
+        "ko": "게이트 열기 (열기 버튼)"
+      },
+      "hint": {
+        "en": "UA Hub Gate in Two-/Three-Button Control: fires the gate operator output set to Open (control_cmd=open).",
+        "nl": "UA Hub Gate in twee-/drieknopsbediening: activeert de uitgang die op Openen staat (control_cmd=open).",
+        "de": "UA Hub Gate in Zwei-/Drei-Tasten-Steuerung: schaltet den Ausgang für Öffnen (control_cmd=open).",
+        "fr": "UA Hub Gate en commande à deux/trois boutons : active la sortie réglée sur Ouvrir (control_cmd=open).",
+        "it": "UA Hub Gate con controllo a due/tre pulsanti: attiva l'uscita impostata su Apri (control_cmd=open).",
+        "sv": "UA Hub Gate med två-/treknappsstyrning: aktiverar utgången inställd på Öppna (control_cmd=open).",
+        "no": "UA Hub Gate med to-/treknappsstyring: aktiverer utgangen satt til Åpne (control_cmd=open).",
+        "es": "UA Hub Gate con control de dos/tres botones: activa la salida configurada como Abrir (control_cmd=open).",
+        "da": "UA Hub Gate med to-/treknapsstyring: aktiverer udgangen sat til Åbn (control_cmd=open).",
+        "ru": "UA Hub Gate в режиме двух/трёх кнопок: срабатывает выход, назначенный на «Открыть» (control_cmd=open).",
+        "pl": "UA Hub Gate w trybie dwu-/trzyprzyciskowym: uruchamia wyjście ustawione na Otwórz (control_cmd=open).",
+        "ko": "2/3버튼 제어 모드의 UA Hub Gate: 열기(으)로 설정된 출력을 작동합니다 (control_cmd=open)."
+      }
+    },
+    {
+      "id": "ufv_garagedoor_gate_close",
+      "title": {
+        "en": "Close gate (Close button)",
+        "nl": "Poort sluiten (Sluit-knop)",
+        "de": "Tor schließen (Zu-Taste)",
+        "fr": "Fermer le portail (bouton Fermer)",
+        "it": "Chiudi cancello (pulsante Chiudi)",
+        "sv": "Stäng grind (Stäng-knapp)",
+        "no": "Lukk port (Lukk-knapp)",
+        "es": "Cerrar portón (botón Cerrar)",
+        "da": "Luk port (Luk-knap)",
+        "ru": "Закрыть ворота (кнопка Закрыть)",
+        "pl": "Zamknij bramę (przycisk Zamknij)",
+        "ko": "게이트 닫기 (닫기 버튼)"
+      },
+      "hint": {
+        "en": "UA Hub Gate in Two-/Three-Button Control: fires the gate operator output set to Close (control_cmd=close).",
+        "nl": "UA Hub Gate in twee-/drieknopsbediening: activeert de uitgang die op Sluiten staat (control_cmd=close).",
+        "de": "UA Hub Gate in Zwei-/Drei-Tasten-Steuerung: schaltet den Ausgang für Schließen (control_cmd=close).",
+        "fr": "UA Hub Gate en commande à deux/trois boutons : active la sortie réglée sur Fermer (control_cmd=close).",
+        "it": "UA Hub Gate con controllo a due/tre pulsanti: attiva l'uscita impostata su Chiudi (control_cmd=close).",
+        "sv": "UA Hub Gate med två-/treknappsstyrning: aktiverar utgången inställd på Stäng (control_cmd=close).",
+        "no": "UA Hub Gate med to-/treknappsstyring: aktiverer utgangen satt til Lukk (control_cmd=close).",
+        "es": "UA Hub Gate con control de dos/tres botones: activa la salida configurada como Cerrar (control_cmd=close).",
+        "da": "UA Hub Gate med to-/treknapsstyring: aktiverer udgangen sat til Luk (control_cmd=close).",
+        "ru": "UA Hub Gate в режиме двух/трёх кнопок: срабатывает выход, назначенный на «Закрыть» (control_cmd=close).",
+        "pl": "UA Hub Gate w trybie dwu-/trzyprzyciskowym: uruchamia wyjście ustawione na Zamknij (control_cmd=close).",
+        "ko": "2/3버튼 제어 모드의 UA Hub Gate: 닫기(으)로 설정된 출력을 작동합니다 (control_cmd=close)."
+      }
+    },
+    {
+      "id": "ufv_garagedoor_gate_stop",
+      "title": {
+        "en": "Stop gate (Stop button)",
+        "nl": "Poort stoppen (Stop-knop)",
+        "de": "Tor stoppen (Stopp-Taste)",
+        "fr": "Arrêter le portail (bouton Stop)",
+        "it": "Ferma cancello (pulsante Stop)",
+        "sv": "Stoppa grind (Stopp-knapp)",
+        "no": "Stopp port (Stopp-knapp)",
+        "es": "Detener portón (botón Detener)",
+        "da": "Stop port (Stop-knap)",
+        "ru": "Остановить ворота (кнопка Стоп)",
+        "pl": "Zatrzymaj bramę (przycisk Stop)",
+        "ko": "게이트 정지 (정지 버튼)"
+      },
+      "hint": {
+        "en": "UA Hub Gate in Three-Button Control: fires the gate operator output set to Stop (control_cmd=stop).",
+        "nl": "UA Hub Gate in drieknopsbediening: activeert de uitgang die op Stoppen staat (control_cmd=stop).",
+        "de": "UA Hub Gate in Drei-Tasten-Steuerung: schaltet den Ausgang für Stopp (control_cmd=stop).",
+        "fr": "UA Hub Gate en commande à trois boutons : active la sortie réglée sur Stop (control_cmd=stop).",
+        "it": "UA Hub Gate con controllo a tre pulsanti: attiva l'uscita impostata su Stop (control_cmd=stop).",
+        "sv": "UA Hub Gate med treknappsstyrning: aktiverar utgången inställd på Stopp (control_cmd=stop).",
+        "no": "UA Hub Gate med treknappsstyring: aktiverer utgangen satt til Stopp (control_cmd=stop).",
+        "es": "UA Hub Gate con control de tres botones: activa la salida configurada como Detener (control_cmd=stop).",
+        "da": "UA Hub Gate med to-/treknapsstyring: aktiverer udgangen sat til Stop (control_cmd=stop).",
+        "ru": "UA Hub Gate в режиме трёх кнопок: срабатывает выход, назначенный на «Стоп» (control_cmd=stop).",
+        "pl": "UA Hub Gate w trybie trzyprzyciskowym: uruchamia wyjście ustawione na Stop (control_cmd=stop).",
+        "ko": "3버튼 제어 모드의 UA Hub Gate: 정지(으)로 설정된 출력을 작동합니다 (control_cmd=stop)."
+      }
     }
   ],
   "triggers": [

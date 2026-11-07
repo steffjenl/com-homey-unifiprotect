@@ -1,0 +1,21 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Stop",
+    "nl": "Stoppen",
+    "de": "Stopp",
+    "fr": "Stop",
+    "it": "Stop",
+    "sv": "Stopp",
+    "no": "Stopp",
+    "es": "Detener",
+    "da": "Stop",
+    "ru": "Стоп",
+    "pl": "Stop",
+    "ko": "정지"
+  },
+  "getable": false,
+  "setable": true,
+  "uiComponent": "button",
+  "icon": "/assets/capabilities/gate_stop_button.svg"
+}

@@ -6,6 +6,7 @@ const UfvConstants = require('../../library/constants');
 const {
   DOOR_STATE_OPEN, DOOR_STATE_CLOSED, DOOR_STATE_UNKNOWN, normalizeDoorState,
 } = require('../../library/door-state');
+const { GATE_BUTTONS, buttonsForMode, toggleCommand } = require('../../library/gate-control');
 
 class MyDevice extends Homey.Device {
 
@@ -23,14 +24,12 @@ class MyDevice extends Homey.Device {
     }
     //
     this.log('Access Garagedoor has been initialized');
-    this.registerCapabilityListener('garagedoor_closed', async () => {
-      // Gate/garage hubs expose a single toggle relay: there is no separate open/close
-      // action, the same unlock pulse both opens and closes the door. The physical
-      // open/closed state is reported separately via the door position sensor (dps)
-      // and is handled by onDoorChange(), not here.
-      this.log('Pulsing the door relay');
-      return this.homey.app.accessApi.setDoorUnLock(this.getData().id);
-    });
+    this.registerCapabilityListener('garagedoor_closed', (value) => this._onGarageDoorToggle(value));
+    try {
+      await this._applyGateMode(this.getSetting(UfvConstants.SETTING_GATE_CONTROL_MODE));
+    } catch (error) {
+      this.error(error);
+    }
     try {
       const device = await this.homey.app.accessApi.getDoor(this.getData().id);
       if (device && typeof device.data.door_position_status !== 'undefined') {
@@ -59,6 +58,63 @@ class MyDevice extends Homey.Device {
      */
   async onSettings({ oldSettings, newSettings, changedKeys }) {
     this.log('Access Garagedoor settings where changed');
+    if (changedKeys.includes(UfvConstants.SETTING_GATE_CONTROL_MODE)) {
+      await this._applyGateMode(newSettings[UfvConstants.SETTING_GATE_CONTROL_MODE]);
+    }
+  }
+
+  /**
+   * Tile toggle. In single-pulse mode the hub has one relay action, so the same unlock
+   * pulse both opens and closes. In two/three-button mode the requested state picks the
+   * operator output via control_cmd. The physical state still comes from the door
+   * position sensor (onDoorChange / polling), not from this handler.
+   * @param {boolean} requestedClosed
+   */
+  async _onGarageDoorToggle(requestedClosed) {
+    const mode = this.getSetting(UfvConstants.SETTING_GATE_CONTROL_MODE);
+    const command = toggleCommand(mode, requestedClosed);
+    if (command) {
+      this.log(`[AccessGarageDoor] Toggle -> control_cmd=${command}`);
+      return this.homey.app.accessApi.setDoorUnLock(this.getData().id, undefined, command);
+    }
+    this.log('[AccessGarageDoor] Pulsing the door relay');
+    return this.homey.app.accessApi.setDoorUnLock(this.getData().id);
+  }
+
+  /**
+   * Add/remove the Open/Close/Stop device-view buttons for the given gate control mode
+   * and make sure each present button has a listener.
+   * @param {string} mode
+   */
+  async _applyGateMode(mode) {
+    const wantedOrder = buttonsForMode(mode);
+    const wanted = new Set(wantedOrder);
+    const present = this.getCapabilities().filter((capability) => capability in GATE_BUTTONS);
+
+    // Homey lists capabilities in the order they were added. If the buttons are not
+    // exactly the wanted ones in the wanted order (e.g. two → three buttons would append
+    // Stop after Close), rebuild them so the view reads Open | Stop | Close.
+    if (present.join(',') !== wantedOrder.join(',')) {
+      for (const capability of present) {
+        await this.removeCapability(capability);
+      }
+      for (const capability of wantedOrder) {
+        await this.addCapability(capability);
+      }
+    }
+    if (!this._gateButtonListeners) this._gateButtonListeners = new Set();
+    for (const capability of wanted) {
+      if (!this._gateButtonListeners.has(capability)) {
+        this.registerCapabilityListener(capability, () => this._onGateButton(capability));
+        this._gateButtonListeners.add(capability);
+      }
+    }
+  }
+
+  async _onGateButton(capability) {
+    const command = GATE_BUTTONS[capability];
+    this.log(`[AccessGarageDoor] Button ${capability} -> control_cmd=${command}`);
+    return this.homey.app.accessApi.setDoorUnLock(this.getData().id, undefined, command);
   }
 
   /**

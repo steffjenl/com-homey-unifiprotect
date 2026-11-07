@@ -1,0 +1,21 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Open",
+    "nl": "Openen",
+    "de": "Öffnen",
+    "fr": "Ouvrir",
+    "it": "Apri",
+    "sv": "Öppna",
+    "no": "Åpne",
+    "es": "Abrir",
+    "da": "Åbn",
+    "ru": "Открыть",
+    "pl": "Otwórz",
+    "ko": "열기"
+  },
+  "getable": false,
+  "setable": true,
+  "uiComponent": "button",
+  "icon": "/assets/capabilities/gate_open_button.svg"
+}

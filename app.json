@@ -8540,6 +8540,120 @@
         ]
       },
       {
+        "id": "ufv_garagedoor_gate_open",
+        "title": {
+          "en": "Open gate (Open button)",
+          "nl": "Poort openen (Open-knop)",
+          "de": "Tor öffnen (Auf-Taste)",
+          "fr": "Ouvrir le portail (bouton Ouvrir)",
+          "it": "Apri cancello (pulsante Apri)",
+          "sv": "Öppna grind (Öppna-knapp)",
+          "no": "Åpne port (Åpne-knapp)",
+          "es": "Abrir portón (botón Abrir)",
+          "da": "Åbn port (Åbn-knap)",
+          "ru": "Открыть ворота (кнопка Открыть)",
+          "pl": "Otwórz bramę (przycisk Otwórz)",
+          "ko": "게이트 열기 (열기 버튼)"
+        },
+        "hint": {
+          "en": "UA Hub Gate in Two-/Three-Button Control: fires the gate operator output set to Open (control_cmd=open).",
+          "nl": "UA Hub Gate in twee-/drieknopsbediening: activeert de uitgang die op Openen staat (control_cmd=open).",
+          "de": "UA Hub Gate in Zwei-/Drei-Tasten-Steuerung: schaltet den Ausgang für Öffnen (control_cmd=open).",
+          "fr": "UA Hub Gate en commande à deux/trois boutons : active la sortie réglée sur Ouvrir (control_cmd=open).",
+          "it": "UA Hub Gate con controllo a due/tre pulsanti: attiva l'uscita impostata su Apri (control_cmd=open).",
+          "sv": "UA Hub Gate med två-/treknappsstyrning: aktiverar utgången inställd på Öppna (control_cmd=open).",
+          "no": "UA Hub Gate med to-/treknappsstyring: aktiverer utgangen satt til Åpne (control_cmd=open).",
+          "es": "UA Hub Gate con control de dos/tres botones: activa la salida configurada como Abrir (control_cmd=open).",
+          "da": "UA Hub Gate med to-/treknapsstyring: aktiverer udgangen sat til Åbn (control_cmd=open).",
+          "ru": "UA Hub Gate в режиме двух/трёх кнопок: срабатывает выход, назначенный на «Открыть» (control_cmd=open).",
+          "pl": "UA Hub Gate w trybie dwu-/trzyprzyciskowym: uruchamia wyjście ustawione na Otwórz (control_cmd=open).",
+          "ko": "2/3버튼 제어 모드의 UA Hub Gate: 열기(으)로 설정된 출력을 작동합니다 (control_cmd=open)."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
+        "id": "ufv_garagedoor_gate_close",
+        "title": {
+          "en": "Close gate (Close button)",
+          "nl": "Poort sluiten (Sluit-knop)",
+          "de": "Tor schließen (Zu-Taste)",
+          "fr": "Fermer le portail (bouton Fermer)",
+          "it": "Chiudi cancello (pulsante Chiudi)",
+          "sv": "Stäng grind (Stäng-knapp)",
+          "no": "Lukk port (Lukk-knapp)",
+          "es": "Cerrar portón (botón Cerrar)",
+          "da": "Luk port (Luk-knap)",
+          "ru": "Закрыть ворота (кнопка Закрыть)",
+          "pl": "Zamknij bramę (przycisk Zamknij)",
+          "ko": "게이트 닫기 (닫기 버튼)"
+        },
+        "hint": {
+          "en": "UA Hub Gate in Two-/Three-Button Control: fires the gate operator output set to Close (control_cmd=close).",
+          "nl": "UA Hub Gate in twee-/drieknopsbediening: activeert de uitgang die op Sluiten staat (control_cmd=close).",
+          "de": "UA Hub Gate in Zwei-/Drei-Tasten-Steuerung: schaltet den Ausgang für Schließen (control_cmd=close).",
+          "fr": "UA Hub Gate en commande à deux/trois boutons : active la sortie réglée sur Fermer (control_cmd=close).",
+          "it": "UA Hub Gate con controllo a due/tre pulsanti: attiva l'uscita impostata su Chiudi (control_cmd=close).",
+          "sv": "UA Hub Gate med två-/treknappsstyrning: aktiverar utgången inställd på Stäng (control_cmd=close).",
+          "no": "UA Hub Gate med to-/treknappsstyring: aktiverer utgangen satt til Lukk (control_cmd=close).",
+          "es": "UA Hub Gate con control de dos/tres botones: activa la salida configurada como Cerrar (control_cmd=close).",
+          "da": "UA Hub Gate med to-/treknapsstyring: aktiverer udgangen sat til Luk (control_cmd=close).",
+          "ru": "UA Hub Gate в режиме двух/трёх кнопок: срабатывает выход, назначенный на «Закрыть» (control_cmd=close).",
+          "pl": "UA Hub Gate w trybie dwu-/trzyprzyciskowym: uruchamia wyjście ustawione na Zamknij (control_cmd=close).",
+          "ko": "2/3버튼 제어 모드의 UA Hub Gate: 닫기(으)로 설정된 출력을 작동합니다 (control_cmd=close)."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
+        "id": "ufv_garagedoor_gate_stop",
+        "title": {
+          "en": "Stop gate (Stop button)",
+          "nl": "Poort stoppen (Stop-knop)",
+          "de": "Tor stoppen (Stopp-Taste)",
+          "fr": "Arrêter le portail (bouton Stop)",
+          "it": "Ferma cancello (pulsante Stop)",
+          "sv": "Stoppa grind (Stopp-knapp)",
+          "no": "Stopp port (Stopp-knapp)",
+          "es": "Detener portón (botón Detener)",
+          "da": "Stop port (Stop-knap)",
+          "ru": "Остановить ворота (кнопка Стоп)",
+          "pl": "Zatrzymaj bramę (przycisk Stop)",
+          "ko": "게이트 정지 (정지 버튼)"
+        },
+        "hint": {
+          "en": "UA Hub Gate in Three-Button Control: fires the gate operator output set to Stop (control_cmd=stop).",
+          "nl": "UA Hub Gate in drieknopsbediening: activeert de uitgang die op Stoppen staat (control_cmd=stop).",
+          "de": "UA Hub Gate in Drei-Tasten-Steuerung: schaltet den Ausgang für Stopp (control_cmd=stop).",
+          "fr": "UA Hub Gate en commande à trois boutons : active la sortie réglée sur Stop (control_cmd=stop).",
+          "it": "UA Hub Gate con controllo a tre pulsanti: attiva l'uscita impostata su Stop (control_cmd=stop).",
+          "sv": "UA Hub Gate med treknappsstyrning: aktiverar utgången inställd på Stopp (control_cmd=stop).",
+          "no": "UA Hub Gate med treknappsstyring: aktiverer utgangen satt til Stopp (control_cmd=stop).",
+          "es": "UA Hub Gate con control de tres botones: activa la salida configurada como Detener (control_cmd=stop).",
+          "da": "UA Hub Gate med to-/treknapsstyring: aktiverer udgangen sat til Stop (control_cmd=stop).",
+          "ru": "UA Hub Gate в режиме трёх кнопок: срабатывает выход, назначенный на «Стоп» (control_cmd=stop).",
+          "pl": "UA Hub Gate w trybie trzyprzyciskowym: uruchamia wyjście ustawione na Stop (control_cmd=stop).",
+          "ko": "3버튼 제어 모드의 UA Hub Gate: 정지(으)로 설정된 출력을 작동합니다 (control_cmd=stop)."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=access-garagedoor"
+          }
+        ]
+      },
+      {
         "id": "ufv_intercom_unlock_door",
         "title": {
           "en": "Unlock intercom door",
@@ -9926,7 +10040,87 @@
           "id": "validate"
         }
       ],
-      "id": "access-garagedoor"
+      "id": "access-garagedoor",
+      "settings": [
+        {
+          "type": "dropdown",
+          "id": "ufp:gate_control_mode",
+          "label": {
+            "en": "Gate Control Mode",
+            "nl": "Poortbedieningsmodus",
+            "de": "Torsteuerungsmodus",
+            "fr": "Mode de commande du portail",
+            "it": "Modalità di controllo del cancello",
+            "sv": "Grindstyrningsläge",
+            "no": "Portstyringsmodus",
+            "es": "Modo de control del portón",
+            "da": "Portstyringstilstand",
+            "ru": "Режим управления воротами",
+            "pl": "Tryb sterowania bramą",
+            "ko": "게이트 제어 모드"
+          },
+          "hint": {
+            "en": "Choose the same Gate Control Mode as the UA Hub Gate in UniFi Access. Single-Button: the toggle sends one unlock pulse. Two-Button: adds Open / Close buttons and the toggle sends Open or Close explicitly. Three-Button: also adds a Stop button.",
+            "nl": "Kies dezelfde Gate Control Mode als de UA Hub Gate in UniFi Access. Single-Button Control = één knop: de schakelaar stuurt één ontgrendelpuls. Two-Button Control = twee knoppen: Open/Sluiten-knoppen en de schakelaar stuurt expliciet Open of Sluiten. Three-Button Control = drie knoppen: ook een Stop-knop.",
+            "de": "Denselben Gate Control Mode wie beim UA Hub Gate in UniFi Access wählen. Single-Button Control = eine Taste: der Schalter sendet einen Entriegelungsimpuls. Two-Button Control = zwei Tasten: Auf/Zu-Tasten, der Schalter sendet gezielt Auf oder Zu. Three-Button Control = drei Tasten: zusätzlich eine Stopp-Taste.",
+            "pl": "Wybierz ten sam tryb co Gate Control Mode huba UA Hub Gate w UniFi Access. Single-Button Control = jeden przycisk: przełącznik wysyła jeden impuls odblokowania. Two-Button Control = dwa przyciski: przyciski Otwórz / Zamknij, a przełącznik wysyła wprost Otwórz lub Zamknij. Three-Button Control = trzy przyciski: dodatkowo przycisk Stop."
+          },
+          "value": "single",
+          "values": [
+            {
+              "id": "single",
+              "label": {
+                "en": "Single-Button Control (Open or Close)",
+                "nl": "Bediening met één knop (Openen of Sluiten)",
+                "de": "Ein-Tasten-Steuerung (Öffnen oder Schließen)",
+                "fr": "Commande à un bouton (Ouvrir ou Fermer)",
+                "it": "Controllo a un pulsante (Apri o Chiudi)",
+                "sv": "Enknappsstyrning (Öppna eller Stäng)",
+                "no": "Énknappsstyring (Åpne eller Lukk)",
+                "es": "Control de un botón (Abrir o Cerrar)",
+                "da": "Enkeltknapsstyring (Åbn eller Luk)",
+                "ru": "Управление одной кнопкой (Открыть или Закрыть)",
+                "pl": "Sterowanie jednym przyciskiem (Otwórz lub Zamknij)",
+                "ko": "단일 버튼 제어 (열기 또는 닫기)"
+              }
+            },
+            {
+              "id": "two_button",
+              "label": {
+                "en": "Two-Button Control (Open and Close)",
+                "nl": "Bediening met twee knoppen (Openen en Sluiten)",
+                "de": "Zwei-Tasten-Steuerung (Öffnen und Schließen)",
+                "fr": "Commande à deux boutons (Ouvrir et Fermer)",
+                "it": "Controllo a due pulsanti (Apri e Chiudi)",
+                "sv": "Tvåknappsstyrning (Öppna och Stäng)",
+                "no": "Toknappsstyring (Åpne og Lukk)",
+                "es": "Control de dos botones (Abrir y Cerrar)",
+                "da": "Toknapsstyring (Åbn og Luk)",
+                "ru": "Управление двумя кнопками (Открыть и Закрыть)",
+                "pl": "Sterowanie dwoma przyciskami (Otwórz i Zamknij)",
+                "ko": "2버튼 제어 (열기 및 닫기)"
+              }
+            },
+            {
+              "id": "three_button",
+              "label": {
+                "en": "Three-Button Control (Open, Stop, and Close)",
+                "nl": "Bediening met drie knoppen (Openen, Stoppen en Sluiten)",
+                "de": "Drei-Tasten-Steuerung (Öffnen, Stopp und Schließen)",
+                "fr": "Commande à trois boutons (Ouvrir, Arrêter et Fermer)",
+                "it": "Controllo a tre pulsanti (Apri, Ferma e Chiudi)",
+                "sv": "Treknappsstyrning (Öppna, Stopp och Stäng)",
+                "no": "Treknappsstyring (Åpne, Stopp og Lukk)",
+                "es": "Control de tres botones (Abrir, Detener y Cerrar)",
+                "da": "Treknapsstyring (Åbn, Stop og Luk)",
+                "ru": "Управление тремя кнопками (Открыть, Стоп и Закрыть)",
+                "pl": "Sterowanie trzema przyciskami (Otwórz, Stop i Zamknij)",
+                "ko": "3버튼 제어 (열기, 정지 및 닫기)"
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       "name": {
@@ -12187,6 +12381,69 @@
       "uiComponent": "toggle",
       "uiQuickAction": true,
       "icon": "/assets/capabilities/garagedoor_closed.svg"
+    },
+    "gate_close_button": {
+      "type": "boolean",
+      "title": {
+        "en": "Close",
+        "nl": "Sluiten",
+        "de": "Schließen",
+        "fr": "Fermer",
+        "it": "Chiudi",
+        "sv": "Stäng",
+        "no": "Lukk",
+        "es": "Cerrar",
+        "da": "Luk",
+        "ru": "Закрыть",
+        "pl": "Zamknij",
+        "ko": "닫기"
+      },
+      "getable": false,
+      "setable": true,
+      "uiComponent": "button",
+      "icon": "/assets/capabilities/gate_close_button.svg"
+    },
+    "gate_open_button": {
+      "type": "boolean",
+      "title": {
+        "en": "Open",
+        "nl": "Openen",
+        "de": "Öffnen",
+        "fr": "Ouvrir",
+        "it": "Apri",
+        "sv": "Öppna",
+        "no": "Åpne",
+        "es": "Abrir",
+        "da": "Åbn",
+        "ru": "Открыть",
+        "pl": "Otwórz",
+        "ko": "열기"
+      },
+      "getable": false,
+      "setable": true,
+      "uiComponent": "button",
+      "icon": "/assets/capabilities/gate_open_button.svg"
+    },
+    "gate_stop_button": {
+      "type": "boolean",
+      "title": {
+        "en": "Stop",
+        "nl": "Stoppen",
+        "de": "Stopp",
+        "fr": "Stop",
+        "it": "Stop",
+        "sv": "Stopp",
+        "no": "Stopp",
+        "es": "Detener",
+        "da": "Stop",
+        "ru": "Стоп",
+        "pl": "Stop",
+        "ko": "정지"
+      },
+      "getable": false,
+      "setable": true,
+      "uiComponent": "button",
+      "icon": "/assets/capabilities/gate_stop_button.svg"
     },
     "ip_address": {
       "type": "string",
