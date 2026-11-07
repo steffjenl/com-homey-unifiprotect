@@ -7,7 +7,7 @@ jobs:
     name: Update App Version
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Publish
         uses: athombv/github-action-homey-app-publish@master
