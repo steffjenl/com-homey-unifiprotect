@@ -8,5 +8,13 @@
   "getable": true,
   "setable": false,
   "insights": true,
-  "icon": "/assets/capabilities/alarm_co_fault.svg"
+  "icon": "/assets/capabilities/alarm_co_fault.svg",
+  "titleTrue": {
+    "en": "CO sensor fault detected",
+    "nl": "Storing CO-melder gedetecteerd"
+  },
+  "titleFalse": {
+    "en": "CO sensor fault cleared",
+    "nl": "Storing CO-melder opgelost"
+  }
 }

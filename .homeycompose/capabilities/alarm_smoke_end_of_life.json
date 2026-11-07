@@ -8,5 +8,13 @@
   "getable": true,
   "setable": false,
   "insights": true,
-  "icon": "/assets/capabilities/alarm_smoke_end_of_life.svg"
+  "icon": "/assets/capabilities/alarm_smoke_end_of_life.svg",
+  "titleTrue": {
+    "en": "Smoke sensor reached end of life",
+    "nl": "Rookmelder heeft einde levensduur bereikt"
+  },
+  "titleFalse": {
+    "en": "Smoke sensor end of life cleared",
+    "nl": "Rookmelder einde levensduur opgeheven"
+  }
 }

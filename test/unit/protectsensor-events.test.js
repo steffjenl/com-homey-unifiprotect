@@ -118,4 +118,38 @@ describe('protectsensor bootstrap', () => {
     ['measure_aqi', 'measure_co2', 'measure_tvoc', 'alarm_vape']
       .forEach((capability) => expect(device.hasCapability(capability)).toBe(false));
   });
+
+  test('smoke sensor without alarmSettings.isEnabled still gets alarm_smoke/alarm_co (issue #62)', async () => {
+    const device = createFakeBootstrapDevice({
+      id: 'smoke-sensor-1',
+      type: 'UP-Sense-Smoke',
+      stats: { light: { value: null, status: 'unknown' }, humidity: { value: null }, temperature: { value: null } },
+      motionSettings: { isEnabled: false },
+      alarmSettings: { isEnabled: false },
+      smokeStatus: { enabled: true, smokeAlarm: false, coAlarm: false },
+    });
+    await device._createMissingCapabilities();
+
+    expect(device.hasCapability('alarm_smoke')).toBe(true);
+    expect(device.hasCapability('alarm_co')).toBe(true);
+    expect(device.hasCapability('measure_luminance')).toBe(false);
+
+    await device.onSmokeStatusChange({ enabled: true, smokeAlarm: true, coAlarm: false });
+    expect(device.capabilityValues.alarm_smoke).toBe(true);
+    expect(device.capabilityValues.alarm_co).toBe(false);
+  });
+
+  test('smart sensor keeps measure_luminance when light value is null; WS light adds it', async () => {
+    const device = createFakeBootstrapDevice({
+      id: 'smart-sensor-1',
+      type: 'UP Sense',
+      stats: { light: { value: null, status: 'unknown' }, humidity: { value: 40 }, temperature: { value: 20 } },
+      motionSettings: { isEnabled: true },
+      alarmSettings: { isEnabled: false },
+    });
+    await device._createMissingCapabilities();
+    expect(device.hasCapability('measure_luminance')).toBe(true);
+    await device.onLightChange(12);
+    expect(device.capabilityValues.measure_luminance).toBe(12);
+  });
 });

@@ -8,5 +8,13 @@
   "getable": true,
   "setable": false,
   "insights": true,
-  "icon": "/assets/capabilities/alarm_smoke_needs_cleaning.svg"
+  "icon": "/assets/capabilities/alarm_smoke_needs_cleaning.svg",
+  "titleTrue": {
+    "en": "Smoke sensor needs cleaning",
+    "nl": "Rookmelder moet gereinigd worden"
+  },
+  "titleFalse": {
+    "en": "Smoke sensor no longer needs cleaning",
+    "nl": "Rookmelder hoeft niet meer gereinigd te worden"
+  }
 }

@@ -8,5 +8,13 @@
   "getable": true,
   "setable": false,
   "insights": true,
-  "icon": "/assets/capabilities/alarm_smoke_test.svg"
+  "icon": "/assets/capabilities/alarm_smoke_test.svg",
+  "titleTrue": {
+    "en": "Smoke sensor test started",
+    "nl": "Test rookmelder gestart"
+  },
+  "titleFalse": {
+    "en": "Smoke sensor test ended",
+    "nl": "Test rookmelder beëindigd"
+  }
 }

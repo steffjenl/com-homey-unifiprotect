@@ -8,5 +8,13 @@
   "getable": true,
   "setable": false,
   "insights": true,
-  "icon": "/assets/capabilities/alarm_smoke_fault.svg"
+  "icon": "/assets/capabilities/alarm_smoke_fault.svg",
+  "titleTrue": {
+    "en": "Smoke sensor fault detected",
+    "nl": "Storing rookmelder gedetecteerd"
+  },
+  "titleFalse": {
+    "en": "Smoke sensor fault cleared",
+    "nl": "Storing rookmelder opgelost"
+  }
 }

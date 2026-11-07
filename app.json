@@ -11802,7 +11802,15 @@
       "getable": true,
       "setable": false,
       "insights": true,
-      "icon": "/assets/capabilities/alarm_co_fault.svg"
+      "icon": "/assets/capabilities/alarm_co_fault.svg",
+      "titleTrue": {
+        "en": "CO sensor fault detected",
+        "nl": "Storing CO-melder gedetecteerd"
+      },
+      "titleFalse": {
+        "en": "CO sensor fault cleared",
+        "nl": "Storing CO-melder opgelost"
+      }
     },
     "alarm_glassbreak": {
       "type": "boolean",
@@ -11874,7 +11882,15 @@
       "getable": true,
       "setable": false,
       "insights": true,
-      "icon": "/assets/capabilities/alarm_smoke_end_of_life.svg"
+      "icon": "/assets/capabilities/alarm_smoke_end_of_life.svg",
+      "titleTrue": {
+        "en": "Smoke sensor reached end of life",
+        "nl": "Rookmelder heeft einde levensduur bereikt"
+      },
+      "titleFalse": {
+        "en": "Smoke sensor end of life cleared",
+        "nl": "Rookmelder einde levensduur opgeheven"
+      }
     },
     "alarm_smoke_fault": {
       "type": "boolean",
@@ -11886,7 +11902,15 @@
       "getable": true,
       "setable": false,
       "insights": true,
-      "icon": "/assets/capabilities/alarm_smoke_fault.svg"
+      "icon": "/assets/capabilities/alarm_smoke_fault.svg",
+      "titleTrue": {
+        "en": "Smoke sensor fault detected",
+        "nl": "Storing rookmelder gedetecteerd"
+      },
+      "titleFalse": {
+        "en": "Smoke sensor fault cleared",
+        "nl": "Storing rookmelder opgelost"
+      }
     },
     "alarm_smoke_needs_cleaning": {
       "type": "boolean",
@@ -11898,7 +11922,15 @@
       "getable": true,
       "setable": false,
       "insights": true,
-      "icon": "/assets/capabilities/alarm_smoke_needs_cleaning.svg"
+      "icon": "/assets/capabilities/alarm_smoke_needs_cleaning.svg",
+      "titleTrue": {
+        "en": "Smoke sensor needs cleaning",
+        "nl": "Rookmelder moet gereinigd worden"
+      },
+      "titleFalse": {
+        "en": "Smoke sensor no longer needs cleaning",
+        "nl": "Rookmelder hoeft niet meer gereinigd te worden"
+      }
     },
     "alarm_smoke_test": {
       "type": "boolean",
@@ -11910,7 +11942,15 @@
       "getable": true,
       "setable": false,
       "insights": true,
-      "icon": "/assets/capabilities/alarm_smoke_test.svg"
+      "icon": "/assets/capabilities/alarm_smoke_test.svg",
+      "titleTrue": {
+        "en": "Smoke sensor test started",
+        "nl": "Test rookmelder gestart"
+      },
+      "titleFalse": {
+        "en": "Smoke sensor test ended",
+        "nl": "Test rookmelder beëindigd"
+      }
     },
     "alarm_vape": {
       "type": "boolean",

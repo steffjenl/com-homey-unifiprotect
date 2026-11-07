@@ -106,7 +106,13 @@ class Sensor extends Homey.Device {
       for (const sensor of bootstrapData.sensors) {
         if (sensor.id === this.getData().id) {
 
-          if (typeof sensor.stats.light !== 'undefined' && typeof sensor.stats.light.value !== 'undefined' && sensor.stats.light.value !== null) {
+          // Keep luminance when the sensor exposes a light stat at all: value can be null
+          // at bootstrap (idle/dark) and removing the capability would make it flap away.
+          // Smoke and air quality sensors have no light sensor.
+          const isSmokeSensor = Boolean(sensor.smokeStatus && sensor.smokeStatus.enabled)
+            || (typeof sensor.type === 'string' && /smoke/i.test(sensor.type));
+          if (sensor.stats && sensor.stats.light && typeof sensor.stats.light === 'object' && !isSmokeSensor
+            && sensor.type !== 'UP-AirQuality') {
             if (!this.hasCapability('measure_luminance')) {
               await this.addCapability('measure_luminance');
               this.homey.app.debug(`created capability measure_luminance for ${this.getName()}`);
@@ -193,7 +199,7 @@ class Sensor extends Homey.Device {
           }
 
           // Smoke + CO alarm sensor (sensor.alarmSettings, added in API v7.1.87)
-          if (typeof sensor.alarmSettings !== 'undefined' && sensor.alarmSettings.isEnabled) {
+          if ((typeof sensor.alarmSettings !== 'undefined' && sensor.alarmSettings.isEnabled) || isSmokeSensor) {
             if (!this.hasCapability('alarm_smoke')) {
               await this.addCapability('alarm_smoke');
               this.homey.app.debug(`created capability alarm_smoke for ${this.getName()}`);
@@ -332,7 +338,7 @@ class Sensor extends Homey.Device {
             }
             this.setCapabilityValue('measure_temperature', value).catch(this.error);
           }
-          if (this.hasCapability('measure_luminance')) {
+          if (this.hasCapability('measure_luminance') && sensor.stats.light) {
             this.setCapabilityValue('measure_luminance', sensor.stats.light.value).catch(this.error);
           }
           if (this.hasCapability('alarm_contact')) {
@@ -423,8 +429,12 @@ class Sensor extends Homey.Device {
     }
   }
 
-  onLightChange(light) {
+  async onLightChange(light) {
     this.homey.app.debug('onLightChange');
+    if (light === null || typeof light === 'undefined') {
+      return;
+    }
+    await this._ensureCapability('measure_luminance');
     if (this.hasCapability('measure_luminance')) {
       this.setCapabilityValue('measure_luminance', light).catch(this.error);
     }
@@ -488,6 +498,11 @@ class Sensor extends Homey.Device {
     this.homey.app.debug('onSmokeStatusChange');
     if (!smokeStatus) {
       return;
+    }
+    // Non-smoke sensors (e.g. UP-AirQuality) also carry smokeStatus with enabled=false.
+    if (smokeStatus.enabled) {
+      await this._ensureCapability('alarm_smoke');
+      await this._ensureCapability('alarm_co');
     }
     if (this.hasCapability('alarm_smoke')) {
       this.setCapabilityValue('alarm_smoke', !!smokeStatus.smokeAlarm).catch(this.error);
