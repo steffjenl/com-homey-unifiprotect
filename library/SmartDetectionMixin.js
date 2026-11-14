@@ -336,13 +336,25 @@ const SmartDetectionMixin = {
     let event = null;
 
     if (actionType === 'add') {
-      event = this.setSmartDetectionEvent(
-        eventId,
-        payload.start,
-        payload.smartDetectTypes || [],
-        payload.score,
-        'audio',
-      );
+      // V1 and V2 both deliver the same audio event: a second 'add' for a known id must not reset the
+      // per-type 'triggered' state, or the trigger fires twice.
+      event = this.getSmartDetectionEvent(eventId);
+      if (event !== null && event.kind === 'audio') {
+        if (Array.isArray(payload.smartDetectTypes) && payload.smartDetectTypes.length > 0) {
+          event.detectionTypes = payload.smartDetectTypes;
+        }
+        if (payload.score !== undefined) {
+          event.detectionScore = payload.score;
+        }
+      } else {
+        event = this.setSmartDetectionEvent(
+          eventId,
+          payload.start,
+          payload.smartDetectTypes || [],
+          payload.score,
+          'audio',
+        );
+      }
       if (!event.detectionTypes || event.detectionTypes.length === 0) {
         this.homey.app.debug(`[AudioDetection] add: waiting for update [${eventId}]`);
         return;

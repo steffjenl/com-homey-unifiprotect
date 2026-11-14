@@ -84,6 +84,11 @@ class ProtectWebSocket extends BaseClass {
         this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, 'Connected');
         this.loggedInStatus = 'Connected';
         this.homey.app.api.emit('protectv1-connection-change', { state: 'connected', host: this.homey.app.api.getHost() });
+        try {
+          this.homey.drivers.getDriver('protect-zone-sensor').onWebsocketReconnected();
+        } catch (error) {
+          this.homey.app.debug(`[WS V1] zone sensor resync failed: ${error}`);
+        }
         this.heartbeat();
       });
 

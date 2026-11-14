@@ -50,6 +50,25 @@ class ZoneSensorDevice extends Homey.Device {
     this._updateMotion();
   }
 
+  /**
+   * After a websocket reconnect closing frames sent during the gap are lost. Ask Protect about each
+   * detection that is still open here and close the ones that already have an `end`; the stale
+   * timer stays as the backstop for everything else.
+   */
+  async resyncOpenEvents() {
+    for (const eventId of [...this._openEvents.keys()]) {
+      try {
+        const result = await this.homey.app.api.getEvent(eventId);
+        if (result && result.end) {
+          this.homey.app.debug(`[ZoneSensorDevice] ${this.getData().id} event ${eventId} ended during gap`);
+          this.onZoneDetectionEnded(eventId);
+        }
+      } catch (error) {
+        this.homey.app.debug(`[ZoneSensorDevice] resync of event ${eventId} failed: ${error}`);
+      }
+    }
+  }
+
   _clearTimer(eventId) {
     if (this._openEvents.has(eventId)) {
       this.homey.clearTimeout(this._openEvents.get(eventId));

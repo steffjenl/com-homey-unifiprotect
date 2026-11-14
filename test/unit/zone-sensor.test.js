@@ -99,3 +99,36 @@ test('mixin -> driver -> device, late frame after end does not re-open', () => {
   cam.onSmartDetection(zoneFrame, 'update', 'ev');
   expect(sensor.values.alarm_motion).toBe(false);
 });
+
+describe('zone sensor resync after websocket reconnect', () => {
+  test('closes open events that ended during the gap, keeps the rest, survives lookup errors', async () => {
+    const sensor = createSensor('1', ['person']);
+    sensor.homey.app.api = {
+      getEvent: async (id) => {
+        if (id === 'gone') return { end: 123 };
+        if (id === 'broken') throw new Error('boom');
+        return { end: null };
+      },
+    };
+    sensor.onZoneDetection('gone', ['person'], ['1']);
+    sensor.onZoneDetection('still', ['person'], ['1']);
+    sensor.onZoneDetection('broken', ['person'], ['1']);
+
+    await sensor.resyncOpenEvents();
+
+    expect([...sensor._openEvents.keys()].sort()).toEqual(['broken', 'still']);
+    expect(sensor.values.alarm_motion).toBe(true);
+
+    sensor.onZoneDetectionEnded('still');
+    sensor.onZoneDetectionEnded('broken');
+    expect(sensor.values.alarm_motion).toBe(false);
+  });
+
+  test('last open event closed by resync turns the sensor off', async () => {
+    const sensor = createSensor('1', ['person']);
+    sensor.homey.app.api = { getEvent: async () => ({ end: 5 }) };
+    sensor.onZoneDetection('e1', ['person'], ['1']);
+    await sensor.resyncOpenEvents();
+    expect(sensor.values.alarm_motion).toBe(false);
+  });
+});

@@ -75,6 +75,15 @@ class ZoneSensorDriver extends Homey.Driver {
     }
   }
 
+  /**
+   * Called when the V1 websocket (re)connects: close detections that ended while it was down.
+   */
+  onWebsocketReconnected() {
+    for (const device of this.getDevices()) {
+      device.resyncOpenEvents().catch((error) => this.error(error));
+    }
+  }
+
   _getDevicesForCamera(cameraId) {
     try {
       return this.getDevices().filter((device) => String(device.getData().cameraId) === String(cameraId));

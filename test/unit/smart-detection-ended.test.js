@@ -62,4 +62,17 @@ describe('smart detection ended trigger', () => {
     device.onSmartDetectionEnd({ end: 2000 }, 'a1');
     expect(fired.app).toHaveLength(0);
   });
+
+  test('audio add repeated by the second stack does not fire the audio trigger twice', () => {
+    const { device } = create();
+    const fired = [];
+    device.homey.app._audioDetectionTrigger = { trigger: async (...a) => fired.push(a) };
+    device.driver._deviceAudioDetectionTrigger = { trigger: async (...a) => fired.push(a) };
+    const frame = { smartDetectTypes: ['alrmSmoke'], start: 1000, score: 50 };
+    device.onAudioDetection(frame, 'add', 'a1'); // V1
+    const afterFirst = fired.length;
+    device.onAudioDetection(frame, 'add', 'a1'); // V2 copy of the same event
+    expect(afterFirst).toBeGreaterThan(0);
+    expect(fired).toHaveLength(afterFirst);
+  });
 });
