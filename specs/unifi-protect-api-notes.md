@@ -559,6 +559,72 @@ system), present on every sensor (not just UP-AirQuality).
 
 ---
 
+## v1 Bootstrap changes (7.0.107 → 7.3.74)
+
+Key-path diff of `GET /proxy/protect/api/bootstrap` (v1, cookie auth) between the sample captured on
+NVR 7.0.107 and one captured 2026-11-14 on NVR 7.3.74 (`ucoreVersion` 6.0.130; UDM-class console).
+Samples live in `specs/` (gitignored: they hold real MACs/IPs/names). Only field **presence/shape**
+was compared: arrays that were empty in one sample hide their children, so a "missing" path is
+not evidence of removal.
+
+**None of the new fields are consumed by the app yet.** The v1 consumers tolerate the new shape.
+
+### Top level
+- New `locks` array (empty on the sample; Protect-native door locks, no shape confirmed).
+- `deviceGroups` no longer present (was 3 entries in the old sample). The app never read it.
+
+### `nvr`
+| Group | Fields |
+|---|---|
+| Connectivity/health | `hasInternet`, `emergencyMode` (`"none"` observed), `serialNumber`, `systemInfo.degradation` `{level, loadLevel, pressures[], updatedAt}`, `systemInfo.ustorage.disks[].life_span`, `isEdgeDevice`, `teleportAvailability` (`"UNSUPPORTED"`) |
+| AI features | `aiFeatureSettings.{aiSummary,deepUnderstanding,faceEnhance,faceRecognition,licensePlateRecognition,recognizeAnything,reverification,speechToText}Settings` each `{enabled, allCameras, cameras[]}`; capability flags in `featureFlags.aiFeatureFlag.*` (`supportFaceRecognition`, `supportLicensePlateRecognition`, `supportAiSummary`, `supportRecognizeAnything`, …) |
+| Access migration | `canMigrateAccessDevices`, `accessMigrationStatus`, `accessMigratedAt`, `hasMigratableAccessDevices`, `pendingAccessMigrationDevices`, `offlineAccessDevices`, `isAccessAdoptedByUid`, `canSwitchBackToAccess` (Access devices adopted into Protect) |
+| Storage | `expansionUnits`, `expansionUnitRetention`, `storageConsoleCameraCounts[]`, `storageConsoleFailoverSettings`, `switchPorts[]` (`linkUp`, `poeConsumption`, `rxBytes`/`txBytes`, …) |
+| Video signing / evidence | `isVideoSigningEnabled`, `videoSigningEnabledAt`, `registeredEvidence(V2)Key*` |
+| Encoding | `isSuperEncodingEnabled`, `superEncodingCodec`, `superEncodingCameraTargetCodecs` |
+| Ports | `ports.dsIngest`, `dsProxy`, `edgeCameraHttps`, `onvifDiscovery` |
+
+### `cameras[]`
+| Field | Notes |
+|---|---|
+| `isRecordingsPaused`, `isRecordingsPausedChangedAt`, `recordingsPausedReason` | `false`/`null` when recording normally |
+| `lastMotionDetectionTypes` | `string[] \| null`, e.g. `["person"]`, `["vehicle"]`, `["motion"]`: type of the most recent detection (can seed state after restart) |
+| `isEntry`, `location`, `hasPackageCamera`, `fogDetection`, `poePortNumber` | placement / hardware info |
+| `overlaySettings`, `useGlobalOverlaySettings` | on-video overlay config (`topLeft`…`bottomRight`, `datetimeFormat`, `capabilities.*`) |
+| `recordingPathSettings`, `recordingPathFailedAt` | storage failover (`isAutoFailoverEnabled`, `failoverTimeoutMs`) |
+| `thirdPartyCameraInfo.*` | ONVIF profile / digital input / relay output tokens, auto fps/compression |
+| `channels[].isAiPortRtspEnabled`, `aiPortRtspAlias` | RTSP re-export via AI Port |
+| `featureFlags` | `radar`, `clarityZones`, `hasSafetyZones`, `hasMotionDetection`, `hasLocalBufferRecording`, `supportPtzVehicleTracking`, `teleportState`, `supportAccessManagedByProtect`, `reader.{supportPinCodeShuffle,supportStatusSound,supportThirdPartySip,supportGifInterfaceImage}`, `hotplug.extender.hasBuzzer` |
+| `readerSettings.twoFactorAuth`, `showUnlockSchedule` | Access reader adopted as camera device |
+| `doorbellSession.{directoryId,currentGroupIndex}`, `accessControlPlane`, `spatialIntelligenceZones` | |
+
+### `sensors[]`
+- Alarm timestamps: `smokeAlarmTriggeredAt`, `coAlarmTriggeredAt`, `glassBreakTriggeredAt` (`null` when idle; same semantics as `tamperingDetectedAt`).
+- `isTestModeActive`, `testModeExpiresAt`, `canSilenceTrouble`, `micSoundLevel`.
+- `scheduleMode` (`"always"` observed), `armProfileIds` (`null` observed), `motionSettings.sensitivityWhenArmed`, `glassBreakSettings.sensitivityWhenArmed`, `hasCustomSensitivityWhenArmed`: confirmed in v1 bootstrap (previously only in the v2 schema).
+- `sensorWidget` `{isEnabled, enabledMetrics[]}` (`temperature`, `humidity`, `light`, `leak`, `door`, `tamper`, `battery`).
+- `featureFlags.{temperature,humidity,light,smoke,waterLeak}` `{channelCount, …}`, `featureFlags.alarmTypes`, `isBidirectional`.
+- UP-AirQuality: `airQualitySettings.nightMode{Enabled,Brightness,StartTime,EndTime}`, `vapeSensitivitySettings`.
+- `wirelessConnectionSettings.{loraSpreadingFactor,supportedLoraSpreadingFactors}`.
+
+### All device types (bridges, cameras, chimes, lights, sensors)
+Firmware revert metadata: `isReverting`, `minFirmwareVersion`, `previousFirmwareVersion`,
+`previousFirmwareUrl`, `releaseNotePath`. `lights[].platform` (chip id, e.g. `qca953x`).
+
+### `users[]`
+`notificationsV2` (per-device `inheritFromParent` + `trigger.{when,schedules,location,sendAnyway}`),
+extended `notifications.detectionNotifications`/`systemEventNotifications`,
+`cloudProviders.*.continuousArchive*` and `cloudProviders.unifiCloudStorage` (quota/subscription),
+`ucoreUserId`.
+
+### Candidate app uses (not implemented)
+1. **Sensor alarm resync**: mirror `smokeAlarmTriggeredAt`/`coAlarmTriggeredAt`/`glassBreakTriggeredAt` into `alarm_smoke`/`alarm_co`/glass-break on start and every sensor update, like the existing `tamperingDetectedAt` resync in `drivers/protectsensor/device.js`.
+2. **Camera recording paused**: boolean capability + flow condition from `isRecordingsPaused`.
+3. **Seed smart-detect state** from `lastMotionDetectionTypes` after restart.
+4. **NVR health**: `hasInternet` / `emergencyMode` on the NVR/unifi-os device.
+
+---
+
 ## v1 Legacy Endpoints
 
 All paths relative to `https://<NVR_IP>:<port>/proxy/protect/api/`.

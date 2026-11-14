@@ -15,7 +15,7 @@ Official SDK documentation:
 | File | Purpose |
 |------|---------|
 | [homey-app-architecture.md](homey-app-architecture.md) | Homey SDK v3 app structure, drivers, devices, capabilities, flow cards, pairing, app API, widgets, settings |
-| [unifi-protect-api-notes.md](unifi-protect-api-notes.md) | Official API v2 (6.2.88) endpoints, auth, WebSocket events, device models |
+| [unifi-protect-api-notes.md](unifi-protect-api-notes.md) | Official API v2 (6.2.88) endpoints, auth, WebSocket events, device models, v1 bootstrap changes up to 7.3.74 |
 | [repo-conventions.md](repo-conventions.md) | Folder structure, naming, coding style, CLI commands, logging, error handling |
 | [testing-strategy.md](testing-strategy.md) | Test pyramid, mocking approach, fixtures, widget API testing, CI expectations |
 | [security-and-secrets.md](security-and-secrets.md) | API keys, tokens, `Homey.env` vs `process.env`, redaction in logs, secure storage |
