@@ -581,7 +581,7 @@ not evidence of removal.
 | Access migration | `canMigrateAccessDevices`, `accessMigrationStatus`, `accessMigratedAt`, `hasMigratableAccessDevices`, `pendingAccessMigrationDevices`, `offlineAccessDevices`, `isAccessAdoptedByUid`, `canSwitchBackToAccess` (Access devices adopted into Protect) |
 | Storage | `expansionUnits`, `expansionUnitRetention`, `storageConsoleCameraCounts[]`, `storageConsoleFailoverSettings`, `switchPorts[]` (`linkUp`, `poeConsumption`, `rxBytes`/`txBytes`, …) |
 | Video signing / evidence | `isVideoSigningEnabled`, `videoSigningEnabledAt`, `registeredEvidence(V2)Key*` |
-| Encoding | `isSuperEncodingEnabled`, `superEncodingCodec`, `superEncodingCameraTargetCodecs` |
+| Encoding | `isSuperEncodingEnabled`, `isSuperEncodingAdjusting`, `superEncodingCodec` (`"h265"`), `superEncodingCameraTargetCodecs` (`null` observed, shape unconfirmed). With Super Encoding on, live streams are H.265 and Homey's h264 demuxer shows black video: `RtspUrlMixin._updateVideoWarning` raises `warnings.super_encoding` (user fix: set Super/Enhanced Encoding to Standard in Protect) |
 | Ports | `ports.dsIngest`, `dsProxy`, `edgeCameraHttps`, `onvifDiscovery` |
 
 ### `cameras[]`

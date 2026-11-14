@@ -242,7 +242,8 @@
     "warnings": {
         "unifi_access": "Warning: UniFi Access features are in early beta. Use with caution and report any issues to the developer.",
         "no_rtsp_url": "Warning: No RTSP URL available for this camera. Please Enable 'Share Livestream' -> 'Enable Secure RTSPS Output' in the camera settings in UniFi Protect to use livestream features. Instructions: https://github.com/steffjenl/com-homey-unifiprotect/blob/develop/wiki/rtsp-setup.md",
-        "h265_stream": "Warning: This camera streams H.265. Disable 'Enhanced Encoding' for this camera in UniFi Protect to use live video in Homey."
+        "h265_stream": "Warning: This camera streams H.265. Disable 'Enhanced Encoding' for this camera in UniFi Protect to use live video in Homey.",
+        "super_encoding": "Warning: Super Encoding is enabled in UniFi Protect, so the live stream is H.265 and shows a black image in Homey. Set Super Encoding / Enhanced Encoding to Standard in UniFi Protect, or set the device video codec to H.265."
     },
     "msg": {
         "controller_unreachable": "Controller unreachable. Check IP address in settings.",

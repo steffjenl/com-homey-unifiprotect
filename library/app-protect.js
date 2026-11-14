@@ -655,6 +655,7 @@ class AppProtect extends BaseClass {
         this.homey.app.api.getBootstrapInfo()
           .then(() => {
             this.homey.app.debug('Bootstrap loaded.');
+            this.refreshVideoWarnings();
             this.debuggedIn = true;
             this.nvrIp = nvrip;
             this.nvrPort = nvrport;
@@ -666,6 +667,24 @@ class AppProtect extends BaseClass {
           .catch((error) => this.error(error));
       })
       .catch((error) => this.error(error));
+  }
+
+  /**
+   * Re-evaluates the video warning (e.g. Super Encoding) on camera and doorbell devices
+   * after the bootstrap has been (re)loaded.
+   */
+  refreshVideoWarnings() {
+    ['protectcamera', 'protectdoorbell'].forEach((driverId) => {
+      try {
+        this.homey.drivers.getDriver(driverId).getDevices().forEach((device) => {
+          if (typeof device._updateVideoWarning === 'function') {
+            device._updateVideoWarning();
+          }
+        });
+      } catch (error) {
+        this.error('[AppProtect] refreshVideoWarnings failed', error);
+      }
+    });
   }
 
   cleanDeviceStorage() {

@@ -27,6 +27,34 @@ const RtspUrlMixin = {
   },
 
   /**
+   * True when NVR-level Super Encoding re-encodes this camera to H.265 (from the cached V1 bootstrap).
+   * Returns false when unknown (e.g. V2 only, no nvr data).
+   */
+  _isSuperEncodingActive() {
+    try {
+      const bootstrap = this.homey.app.api && this.homey.app.api.getBootstrap();
+      const nvr = bootstrap && bootstrap.nvr;
+      if (!nvr || nvr.isSuperEncodingEnabled !== true) {
+        return false;
+      }
+      let codec = nvr.superEncodingCodec;
+      const targets = nvr.superEncodingCameraTargetCodecs;
+      // Per-camera target codecs (shape unconfirmed): use this camera's entry when present.
+      if (targets && typeof targets === 'object' && !Array.isArray(targets)) {
+        const id = String(this.getData().id);
+        if (Object.prototype.hasOwnProperty.call(targets, id)) {
+          codec = targets[id];
+        }
+      }
+      const normalized = codec ? String(codec).toLowerCase() : '';
+      return normalized === 'h265' || normalized === 'hevc';
+    } catch (error) {
+      this.error('[RtspUrlMixin] Unable to read Super Encoding state', error);
+      return false;
+    }
+  },
+
+  /**
    * Demuxer for the main live stream: the device setting, or (auto) derived from the camera codec.
    * @returns {'h264'|'hevc'}
    */
@@ -61,13 +89,16 @@ const RtspUrlMixin = {
   },
 
   /**
-   * Sets the single device warning: missing RTSP URL first, then H.265 notice, otherwise cleared.
+   * Sets the single device warning: missing RTSP URL first, then Super Encoding, then H.265 notice,
+   * otherwise cleared.
    */
   _updateVideoWarning() {
     const codec = this._getCameraVideoCodec();
     let warning = null;
     if (!this.rtspUrl) {
       warning = this.homey.__('warnings.no_rtsp_url');
+    } else if (this._isSuperEncodingActive() && this._getDemuxer() !== 'hevc') {
+      warning = this.homey.__('warnings.super_encoding');
     } else if ((codec === 'h265' || codec === 'hevc') && this._getDemuxer() !== 'hevc') {
       warning = this.homey.__('warnings.h265_stream');
     }

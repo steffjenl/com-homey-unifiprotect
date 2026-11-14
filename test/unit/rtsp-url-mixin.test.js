@@ -2,7 +2,9 @@
 
 const RtspUrlMixin = require('../../library/RtspUrlMixin');
 
-function createDevice({ codec, streams, codecSetting = 'auto' }) {
+function createDevice({
+  codec, streams, codecSetting = 'auto', nvr,
+}) {
   const warnings = [];
   const timers = [];
   let callCount = 0;
@@ -29,7 +31,7 @@ function createDevice({ codec, streams, codecSetting = 'auto' }) {
         debug: () => {},
         isV1Available: () => false,
         isV2Available: () => true,
-        api: { getBootstrap: () => ({ cameras: [{ id: 'abc', videoCodec: codec }] }) },
+        api: { getBootstrap: () => ({ nvr, cameras: [{ id: 'abc', videoCodec: codec }] }) },
         apiV2: {
           getRtspsStream: async () => {
             callCount += 1;
@@ -82,5 +84,46 @@ describe('RtspUrlMixin', () => {
     ['override h264', 'h265', 'h264', 'h264'],
   ])('demuxer selection: %s', (_label, codec, codecSetting, expected) => {
     expect(createDevice({ codec, codecSetting, streams: [] })._getDemuxer()).toBe(expected);
+  });
+
+  describe('Super Encoding warning', () => {
+    const on = { isSuperEncodingEnabled: true, superEncodingCodec: 'h265', superEncodingCameraTargetCodecs: null };
+    const streams = [{ high: 'rtsps://x/high' }];
+
+    test('enabled + h264 camera + auto demuxer warns', async () => {
+      const device = createDevice({ codec: 'h264', streams, nvr: on });
+      await device._refreshRtspUrl();
+      expect(lastWarning(device)).toBe('warnings.super_encoding');
+    });
+
+    test('enabled but hevc demuxer override: no warning', async () => {
+      const device = createDevice({
+        codec: 'h264', codecSetting: 'hevc', streams, nvr: on,
+      });
+      await device._refreshRtspUrl();
+      expect(lastWarning(device)).toBeNull();
+    });
+
+    test.each([
+      ['disabled', { ...on, isSuperEncodingEnabled: false }],
+      ['no nvr data (V2 only)', undefined],
+      ['h264 target codec', { ...on, superEncodingCodec: 'h264' }],
+    ])('%s: no warning', async (_label, nvr) => {
+      const device = createDevice({ codec: 'h264', streams, nvr });
+      await device._refreshRtspUrl();
+      expect(lastWarning(device)).toBeNull();
+    });
+
+    test('per-camera target codec overrides global codec', async () => {
+      const device = createDevice({ codec: 'h264', streams, nvr: { ...on, superEncodingCameraTargetCodecs: { abc: 'h264' } } });
+      await device._refreshRtspUrl();
+      expect(lastWarning(device)).toBeNull();
+    });
+
+    test('missing RTSP URL keeps priority', async () => {
+      const device = createDevice({ codec: 'h264', streams: [new Error('x')], nvr: on });
+      await device._refreshRtspUrl();
+      expect(device.warnings[0]).toBe('warnings.no_rtsp_url');
+    });
   });
 });
