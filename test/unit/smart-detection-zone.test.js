@@ -84,3 +84,37 @@ test('mixin passes zone ids as trigger state and keeps them for the ended trigge
   expect(states[0]).toEqual({ zone_ids: ['1'] });
   expect(states[states.length - 1]).toEqual({ zone_ids: ['1'] });
 });
+
+test('frame with every zone "none" tells zone sensors the object is in no zone, tokens keep last zones', () => {
+  const sensorCalls = [];
+  const states = [];
+  const card = {
+    trigger: async (d, t, state) => {
+      states.push(state);
+    },
+  };
+  const device = createSmartDetectionDevice({
+    driverCards: {
+      _deviceSmartDetectionTrigger: card,
+      _deviceSmartDetectionTriggerPerson: card,
+      _deviceSmartDetectionEndedTrigger: card,
+    },
+    homey: {
+      drivers: {
+        getDriver: () => ({
+          onSmartDetectionUpdate: (cameraId, eventId, types, zoneIds) => sensorCalls.push(zoneIds),
+          onSmartDetectionEnded: () => {},
+        }),
+      },
+    },
+  });
+  device._smartDetectZones = [{ id: 1, name: 'Driveway' }, { id: 2, name: 'Street' }];
+
+  device.onSmartDetection({ smartDetectTypes: ['person'], start: 1000, metadata: { zonesStatus: { 1: { status: 'enter' }, 2: { status: 'none' } } } }, 'add', 'e1');
+  device.onSmartDetection({ smartDetectTypes: ['person'], metadata: { zonesStatus: { 1: { status: 'none' }, 2: { status: 'none' } } } }, 'update', 'e1');
+  device.onSmartDetection({ smartDetectTypes: ['person'] }, 'update', 'e1'); // no metadata: keep known zones
+  device.onSmartDetection({ smartDetectTypes: [], end: 5000 }, 'update', 'e1');
+
+  expect(sensorCalls).toEqual([['1'], [], ['1']]);
+  expect(states[states.length - 1]).toEqual({ zone_ids: ['1'] });
+});

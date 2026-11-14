@@ -15,6 +15,7 @@ function createWebSocketHarness(WebSocketClass, drivers = {}) {
       log: () => {},
       toLocalTime: (d) => d,
       onFobWebsocketMessage: jest.fn(),
+      isV1Available: () => false,
     },
     log: () => {},
     error: () => {},

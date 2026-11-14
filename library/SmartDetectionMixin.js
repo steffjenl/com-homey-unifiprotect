@@ -93,10 +93,10 @@ const SmartDetectionMixin = {
    * Feed the per-zone motion sensors (protect-zone-sensor). Dispatched via the driver so the
    * mixin holds no device references.
    */
-  _dispatchZoneSensors(eventId, event) {
+  _dispatchZoneSensors(eventId, event, currentZoneIds = event.zoneIds) {
     try {
       const driver = this.homey.drivers.getDriver('protect-zone-sensor');
-      driver.onSmartDetectionUpdate(this.getData().id, eventId, event.detectionTypes, event.zoneIds);
+      driver.onSmartDetectionUpdate(this.getData().id, eventId, event.detectionTypes, currentZoneIds);
     } catch (e) {
       this.homey.app.debug(`[SmartDetection] zone sensor dispatch failed: ${e}`);
     }
@@ -266,7 +266,11 @@ const SmartDetectionMixin = {
     const { zones } = event;
     const { zoneIds } = event;
     if (!event.endedFired) {
-      this._dispatchZoneSensors(eventId, event);
+      // A frame with zonesStatus where every zone is 'none' means the object is in no zone right now:
+      // zone sensors must follow that, while the event keeps its last zones for the trigger tokens.
+      const hasZonesStatus = !!(payload && payload.metadata && payload.metadata.zonesStatus
+        && typeof payload.metadata.zonesStatus === 'object');
+      this._dispatchZoneSensors(eventId, event, hasZonesStatus ? zoneInfo.zoneIds : zoneIds);
     }
 
     // Plate text and direction can arrive on a later frame: remember them on the event.

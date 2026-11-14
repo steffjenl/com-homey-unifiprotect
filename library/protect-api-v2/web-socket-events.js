@@ -295,7 +295,11 @@ class ProtectWebSocket extends BaseClass {
         // loitering all share the same payload shape and are dispatched the same
         // way. detectionMethod is passed through for a possible future
         // dedicated trigger/token; SmartDetectionMixin ignores unknown fields today.
-        if (itemType === 'smartDetectZone' || itemType === 'smartDetectLine' || itemType === 'smartDetectLoiterZone') {
+        // While a V1 login is connected, V1 carries these events with zones and score; forwarding the
+        // V2 copy too fires triggers twice and replaces the stored event (dropping zones, which makes
+        // zone sensors flicker). V2 is only used when there is no V1 login.
+        if ((itemType === 'smartDetectZone' || itemType === 'smartDetectLine' || itemType === 'smartDetectLoiterZone')
+          && !this.homey.app.isV1Available()) {
           // A closing frame (item.end) may carry empty types; the mixin keeps the types it already knows.
           if ((item.smartDetectTypes && item.smartDetectTypes.length > 0) || (item.end && eventType === 'update')) {
             this.homey.app.debug(`[V2] smart detection (${itemType}): ${JSON.stringify(item.smartDetectTypes)} on ${deviceId}`);

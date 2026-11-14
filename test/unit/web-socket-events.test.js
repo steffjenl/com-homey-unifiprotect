@@ -125,6 +125,19 @@ describe('V2 events websocket routing', () => {
       expect(s.drivers.protectdoorbell.onParseWebsocketMessage).toHaveBeenCalled();
     });
 
+    test.each(['smartDetectZone', 'smartDetectLine', 'smartDetectLoiterZone'])('%s is left to V1 while a V1 login is connected', (itemType) => {
+      const s = createSetup();
+      s.homey.app.isV1Available = () => true;
+      s.emit(packet('add', {
+        type: itemType, smartDetectTypes: ['person'], start: 1, id: 'sd-1',
+      }));
+      s.emit(packet('update', {
+        type: itemType, smartDetectTypes: [], end: 9, id: 'sd-1',
+      }));
+      expect(s.drivers.protectcamera.onParseWebsocketMessage).not.toHaveBeenCalled();
+      expect(s.drivers.protectdoorbell.onParseWebsocketMessage).not.toHaveBeenCalled();
+    });
+
     test('closing frame with empty types is still forwarded', () => {
       const s = createSetup();
       s.emit(packet('update', { type: 'smartDetectZone', smartDetectTypes: [], end: 9 }));
