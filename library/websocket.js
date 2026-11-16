@@ -111,7 +111,7 @@ class ProtectWebSocket extends BaseClass {
         // If we're closing before fully established it's because we're shutting down the API - ignore it.
         if (error.message !== 'WebSocket was closed before the connection was established') {
           this.homey.app.debug(`${this.homey.app.api.getHost()}: ${error}`);
-          this.homey.emit('protectv1-connection-error', { error, host: this.homey.app.api.getHost() });
+          this.homey.app.api.emit('protectv1-connection-error', { error, host: this.homey.app.api.getHost() });
         }
 
         this.homey.api.realtime(UfvConstants.EVENT_SETTINGS_WEBSOCKET_STATUS, error.message);

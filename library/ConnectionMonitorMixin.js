@@ -27,19 +27,47 @@ const ConnectionMonitorMixin = {
    */
   _startConnectionMonitoring(apiType) {
     try {
-      if (apiType === 'v2' && this.homey.app.apiV2) {
-        this.homey.app.apiV2.on('protectv2-connection-error', this._onConnectionError.bind(this, 'v2'));
-        this.homey.app.apiV2.on('protectv2-connection-change', this._onConnectionChange.bind(this, 'v2'));
-      } else if (apiType === 'v1' && this.homey.app.api) {
-        this.homey.app.api.on('protectv1-connection-error', this._onConnectionError.bind(this, 'v1'));
-        this.homey.app.api.on('protectv1-connection-change', this._onConnectionChange.bind(this, 'v1'));
-      } else if (apiType === 'access' && this.homey.app.accessApi) {
-        this.homey.app.accessApi.on('access-connection-error', this._onConnectionError.bind(this, 'access'));
-        this.homey.app.accessApi.on('access-connection-change', this._onConnectionChange.bind(this, 'access'));
+      const sources = {
+        v2: { emitter: this.homey.app.apiV2, prefix: 'protectv2' },
+        v1: { emitter: this.homey.app.api, prefix: 'protectv1' },
+        access: { emitter: this.homey.app.accessApi, prefix: 'access' },
+      };
+      const source = sources[apiType];
+      if (!source || !source.emitter) {
+        return;
       }
+
+      // Never register twice for the same device.
+      this._removeConnectionMonitorHandlers();
+
+      // Keep the bound handlers so only this device's listeners are removed later.
+      const handlers = {
+        emitter: source.emitter,
+        errorEvent: `${source.prefix}-connection-error`,
+        changeEvent: `${source.prefix}-connection-change`,
+        onError: this._onConnectionError.bind(this, apiType),
+        onChange: this._onConnectionChange.bind(this, apiType),
+      };
+      handlers.emitter.on(handlers.errorEvent, handlers.onError);
+      handlers.emitter.on(handlers.changeEvent, handlers.onChange);
+      this._connectionMonitorHandlers = handlers;
     } catch (error) {
       this.error('[ConnectionMonitor] Failed to start monitoring:', error);
     }
+  },
+
+  /**
+   * Remove this device's own listeners from the API emitter
+   * @private
+   */
+  _removeConnectionMonitorHandlers() {
+    const handlers = this._connectionMonitorHandlers;
+    if (!handlers) {
+      return;
+    }
+    handlers.emitter.removeListener(handlers.errorEvent, handlers.onError);
+    handlers.emitter.removeListener(handlers.changeEvent, handlers.onChange);
+    this._connectionMonitorHandlers = null;
   },
 
   /**
@@ -123,16 +151,8 @@ const ConnectionMonitorMixin = {
       this._connectionErrorTimeout = null;
     }
 
-    if (apiType === 'v2' && this.homey.app.apiV2) {
-      this.homey.app.apiV2.removeAllListeners('protectv2-connection-error');
-      this.homey.app.apiV2.removeAllListeners('protectv2-connection-change');
-    } else if (apiType === 'v1' && this.homey.app.api) {
-      this.homey.app.api.removeAllListeners('protectv1-connection-error');
-      this.homey.app.api.removeAllListeners('protectv1-connection-change');
-    } else if (apiType === 'access' && this.homey.app.accessApi) {
-      this.homey.app.accessApi.removeAllListeners('access-connection-error');
-      this.homey.app.accessApi.removeAllListeners('access-connection-change');
-    }
+    // Only this device's listeners: other devices and AppProtect share the same emitter.
+    this._removeConnectionMonitorHandlers();
   },
 };
 

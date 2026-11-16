@@ -64,7 +64,8 @@ class AccessWebSocket extends BaseClass {
     this._reconnectAttempt += 1;
     this._reconnectTimeout = this.homey.setTimeout(() => {
       this._reconnectTimeout = null;
-      this.reconnectNotificationsListener();
+      // Keep the attempt counter so the backoff actually grows between retries.
+      this.reconnectNotificationsListener({ resetBackoff: false });
     }, reconnectDelayMs);
   }
 
@@ -155,7 +156,7 @@ class AccessWebSocket extends BaseClass {
         // If we're closing before fully established it's because we're shutting down the API - ignore it.
         if (error.message !== 'WebSocket was closed before the connection was established') {
           this.homey.app.log(`${this.homey.app.accessApi.webclient._serverHost}: ${error}`);
-          this.homey.emit('access-connection-error', { error, host: this.homey.app.accessApi.webclient._serverHost, port: this.homey.app.accessApi.webclient._serverPort });
+          this.homey.app.accessApi.emit('access-connection-error', { error, host: this.homey.app.accessApi.webclient._serverHost, port: this.homey.app.accessApi.webclient._serverPort });
         }
 
         this.loggedInStatus = error.message;
@@ -168,10 +169,12 @@ class AccessWebSocket extends BaseClass {
     return true;
   }
 
-  disconnectEventListener() {
+  disconnectEventListener({ resetBackoff = true } = {}) {
     return new Promise((resolve, reject) => {
       this._isDisconnectRequested = true;
-      this._reconnectAttempt = 0;
+      if (resetBackoff) {
+        this._reconnectAttempt = 0;
+      }
       this._clearReconnectTimeout();
       this.homey.clearInterval(this.pingTimeout);
 
@@ -193,10 +196,10 @@ class AccessWebSocket extends BaseClass {
     });
   }
 
-  reconnectNotificationsListener() {
+  reconnectNotificationsListener({ resetBackoff = true } = {}) {
     this.homey.app.log('Called reconnectUpdatesListener');
     this._isDisconnectRequested = false;
-    this.disconnectEventListener().then((res) => {
+    this.disconnectEventListener({ resetBackoff }).then((res) => {
       this._isDisconnectRequested = false;
       this.launchNotificationsListener();
       this.configureNotificationsListener(this);

@@ -9,6 +9,9 @@ class AccessAPI extends BaseClient {
     super(...props);
     this.webclient = new WebClient();
     this.websocket = new AccessWebSocket();
+    // One connection-monitor listener pair per paired device is expected, so the default
+    // limit of 10 only produces false MaxListenersExceededWarning noise.
+    this.setMaxListeners(0);
   }
 
   setSettings(host, port, apiToken) {

@@ -415,5 +415,8 @@
   },
   "1.13.7": {
     "en": "License Plate fix for V2"
+  },
+  "1.13.8": {
+    "en": "A rejected Protect API key (HTTP 401/403) is now reported clearly in the connection status instead of being retried every 10 seconds; check the API key in the app settings. Websocket reconnects now back off properly, and devices are marked unavailable when the controller connection fails."
   }
 }

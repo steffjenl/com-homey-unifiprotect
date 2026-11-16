@@ -30,6 +30,7 @@ class ProtectWebSocket extends BaseClass {
     this._reconnectMaxDelayMs = 300000;
     this._reconnectJitterRatio = 0.2;
     this._reconnectAttempt = 0;
+    this._authFailed = false;
   }
 
   heartbeat() {
@@ -79,7 +80,8 @@ class ProtectWebSocket extends BaseClass {
     this._reconnectAttempt += 1;
     this._reconnectTimeout = this.homey.setTimeout(() => {
       this._reconnectTimeout = null;
-      this.reconnectNotificationsListener();
+      // Keep the attempt counter so the backoff actually grows between retries.
+      this.reconnectNotificationsListener({ resetBackoff: false });
     }, reconnectDelayMs);
   }
 
@@ -118,6 +120,7 @@ class ProtectWebSocket extends BaseClass {
 
     try {
       this._isDisconnectRequested = false;
+      this._authFailed = false;
       this.loggedInStatus = 'Connecting';
 
       const _ws = new WebSocketEvents(this.notificationsUrl(), {
@@ -156,9 +159,15 @@ class ProtectWebSocket extends BaseClass {
         delete this._eventListener;
         this._eventListenerConfigured = false;
         this.homey.clearInterval(this.pingTimeout);
-        this.loggedInStatus = 'Disconnected';
+        if (!this._authFailed) {
+          this.loggedInStatus = 'Disconnected';
+        }
         this.homey.app.apiV2.emit('protectv2-connection-change', { state: 'disconnected', host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort });
-        this._scheduleReconnect();
+        // HTTP 401/403: the API key is wrong, retrying will not help. The hourly auth
+        // refresh and a settings save both trigger a fresh attempt.
+        if (!this._authFailed) {
+          this._scheduleReconnect();
+        }
       });
 
       this._eventListener.on('error', (error) => {
@@ -166,7 +175,15 @@ class ProtectWebSocket extends BaseClass {
         // If we're closing before fully established it's because we're shutting down the API - ignore it.
         if (error.message !== 'WebSocket was closed before the connection was established') {
           this.homey.app.log(`${this.homey.app.apiV2.webclient._serverHost}: ${error}`);
-          this.homey.emit('protectv2-connection-error', { error, host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort });
+          this.homey.app.apiV2.emit('protectv2-connection-error', { error, host: this.homey.app.apiV2.webclient._serverHost, port: this.homey.app.apiV2.webclient._serverPort });
+        }
+
+        const authFailure = /Unexpected server response: (401|403)/.exec(String(error && error.message));
+        if (authFailure) {
+          this._authFailed = true;
+          this.loggedInStatus = `Unauthorized (API key rejected, HTTP ${authFailure[1]})`;
+          this.homey.app.log(`[V2 Events WS] API key rejected (HTTP ${authFailure[1]}); not reconnecting until the next auth refresh or settings change.`);
+          return;
         }
 
         this.loggedInStatus = error.message;
@@ -179,10 +196,12 @@ class ProtectWebSocket extends BaseClass {
     return true;
   }
 
-  disconnectEventListener() {
+  disconnectEventListener({ resetBackoff = true } = {}) {
     return new Promise((resolve, reject) => {
       this._isDisconnectRequested = true;
-      this._reconnectAttempt = 0;
+      if (resetBackoff) {
+        this._reconnectAttempt = 0;
+      }
       this._clearReconnectTimeout();
       this.homey.clearInterval(this.pingTimeout);
 
@@ -196,7 +215,7 @@ class ProtectWebSocket extends BaseClass {
     });
   }
 
-  reconnectNotificationsListener() {
+  reconnectNotificationsListener({ resetBackoff = true } = {}) {
     this.homey.app.log('Called reconnectUpdatesListener');
     if (this.homey.app.apiV2.webclient.isCloudEnabled()) {
       this._isDisconnectRequested = true;
@@ -205,7 +224,7 @@ class ProtectWebSocket extends BaseClass {
       return;
     }
     this._isDisconnectRequested = false;
-    this.disconnectEventListener().then((res) => {
+    this.disconnectEventListener({ resetBackoff }).then((res) => {
       this._isDisconnectRequested = false;
       this.launchNotificationsListener();
       this.configureNotificationsListener(this);

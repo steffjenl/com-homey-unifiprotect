@@ -92,8 +92,11 @@ Last updated: March 2026
 ### WebSocket Reconnection
 - On WS `close`: clean up state, `loggedInStatus = 'Disconnected'`
 - Do **NOT** auto-reconnect immediately (memory leak risk)
-- Reconnection triggered by **hourly auth refresh** in `app-protect.js`
+- V2 and Access websockets reconnect with exponential backoff (10 s → 5 min, ±20% jitter). The attempt counter resets only on a successful `open` or an external reconnect — the reconnect timer must pass `{ resetBackoff: false }`
+- HTTP 401/403 on a V2 websocket → status `Unauthorized (API key rejected, HTTP <code>)`, **no** reconnect is scheduled
+- Fallback for all cases: the **hourly auth refresh** in `app-protect.js` and a settings save
 - Manual reconnect: call `reconnectNotificationsListener()`
+- Emit `*-connection-error` / `*-connection-change` on the API object (`this.homey.app.apiV2`, `.api`, `.accessApi`), never on `this.homey` — listeners are registered on the API object
 
 ### `waitForBootstrap` Polling
 - Poll every **250 ms** using `this.homey.setTimeout(this.waitForBootstrap.bind(this), 250)`

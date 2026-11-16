@@ -73,6 +73,10 @@ Each WS class exposes:
 - `getLastWebsocketMessageTime()` → `string|null` (ISO, truncated to minute)
 - `loggedInStatus` → `'Unknown'|'Connecting'|'Connected'|'Disconnected'|<error message>`
 
+V2 websockets (`web-socket-events.js`, `web-socket-devices.js`):
+- `Unauthorized (API key rejected, HTTP 401|403)` → the NVR refused the API key. No reconnect is scheduled; the next attempt comes from the hourly auth refresh or a settings save. Log line: `[V2 Events WS] API key rejected (HTTP 401); not reconnecting until the next auth refresh or settings change.`
+- Any other close → reconnect with exponential backoff (10 s → 5 min). `reconnect attempt #N` in the log must increase while the controller stays unreachable; a constant `#1` means the backoff is being reset.
+
 ---
 
 ## Common Debug Scenarios
@@ -85,7 +89,11 @@ Each WS class exposes:
 **WebSocket events not received:**
 1. Check `getProtectV2WebsocketStatus` in status tab
 2. Verify v2 API key is set
-3. Check last WS message time — stale = silent disconnect
+3. Status `Unauthorized (API key rejected, HTTP 401)` → create a new API key on the console itself (by IP, with an account that has Protect access) and save it in the settings
+4. Check last WS message time — stale = silent disconnect
+
+**`ECONNREFUSED <ip>:<port>` in the log:**
+1. The port is the one saved in the settings (V1: `ufp:nvrport`, V2: `ufp:v2nvr`) — check for a typo; the default is 443
 
 **Flow card doesn't fire:**
 1. Check event constant registered in `app-protect.js`

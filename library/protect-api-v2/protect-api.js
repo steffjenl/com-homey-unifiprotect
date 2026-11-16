@@ -48,7 +48,9 @@ class ProtectAPI extends BaseClass {
     this.webclient = new WebClient();
     this.websocket = new ProtectWebSocketEvents();
     this.websocketDevices = new ProtectWebSocketDevices();
-
+    // One connection-monitor listener pair per paired device is expected, so the default
+    // limit of 10 only produces false MaxListenersExceededWarning noise.
+    this.setMaxListeners(0);
   }
 
   setSettings(host, port, apiToken, options = {}) {
