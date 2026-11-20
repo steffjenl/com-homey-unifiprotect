@@ -159,6 +159,29 @@
                 "finish": "Save and finish",
                 "saved": "Setup complete. The app is connecting now."
             }
+        },
+        "debugInfo": {
+            "title": "Feilsøkingsinfo",
+            "hint": "Tar opp de rå websocket-meldingene en stund og eksporterer dem sammen med bootstrap som en JSON-fil for å forbedre appen. Passord og API-nøkler fjernes; IP/MAC-adresser, e-postadresser, brukernavn og NFC/fingeravtrykk-ID-er erstattes med anonyme koder. Del filen bare med utvikleren.",
+            "duration": "Opptaksvarighet",
+            "duration1": "1 time",
+            "duration6": "6 timer",
+            "duration24": "24 timer",
+            "recording": "Opptak",
+            "start": "Start opptak",
+            "stop": "Stopp opptak",
+            "save": "Lagre feilsøkingsinfo",
+            "copy": "Kopier til utklippstavlen",
+            "clear": "Slett opptak",
+            "busy": "Vent…",
+            "messages": "meldinger",
+            "activeUntil": "Aktiv til",
+            "inactive": "Ingen opptak",
+            "copied": "Feilsøkingsinfo kopiert til utklippstavlen.",
+            "copyFailed": "Kopiering mislyktes. Åpne innstillingene via my.homey.app i en nettleser og prøv 'Lagre feilsøkingsinfo'.",
+            "linkHint": "En nettleserfane med feilsøkingsinfo (JSON) åpnes. Lagre den med Ctrl+S / Cmd+S (eller Del → Lagre på telefon) og send filen til utvikleren. Lenken er gyldig i 15 minutter. Lastes ikke fanen? Bruk den andre lenken:",
+            "openLocal": "Åpne via lokalt nettverk",
+            "openCloud": "Åpne via Homey cloud"
         }
     },
     "events": {

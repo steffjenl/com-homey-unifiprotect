@@ -270,6 +270,35 @@
     </p>
     </fieldset>
 
+    <!-- Debug info -->
+    <fieldset class="homey-form-fieldset debug-info">
+        <legend class="homey-form-legend" data-i18n="settings.debugInfo.title"></legend>
+        <p><em data-i18n="settings.debugInfo.hint"></em></p>
+        <div class="homey-form-group">
+            <label class="homey-form-label" for="sel_debugDuration" data-i18n="settings.debugInfo.duration"></label>
+            <select id="sel_debugDuration" class="homey-form-select">
+                <option value="1" data-i18n="settings.debugInfo.duration1"></option>
+                <option value="6" data-i18n="settings.debugInfo.duration6" selected></option>
+                <option value="24" data-i18n="settings.debugInfo.duration24"></option>
+            </select>
+        </div>
+        <p><span data-i18n="settings.debugInfo.recording"></span>: <span id="debug_recording_status"
+                                                                         style="font-weight: bold;">Unknown</span></p>
+        <button id="btn_debug_toggle" class="homey-button-secondary-full" data-i18n="settings.debugInfo.start"></button>
+        <br/><br/>
+        <button id="btn_debug_save" class="homey-button-primary-full" data-i18n="settings.debugInfo.save"></button>
+        <div id="debug_links" style="display: none;">
+            <p><em data-i18n="settings.debugInfo.linkHint"></em></p>
+            <button id="btn_debug_open_local" class="homey-button-secondary-full" data-i18n="settings.debugInfo.openLocal"></button>
+            <br/><br/>
+            <button id="btn_debug_open_cloud" class="homey-button-secondary-full" data-i18n="settings.debugInfo.openCloud"></button>
+        </div>
+        <br/><br/>
+        <button id="btn_debug_copy" class="homey-button-secondary-full" data-i18n="settings.debugInfo.copy"></button>
+        <br/><br/>
+        <button id="btn_debug_clear" class="homey-button-secondary-full" data-i18n="settings.debugInfo.clear"></button>
+    </fieldset>
+
     <!-- Setup wizard -->
     <fieldset class="homey-form-fieldset">
         <legend class="homey-form-legend" data-i18n="settings.wizard.title"></legend>
@@ -301,6 +330,13 @@
     const btnAccessApply = document.getElementById('btn_AccessApply');
     const btnAccessTest = document.getElementById('btn_access_test');
     const btnRestartWizard = document.getElementById('btn_restart_wizard');
+    const selDebugDuration = document.getElementById('sel_debugDuration');
+    const btnDebugToggle = document.getElementById('btn_debug_toggle');
+    const btnDebugSave = document.getElementById('btn_debug_save');
+    const btnDebugOpenLocal = document.getElementById('btn_debug_open_local');
+    const btnDebugOpenCloud = document.getElementById('btn_debug_open_cloud');
+    const btnDebugCopy = document.getElementById('btn_debug_copy');
+    const btnDebugClear = document.getElementById('btn_debug_clear');
 
     function onHomeyReady(Homey) {
         const readSettings = () => {
@@ -551,6 +587,143 @@
         });
 
         readSettings();
+
+        // --- Debug info: websocket recording + "Save Debug Info" export ---
+        const debugApi = (method, path, body) => new Promise((resolve, reject) => {
+            Homey.api(method, path, body || null, (err, result) => (err ? reject(err) : resolve(result)));
+        });
+        let debugRecordingActive = false;
+        let debugBusy = false;
+
+        const formatBytes = (bytes) => {
+            if (bytes >= 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+            if (bytes >= 1024) return Math.round(bytes / 1024) + ' kB';
+            return bytes + ' B';
+        };
+        const formatTime = (ms) => new Date(ms).toLocaleString([], {
+            day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+        });
+
+        const renderDebugStatus = (status) => {
+            if (!status) return;
+            debugRecordingActive = !!status.active;
+            const field = document.getElementById('debug_recording_status');
+            const size = status.messageCount + ' ' + Homey.__('settings.debugInfo.messages') + ', ' + formatBytes(status.bytes);
+            if (status.active) {
+                field.style.color = 'darkgreen';
+                field.textContent = Homey.__('settings.debugInfo.activeUntil') + ' ' + formatTime(status.stopAt) + ' (' + size + ')';
+            } else {
+                field.style.color = '';
+                field.textContent = Homey.__('settings.debugInfo.inactive') + (status.messageCount ? ' (' + size + ')' : '');
+            }
+            btnDebugToggle.textContent = Homey.__(status.active ? 'settings.debugInfo.stop' : 'settings.debugInfo.start');
+        };
+
+        // Ignore status responses that were requested before the latest action (stale poll results)
+        let debugStatusSeq = 0;
+        const refreshDebugStatus = () => {
+            const seq = ++debugStatusSeq;
+            return debugApi('GET', '/debug/status')
+                .then((status) => { if (seq === debugStatusSeq) renderDebugStatus(status); })
+                .catch((err) => console.log('[SETTINGS] debug status failed', err));
+        };
+
+        const buildDebugExport = async () => {
+            const snapshot = await debugApi('GET', '/debug/snapshot');
+            const lines = [];
+            let offset = 0;
+            for (;;) {
+                const chunk = await debugApi('GET', '/debug/recording?offset=' + offset);
+                if (chunk.data) {
+                    chunk.data.split('\n').forEach((line) => {
+                        if (!line) return;
+                        try { lines.push(JSON.parse(line)); } catch (e) { lines.push({ raw: line }); }
+                    });
+                }
+                if (chunk.done || chunk.nextOffset <= offset) break;
+                offset = chunk.nextOffset;
+            }
+            snapshot.websocketMessages = lines;
+            return JSON.stringify(snapshot, null, 2);
+        };
+
+        const copyText = async (text) => {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } catch (e) {
+                    // fall through to the textarea fallback (clipboard API is blocked in some webviews)
+                }
+            }
+            const area = document.createElement('textarea');
+            area.value = text;
+            area.style.position = 'fixed';
+            area.style.opacity = '0';
+            document.body.appendChild(area);
+            area.select();
+            const ok = document.execCommand('copy');
+            document.body.removeChild(area);
+            return ok;
+        };
+
+        const runDebugAction = async (button, action) => {
+            if (debugBusy) return;
+            debugBusy = true;
+            const label = button.textContent;
+            button.textContent = Homey.__('settings.debugInfo.busy');
+            button.disabled = true;
+            debugStatusSeq++;
+            try {
+                await action();
+            } catch (err) {
+                Homey.alert(err && err.message ? err.message : String(err), 'error');
+            } finally {
+                button.disabled = false;
+                button.textContent = label;
+                debugBusy = false;
+                refreshDebugStatus();
+            }
+        };
+
+        btnDebugToggle.addEventListener('click', () => runDebugAction(btnDebugToggle, async () => {
+            if (debugRecordingActive) {
+                renderDebugStatus(await debugApi('POST', '/debug/stop'));
+            } else {
+                renderDebugStatus(await debugApi('POST', '/debug/start', { hours: Number(selDebugDuration.value) }));
+            }
+        }));
+
+        // The settings iframe is sandboxed (no downloads), so open the export in a real browser tab.
+        let debugLinks = null;
+        const openDebugLink = (url) => {
+            if (url) Homey.openURL(url);
+        };
+        btnDebugOpenLocal.addEventListener('click', () => openDebugLink(debugLinks && debugLinks.localUrl));
+        btnDebugOpenCloud.addEventListener('click', () => openDebugLink(debugLinks && debugLinks.cloudUrl));
+
+        btnDebugSave.addEventListener('click', () => runDebugAction(btnDebugSave, async () => {
+            debugLinks = await debugApi('POST', '/debug/download-link');
+            btnDebugOpenLocal.style.display = debugLinks.localUrl ? '' : 'none';
+            btnDebugOpenCloud.style.display = debugLinks.cloudUrl ? '' : 'none';
+            document.getElementById('debug_links').style.display = 'block';
+            openDebugLink(debugLinks.localUrl || debugLinks.cloudUrl);
+        }));
+
+        btnDebugCopy.addEventListener('click', () => runDebugAction(btnDebugCopy, async () => {
+            const json = await buildDebugExport();
+            const ok = await copyText(json);
+            Homey.alert(Homey.__(ok ? 'settings.debugInfo.copied' : 'settings.debugInfo.copyFailed'), ok ? 'info' : 'error');
+        }));
+
+        btnDebugClear.addEventListener('click', () => runDebugAction(btnDebugClear, async () => {
+            renderDebugStatus(await debugApi('POST', '/debug/clear'));
+            debugLinks = null;
+            document.getElementById('debug_links').style.display = 'none';
+        }));
+
+        refreshDebugStatus();
+        setInterval(refreshDebugStatus, 10000);
 
         document.querySelectorAll('.toggle-password').forEach(function(btn) {
             btn.addEventListener('click', function() {

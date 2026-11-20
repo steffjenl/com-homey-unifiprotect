@@ -55,6 +55,38 @@ When active: `debug()` writes to `homey.log` and optionally to `/userdata/applic
 
 ---
 
+## Debug Recording & "Save Debug Info"
+
+Settings → Status tab → **Debug info**. Lets users send real-world data to the developer.
+
+- **Recording:** `library/debug-recorder.js` (`this.homey.app.debugRecorder`). Start for 1 / 6 / 24 h
+  (`DEBUG_RECORDING_DURATIONS`). Every websocket `message` handler calls `recorder.record(source, msg)`
+  (sources `v1` (decoded packet), `v2-events`, `v2-devices`, `access`) **before** any filtering. No-op when not recording.
+- **Storage:** JSONL `{ t, src, msg }` in `/userdata/debug-ws.jsonl`, buffered and appended every 2 s.
+  Auto-stops at `DEBUG_RECORDING_MAX_BYTES` (10 MB) or when the duration elapses. State persisted in
+  setting `ufp:debugRecording`, so a recording resumes after an app restart.
+- **Export:** the settings page runs in a sandboxed iframe on my.homey.app (no `allow-downloads`), so a Blob
+  download is silently blocked. Instead "Save Debug Info" calls `POST /debug/download-link`, which returns a
+  local (`http://<ip>/api/app/<id>/debug-export/unifiprotect-debug-YYYYMMDD-HHMM.json?code=…`) and a cloud
+  (`https://<homeyId>.connect.athom.com/…`) URL, and opens one with `Homey.openURL()` in a real browser tab.
+  The query parameter is `code`, never `token`: Homey's Web API reads `?token=` as its own bearer token and
+  answers 401 "Missing Session ID in Token" before the app handler runs.
+  The `.json` file name in the path is only there so the browser proposes it on Ctrl+S (no headers can be set).
+  `GET /debug-export/:filename` is a **public** endpoint: only a random 48-hex token, valid 15 min / 5 uses, in memory
+  only (`DEBUG_DOWNLOAD_TOKEN_*`), returns data. The response holds app/Homey version, connection status, paired
+  Homey devices, fresh raw V1 bootstrap (max 100 events), V2 nvr/cameras/lights/sensors/chimes/relays and
+  `websocketMessages`. The user saves the tab with Ctrl+S.
+- **Clear revokes links:** `clear()` also drops every issued download token, and the settings page hides the link buttons.
+- **No zip / file download possible:** app API responses are always JSON, the iframe blocks downloads, and a
+  Homey Image rejects non-image content (`Invalid Image Buffer`). So the export is JSON in a browser tab.
+- **Redaction (`redact()`):** keys matching token/password/secret/cookie/csrf/apikey/accesskey/rtspAlias/… →
+  `<removed>`; MAC/IP/host/e-mail/user names/NFC/fingerprint/PIN/phone/location/serial/license plate →
+  `<redacted:xxxxxxxx>` (salted SHA-1, salt per recording so ids stay correlatable within one export);
+  IPv4/MAC/e-mail patterns inside free text are masked too (`*version*` / `*firmware*` keys excepted).
+  Add new sensitive field names to the patterns at the top of `debug-recorder.js`.
+
+---
+
 ## Status Page (Realtime Events)
 
 | Event constant | Purpose |

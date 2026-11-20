@@ -262,6 +262,9 @@ class AccessWebSocket extends BaseClass {
       // against double-processing the same Access event on reconnect.
       if (this._eventListener !== _ws) return;
 
+      const recorder = this.homey.app.debugRecorder;
+      if (recorder) recorder.record('access', event);
+
       if (!this.shouldProcessEvent(event.toString())) {
         return;
       }

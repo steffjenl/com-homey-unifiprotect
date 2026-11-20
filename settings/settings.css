@@ -422,3 +422,24 @@ button:hover {
 .wizard .wizard-test-button:hover {
     background-color: #1287bb;
 }
+
+/* The global button:hover turns every button green, which makes the secondary (light) Homey
+   buttons in the debug section unreadable while hovered, focused or pressed. */
+.debug-info .homey-button-secondary-full:hover,
+.debug-info .homey-button-secondary-full:focus,
+.debug-info .homey-button-secondary-full:active {
+    background-color: #e3ebf0;
+    color: #304652;
+}
+
+.debug-info .homey-button-primary-full:hover,
+.debug-info .homey-button-primary-full:focus,
+.debug-info .homey-button-primary-full:active {
+    background-color: #0f78a8;
+    color: white;
+}
+
+.debug-info button[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+}

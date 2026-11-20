@@ -159,6 +159,29 @@
                 "finish": "Save and finish",
                 "saved": "Setup complete. The app is connecting now."
             }
+        },
+        "debugInfo": {
+            "title": "Información de depuración",
+            "hint": "Graba durante un tiempo los mensajes websocket sin procesar y los exporta junto con el bootstrap como archivo JSON, para mejorar la app. Las contraseñas y claves API se eliminan; las direcciones IP/MAC, correos, nombres de usuario e ids NFC/huella se sustituyen por códigos anónimos. Comparte el archivo solo con el desarrollador.",
+            "duration": "Duración de la grabación",
+            "duration1": "1 hora",
+            "duration6": "6 horas",
+            "duration24": "24 horas",
+            "recording": "Grabación",
+            "start": "Iniciar grabación",
+            "stop": "Detener grabación",
+            "save": "Guardar info de depuración",
+            "copy": "Copiar al portapapeles",
+            "clear": "Eliminar grabación",
+            "busy": "Espere…",
+            "messages": "mensajes",
+            "activeUntil": "Activa hasta",
+            "inactive": "Sin grabación",
+            "copied": "Info de depuración copiada al portapapeles.",
+            "copyFailed": "Error al copiar. Abre los ajustes en my.homey.app desde un navegador y prueba 'Guardar info de depuración'.",
+            "linkHint": "Se abre una pestaña con la info de depuración (JSON). Guárdala con Ctrl+S / Cmd+S (o Compartir → Guardar en el móvil) y envía el archivo al desarrollador. El enlace es válido 15 minutos. ¿No carga la pestaña? Usa el otro enlace:",
+            "openLocal": "Abrir vía red local",
+            "openCloud": "Abrir vía Homey cloud"
         }
     },
     "events": {

@@ -246,6 +246,8 @@ class ProtectWebSocket extends BaseClass {
 
     // Listen for any messages coming in from our listener.
     this._eventListener.on('message', (event) => {
+      const recorder = this.homey.app.debugRecorder;
+      if (recorder) recorder.record('v2-events', event);
 
       if (!this.shouldProcessEvent(event.toString())) {
         return;

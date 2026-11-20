@@ -159,6 +159,29 @@
                 "finish": "Save and finish",
                 "saved": "Setup complete. The app is connecting now."
             }
+        },
+        "debugInfo": {
+            "title": "Infos de débogage",
+            "hint": "Enregistre pendant un certain temps les messages websocket bruts et les exporte avec le bootstrap dans un fichier JSON, pour améliorer l'app. Les mots de passe et clés API sont supprimés ; les adresses IP/MAC, e-mails, noms d'utilisateur et identifiants NFC/empreinte sont remplacés par des codes anonymes. Ne partagez le fichier qu'avec le développeur.",
+            "duration": "Durée d'enregistrement",
+            "duration1": "1 heure",
+            "duration6": "6 heures",
+            "duration24": "24 heures",
+            "recording": "Enregistrement",
+            "start": "Démarrer l'enregistrement",
+            "stop": "Arrêter l'enregistrement",
+            "save": "Enregistrer les infos de débogage",
+            "copy": "Copier dans le presse-papiers",
+            "clear": "Supprimer l'enregistrement",
+            "busy": "Patientez…",
+            "messages": "messages",
+            "activeUntil": "Actif jusqu'à",
+            "inactive": "Pas d'enregistrement",
+            "copied": "Infos de débogage copiées dans le presse-papiers.",
+            "copyFailed": "La copie a échoué. Ouvrez les paramètres via my.homey.app dans un navigateur et essayez 'Enregistrer les infos de débogage'.",
+            "linkHint": "Un onglet s'ouvre avec les infos de débogage (JSON). Enregistrez-le avec Ctrl+S / Cmd+S (ou Partager → Enregistrer sur un téléphone) et envoyez le fichier au développeur. Le lien est valable 15 minutes. L'onglet ne se charge pas ? Utilisez l'autre lien :",
+            "openLocal": "Ouvrir via le réseau local",
+            "openCloud": "Ouvrir via le cloud Homey"
         }
     },
     "events": {

@@ -409,6 +409,39 @@
     "testAccessApiKey": {
       "method": "POST",
       "path": "/testAccessApiKey"
+    },
+    "getDebugStatus": {
+      "method": "GET",
+      "path": "/debug/status"
+    },
+    "startDebugRecording": {
+      "method": "POST",
+      "path": "/debug/start"
+    },
+    "stopDebugRecording": {
+      "method": "POST",
+      "path": "/debug/stop"
+    },
+    "clearDebugRecording": {
+      "method": "POST",
+      "path": "/debug/clear"
+    },
+    "getDebugSnapshot": {
+      "method": "GET",
+      "path": "/debug/snapshot"
+    },
+    "getDebugRecording": {
+      "method": "GET",
+      "path": "/debug/recording"
+    },
+    "createDebugDownloadLink": {
+      "method": "POST",
+      "path": "/debug/download-link"
+    },
+    "getDebugDownload": {
+      "method": "GET",
+      "path": "/debug-export/:filename",
+      "public": true
     }
   },
   "flow": {

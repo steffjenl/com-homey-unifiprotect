@@ -159,6 +159,29 @@
                 "finish": "Save and finish",
                 "saved": "Setup complete. The app is connecting now."
             }
+        },
+        "debugInfo": {
+            "title": "Informacje debugowania",
+            "hint": "Przez pewien czas nagrywa surowe wiadomości websocket i eksportuje je razem z bootstrapem jako plik JSON, aby ulepszyć aplikację. Hasła i klucze API są usuwane; adresy IP/MAC, e-maile, nazwy użytkowników i identyfikatory NFC/odcisków palców są zastępowane anonimowymi kodami. Udostępniaj plik tylko deweloperowi.",
+            "duration": "Czas nagrywania",
+            "duration1": "1 godzina",
+            "duration6": "6 godzin",
+            "duration24": "24 godziny",
+            "recording": "Nagrywanie",
+            "start": "Rozpocznij nagrywanie",
+            "stop": "Zatrzymaj nagrywanie",
+            "save": "Zapisz informacje debugowania",
+            "copy": "Kopiuj do schowka",
+            "clear": "Usuń nagranie",
+            "busy": "Proszę czekać…",
+            "messages": "wiadomości",
+            "activeUntil": "Aktywne do",
+            "inactive": "Brak nagrywania",
+            "copied": "Informacje debugowania skopiowane do schowka.",
+            "copyFailed": "Kopiowanie nie powiodło się. Otwórz ustawienia przez my.homey.app w przeglądarce i spróbuj 'Zapisz informacje debugowania'.",
+            "linkHint": "Otworzy się karta z informacjami debugowania (JSON). Zapisz ją skrótem Ctrl+S / Cmd+S (lub Udostępnij → Zapisz na telefonie) i wyślij plik deweloperowi. Link jest ważny 15 minut. Karta się nie ładuje? Użyj drugiego linku:",
+            "openLocal": "Otwórz przez sieć lokalną",
+            "openCloud": "Otwórz przez chmurę Homey"
         }
     },
     "events": {

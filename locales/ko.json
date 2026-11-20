@@ -159,6 +159,29 @@
                 "finish": "Save and finish",
                 "saved": "Setup complete. The app is connecting now."
             }
+        },
+        "debugInfo": {
+            "title": "디버그 정보",
+            "hint": "앱 개선을 위해 일정 시간 동안 원시 웹소켓 메시지를 기록하고 부트스트랩과 함께 JSON 파일로 내보냅니다. 비밀번호와 API 키는 제거되며, IP/MAC 주소, 이메일, 사용자 이름, NFC/지문 ID는 익명 코드로 대체됩니다. 파일은 개발자와만 공유하세요.",
+            "duration": "기록 시간",
+            "duration1": "1시간",
+            "duration6": "6시간",
+            "duration24": "24시간",
+            "recording": "기록",
+            "start": "기록 시작",
+            "stop": "기록 중지",
+            "save": "디버그 정보 저장",
+            "copy": "클립보드에 복사",
+            "clear": "기록 삭제",
+            "busy": "처리 중…",
+            "messages": "메시지",
+            "activeUntil": "활성 종료 시각",
+            "inactive": "기록 중 아님",
+            "copied": "디버그 정보를 클립보드에 복사했습니다.",
+            "copyFailed": "복사에 실패했습니다. 브라우저에서 my.homey.app을 통해 설정을 열고 '디버그 정보 저장'을 시도하세요.",
+            "linkHint": "디버그 정보(JSON)가 담긴 브라우저 탭이 열립니다. Ctrl+S / Cmd+S(휴대폰에서는 공유 → 저장)로 저장한 뒤 파일을 개발자에게 보내세요. 링크는 15분간 유효합니다. 탭이 열리지 않나요? 다른 링크를 사용하세요:",
+            "openLocal": "로컬 네트워크로 열기",
+            "openCloud": "Homey 클라우드로 열기"
         }
     },
     "events": {

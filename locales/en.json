@@ -159,6 +159,29 @@
                 "finish": "Save and finish",
                 "saved": "Setup complete. The app is connecting now."
             }
+        },
+        "debugInfo": {
+            "title": "Debug info",
+            "hint": "Records the raw websocket messages for a while and exports them together with the bootstrap as a JSON file, to help improve the app. Passwords and API keys are removed; IP/MAC addresses, e-mail addresses, user names and NFC/fingerprint ids are replaced by anonymous codes. Only share the file with the developer.",
+            "duration": "Recording duration",
+            "duration1": "1 hour",
+            "duration6": "6 hours",
+            "duration24": "24 hours",
+            "recording": "Recording",
+            "start": "Start recording",
+            "stop": "Stop recording",
+            "save": "Save Debug Info",
+            "copy": "Copy to clipboard",
+            "clear": "Delete recording",
+            "busy": "Busy…",
+            "messages": "messages",
+            "activeUntil": "Active until",
+            "inactive": "Not recording",
+            "copied": "Debug info copied to the clipboard.",
+            "copyFailed": "Copying failed. Open the settings via my.homey.app in a browser and try 'Save Debug Info'.",
+            "linkHint": "A browser tab opens with the debug info (JSON). Save it with Ctrl+S / Cmd+S (or Share → Save on a phone) and send the file to the developer. The link is valid for 15 minutes. Did the tab not load? Use the other link:",
+            "openLocal": "Open via local network",
+            "openCloud": "Open via Homey cloud"
         }
     },
     "events": {

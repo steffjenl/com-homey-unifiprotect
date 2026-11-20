@@ -279,3 +279,13 @@ module.exports.SETTING_VIDEO_CODEC = 'ufp:video_codec';
 module.exports.VIDEO_CODEC_AUTO = 'auto';
 module.exports.STREAM_QUALITY_AUTO = 'auto';
 module.exports.STREAM_QUALITIES = ['high', 'medium', 'low'];
+
+// Debug recording ("Save Debug Info" on the settings page)
+module.exports.SETTING_DEBUG_RECORDING = 'ufp:debugRecording';
+module.exports.DEBUG_RECORDING_FILE = '/userdata/debug-ws.jsonl';
+module.exports.DEBUG_RECORDING_MAX_BYTES = 10 * 1024 * 1024;
+module.exports.DEBUG_RECORDING_CHUNK_BYTES = 512 * 1024;
+module.exports.DEBUG_RECORDING_DURATIONS = [1, 6, 24];
+module.exports.DEBUG_BOOTSTRAP_MAX_EVENTS = 100;
+module.exports.DEBUG_DOWNLOAD_TOKEN_TTL_MS = 15 * 60 * 1000;
+module.exports.DEBUG_DOWNLOAD_TOKEN_MAX_USES = 5;

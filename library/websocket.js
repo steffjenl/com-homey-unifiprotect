@@ -318,6 +318,9 @@ class ProtectWebSocket extends BaseClass {
       return;
     }
 
+    const recorder = this.homey.app.debugRecorder;
+    if (recorder) recorder.record('v1', updatePacket);
+
     // if (
     //     updatePacket.action.modelKey !== 'nvr'
     //     && updatePacket.action.modelKey !== 'sensor'

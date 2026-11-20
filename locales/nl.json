@@ -159,6 +159,29 @@
                 "finish": "Opslaan en afronden",
                 "saved": "Instellen voltooid. De app maakt nu verbinding."
             }
+        },
+        "debugInfo": {
+            "title": "Debug-informatie",
+            "hint": "Neemt een tijd lang de ruwe websocket-berichten op en exporteert die samen met de bootstrap als JSON-bestand, om de app te verbeteren. Wachtwoorden en API-sleutels worden verwijderd; IP/MAC-adressen, e-mailadressen, gebruikersnamen en NFC/vingerafdruk-id's worden vervangen door anonieme codes. Deel het bestand alleen met de ontwikkelaar.",
+            "duration": "Opnameduur",
+            "duration1": "1 uur",
+            "duration6": "6 uur",
+            "duration24": "24 uur",
+            "recording": "Opname",
+            "start": "Opname starten",
+            "stop": "Opname stoppen",
+            "save": "Debug-info opslaan",
+            "copy": "Kopiëren naar klembord",
+            "clear": "Opname verwijderen",
+            "busy": "Bezig…",
+            "messages": "berichten",
+            "activeUntil": "Actief tot",
+            "inactive": "Geen opname",
+            "copied": "Debug-info gekopieerd naar het klembord.",
+            "copyFailed": "Kopiëren mislukt. Open de instellingen via my.homey.app in een browser en probeer 'Debug-info opslaan'.",
+            "linkHint": "Er opent een browsertabblad met de debug-info (JSON). Sla het op met Ctrl+S / Cmd+S (of Delen → Opslaan op een telefoon) en stuur het bestand naar de ontwikkelaar. De link is 15 minuten geldig. Laadt het tabblad niet? Gebruik de andere link:",
+            "openLocal": "Openen via lokaal netwerk",
+            "openCloud": "Openen via Homey cloud"
         }
     },
     "events": {

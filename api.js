@@ -39,6 +39,13 @@ function getLastWebsocketMessageTime(websocket) {
   return 'Not initialized';
 }
 
+function getDebugRecorder(homey) {
+  if (!homey.app.debugRecorder) {
+    throw new Error('Debug recorder not initialized');
+  }
+  return homey.app.debugRecorder;
+}
+
 function getWebsocketStatus(websocket) {
   if (!websocket || typeof websocket.isWebsocketConnected !== 'function') {
     return 'Not initialized';
@@ -88,6 +95,35 @@ module.exports = {
   },
   async getLastProtectV2WebsocketMessageTime({ homey, query }) {
     return getLastWebsocketMessageTime(homey.app.apiV2 && homey.app.apiV2.websocket);
+  },
+  async getDebugStatus({ homey }) {
+    return getDebugRecorder(homey).getStatus();
+  },
+  async startDebugRecording({ homey, body }) {
+    return getDebugRecorder(homey).start(body && body.hours);
+  },
+  async stopDebugRecording({ homey }) {
+    return getDebugRecorder(homey).stop('manual');
+  },
+  async clearDebugRecording({ homey }) {
+    return getDebugRecorder(homey).clear();
+  },
+  async getDebugSnapshot({ homey }) {
+    return getDebugRecorder(homey).buildSnapshot();
+  },
+  async getDebugRecording({ homey, query }) {
+    return getDebugRecorder(homey).readChunk(query && query.offset);
+  },
+  async createDebugDownloadLink({ homey }) {
+    return getDebugRecorder(homey).createDownloadLink();
+  },
+  // Public endpoint (opened in a normal browser tab): only a valid, short-lived token gets data.
+  async getDebugDownload({ homey, query }) {
+    const recorder = getDebugRecorder(homey);
+    if (!recorder.isValidDownloadToken(query && query.code)) {
+      throw new Error('Invalid or expired download link. Create a new one in the app settings.');
+    }
+    return recorder.buildExport();
   },
   async testCredentials({ homey, body }) {
     // Test V1 (username/password) credentials

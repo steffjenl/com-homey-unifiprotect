@@ -9,6 +9,7 @@ const AppProtect = require('./library/app-protect');
 const FobHandler = require('./library/fob-handler');
 const FobActionMapper = require('./library/action-mapper');
 const SpeakerService = require('./library/speaker-service');
+const DebugRecorder = require('./library/debug-recorder');
 //
 
 class UniFiProtect extends Homey.App {
@@ -25,6 +26,10 @@ class UniFiProtect extends Homey.App {
     this.ignoreEventsDoorbell = 5; // seconds
     this._refreshAuthTokensnterval = 60 * 60 * 1000; // 1 hour
     this.lastDoorAccessEvent = null;
+
+    // Debug recording of websocket messages ("Save Debug Info" on the settings page)
+    this.debugRecorder = new DebugRecorder(this.homey);
+    await this.debugRecorder.init().catch(this.error);
 
     // Single API instance for all devices
     this.api = new ProtectAPI();
@@ -328,6 +333,11 @@ class UniFiProtect extends Homey.App {
     if (this._memoryLogInterval) {
       this.homey.clearInterval(this._memoryLogInterval);
       this._memoryLogInterval = null;
+    }
+
+    // Keep the persisted recording state so a running recording resumes after a restart
+    if (this.debugRecorder) {
+      await this.debugRecorder.destroy().catch(this.error);
     }
   }
 
